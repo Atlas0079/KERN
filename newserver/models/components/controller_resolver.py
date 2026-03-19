@@ -15,18 +15,16 @@ def resolve_enabled_controller_component(entity: Any):
 	- (component_name, component_instance) or (None, None)
 
 	Explanation:
-	- Compatible with old data: LLMControlComponent will be built as AgentControlComponent in builder,
-	  but key in entity.components might still be "LLMControlComponent".
+	- Only new control component names are accepted.
 	"""
 
 	if entity is None or not hasattr(entity, "get_component"):
 		return (None, None)
 
-	# Priority: Player > LLM/Agent > Pure Logic (can be adjusted as needed)
+	# Priority: Player > Agent > Pure Logic
 	candidates = [
 		("PlayerControlComponent", PlayerControlComponent),
 		("AgentControlComponent", AgentControlComponent),
-		("LLMControlComponent", AgentControlComponent),
 		("LogicControlComponent", LogicControlComponent),
 	]
 

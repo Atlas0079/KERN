@@ -20,3 +20,5 @@ class SimplePolicyActionProvider:
 				return [{"verb": "Consume", "target_id": ent.get("id")}]
 		return []
 
+	def decide_dialogue(self, perception: dict[str, Any], conversation_context: dict[str, Any], self_id: str | None = None) -> str:
+		return "PASS"

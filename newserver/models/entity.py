@@ -4,14 +4,18 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .components import (
-	AgentComponent,
+	AgentSetting,
 	AgentControlComponent,
 	ContainerComponent,
 	CreatureComponent,
+	DecisionArbiterComponent,
 	LogicControlComponent,
+	MemoryComponent,
 	PlayerControlComponent,
 	TagComponent,
+	TaskHostComponent,
 	UnknownComponent,
+	WorkerComponent,
 )
 
 
@@ -19,11 +23,15 @@ ComponentValue = (
 	TagComponent
 	| ContainerComponent
 	| CreatureComponent
-	| AgentComponent
+	| AgentSetting
 	| AgentControlComponent
 	| PlayerControlComponent
 	| LogicControlComponent
+	| MemoryComponent
+	| DecisionArbiterComponent
+	| TaskHostComponent
 	| UnknownComponent
+	| WorkerComponent
 )
 
 
@@ -75,4 +83,3 @@ class Entity:
 		creature = self.components.get("CreatureComponent")
 		if isinstance(creature, CreatureComponent):
 			creature.ensure_initialized()
-

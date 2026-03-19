@@ -9,9 +9,6 @@ from ..task import Task
 @dataclass
 class TaskHostComponent:
 	"""
-	Original Godot name: TaskComponent
-
-	Renamed to TaskHostComponent in Python backend (Clearer: This is "Task Host/Workstation").
 	Responsibility: Holds task list and provides "claimable task" query.
 	"""
 
@@ -42,4 +39,3 @@ class TaskHostComponent:
 			if not t.assigned_agent_ids:
 				available.append(t)
 		return available
-

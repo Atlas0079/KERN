@@ -1,0 +1,23 @@
+{
+	"Corpse": {
+		"name": "Corpse",
+		"components": {
+			"TagComponent": {
+				"tags": ["item", "corpse", "container", "dead_body"]
+			},
+			"ContainerComponent": {
+				"slots": {
+					"main": {
+						"config": {
+							"capacity_count": 999,
+							"accepted_tags": ["item"]
+						}
+					}
+				}
+			},
+			"DescriptionComponent": {
+				"description": "A lifeless body."
+			}
+		}
+	}
+}

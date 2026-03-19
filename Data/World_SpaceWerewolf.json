@@ -1,0 +1,642 @@
+{
+    "meta": {
+        "version": "0.2.0",
+        "save_name": "Space Werewolf Prototype"
+    },
+    "world_state": {
+        "current_tick": 0
+    },
+    "locations": [
+        {
+            "location_id": "meeting_room",
+            "location_name": "会议室",
+            "description": "中枢会议室，只有通道，没有关键物资。",
+            "entities": [
+                {
+                    "instance_id": "imposter_01",
+                    "template_id": "human",
+                    "component_overrides": {
+                        "AgentSetting": {
+                            "agent_name": "Eris",
+                            "personality_summary": "你冷静、善于伪装，擅长在完成表面任务与制造混乱之间平衡。",
+                            "common_knowledge_summary": "你是太空站员工，但你的真实身份是内奸。目标是在不暴露的前提下消灭平民，或者阻止他们完成任务。其他平民可能会持有杀死你的武器。你拥有一把电击手枪，可以造成致命伤害，每次射击后需要等待15tick才能再次射击。太空站上其余三人是 Mira、Noah、Lena。"
+                        },
+                        "MemoryComponent": {
+                            "short_term_queue": [],
+                            "short_term_max_entries": 25,
+                            "mid_term_prep_queue": [],
+                            "mid_term_prep_max_entries": 50,
+                            "mid_term_queue": [
+                                {
+                                    "tick_start": 0,
+                                    "tick_end": 0,
+                                    "summary": "背景：我提前动过导航稳定器，撞击与故障是我制造的。系统要求60tick内修复三处损坏，这会制造混乱与互疑。",
+                                    "tags": ["background", "incident", "imposter"]
+                                },
+                                {
+                                    "tick_start": 0,
+                                    "tick_end": 0,
+                                    "summary": "任务：在不暴露身份的前提下消灭平民，或阻止他们完成任务；我持有可致命的电击手枪。",
+                                    "tags": ["goal", "combat", "imposter"]
+                                }
+                            ],
+                            "mid_term_max_entries": 20,
+                            "last_mid_term_summary_tick": 0,
+                            "mid_term_summary_cooldown_ticks": 15
+                        }
+                    }
+                },
+                {
+                    "instance_id": "civilian_01",
+                    "template_id": "human",
+                    "component_overrides": {
+                        "AgentSetting": {
+                            "agent_name": "Mira",
+                            "personality_summary": "你谨慎务实，重视团队合作与风险控制。",
+                            "common_knowledge_summary": "你是太空站员工。当前目标是与同伴协作并推进任务。你知道船员中存在一名内奸，但不知道是谁。你需要杀死内奸，或者在内奸杀死你们之前完成全部任务。太空站上包括你在内一共四人：你自己，以及 Eris、Noah、Lena。"
+                        },
+                        "MemoryComponent": {
+                            "short_term_queue": [],
+                            "short_term_max_entries": 25,
+                            "mid_term_prep_queue": [],
+                            "mid_term_prep_max_entries": 50,
+                            "mid_term_queue": [
+                                {
+                                    "tick_start": 0,
+                                    "tick_end": 0,
+                                    "summary": "背景：太空站发生剧烈撞击，系统要求60tick内修复三处损坏，所有人已在会议室集合并分工。",
+                                    "tags": ["background", "incident", "crew"]
+                                },
+                                {
+                                    "tick_start": 0,
+                                    "tick_end": 0,
+                                    "summary": "任务A：去研发室任务站A完成修复；完成条件为 task_a_done。先去发动机室任务柜 cabinet_engine_room_01 翻箱取得智能平板。",
+                                    "tags": ["task", "task_a", "tool"]
+                                }
+                            ],
+                            "mid_term_max_entries": 20,
+                            "last_mid_term_summary_tick": 0,
+                            "mid_term_summary_cooldown_ticks": 15
+                        }
+                    }
+                },
+                {
+                    "instance_id": "civilian_02",
+                    "template_id": "human",
+                    "component_overrides": {
+                        "AgentSetting": {
+                            "agent_name": "Noah",
+                            "personality_summary": "你偏理性，愿意通过交易与分工提升效率。",
+                            "common_knowledge_summary": "你是太空站员工。当前目标是与同伴协作并推进任务。你知道船员中存在一名内奸，但不知道是谁。你需要杀死内奸，或者在内奸杀死你们之前完成全部任务。太空站上包括你在内一共四人：你自己，以及 Eris、Mira、Lena。"
+                        },
+                        "MemoryComponent": {
+                            "short_term_queue": [],
+                            "short_term_max_entries": 25,
+                            "mid_term_prep_queue": [],
+                            "mid_term_prep_max_entries": 50,
+                            "mid_term_queue": [
+                                {
+                                    "tick_start": 0,
+                                    "tick_end": 0,
+                                    "summary": "背景：太空站发生剧烈撞击，系统要求60tick内修复三处损坏，所有人已在会议室集合并分工。",
+                                    "tags": ["background", "incident", "crew"]
+                                },
+                                {
+                                    "tick_start": 0,
+                                    "tick_end": 0,
+                                    "summary": "任务B：去医疗室任务站B完成修复；完成条件为 task_b_done。先去维生舱任务柜 cabinet_life_support_01 翻箱取得工具箱。",
+                                    "tags": ["task", "task_b", "tool"]
+                                }
+                            ],
+                            "mid_term_max_entries": 20,
+                            "last_mid_term_summary_tick": 0,
+                            "mid_term_summary_cooldown_ticks": 15
+                        }
+                    }
+                },
+                {
+                    "instance_id": "civilian_03",
+                    "template_id": "human",
+                    "component_overrides": {
+                        "AgentSetting": {
+                            "agent_name": "Lena",
+                            "personality_summary": "你观察敏锐，擅长记录异常并引导讨论。",
+                            "common_knowledge_summary": "你是太空站员工。你知道船员中存在一名内奸，但不知道是谁。你需要杀死内奸，或者在内奸杀死你们之前完成全部任务。太空站上包括你在内一共四人：你自己，以及 Eris、Mira、Noah。"
+                        },
+                        "MemoryComponent": {
+                            "short_term_queue": [],
+                            "short_term_max_entries": 25,
+                            "mid_term_prep_queue": [],
+                            "mid_term_prep_max_entries": 50,
+                            "mid_term_queue": [
+                                {
+                                    "tick_start": 0,
+                                    "tick_end": 0,
+                                    "summary": "背景：太空站发生剧烈撞击，系统要求60tick内修复三处损坏，所有人已在会议室集合并分工。",
+                                    "tags": ["background", "incident", "crew"]
+                                },
+                                {
+                                    "tick_start": 0,
+                                    "tick_end": 0,
+                                    "summary": "任务C：去发动机室任务站C完成修复；完成条件为 task_c_done。先去医疗室任务柜 cabinet_med_bay_01 翻箱取得研发记录。",
+                                    "tags": ["task", "task_c", "tool"]
+                                }
+                            ],
+                            "mid_term_max_entries": 20,
+                            "last_mid_term_summary_tick": 0,
+                            "mid_term_summary_cooldown_ticks": 15
+                        }
+                    }
+                },
+                {
+                    "instance_id": "cabinet_meeting_room_01",
+                    "template_id": "WoodenBox",
+                    "component_overrides": {
+                        "ContainerComponent": {
+                            "slots": {
+                                "main": {
+                                    "config": {
+                                        "transparent": false
+                                    }
+                                }
+                            }
+                        }
+                        ,
+                        "TaskHostComponent": {
+                            "tasks": {
+                                "rummage_cabinet_meeting_room_01": {
+                                    "task_id": "rummage_cabinet_meeting_room_01",
+                                    "task_type": "Rummage",
+                                    "action_type": "Task",
+                                    "target_entity_id": "cabinet_meeting_room_01",
+                                    "progress": 0.0,
+                                    "required_progress": 5.0,
+                                    "multiple_entity": false,
+                                    "assigned_agent_ids": [],
+                                    "task_status": "Inactive",
+                                    "parameters": {},
+                                    "progressor_id": "Linear",
+                                    "progressor_params": {
+                                        "base_progress_per_tick": 1.0,
+                                        "progress_contributors": []
+                                    },
+                                    "tick_effects": [],
+                                    "completion_effects": [
+                                        {
+                                            "effect": "ModifyProperty",
+                                            "target": "target",
+                                            "component": "ContainerComponent",
+                                            "property": "slots.main.config.transparent",
+                                            "value": true
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "location_id": "engine_room",
+            "location_name": "发动机室",
+            "entities": [
+                {
+                    "instance_id": "cabinet_engine_room_01",
+                    "template_id": "WoodenBox",
+                    "component_overrides": {
+                        "ContainerComponent": {
+                            "slots": {
+                                "main": {
+                                    "config": {
+                                        "transparent": false
+                                    }
+                                }
+                            }
+                        }
+                        ,
+                        "TaskHostComponent": {
+                            "tasks": {
+                                "rummage_cabinet_engine_room_01": {
+                                    "task_id": "rummage_cabinet_engine_room_01",
+                                    "task_type": "Rummage",
+                                    "action_type": "Task",
+                                    "target_entity_id": "cabinet_engine_room_01",
+                                    "progress": 0.0,
+                                    "required_progress": 5.0,
+                                    "multiple_entity": false,
+                                    "assigned_agent_ids": [],
+                                    "task_status": "Inactive",
+                                    "parameters": {},
+                                    "progressor_id": "Linear",
+                                    "progressor_params": {
+                                        "base_progress_per_tick": 1.0,
+                                        "progress_contributors": []
+                                    },
+                                    "tick_effects": [],
+                                    "completion_effects": [
+                                        {
+                                            "effect": "ModifyProperty",
+                                            "target": "target",
+                                            "component": "ContainerComponent",
+                                            "property": "slots.main.config.transparent",
+                                            "value": true
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "instance_id": "task_station_c_01",
+                    "template_id": "TaskStationC",
+                    "component_overrides": {
+                        "TaskHostComponent": {
+                            "tasks": {
+                                "task_c_on_station_c_01": {
+                                    "task_id": "task_c_on_station_c_01",
+                                    "task_type": "ExecuteTaskC",
+                                    "action_type": "Task",
+                                    "target_entity_id": "task_station_c_01",
+                                    "progress": 0.0,
+                                    "required_progress": 15.0,
+                                    "multiple_entity": false,
+                                    "assigned_agent_ids": [],
+                                    "task_status": "Inactive",
+                                    "parameters": {
+                                        "required_item_tag": "task_tool_c",
+                                        "done_condition_id": "task_c_done"
+                                    },
+                                    "progressor_id": "Linear",
+                                    "progressor_params": {
+                                        "base_progress_per_tick": 1.0,
+                                        "progress_contributors": []
+                                    },
+                                    "tick_effects": [],
+                                    "completion_effects": [
+                                        {
+                                            "effect": "AddCondition",
+                                            "target": "target",
+                                            "condition_id": "task_c_done"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "location_id": "dorm_b",
+            "location_name": "维生舱",
+            "entities": [
+                {
+                    "instance_id": "cabinet_life_support_01",
+                    "template_id": "WoodenBox",
+                    "component_overrides": {
+                        "ContainerComponent": {
+                            "slots": {
+                                "main": {
+                                    "config": {
+                                        "transparent": false
+                                    }
+                                }
+                            }
+                        }
+                        ,
+                        "TaskHostComponent": {
+                            "tasks": {
+                                "rummage_cabinet_life_support_01": {
+                                    "task_id": "rummage_cabinet_life_support_01",
+                                    "task_type": "Rummage",
+                                    "action_type": "Task",
+                                    "target_entity_id": "cabinet_life_support_01",
+                                    "progress": 0.0,
+                                    "required_progress": 5.0,
+                                    "multiple_entity": false,
+                                    "assigned_agent_ids": [],
+                                    "task_status": "Inactive",
+                                    "parameters": {},
+                                    "progressor_id": "Linear",
+                                    "progressor_params": {
+                                        "base_progress_per_tick": 1.0,
+                                        "progress_contributors": []
+                                    },
+                                    "tick_effects": [],
+                                    "completion_effects": [
+                                        {
+                                            "effect": "ModifyProperty",
+                                            "target": "target",
+                                            "component": "ContainerComponent",
+                                            "property": "slots.main.config.transparent",
+                                            "value": true
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "location_id": "research_lab",
+            "location_name": "研发室",
+            "entities": [
+                {
+                    "instance_id": "cabinet_research_lab_02",
+                    "template_id": "WoodenBox",
+                    "component_overrides": {
+                        "ContainerComponent": {
+                            "slots": {
+                                "main": {
+                                    "config": {
+                                        "transparent": false
+                                    }
+                                }
+                            }
+                        }
+                        ,
+                        "TaskHostComponent": {
+                            "tasks": {
+                                "rummage_cabinet_research_lab_02": {
+                                    "task_id": "rummage_cabinet_research_lab_02",
+                                    "task_type": "Rummage",
+                                    "action_type": "Task",
+                                    "target_entity_id": "cabinet_research_lab_02",
+                                    "progress": 0.0,
+                                    "required_progress": 5.0,
+                                    "multiple_entity": false,
+                                    "assigned_agent_ids": [],
+                                    "task_status": "Inactive",
+                                    "parameters": {},
+                                    "progressor_id": "Linear",
+                                    "progressor_params": {
+                                        "base_progress_per_tick": 1.0,
+                                        "progress_contributors": []
+                                    },
+                                    "tick_effects": [],
+                                    "completion_effects": [
+                                        {
+                                            "effect": "ModifyProperty",
+                                            "target": "target",
+                                            "component": "ContainerComponent",
+                                            "property": "slots.main.config.transparent",
+                                            "value": true
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "instance_id": "task_station_a_01",
+                    "template_id": "TaskStationA",
+                    "component_overrides": {
+                        "TaskHostComponent": {
+                            "tasks": {
+                                "task_a_on_station_a_01": {
+                                    "task_id": "task_a_on_station_a_01",
+                                    "task_type": "ExecuteTaskA",
+                                    "action_type": "Task",
+                                    "target_entity_id": "task_station_a_01",
+                                    "progress": 0.0,
+                                    "required_progress": 15.0,
+                                    "multiple_entity": false,
+                                    "assigned_agent_ids": [],
+                                    "task_status": "Inactive",
+                                    "parameters": {
+                                        "required_item_tag": "task_tool_a",
+                                        "done_condition_id": "task_a_done"
+                                    },
+                                    "progressor_id": "Linear",
+                                    "progressor_params": {
+                                        "base_progress_per_tick": 1.0,
+                                        "progress_contributors": []
+                                    },
+                                    "tick_effects": [],
+                                    "completion_effects": [
+                                        {
+                                            "effect": "AddCondition",
+                                            "target": "target",
+                                            "condition_id": "task_a_done"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "location_id": "med_bay",
+            "location_name": "医疗室",
+            "entities": [
+                {
+                    "instance_id": "cabinet_med_bay_01",
+                    "template_id": "WoodenBox",
+                    "component_overrides": {
+                        "ContainerComponent": {
+                            "slots": {
+                                "main": {
+                                    "config": {
+                                        "transparent": false
+                                    }
+                                }
+                            }
+                        }
+                        ,
+                        "TaskHostComponent": {
+                            "tasks": {
+                                "rummage_cabinet_med_bay_01": {
+                                    "task_id": "rummage_cabinet_med_bay_01",
+                                    "task_type": "Rummage",
+                                    "action_type": "Task",
+                                    "target_entity_id": "cabinet_med_bay_01",
+                                    "progress": 0.0,
+                                    "required_progress": 5.0,
+                                    "multiple_entity": false,
+                                    "assigned_agent_ids": [],
+                                    "task_status": "Inactive",
+                                    "parameters": {},
+                                    "progressor_id": "Linear",
+                                    "progressor_params": {
+                                        "base_progress_per_tick": 1.0,
+                                        "progress_contributors": []
+                                    },
+                                    "tick_effects": [],
+                                    "completion_effects": [
+                                        {
+                                            "effect": "ModifyProperty",
+                                            "target": "target",
+                                            "component": "ContainerComponent",
+                                            "property": "slots.main.config.transparent",
+                                            "value": true
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "instance_id": "task_station_b_01",
+                    "template_id": "TaskStationB",
+                    "component_overrides": {
+                        "TaskHostComponent": {
+                            "tasks": {
+                                "task_b_on_station_b_01": {
+                                    "task_id": "task_b_on_station_b_01",
+                                    "task_type": "ExecuteTaskB",
+                                    "action_type": "Task",
+                                    "target_entity_id": "task_station_b_01",
+                                    "progress": 0.0,
+                                    "required_progress": 15.0,
+                                    "multiple_entity": false,
+                                    "assigned_agent_ids": [],
+                                    "task_status": "Inactive",
+                                    "parameters": {
+                                        "required_item_tag": "task_tool_b",
+                                        "done_condition_id": "task_b_done"
+                                    },
+                                    "progressor_id": "Linear",
+                                    "progressor_params": {
+                                        "base_progress_per_tick": 1.0,
+                                        "progress_contributors": []
+                                    },
+                                    "tick_effects": [],
+                                    "completion_effects": [
+                                        {
+                                            "effect": "AddCondition",
+                                            "target": "target",
+                                            "condition_id": "task_b_done"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "entities": [
+        {
+            "instance_id": "shock_pistol_imposter_01",
+            "template_id": "ShockPistol",
+            "parent_container": "imposter_01"
+        },
+        {
+            "instance_id": "revolver_civilian_01",
+            "template_id": "RevolverPistol",
+            "parent_container": "civilian_01"
+        },
+        {
+            "instance_id": "bullet_civilian_02",
+            "template_id": "PistolBullet",
+            "parent_container": "civilian_02"
+        },
+        {
+            "instance_id": "bullet_meeting_room_01",
+            "template_id": "PistolBullet",
+            "parent_container": "cabinet_meeting_room_01"
+        },
+        {
+            "instance_id": "task_tool_a_01",
+            "template_id": "SmartTablet",
+            "parent_container": "cabinet_engine_room_01"
+        },
+        {
+            "instance_id": "task_tool_b_01",
+            "template_id": "Toolbox",
+            "parent_container": "cabinet_life_support_01"
+        },
+        {
+            "instance_id": "revolver_research_lab_01",
+            "template_id": "RevolverPistol",
+            "parent_container": "cabinet_research_lab_02"
+        },
+        {
+            "instance_id": "task_tool_c_01",
+            "template_id": "ResearchRecord",
+            "parent_container": "cabinet_med_bay_01"
+        }
+    ],
+    "tasks": [],
+    "paths": [
+        {
+            "path_id": "p_meeting_to_research",
+            "from_location_id": "meeting_room",
+            "to_location_id": "research_lab",
+            "distance": 1.0,
+            "travel_type": "walk"
+        },
+        {
+            "path_id": "p_research_to_meeting",
+            "from_location_id": "research_lab",
+            "to_location_id": "meeting_room",
+            "distance": 1.0,
+            "travel_type": "walk"
+        },
+        {
+            "path_id": "p_research_to_engine",
+            "from_location_id": "research_lab",
+            "to_location_id": "engine_room",
+            "distance": 1.0,
+            "travel_type": "walk"
+        },
+        {
+            "path_id": "p_engine_to_research",
+            "from_location_id": "engine_room",
+            "to_location_id": "research_lab",
+            "distance": 1.0,
+            "travel_type": "walk"
+        },
+        {
+            "path_id": "p_engine_to_med",
+            "from_location_id": "engine_room",
+            "to_location_id": "med_bay",
+            "distance": 1.0,
+            "travel_type": "walk"
+        },
+        {
+            "path_id": "p_med_to_engine",
+            "from_location_id": "med_bay",
+            "to_location_id": "engine_room",
+            "distance": 1.0,
+            "travel_type": "walk"
+        },
+        {
+            "path_id": "p_med_to_meeting",
+            "from_location_id": "med_bay",
+            "to_location_id": "meeting_room",
+            "distance": 1.0,
+            "travel_type": "walk"
+        },
+        {
+            "path_id": "p_meeting_to_med",
+            "from_location_id": "meeting_room",
+            "to_location_id": "med_bay",
+            "distance": 1.0,
+            "travel_type": "walk"
+        },
+        {
+            "path_id": "p_meeting_to_dorm_b",
+            "from_location_id": "meeting_room",
+            "to_location_id": "dorm_b",
+            "distance": 1.0,
+            "travel_type": "walk"
+        },
+        {
+            "path_id": "p_dorm_b_to_meeting",
+            "from_location_id": "dorm_b",
+            "to_location_id": "meeting_room",
+            "distance": 1.0,
+            "travel_type": "walk"
+        }
+    ]
+}

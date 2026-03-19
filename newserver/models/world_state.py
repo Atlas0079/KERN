@@ -8,6 +8,7 @@ from .gametime import GameTime
 from .location import Location
 from .components import ContainerComponent
 from .task import Task
+from .path import Path
 
 
 @dataclass
@@ -23,9 +24,9 @@ class WorldState:
 	locations: dict[str, Location] = field(default_factory=dict)
 	tasks: dict[str, Task] = field(default_factory=dict)
 
-	paths: dict[str, Any] = field(default_factory=dict)
+	paths: dict[str, Path] = field(default_factory=dict)
 
-	# Runtime service registry (Injected by WorldManager, for components to access system capabilities in per_tick)
+	# Runtime service registry (Injected by WorldManager, used by executor/effects and systems)
 	# Convention keys (Extensible):
 	# - "perception_system"
 	# - "interaction_engine"
@@ -33,12 +34,10 @@ class WorldState:
 	# - "action_providers"
 	services: dict[str, Any] = field(default_factory=dict)
 
-	# Written by components in per_tick phase, consumed by Manager (Single executor write entry)
-	# item: {"effect": {...}, "context": {...}}
-	# pending_effects: list[dict[str, Any]] = field(default_factory=list) # REMOVED: Immediate execution mode
 
 
-	# World event log (For observation/replay/debug)
+
+	# World event log (For observation/debug)
 	# Convention: Each record contains tick + location (For "visible in same location" filtering)
 	event_log: list[dict[str, Any]] = field(default_factory=list)
 	_event_seq: int = 0
@@ -50,6 +49,32 @@ class WorldState:
 	interaction_log: list[dict[str, Any]] = field(default_factory=list)
 	_interaction_seq: int = 0
 
+	def _notify_memory_capture_interaction(self, record: dict[str, Any]) -> None:
+		services = getattr(self, "services", {}) or {}
+		memory_capture = services.get("memory_capture_system")
+		if memory_capture is None or not hasattr(memory_capture, "capture_from_interaction"):
+			return
+		try:
+			memory_capture.capture_from_interaction(self, dict(record))
+		except Exception as e:
+			raise RuntimeError(
+				f"memory_capture interaction failed: seq={int((record or {}).get('seq', 0) or 0)} "
+				f"actor_id={str((record or {}).get('actor_id', '') or '')}"
+			) from e
+
+	def _notify_memory_capture_event(self, record: dict[str, Any]) -> None:
+		services = getattr(self, "services", {}) or {}
+		memory_capture = services.get("memory_capture_system")
+		if memory_capture is None or not hasattr(memory_capture, "capture_from_event"):
+			return
+		try:
+			memory_capture.capture_from_event(self, dict(record))
+		except Exception as e:
+			raise RuntimeError(
+				f"memory_capture event failed: seq={int((record or {}).get('seq', 0) or 0)} "
+				f"actor_id={str((record or {}).get('actor_id', '') or '')}"
+			) from e
+
 	def record_interaction_attempt(
 		self,
 		actor_id: str,
@@ -58,13 +83,14 @@ class WorldState:
 		status: str,
 		reason: str = "",
 		recipe_id: str = "",
+		extra: dict[str, Any] | None = None,
 	) -> None:
 		"""
 		Record an action attempt (ActionAttempt / InteractionAttempt).
 
 		Convention fields:
 		- actor_id/target_id/verb/recipe_id/status/reason
-		- actor_name/target_name: Name snapshots (For multi-perspective rendering and replay after entity destruction)
+		- actor_name/target_name: Name snapshots (For multi-perspective rendering after entity destruction)
 		- location_id: Location snapshot (For "visible in same location" filtering)
 		"""
 
@@ -79,7 +105,15 @@ class WorldState:
 		target = self.get_entity_by_id(tid) if tid else None
 
 		actor_name = str(getattr(actor, "entity_name", "") or aid)
+		if actor is not None:
+			actor_setting = actor.get_component("AgentSetting")
+			if actor_setting is not None:
+				actor_name = str(getattr(actor_setting, "agent_name", "") or actor_name)
 		target_name = str(getattr(target, "entity_name", "") or tid)
+		if target is not None:
+			target_setting = target.get_component("AgentSetting")
+			if target_setting is not None:
+				target_name = str(getattr(target_setting, "agent_name", "") or target_name)
 
 		loc_id = ""
 		if aid:
@@ -88,8 +122,7 @@ class WorldState:
 				loc_id = str(getattr(loc, "location_id", "") or "")
 
 		self._interaction_seq += 1
-		self.interaction_log.append(
-			{
+		record: dict[str, Any] = {
 				"seq": int(self._interaction_seq),
 				"tick": int(getattr(self.game_time, "total_ticks", 0)),
 				"location_id": loc_id,
@@ -101,8 +134,12 @@ class WorldState:
 				"recipe_id": rid,
 				"status": st,
 				"reason": rs,
-			}
-		)
+		}
+		if isinstance(extra, dict) and extra:
+			for k, val in extra.items():
+				record[str(k)] = val
+		self.interaction_log.append(record)
+		self._notify_memory_capture_interaction(record)
 
 	def record_event(self, event: dict[str, Any], context: dict[str, Any] | None = None) -> None:
 		"""
@@ -117,7 +154,7 @@ class WorldState:
 			return
 
 		ctx = context or {}
-		actor_id = str(ctx.get("agent_id", "") or ctx.get("actor_id", "") or "")
+		actor_id = str(ctx.get("self_id", "") or ctx.get("actor_id", "") or "")
 
 		loc_id = ""
 		if actor_id:
@@ -126,15 +163,15 @@ class WorldState:
 				loc_id = str(getattr(loc, "location_id", "") or "")
 
 		self._event_seq += 1
-		self.event_log.append(
-			{
-				"seq": int(self._event_seq),
-				"tick": int(getattr(self.game_time, "total_ticks", 0)),
-				"location_id": loc_id,
-				"actor_id": actor_id,
-				"event": dict(event),
-			}
-		)
+		record = {
+			"seq": int(self._event_seq),
+			"tick": int(getattr(self.game_time, "total_ticks", 0)),
+			"location_id": loc_id,
+			"actor_id": actor_id,
+			"event": dict(event),
+		}
+		self.event_log.append(record)
+		self._notify_memory_capture_event(record)
 
 	def register_entity(self, entity: Entity) -> None:
 		if entity.entity_id in self.entities:
@@ -159,6 +196,17 @@ class WorldState:
 
 	def get_task_by_id(self, task_id: str) -> Task | None:
 		return self.tasks.get(task_id)
+
+	def register_path(self, path: Path) -> None:
+		if path.path_id in self.paths:
+			raise ValueError(f"path id already exists: {path.path_id}")
+		self.paths[path.path_id] = path
+
+	def get_path_by_id(self, path_id: str) -> Path | None:
+		return self.paths.get(path_id)
+
+	def get_paths_from(self, location_id: str) -> list[Path]:
+		return [p for p in self.paths.values() if p.from_location_id == location_id]
 
 	def unregister_task(self, task_id: str) -> None:
 		self.tasks.pop(task_id, None)
@@ -230,4 +278,3 @@ class WorldState:
 			collected.append(child_id)
 			collected.extend(self.collect_descendant_item_ids(child_id))
 		return collected
-

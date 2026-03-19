@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
+from newserver.log_manager import configure_logger, get_logger
 from newserver.data.loader import load_data_bundle
 from newserver.data.loader import load_json
+from newserver.data.checkpoint import resolve_checkpoint_file, restore_world_state_from_checkpoint
+from newserver.data.validator import validate_bundle
 from newserver.data.builder import build_world_state
 from newserver.sim.manager import WorldManager
 from newserver.sim.perception import PerceptionSystem
@@ -13,96 +17,198 @@ from newserver.agents.simple_policy import SimplePolicyActionProvider
 from newserver.agents.llm_action_provider import build_default_llm_provider
 
 
+def _load_runtime_config(project_root: Path) -> dict[str, str]:
+	config_path = project_root / "runtime_config.json"
+	if not config_path.exists():
+		raise FileNotFoundError(f"runtime config not found: {config_path}")
+	raw = json.loads(config_path.read_text(encoding="utf-8"))
+	env_map: dict[str, object] = {}
+	if isinstance(raw, dict):
+		if isinstance(raw.get("env"), dict):
+			env_map = dict(raw.get("env") or {})
+		else:
+			env_map = dict(raw)
+	out: dict[str, str] = {}
+	for k, v in env_map.items():
+		key = str(k or "").strip()
+		if not key:
+			continue
+		if v is None:
+			continue
+		out[key] = str(v)
+	return out
+
+
+def _cfg_get(cfg: dict[str, str], key: str, default: str = "") -> str:
+	return str(cfg.get(str(key), default) or default).strip()
+
+
+def _cfg_bool(cfg: dict[str, str], key: str, default: bool = False) -> bool:
+	v = _cfg_get(cfg, key, "1" if default else "0").lower()
+	return v in {"1", "true", "yes", "on"}
+
+
+def _cfg_int(cfg: dict[str, str], key: str, default: int) -> int:
+	raw = _cfg_get(cfg, key, str(default))
+	try:
+		return int(raw)
+	except Exception:
+		return int(default)
+
 
 def main() -> None:
-	# If you want to load from an external directory in the future, just change project_root to the external path.
 	project_root = Path(__file__).resolve().parent
+	cfg = _load_runtime_config(project_root)
+	configure_logger(
+		level=_cfg_get(cfg, "LOG_LEVEL", "info"),
+		categories=_cfg_get(cfg, "LOG_CATEGORIES", "*"),
+		json_mode=_cfg_bool(cfg, "LOG_JSON", False),
+		buffer_size=_cfg_int(cfg, "LOG_BUFFER_SIZE", 1000),
+	)
+	logger = get_logger()
 
 	bundle = load_data_bundle(project_root)
 
-	# Optional: Switch test world (default World.json)
-	# Example: $env:WORLD_JSON="World_LLM_Demo.json"
-	world_json_name = str(__import__("os").environ.get("WORLD_JSON", "") or "").strip()
+	world_json_name = _cfg_get(cfg, "WORLD_JSON", "")
 	if world_json_name:
 		world_path = project_root / "Data" / world_json_name
 		bundle.world = load_json(world_path)
-	result = build_world_state(bundle.world, bundle.entity_templates)
+	restore_file_env = _cfg_get(cfg, "CHECKPOINT_RESTORE_FILE", "")
+	restore_dir_env = _cfg_get(cfg, "CHECKPOINT_RESTORE_DIR", "")
+	restore_path = resolve_checkpoint_file(restore_file_env, restore_dir_env)
+	if restore_path is not None:
+		ws = restore_world_state_from_checkpoint(restore_path, bundle.entity_templates)
+		if not ws.entities or not ws.locations:
+			raise ValueError(f"Invalid checkpoint format or empty world state: {restore_path}")
+		logger.info("checkpoint", "restored", context={"path": str(restore_path), "tick": int(ws.game_time.total_ticks)})
+	else:
+		validation_mode = _cfg_get(cfg, "VALIDATION_MODE", "fast").lower() or "fast"
+		report = validate_bundle(bundle, mode=validation_mode)
+		if not report.ok:
+			raise ValueError("Data validation failed:\n" + "\n".join(report.errors))
+		logger.info("system", "data_validated", context={"mode": report.mode, "warnings": len(report.warnings)})
+		result = build_world_state(bundle.world, bundle.entity_templates, bundle.recipes)
+		ws = result.world_state
+	logger.info(
+		"system",
+		"world_loaded",
+		context={
+			"time": ws.game_time.time_to_string(),
+			"ticks": int(ws.game_time.total_ticks),
+			"locations": list(ws.locations.keys()),
+			"entities": list(ws.entities.keys()),
+		},
+	)
 
-	ws = result.world_state
-	print("World loaded.")
-	print("Time:", ws.game_time.time_to_string(), "ticks=", ws.game_time.total_ticks)
-	print("Locations:", list(ws.locations.keys()))
-	print("Entities:", list(ws.entities.keys()))
-
-	# Example: Output beatrice_01's location and visible entities
-	agent_id = "beatrice_01"
+	# Select first controllable agent in world
+	agent_id = ""
+	for ent in ws.entities.values():
+		if ent.get_component("AgentControlComponent") is not None:
+			agent_id = ent.entity_id
+			break
+	if not agent_id:
+		raise ValueError("No controllable agent found in world")
 	loc = ws.get_location_of_entity(agent_id)
-	print("Agent location:", loc.location_id if loc else None)
+	logger.info("system", "agent_location", context={"agent_id": agent_id, "location_id": loc.location_id if loc else None})
 
 	# Task progression regression test (Sleep 60 ticks)
 	agent = ws.get_entity_by_id(agent_id)
 	worker = agent.get_component("WorkerComponent") if agent else None
 	current_task_id = getattr(worker, "current_task_id", "") if worker else ""
-	print("Agent current_task_id:", current_task_id)
+	logger.info("system", "agent_task_state", context={"agent_id": agent_id, "current_task_id": str(current_task_id or "")})
 	if current_task_id:
 		task = ws.get_task_by_id(current_task_id)
 		if task:
-			print("Task loaded:", task.task_id, task.task_type, "progress=", task.progress, "/", task.required_progress, "progressor=", task.progressor_id or "<default>")
+			logger.info(
+				"task",
+				"task_loaded",
+				context={
+					"task_id": str(task.task_id),
+					"task_type": str(task.task_type),
+					"progress": float(task.progress),
+					"required_progress": float(task.required_progress),
+					"progressor": str(task.progressor_id or "<default>"),
+				},
+			)
 
 	# Print perception results once to confirm if container hiding is effective
 	perception = PerceptionSystem().perceive(ws, agent_id)
-	print("Perception visible entity ids:", [e.get("id") for e in perception.get("entities", [])])
-	print("Perception hidden_entity_count:", perception.get("hidden_entity_count"))
+	logger.info(
+		"interaction",
+		"perception_snapshot",
+		context={
+			"agent_id": agent_id,
+			"visible_entity_ids": [e.get("id") for e in perception.get("entities", [])],
+			"visible_entities": [
+				{
+					"id": e.get("id"),
+					"name": e.get("name"),
+					"tags": list(e.get("tags", []) or []),
+				}
+				for e in perception.get("entities", [])
+			],
+			"hidden_entity_count": perception.get("hidden_entity_count"),
+		},
+	)
 
-	# Optional: Continuous task regression test (avoid interfering with LLM demo)
-	# Example: $env:DEMO_DURATION_TEST="1"
-	if str(__import__("os").environ.get("DEMO_DURATION_TEST", "") or "").strip() == "1":
+	if _cfg_bool(cfg, "DEMO_DURATION_TEST", False):
 		if worker is not None:
 			worker.stop_task()
-		print("After stop_task, current_task_id:", getattr(worker, "current_task_id", "") if worker else "")
+		logger.info("task", "task_stopped_for_demo", context={"current_task_id": getattr(worker, "current_task_id", "") if worker else ""})
 		sleep_result = InteractionEngine(recipe_db=bundle.recipes).process_command(ws, agent_id, {"verb": "Sleep", "target_id": agent_id})
-		print("Sleep command result:", {"status": sleep_result.get("status"), "reason": sleep_result.get("reason"), "message": sleep_result.get("message")})
+		logger.info(
+			"interaction",
+			"sleep_command_result",
+			context={"status": sleep_result.get("status"), "reason": sleep_result.get("reason"), "message": sleep_result.get("message")},
+		)
 		if sleep_result.get("status") == "success":
 			for effect in sleep_result.get("effects", []):
 				WorldExecutor(entity_templates=bundle.entity_templates).execute(ws, effect, sleep_result.get("context", {}) or {})
-		print("After Sleep command, current_task_id:", getattr(worker, "current_task_id", "") if worker else "")
+		logger.info("task", "task_after_sleep", context={"current_task_id": getattr(worker, "current_task_id", "") if worker else ""})
 
-	# You can switch to two-layer LLM control (planner+grounder) via environment variable USE_LLM=1.
-	use_llm = str(__import__("os").environ.get("USE_LLM", "") or "").strip() == "1"
-	action_provider = build_default_llm_provider() if use_llm else SimplePolicyActionProvider()
-	max_ticks_env = str(__import__("os").environ.get("MAX_TICKS", "") or "").strip()
+	use_llm = _cfg_bool(cfg, "USE_LLM", False)
+	action_provider = build_default_llm_provider(cfg) if use_llm else SimplePolicyActionProvider()
+	max_ticks_env = _cfg_get(cfg, "MAX_TICKS", "")
 	max_ticks = int(max_ticks_env) if max_ticks_env else (15 if use_llm else 65)
+	checkpoint_enabled = _cfg_bool(cfg, "CHECKPOINT_EVERY_TICK", True)
+	checkpoint_include_logs = _cfg_bool(cfg, "CHECKPOINT_INCLUDE_LOGS", True)
+	dialogue_log_full = _cfg_bool(cfg, "DIALOGUE_LOG_FULL", False)
+	default_checkpoint_dir = project_root / "checkpoints" / (world_json_name or "default")
+	checkpoint_dir_env = _cfg_get(cfg, "CHECKPOINT_DIR", "")
+	checkpoint_dir = checkpoint_dir_env if checkpoint_dir_env else str(default_checkpoint_dir)
 	manager = WorldManager(
 		world_state=ws,
 		interaction_engine=InteractionEngine(recipe_db=bundle.recipes),
 		executor=WorldExecutor(entity_templates=bundle.entity_templates),
 		perception_system=PerceptionSystem(),
 		action_provider=action_provider,
+		reaction_rules=list((bundle.reactions or {}).get("rules", []) or []),
+		checkpoint_enabled=checkpoint_enabled,
+		checkpoint_dir=checkpoint_dir,
+		checkpoint_include_logs=checkpoint_include_logs,
+		dialogue_log_full=dialogue_log_full,
 	)
 	events = manager.run(max_ticks=max_ticks)
-	print("Events (filtered):")
-	verbose_events = str(__import__("os").environ.get("VERBOSE_EVENTS", "") or "").strip() == "1"
-	for e in events:
-		if not verbose_events:
-			# Only print events of interest to avoid flooding the screen
-			if e.get("type") in ["TickAdvanced", "TaskFinished", "DecisionCycleAborted", "ActionFailed", "ExecutorError"]:
-				print("  ", e)
-		# If verbose_events=1, they are already printed in real-time in the manager, so no repetition here
+	logger.info("system", "run_finished", context={"event_count": len(events), "ticks": int(ws.game_time.total_ticks)})
 
 	# LLM demo: Print a segment of "interactive narrative" to make behavior look more intuitive
 	if use_llm:
 		ps = PerceptionSystem()
-		interactions = ps.get_visible_interactions(ws, agent_id, max_records=20, tick_window=99999)
-		print("\nRecent interactions (rendered):")
-		for it in interactions:
-			print("  ", it.get("text"))
+		perception = ps.perceive(ws, agent_id)
+		logger.info(
+			"interaction",
+			"short_term_memory_rendered",
+			context={
+				"agent_id": agent_id,
+				"short_term_memory_text": str((perception or {}).get("short_term_memory_text", "") or ""),
+			},
+		)
 
 	# Finally check if the task has been cleaned up
 	if current_task_id:
 		task_after = ws.get_task_by_id(current_task_id)
-		print("Task after run:", task_after)
+		logger.info("task", "task_after_run", context={"task_id": str(current_task_id), "task": str(task_after)})
 
 
 if __name__ == "__main__":
 	main()
-

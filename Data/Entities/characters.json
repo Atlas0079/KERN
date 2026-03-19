@@ -1,6 +1,6 @@
 {
-    "beatrice": {
-        "name": "Beatrice",
+    "killer": {
+        "name": "Killer",
         "components": {
             "TagComponent": {
                 "tags": ["character", "agent"]
@@ -10,19 +10,115 @@
                 "max_energy": 100,
                 "max_nutrition": 100
             },
-            "AgentComponent": {
-                "agent_name": "Beatrice",
-                "personality_summary": "测试角色：当前目标是尽可能多地探索新交互。",
-                "common_knowledge_summary": "你是一个专用于系统测试的代理，优先尝试并覆盖尽可能多的交互与配方，以验证交互流程与执行器效果。"
+            "AgentSetting": {
+                "agent_name": "Killer",
+                "personality_summary": "你冷静、直接、目标导向，只关心完成击杀。",
+                "common_knowledge_summary": "你的唯一目标是立刻杀死同地点的受害者。"
             },
             "PerceptionComponent": {},
             "EquipmentComponent": {},
-            "LLMControlComponent": {},
+            "ContainerComponent": {
+                "slots": {
+                    "inventory": {
+                        "capacity_volume": 20,
+                        "capacity_count": 20,
+                        "accepted_tags": []
+                    }
+                }
+            },
+            "AgentControlComponent": {},
+            "MemoryComponent": {
+                "short_term_queue": [],
+                "short_term_max_entries": 25,
+                "mid_term_prep_queue": [],
+                "mid_term_prep_max_entries": 50,
+                "mid_term_queue": [],
+                "mid_term_max_entries": 20,
+                "last_mid_term_summary_tick": -1,
+                "mid_term_summary_cooldown_ticks": 15
+            },
+            "WorkerComponent": {},
             "TaskHostComponent": {},
             "DecisionArbiterComponent": {
+                "active_interrupt_preset_id": "default",
+                "interrupt_preset_descriptions": {
+                    "default": "默认预设：启用 Idle、LowNutrition、PerceptionChange 与 CorpseSighted 中断。"
+                },
+                "interrupt_presets": {
+                    "default": {
+                        "Idle": { "enabled": true },
+                        "LowNutrition": { "enabled": true, "threshold_on": 50, "threshold_off": 65, "cooldown_ticks": 10 },
+                        "PerceptionChange": { "enabled": true, "trigger_on_agent_sighted": true, "trigger_on_agent_left": true },
+                        "CorpseSighted": { "enabled": true, "trigger_on_new_corpse": true, "cooldown_ticks": 3 }
+                    }
+                },
                 "rules": [
                     { "type": "Idle", "priority": 999 },
-                    { "type": "LowNutrition", "priority": 10, "threshold": 50 }
+                    { "type": "LowNutrition", "priority": 10, "threshold": 50 },
+                    { "type": "CorpseSighted", "priority": 30, "trigger_on_new_corpse": true },
+                    { "type": "PerceptionChange", "priority": 50 }
+                ]
+            }
+        }
+    },
+    "human": {
+        "name": "Human",
+        "components": {
+            "TagComponent": {
+                "tags": ["character", "agent"]
+            },
+            "CreatureComponent": {
+                "max_hp": 100,
+                "max_energy": 100,
+                "max_nutrition": 100
+            },
+            "AgentSetting": {
+                "agent_name": "Human",
+                "personality_summary": "你是一个普通人，会优先进行自然互动与探索。",
+                "common_knowledge_summary": "你会根据所见所闻做出合理行动，优先保持安全并与他人交流。"
+            },
+            "PerceptionComponent": {},
+            "EquipmentComponent": {},
+            "ContainerComponent": {
+                "slots": {
+                    "inventory": {
+                        "capacity_volume": 20,
+                        "capacity_count": 20,
+                        "accepted_tags": []
+                    }
+                }
+            },
+            "AgentControlComponent": {},
+            "MemoryComponent": {
+                "short_term_queue": [],
+                "short_term_max_entries": 25,
+                "mid_term_prep_queue": [],
+                "mid_term_prep_max_entries": 50,
+                "mid_term_queue": [],
+                "mid_term_max_entries": 20,
+                "last_mid_term_summary_tick": -1,
+                "mid_term_summary_cooldown_ticks": 15
+            },
+            "WorkerComponent": {},
+            "TaskHostComponent": {},
+            "DecisionArbiterComponent": {
+                "active_interrupt_preset_id": "default",
+                "interrupt_preset_descriptions": {
+                    "default": "默认预设：启用 Idle、LowNutrition、PerceptionChange 与 CorpseSighted 中断。"
+                },
+                "interrupt_presets": {
+                    "default": {
+                        "Idle": { "enabled": true },
+                        "LowNutrition": { "enabled": true, "threshold_on": 50, "threshold_off": 65, "cooldown_ticks": 10 },
+                        "PerceptionChange": { "enabled": true, "trigger_on_agent_sighted": true, "trigger_on_agent_left": true },
+                        "CorpseSighted": { "enabled": true, "trigger_on_new_corpse": true, "cooldown_ticks": 3 }
+                    }
+                },
+                "rules": [
+                    { "type": "Idle", "priority": 999 },
+                    { "type": "LowNutrition", "priority": 10, "threshold": 50 },
+                    { "type": "CorpseSighted", "priority": 30, "trigger_on_new_corpse": true },
+                    { "type": "PerceptionChange", "priority": 50 }
                 ]
             }
         }

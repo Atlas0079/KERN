@@ -9,7 +9,7 @@
                 "effects_on_consume": [
                     {
                         "effect": "ModifyProperty",
-                        "target": "agent",
+                        "target": "self",
                         "component": "CreatureComponent",
                         "property": "current_nutrition",
                         "change": 25
@@ -35,6 +35,110 @@
                         "accepted_tags": ["bindable", "tool"]
                     }
                 }
+            }
+        }
+    },
+    "WoodenBox": {
+        "name": "Wooden Box",
+        "components": {
+            "TagComponent": {
+                "tags": ["container", "box"]
+            },
+            "ContainerComponent": {
+                "slots": {
+                    "main": {
+                        "capacity_volume": 50,
+                        "accepted_tags": [],
+                        "transparent": true
+                    }
+                }
+            }
+        }
+    },
+    "RevolverPistol": {
+        "name": "Revolver Pistol",
+        "components": {
+            "TagComponent": {
+                "tags": ["item", "weapon", "gun", "revolver"]
+            },
+            "ConditionComponent": {
+                "conditions": ["revolver_unloaded"]
+            }
+        }
+    },
+    "ShockPistol": {
+        "name": "Shock Pistol",
+        "components": {
+            "TagComponent": {
+                "tags": ["item", "weapon", "gun", "shock_pistol"]
+            },
+            "ConditionComponent": {
+                "conditions": ["shock_charged"]
+            }
+        }
+    },
+    "PistolBullet": {
+        "name": "Pistol Bullet",
+        "components": {
+            "TagComponent": {
+                "tags": ["item", "ammo", "bullet"]
+            }
+        }
+    },
+    "SmartTablet": {
+        "name": "Smart Tablet",
+        "components": {
+            "TagComponent": {
+                "tags": ["item", "task_tool", "task_tool_a"]
+            }
+        }
+    },
+    "Toolbox": {
+        "name": "Toolbox",
+        "components": {
+            "TagComponent": {
+                "tags": ["item", "task_tool", "task_tool_b"]
+            }
+        }
+    },
+    "ResearchRecord": {
+        "name": "Research Record",
+        "components": {
+            "TagComponent": {
+                "tags": ["item", "task_tool", "task_tool_c"]
+            }
+        }
+    },
+    "TaskStationA": {
+        "name": "Task Station A",
+        "components": {
+            "TagComponent": {
+                "tags": ["task_station", "task_station_a"]
+            },
+            "ConditionComponent": {
+                "conditions": []
+            }
+        }
+    },
+    "TaskStationB": {
+        "name": "Task Station B",
+        "components": {
+            "TagComponent": {
+                "tags": ["task_station", "task_station_b"]
+            },
+            "ConditionComponent": {
+                "conditions": []
+            }
+        }
+    },
+    "TaskStationC": {
+        "name": "Task Station C",
+        "components": {
+            "TagComponent": {
+                "tags": ["task_station", "task_station_c"]
+            },
+            "ConditionComponent": {
+                "conditions": []
             }
         }
     }

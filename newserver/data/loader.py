@@ -14,6 +14,7 @@ class DataBundle:
 
 	entity_templates: dict[str, Any]
 	recipes: dict[str, Any]
+	reactions: dict[str, Any]
 	world: dict[str, Any]
 
 
@@ -41,6 +42,8 @@ def load_data_bundle(project_root: Path) -> DataBundle:
 
 	world = load_json(data_dir / "World.json")
 	recipes = load_json(data_dir / "Recipes.json")
+	reactions_path = data_dir / "Reactions.json"
+	reactions = load_json(reactions_path) if reactions_path.exists() else {"rules": []}
 
 	# Automatically load Entities/*.json and merge
 	# Consistent with Godot DataManager.merge: Later loaded overwrites earlier loaded for same-name keys
@@ -53,6 +56,6 @@ def load_data_bundle(project_root: Path) -> DataBundle:
 	return DataBundle(
 		entity_templates=entity_templates,
 		recipes=recipes,
+		reactions=reactions if isinstance(reactions, dict) else {"rules": []},
 		world=world,
 	)
-

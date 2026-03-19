@@ -20,3 +20,10 @@ venv.bak/
 
 # Logs
 *.log
+
+# Local runtime config with secrets
+runtime_config.json
+
+# Runtime artifacts
+checkpoints/
+Saves/

@@ -1,4 +1,211 @@
 {
+    "weapon_reload_revolver": {
+        "verb": "ReloadRevolver",
+        "planner_hint": "给左轮装弹，通常用于准备后续射击。",
+        "grounder_hint": "parameters 必须包含 weapon_id(左轮id) 与 bullet_id(子弹id)，两者都应来自 Inventory；weapon 需要带 revolver_unloaded。",
+        "target_tags": ["revolver"],
+        "narrative_success": "{actor}给左轮装填了一发子弹",
+        "narrative_fail": "{actor}想给左轮装填子弹，但失败了：{reason}",
+        "selector": {
+            "type": "has_tag",
+            "target": "param:bullet_id",
+            "tag": "bullet"
+        },
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "inventory_contains",
+                    "owner": "self",
+                    "item_ref": "target"
+                },
+                {
+                    "type": "inventory_contains",
+                    "owner": "self",
+                    "item_ref": "param:bullet_id"
+                },
+                {
+                    "type": "has_condition",
+                    "target": "target",
+                    "condition_id": "revolver_unloaded"
+                }
+            ]
+        },
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "DestroyEntity",
+                "target": "param:bullet_id"
+            },
+            {
+                "effect": "AddCondition",
+                "target": "target",
+                "condition_id": "revolver_loaded"
+            },
+            {
+                "effect": "RemoveCondition",
+                "target": "target",
+                "condition_id": "revolver_unloaded"
+            }
+        ]
+    },
+    "weapon_shoot_revolver": {
+        "verb": "ShootRevolver",
+        "planner_hint": "使用已上膛的左轮对目标进行致命射击。",
+        "grounder_hint": "parameters 必须包含 weapon_id；weapon_id 需要是 Inventory 中带 revolver_loaded 条件的左轮。",
+        "target_tags": ["agent"],
+        "narrative_success": "{actor}用左轮射杀了{target}",
+        "narrative_fail": "{actor}想用左轮射击{target}，但失败了：{reason}",
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "has_tag",
+                    "target": "param:weapon_id",
+                    "tag": "revolver"
+                },
+                {
+                    "type": "inventory_contains",
+                    "owner": "self",
+                    "item_ref": "param:weapon_id"
+                },
+                {
+                    "type": "has_condition",
+                    "target": "param:weapon_id",
+                    "condition_id": "revolver_loaded"
+                }
+            ]
+        },
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "RemoveCondition",
+                "target": "param:weapon_id",
+                "condition_id": "revolver_loaded"
+            },
+            {
+                "effect": "AddCondition",
+                "target": "param:weapon_id",
+                "condition_id": "revolver_unloaded"
+            },
+            {
+                "effect": "ModifyProperty",
+                "target": "target",
+                "component": "CreatureComponent",
+                "property": "current_hp",
+                "change": -9999
+            }
+        ]
+    },
+    "weapon_shoot_shock_pistol": {
+        "verb": "ShootShockPistol",
+        "planner_hint": "使用电击手枪杀死目标，受冷却限制。",
+        "grounder_hint": "parameters 必须包含 weapon_id，且 weapon_id 必须是 Inventory 中带 shock_charged 条件的 shock_pistol。",
+        "target_tags": ["agent"],
+        "narrative_success": "{actor}用电击手枪击杀了{target}",
+        "narrative_fail": "{actor}想用电击手枪射击{target}，但失败了：{reason}",
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "has_tag",
+                    "target": "param:weapon_id",
+                    "tag": "shock_pistol"
+                },
+                {
+                    "type": "inventory_contains",
+                    "owner": "self",
+                    "item_ref": "param:weapon_id"
+                },
+                {
+                    "type": "has_condition",
+                    "target": "param:weapon_id",
+                    "condition_id": "shock_charged"
+                },
+                {
+                    "type": "check_cooldown",
+                    "target": "param:weapon_id",
+                    "key": "shock_shot",
+                    "duration": 15
+                }
+            ]
+        },
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "ModifyProperty",
+                "target": "target",
+                "component": "CreatureComponent",
+                "property": "current_hp",
+                "change": -9999
+            },
+            {
+                "effect": "SetCooldown",
+                "target": "param:weapon_id",
+                "key": "shock_shot"
+            },
+            {
+                "effect": "RemoveCondition",
+                "target": "param:weapon_id",
+                "condition_id": "shock_charged"
+            },
+            {
+                "effect": "AddCondition",
+                "target": "param:weapon_id",
+                "condition_id": "shock_uncharged"
+            }
+        ]
+    },
+    "weapon_recharge_shock_pistol": {
+        "verb": "RechargeShockPistol",
+        "planner_hint": "为电击手枪重新充电，使其可再次射击。",
+        "grounder_hint": "target_id 必须是 Inventory 中的 shock_pistol，且应带 shock_uncharged；冷却结束后再充电。",
+        "target_tags": ["shock_pistol"],
+        "narrative_success": "{actor}给电击手枪完成了充电",
+        "narrative_fail": "{actor}想给电击手枪充电，但失败了：{reason}",
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "inventory_contains",
+                    "owner": "self",
+                    "item_ref": "target"
+                },
+                {
+                    "type": "has_condition",
+                    "target": "target",
+                    "condition_id": "shock_uncharged"
+                },
+                {
+                    "type": "check_cooldown",
+                    "target": "target",
+                    "key": "shock_shot",
+                    "duration": 15
+                }
+            ]
+        },
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "RemoveCondition",
+                "target": "target",
+                "condition_id": "shock_uncharged"
+            },
+            {
+                "effect": "AddCondition",
+                "target": "target",
+                "condition_id": "shock_charged"
+            }
+        ]
+    },
     "generic_consume": {
         "verb": "Consume",
         "target_tags": ["edible"],
@@ -71,5 +278,228 @@
             },
             "tick_effects": []
         }
+    },
+    "generic_travel": {
+        "verb": "Travel",
+        "target_tags": ["agent"],
+        "narrative_success": "{actor}开始前往{to_location_id}",
+        "narrative_fail": "{actor}想前往{to_location_id}，但失败了：{reason}",
+        "process": {
+            "required_progress": 1
+        },
+        "outputs": [
+            {
+                "effect": "MoveEntity",
+                "entity_ref": "self",
+                "from_ref": "param:source_location_id",
+                "to_ref": "param:to_location_id"
+            }
+        ],
+        "progression": {
+            "progressor": "Linear",
+            "params": {
+                "base_progress_per_tick": 1.0,
+                "progress_contributors": []
+            },
+            "tick_effects": []
+        }
+    },
+    "generic_talk": {
+        "verb": "Talk",
+        "planner_hint": "发起一次同地点群体对话，并给出一句开场白。对话会按轮次在当前地点的所有可对话角色之间展开。",
+        "grounder_hint": "不得提供 target_id；parameters 必须包含 text（开场白，非空字符串）。执行时该 text 会作为第一轮发言，然后同地点其他角色按轮次继续。",
+        "target_tags": ["agent"],
+        "narrative_success": "{actor}开始了一段对话",
+        "narrative_fail": "{actor}想发起对话，但失败了：{reason}",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "StartConversation",
+                "max_utterances_per_tick": 4
+            }
+        ]
+    },
+    "generic_give": {
+        "verb": "Give",
+        "planner_hint": "把背包中的物品交给同地点可见角色，用于协作分工。",
+        "grounder_hint": "target_id 必须是同地点可见 agent；parameters 必须包含 item_id，且 item_id 必须在自己的 Inventory 中。",
+        "target_tags": ["agent"],
+        "narrative_success": "{actor}把物品交给了{target}",
+        "narrative_fail": "{actor}想把物品交给{target}，但失败了：{reason}",
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "inventory_contains",
+                    "owner": "self",
+                    "item_ref": "param:item_id"
+                }
+            ]
+        },
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "MoveEntity",
+                "entity_ref": "param:item_id",
+                "from_ref": "self",
+                "to_ref": "target"
+            }
+        ]
+    },
+    "generic_take_item": {
+        "verb": "TakeItem",
+        "planner_hint": "拾取同地点可见物品（包括透明容器中可见物品）到自己的背包。",
+        "grounder_hint": "target_id 必须是可见 item；parameters 必须包含 source_id。若目标在容器中，source_id 填 visible_entities 里的 contained_in；若目标在地面，source_id 填当前 location_id。",
+        "target_tags": ["item"],
+        "narrative_success": "{actor}拿起了{target}",
+        "narrative_fail": "{actor}想拿起{target}，但失败了：{reason}",
+        "condition": {
+            "type": "not",
+            "condition": {
+                "type": "inventory_contains",
+                "owner": "self",
+                "item_ref": "target"
+            }
+        },
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "MoveEntity",
+                "entity_ref": "target",
+                "from_ref": "param:source_id",
+                "to_ref": "self"
+            }
+        ]
+    },
+    "meta_switch_interrupt_preset": {
+        "verb": "SwitchInterruptPreset",
+        "planner_hint": "切换当前中断预设，改变后续中断行为策略。",
+        "grounder_hint": "meta 动作，不要提供 target_id；parameters 必须包含 preset_id。",
+        "is_meta": true,
+        "target_tags": ["agent"],
+        "narrative_success": "{actor}切换了中断预设",
+        "narrative_fail": "{actor}想切换中断预设，但失败了：{reason}",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "ApplyMetaAction",
+                "target": "self",
+                "action_type": "SwitchInterruptPreset",
+                "params": {
+                    "preset_id": "{preset_id}"
+                }
+            }
+        ]
+    },
+    "meta_update_interrupt_rule_param": {
+        "verb": "UpdateInterruptRuleParam",
+        "planner_hint": "调整中断规则参数以临时改变决策行为。",
+        "grounder_hint": "meta 动作，不要提供 target_id；parameters 必须包含 preset_id、rule_type、key、value。",
+        "is_meta": true,
+        "target_tags": ["agent"],
+        "narrative_success": "{actor}调整了中断规则参数",
+        "narrative_fail": "{actor}想调整中断规则参数，但失败了：{reason}",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "ApplyMetaAction",
+                "target": "self",
+                "action_type": "UpdateInterruptRuleParam",
+                "params": {
+                    "preset_id": "{preset_id}",
+                    "rule_type": "{rule_type}",
+                    "key": "{key}",
+                    "value": "{value}"
+                }
+            }
+        ]
+    },
+    "meta_inspect_interrupt_presets": {
+        "verb": "InspectInterruptPresets",
+        "planner_hint": "查看中断预设细节，便于后续切换或调参。",
+        "grounder_hint": "meta 动作，不要提供 target_id；parameters 可选 preset_id。",
+        "is_meta": true,
+        "target_tags": ["agent"],
+        "narrative_success": "{actor}查看了中断预设的详细配置",
+        "narrative_fail": "{actor}想查看中断预设的详细配置，但失败了：{reason}",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "AttachInterruptPresetDetails"
+            }
+        ]
+    },
+    "meta_commit_memory": {
+        "verb": "CommitMemory",
+        "planner_hint": "把当前值得保留的信息（使用中文）写入中期记忆，供后续回忆与决策使用。",
+        "grounder_hint": "meta 动作，不要提供 target_id；parameters 必须包含 text (必须使用中文)，可选 importance(0~1)。",
+        "is_meta": true,
+        "target_tags": ["agent"],
+        "narrative_success": "{actor}记下了一条中期记忆",
+        "narrative_fail": "{actor}想记录一条中期记忆，但失败了：{reason}",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "AddMemoryNote",
+                "target": "self",
+                "text": "{text}",
+                "importance": "{importance}"
+            }
+        ]
+    },
+    "interaction_accept_task": {
+        "verb": "AcceptTask",
+        "planner_hint": "从任务宿主（如箱子、任务站）接取它提供的任务并开始执行。用于共享的翻找任务：同一箱子只有一个任务，进度共享。TODO：后续支持在 parameters 里指定 task_id 或 task_type 以精确选择任务。",
+        "grounder_hint": "target_id 必须是可见的任务宿主（通常是 container）。parameters 为空。",
+        "target_tags": ["container", "task_station"],
+        "target_tags_match": "any",
+        "narrative_success": "{actor}接取了{target}的任务",
+        "narrative_fail": "{actor}想接取{target}的任务，但失败了：{reason}",
+        "condition": {
+            "type": "has_component",
+            "target": "target",
+            "component": "TaskHostComponent"
+        },
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "AcceptTask",
+                "target": "target"
+            }
+        ]
+    },
+    "interaction_close_container": {
+        "verb": "CloseContainer",
+        "target_tags": ["container"],
+        "narrative_success": "{actor}关闭了{target}",
+        "narrative_fail": "{actor}想关闭{target}，但失败了：{reason}",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "ModifyProperty",
+                "target": "target",
+                "component": "ContainerComponent",
+                "property": "slots.main.config.transparent",
+                "value": false
+            }
+        ]
     }
 } 

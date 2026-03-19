@@ -4,15 +4,17 @@ import json
 import os
 import time
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Protocol
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
+from ..log_manager import get_logger
 
 
-DEFAULT_BASE_URL = os.environ.get("LLM_BASE_URL", "https://www.packyapi.com/")
+
+DEFAULT_BASE_URL = os.environ.get("LLM_BASE_URL", "https://api.aabao.top")
 DEFAULT_API_PREFIX = os.environ.get("LLM_API_PREFIX", "/v1")
-DEFAULT_API_KEY = os.environ.get("LLM_API_KEY", "")
+DEFAULT_API_KEY = os.environ.get("LLM_API_KEY", "REPLACE_ME")
 
 
 class LLMRequestError(RuntimeError):
@@ -21,10 +23,68 @@ class LLMRequestError(RuntimeError):
 	"""
 
 
+class ChatClient(Protocol):
+	def chat_text(
+		self,
+		messages: list[dict[str, Any]],
+		model: str,
+		temperature: float = 0.2,
+		max_tokens: int | None = None,
+		response_format: dict[str, Any] | None = None,
+		extra: dict[str, Any] | None = None,
+	) -> str:
+		...
+
+
 def _join_url(base_url: str, path: str) -> str:
 	b = str(base_url or "").rstrip("/")
 	p = str(path or "").lstrip("/")
 	return f"{b}/{p}"
+
+
+def _parse_sse_chat_chunks(raw: str) -> dict[str, Any]:
+	text_parts: list[str] = []
+	last_model = ""
+	last_id = ""
+	last_created: int | None = None
+	for line in str(raw or "").splitlines():
+		s = str(line or "").strip()
+		if not s.startswith("data:"):
+			continue
+		payload = s[5:].strip()
+		if not payload or payload == "[DONE]":
+			continue
+		try:
+			obj = json.loads(payload)
+		except Exception as e:
+			raise LLMRequestError(f"invalid sse json chunk: {payload}") from e
+		if isinstance(obj, dict):
+			last_model = str(obj.get("model", last_model) or last_model)
+			last_id = str(obj.get("id", last_id) or last_id)
+			created = obj.get("created", None)
+			try:
+				if created is not None:
+					last_created = int(created)
+			except Exception as e:
+				raise LLMRequestError(f"invalid sse created field: {created}") from e
+			choices = obj.get("choices", [])
+			if isinstance(choices, list):
+				for c in choices:
+					if not isinstance(c, dict):
+						continue
+					delta = c.get("delta", {}) or {}
+					if isinstance(delta, dict):
+						content = delta.get("content", "")
+						if content is not None:
+							text_parts.append(str(content))
+	content_text = "".join(text_parts)
+	return {
+		"id": last_id,
+		"model": last_model,
+		"created": last_created if last_created is not None else int(time.time()),
+		"object": "chat.completion",
+		"choices": [{"index": 0, "message": {"role": "assistant", "content": content_text}, "finish_reason": "stop"}],
+	}
 
 
 @dataclass
@@ -100,12 +160,16 @@ class OpenAICompatClient:
 			headers["Authorization"] = f"Bearer {self.api_key}"
 
 		last_err: Exception | None = None
-		for attempt in range(int(self.max_retries) + 1):
+		max_retries = int(self.max_retries)
+		for attempt in range(max_retries + 1):
 			try:
 				req = Request(url=url, data=body, headers=headers, method="POST")
 				with urlopen(req, timeout=int(self.timeout_seconds)) as resp:
 					raw = resp.read().decode("utf-8", errors="replace")
-					data = json.loads(raw)
+					if str(raw).lstrip().startswith("data:"):
+						data = _parse_sse_chat_chunks(raw)
+					else:
+						data = json.loads(raw)
 					if not isinstance(data, dict):
 						raise LLMRequestError("invalid response json: not an object")
 					return data
@@ -119,18 +183,41 @@ class OpenAICompatClient:
 				# 4xx usually not retryable; 5xx/429 retryable
 				code = int(getattr(e, "code", 0) or 0)
 				if code and 400 <= code < 500 and code not in [429]:
-					raise LLMRequestError(msg) from e
-				if attempt >= int(self.max_retries):
-					raise LLMRequestError(msg) from e
+					raise LLMRequestError(f"{msg} attempts={attempt + 1}/{max_retries + 1}") from e
+				if attempt >= max_retries:
+					raise LLMRequestError(f"{msg} attempts={attempt + 1}/{max_retries + 1}") from e
+				sleep_seconds = float(self.retry_backoff_seconds) * float(2**attempt)
+				get_logger().warn(
+					"llm",
+					"request_retry",
+					context={
+						"attempt": int(attempt + 1),
+						"max_attempts": int(max_retries + 1),
+						"sleep_seconds": float(sleep_seconds),
+						"http_code": int(code),
+					},
+				)
 			except (URLError, TimeoutError, json.JSONDecodeError) as e:
 				last_err = e
-				if attempt >= int(self.max_retries):
-					raise LLMRequestError(f"LLM request failed: {e}") from e
+				if attempt >= max_retries:
+					raise LLMRequestError(f"LLM request failed after {attempt + 1}/{max_retries + 1} attempts: {e}") from e
+				sleep_seconds = float(self.retry_backoff_seconds) * float(2**attempt)
+				get_logger().warn(
+					"llm",
+					"request_retry",
+					context={
+						"attempt": int(attempt + 1),
+						"max_attempts": int(max_retries + 1),
+						"sleep_seconds": float(sleep_seconds),
+						"error": str(e),
+						"error_type": str(getattr(e, "__class__", type("x", (), {})).__name__ or ""),
+					},
+				)
 
 			# retry backoff
 			time.sleep(float(self.retry_backoff_seconds) * float(2**attempt))
 
-		raise LLMRequestError(f"LLM request failed: {last_err}")
+		raise LLMRequestError(f"LLM request failed after {max_retries + 1}/{max_retries + 1} attempts: {last_err}")
 
 	def chat_text(
 		self,
@@ -164,27 +251,6 @@ class OpenAICompatClient:
 		return str(content)
 
 
-def demo_call() -> None:
-	"""
-	Minimal call example (Only for local debug/verify third-party API compatibility).
-
-	Usage:
-	- Fill your third-party platform info in DEFAULT_BASE_URL/DEFAULT_API_KEY (or pass during instantiation)
-	- Run a simple chat request, print returned text
-	"""
-
-	client = OpenAICompatClient()
-	text = client.chat_text(
-		messages=[
-			{"role": "system", "content": "You are a short answer assistant."},
-			{"role": "user", "content": "Explain what tick-based simulation is in one sentence."},
-		],
-		model="REPLACE_ME_MODEL",
-		temperature=0.2,
-	)
-	print(text)
-
-
 @dataclass
 class DualModelLLM:
 	"""
@@ -194,7 +260,7 @@ class DualModelLLM:
 	- model name is completely custom (Depends on model ID supported by third-party platform).
 	"""
 
-	client: OpenAICompatClient
+	client: ChatClient
 	planner_model: str
 	grounder_model: str
 
@@ -220,4 +286,3 @@ class DualModelLLM:
 			max_tokens=max_tokens,
 			response_format=response_format,
 		)
-

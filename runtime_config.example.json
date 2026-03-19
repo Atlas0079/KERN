@@ -1,0 +1,22 @@
+{
+  "env": {
+    "USE_LLM": "1",
+    "LLM_PROVIDER": "openai_compat",
+    "LLM_BASE_URL": "https://api.aabao.top",
+    "LLM_API_PREFIX": "/v1",
+    "LLM_API_KEY": "REPLACE_ME",
+    "LLM_PLANNER_MODEL": "gpt-4o-mini",
+    "LLM_GROUNDER_MODEL": "gpt-4o-mini",
+    "LOG_LEVEL": "warn",
+    "LOG_CATEGORIES": "llm,interaction,executor,task",
+    "LLM_TIMEOUT_SECONDS": "20",
+    "LLM_MAX_RETRIES": "2",
+    "LLM_RETRY_BACKOFF_SECONDS": "1.5",
+    "LLM_FAILURE_THRESHOLD": "3",
+    "LLM_FAILURE_COOLDOWN_TICKS": "60",
+    "LLM_DEBUG_VIEW": "",
+    "DIALOGUE_LOG_FULL": "1",
+    "WORLD_JSON": "World_SpaceWerewolf.json",
+    "MAX_TICKS": "50"
+  }
+}
