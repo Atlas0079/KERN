@@ -28,6 +28,7 @@
 - 当前目标/子目标：{{current_goal}}
 - 当前计划（若有）：{{current_plan}}
 - 当前任务占用（若有 current_task_id）：{{current_task_id}}
+- 当前任务详情：{{current_task_summary}}
 - 当前中断预设（active_interrupt_preset_id）：{{active_interrupt_preset_id}}
 - 可用中断预设概览（id: 描述）：
 {{interrupt_preset_summaries}}

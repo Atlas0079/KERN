@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import os
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any
@@ -14,10 +13,6 @@ _LEVEL_VALUE = {
 	"warn": 40,
 	"error": 50,
 }
-
-
-def _parse_bool(v: str) -> bool:
-	return str(v or "").strip().lower() in {"1", "true", "yes", "on"}
 
 
 def _normalize_level(v: str) -> str:
@@ -46,14 +41,7 @@ class LogManager:
 
 	@classmethod
 	def from_env(cls) -> "LogManager":
-		level = _normalize_level(os.environ.get("LOG_LEVEL", "info"))
-		categories = _parse_categories(os.environ.get("LOG_CATEGORIES", "*"))
-		json_mode = _parse_bool(os.environ.get("LOG_JSON", "0"))
-		size_text = str(os.environ.get("LOG_BUFFER_SIZE", "1000") or "").strip()
-		buffer_size = int(size_text) if size_text else 1000
-		if buffer_size <= 0:
-			buffer_size = 1000
-		return cls(level=level, categories=categories, json_mode=json_mode, buffer_size=buffer_size)
+		return cls(level="info", categories={"*"}, json_mode=False, buffer_size=1000)
 
 	def enabled(self, level: str, category: str) -> bool:
 		lv = _normalize_level(level)

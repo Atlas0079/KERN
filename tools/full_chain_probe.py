@@ -18,7 +18,7 @@ from newserver.entity_ref_resolver import resolve_entity
 from newserver.effect_contract import EFFECT_TYPES
 from newserver.executor._effect_binder import BindError, bind_effect_input, get_binder_effect_types
 from newserver.executor.executor import WorldExecutor, get_executor_effect_types
-from newserver.models.components import CooldownComponent, TagComponent, UnknownComponent
+from newserver.models.components import TagComponent, UnknownComponent
 from newserver.interaction.engine import InteractionEngine
 from newserver.sim.trigger_system import TriggerSystem
 
@@ -221,16 +221,16 @@ def _guess_param_value(ws: Any, key: str, ctx: dict[str, Any]) -> Any:
 def _build_context_for_node(ws: Any, node: dict[str, Any]) -> dict[str, Any]:
 	ctx = _build_base_context(ws)
 	eff = str(node.get("effect", "") or "")
-	if eff in {"AddCondition", "RemoveCondition"}:
-		cond = str(node.get("condition_id", "") or "")
+	if eff in {"AddStatus", "RemoveStatus"}:
+		status = str(node.get("status_id", "") or "")
 		candidates = _all_entities(ws)
 		for ent in candidates:
-			comp = ent.get_component("ConditionComponent")
+			comp = ent.get_component("StatusComponent")
 			if comp is None:
 				continue
-			if "revolver" in cond and not ent.has_tag("revolver"):
+			if "revolver" in status and not ent.has_tag("revolver"):
 				continue
-			if "shock" in cond and not ent.has_tag("shock_pistol"):
+			if "shock" in status and not ent.has_tag("shock_pistol"):
 				continue
 			ctx["target_id"] = str(ent.entity_id)
 			break
@@ -285,17 +285,17 @@ def _fill_templates(node: Any, params: dict[str, Any]) -> Any:
 	return node
 
 
-def _ensure_condition_component(ent: Any) -> list[str] | None:
+def _ensure_status_component(ent: Any) -> list[str] | None:
 	if ent is None:
 		return None
-	comp = ent.get_component("ConditionComponent")
+	comp = ent.get_component("StatusComponent")
 	if comp is None:
-		comp = UnknownComponent(data={"conditions": []})
-		ent.components["ConditionComponent"] = comp
+		comp = UnknownComponent(data={"statuses": []})
+		ent.components["StatusComponent"] = comp
 	if hasattr(comp, "data") and isinstance(getattr(comp, "data"), dict):
-		comp.data.setdefault("conditions", [])
-		if isinstance(comp.data["conditions"], list):
-			return comp.data["conditions"]
+		comp.data.setdefault("statuses", [])
+		if isinstance(comp.data["statuses"], list):
+			return comp.data["statuses"]
 	return None
 
 
@@ -382,29 +382,17 @@ def _satisfy_condition(ws: Any, cond: dict[str, Any], ctx: dict[str, Any]) -> No
 				if tag not in tc.tags:
 					tc.tags.append(tag)
 		return
-	if c_type == "has_condition":
+	if c_type == "has_status":
 		target = resolve_entity(ws, cond.get("target", "self"), ctx, allow_literal=True)
-		cid = str(cond.get("condition_id", "") or "")
-		lst = _ensure_condition_component(target)
-		if lst is not None and cid and cid not in lst:
-			lst.append(cid)
+		sid = str(cond.get("status_id", "") or "")
+		lst = _ensure_status_component(target)
+		if lst is not None and sid and sid not in lst:
+			lst.append(sid)
 		return
 	if c_type == "inventory_contains":
 		owner = resolve_entity(ws, cond.get("owner", "self"), ctx, allow_literal=True)
 		item = resolve_entity(ws, cond.get("item_ref", "target"), ctx, allow_literal=True)
 		_ensure_inventory_contains(ws, owner, item)
-		return
-	if c_type == "check_cooldown":
-		target = resolve_entity(ws, cond.get("target", "self"), ctx, allow_literal=True)
-		key = str(cond.get("key", "") or "")
-		duration = int(cond.get("duration", 0) or 0)
-		if target is not None and key:
-			comp = target.get_component("CooldownComponent")
-			if not isinstance(comp, CooldownComponent):
-				comp = CooldownComponent(cooldowns={})
-				target.components["CooldownComponent"] = comp
-			now = int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
-			comp.cooldowns[key] = int(now - duration - 1)
 		return
 	if c_type == "compare_property":
 		target = resolve_entity(ws, cond.get("target", "self"), ctx, allow_literal=True)
@@ -451,7 +439,7 @@ def _probe_effect_bind_and_exec(ws: Any, executor: WorldExecutor, source: str, e
 	ctx = _build_context_for_node(ws, effect_obj)
 	params = dict((ctx or {}).get("parameters", {}) or {})
 	eff_payload = _fill_templates(dict(effect_obj), params)
-	if str((eff_payload or {}).get("effect", "") or "") == "AttachInterruptPresetDetails":
+	if str((eff_payload or {}).get("effect", "") or "") == "AttachDetails" and str((eff_payload or {}).get("detail_type", "") or "") == "interrupt_preset":
 		if not isinstance(getattr(ws, "interaction_log", None), list):
 			ws.interaction_log = []
 		if not ws.interaction_log:

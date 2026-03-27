@@ -3,6 +3,21 @@ from __future__ import annotations
 from typing import Any
 
 from ..models.components import MemoryComponent
+from ._effect_binder import BindError, _base_bind, _require_param, _require_str, _resolve_param_token
+
+
+def _bind_add_memory_note(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	target = _require_str(params, effect_type, "target")
+	text = str(_resolve_param_token(_require_param(params, effect_type, "text"), ctx) or "").strip()
+	if not text:
+		raise BindError(effect_type, ["text"])
+	out: dict[str, Any] = {"effect": effect_type, "target": target, "text": text}
+	if "importance" in params:
+		out["importance"] = _resolve_param_token(params.get("importance"), ctx)
+	if "tags" in params:
+		out["tags"] = _resolve_param_token(params.get("tags"), ctx)
+	return out, ctx
 
 
 def execute_add_memory_note(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:

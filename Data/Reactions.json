@@ -10,7 +10,8 @@
 			},
 			"effects": [
 				{
-					"effect": "AgentControlTick"
+					"effect": "AgentControlTick",
+					"max_actions_in_tick": 50
 				}
 			]
 		},
@@ -24,34 +25,22 @@
 			},
 			"effects": [
 				{
-					"effect": "WorkerTick"
+					"effect": "WorkerTick",
+					"ticks": 1
 				}
 			]
 		},
 		{
-			"id": "death_on_hp_zero",
-			"on_event": "PropertyModified",
-			"selector": {
-				"type": "all",
-				"conditions": [
-					{"type": "event_field_eq", "field": "component", "value": "CreatureComponent"},
-					{"type": "event_field_eq", "field": "property", "value": "current_hp"}
-				]
-			},
+			"id": "advance_tick_status",
+			"on_event": "AdvanceTick",
 			"condition": {
-				"type": "compare_property",
+				"type": "has_component",
 				"target": "event_entity",
-				"component": "CreatureComponent",
-				"property": "current_hp",
-				"op": "<=",
-				"value": 0
+				"component": "StatusComponent"
 			},
 			"effects": [
 				{
-					"effect": "KillEntity",
-					"target": "event_entity",
-					"corpse_template": "Corpse",
-					"reason": "zero_hp"
+					"effect": "StatusTick"
 				}
 			]
 		}

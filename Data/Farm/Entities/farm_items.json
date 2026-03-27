@@ -1,0 +1,180 @@
+{
+  "Farmland": {
+    "name": "农田",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "farmland",
+          "container"
+        ]
+      },
+      "StatusComponent": {
+        "statuses": []
+      },
+      "WorkerComponent": {
+        "current_task_id": ""
+      },
+      "ContainerComponent": {
+        "is_transparent": true,
+        "is_locked": false,
+        "locked_by": "",
+        "slots": {
+          "inventory": {
+            "capacity_volume": 999.0,
+            "capacity_count": 1,
+            "accepted_tags": [],
+            "transparent": true
+          }
+        }
+      }
+    }
+  },
+  "TomatoSeed": {
+    "name": "番茄种子",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "seed",
+          "item",
+          "commodity"
+        ]
+      },
+      "StatusComponent": {
+        "statuses": [
+          "seed_stage"
+        ]
+      },
+      "CreatureComponent": {
+        "current_hp": 0,
+        "max_hp": 100,
+        "hp_regen_rate": 0,
+        "current_energy": 0,
+        "max_energy": 100
+      },
+      "ValuableComponent": {
+        "price": 10
+      }
+    }
+  },
+  "TomatoCrop": {
+    "name": "成熟番茄",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "crop",
+          "item",
+          "edible"
+        ]
+      },
+      "CreatureComponent": {
+        "current_hp": 100,
+        "max_hp": 100,
+        "hp_regen_rate": 0,
+        "current_energy": 0,
+        "max_energy": 100
+      },
+      "ValuableComponent": {
+        "price": 50
+      }
+    }
+  },
+  "BlueberrySeed": {
+    "name": "蓝莓种子",
+    "components": {
+      "TagComponent": {
+        "tags": ["seed", "item", "commodity", "blueberry"]
+      },
+      "StatusComponent": {
+        "statuses": ["seed_stage"]
+      },
+      "CreatureComponent": {
+        "current_hp": 0,
+        "max_hp": 200,
+        "hp_regen_rate": 0,
+        "current_energy": 0,
+        "max_energy": 100
+      },
+      "ValuableComponent": {
+        "price": 30
+      }
+    }
+  },
+  "BlueberryCrop": {
+    "name": "成熟蓝莓",
+    "components": {
+      "TagComponent": {
+        "tags": ["crop", "item", "edible"]
+      },
+      "CreatureComponent": {
+        "current_hp": 200,
+        "max_hp": 200,
+        "hp_regen_rate": 0,
+        "current_energy": 0,
+        "max_energy": 100
+      },
+      "ValuableComponent": {
+        "price": 200
+      }
+    }
+  },
+  "WateringCan": {
+    "name": "水壶",
+    "components": {
+      "TagComponent": {
+        "tags": ["tool", "watering_can", "item"]
+      },
+      "ValuableComponent": {
+        "price": 10
+      }
+    }
+  },
+  "GoldenWateringCan": {
+    "name": "黄金水壶",
+    "components": {
+      "TagComponent": {
+        "tags": ["tool", "watering_can", "item", "golden_tool", "commodity"]
+      },
+      "ValuableComponent": {
+        "price": 100
+      }
+    }
+  },
+  "FarmTutorialNote": {
+    "name": "农场游戏教程笔记",
+    "components": {
+      "TagComponent": {
+        "tags": ["item", "note", "tutorial", "readable"]
+      },
+      "ValuableComponent": {
+        "price": 0
+      }
+    }
+  },
+  "MerchantNPC": {
+    "name": "商人",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "merchant",
+          "vending_machine"
+        ]
+      },
+      "AgentSetting": {
+        "agent_name": "售货机",
+        "personality_summary": "一个售货机，出售种子和工具。",
+        "money": 99999
+      },
+      "ContainerComponent": {
+        "is_transparent": true,
+        "slots": {
+          "inventory": {
+            "capacity_volume": 999.0,
+            "capacity_count": 50,
+            "accepted_tags": [],
+            "transparent": true
+          }
+        }
+      }
+    }
+  }
+}

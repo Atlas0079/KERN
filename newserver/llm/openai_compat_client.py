@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import os
 import time
 from dataclasses import dataclass
 from typing import Any, Protocol
@@ -12,9 +11,9 @@ from ..log_manager import get_logger
 
 
 
-DEFAULT_BASE_URL = os.environ.get("LLM_BASE_URL", "https://api.aabao.top")
-DEFAULT_API_PREFIX = os.environ.get("LLM_API_PREFIX", "/v1")
-DEFAULT_API_KEY = os.environ.get("LLM_API_KEY", "REPLACE_ME")
+DEFAULT_BASE_URL = "https://api.aabao.top"
+DEFAULT_API_PREFIX = "/v1"
+DEFAULT_API_KEY = "REPLACE_ME"
 
 
 class LLMRequestError(RuntimeError):

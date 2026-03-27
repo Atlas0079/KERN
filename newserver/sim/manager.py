@@ -50,6 +50,8 @@ class WorldManager:
 	checkpoint_dir: str = ""
 	checkpoint_include_logs: bool = True
 	dialogue_log_full: bool = False
+	dialogue_budget_limit_per_location: int = 4
+	last_stop_info: dict[str, Any] = field(default_factory=dict)
 
 	def __post_init__(self) -> None:
 		if self.trigger_system is None:
@@ -257,6 +259,10 @@ class WorldManager:
 	def stop(self) -> None:
 		self.is_running = False
 
+	def request_stop(self, info: dict[str, Any] | None = None) -> None:
+		self.is_running = False
+		self.last_stop_info = dict(info or {})
+
 	def step(self) -> list[dict[str, Any]]:
 		"""
 		Advance one simulation tick (Turn-based).
@@ -275,10 +281,16 @@ class WorldManager:
 			"interaction_engine": self.interaction_engine,
 			"default_action_provider": self.action_provider,
 			"action_providers": dict(self.action_providers or {}),
-			"dialogue_budget_limit_per_location": 4,
+			"dialogue_budget_limit_per_location": int(self.dialogue_budget_limit_per_location),
 			"dialogue_budget_used_per_location": {},
 			"dialogue_log_full": bool(self.dialogue_log_full),
 			"memory_capture_system": self.memory_capture_system,
+			"request_stop": self.request_stop,
+			"abort_requested": False,
+			"abort_reason": "",
+			"abort_detail": "",
+			"abort_severity": "",
+			"abort_actor_id": "",
 		}
 
 		# 2) Advance time
@@ -297,6 +309,8 @@ class WorldManager:
 		def execute_wrapper(effect: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 			collected_events: list[dict[str, Any]] = []
 			def execute_with_reactions(eff: dict[str, Any], ctx: dict[str, Any], depth: int) -> None:
+				if not bool(self.is_running):
+					return
 				logger.debug("effect", "execute", context={"effect": dict(eff or {}), "context": dict(ctx or {}), "depth": int(depth)})
 				result_events = self.executor.execute(ws, eff, ctx)
 				reaction_rule_id = str((ctx or {}).get("reaction_rule_id", "") or "")
@@ -305,9 +319,10 @@ class WorldManager:
 				for _ev in list(result_events or []):
 					if not isinstance(_ev, dict):
 						continue
-					if str(_ev.get("type", "") or "") == "ExecutorError":
+					ev_type = str(_ev.get("type", "") or "")
+					if ev_type in {"ExecutorError", "BindError"}:
 						reaction_failed = True
-						reaction_fail_reason = str(_ev.get("message", "") or "ExecutorError")
+						reaction_fail_reason = str(_ev.get("message", "") or ev_type)
 						logger.warn(
 							"executor",
 							"effect_failed",
@@ -344,6 +359,8 @@ class WorldManager:
 					ws.record_event(ev, ctx)
 					events.append(ev)
 					logger.trace("event", "record", context={"event": dict(ev), "context": dict(ctx or {}), "depth": int(depth)})
+					if bool((ws.services or {}).get("abort_requested", False)):
+						return
 					if depth >= int(self.max_trigger_depth):
 						limit_event = {
 							"type": "ReactionDepthExceeded",
@@ -363,14 +380,27 @@ class WorldManager:
 						rctx = req.get("context", {}) or {}
 						if isinstance(reff, dict) and isinstance(rctx, dict):
 							execute_with_reactions(reff, rctx, depth + 1)
+							if bool((ws.services or {}).get("abort_requested", False)):
+								return
 
 			execute_with_reactions(effect, context, 0)
+			if bool((ws.services or {}).get("abort_requested", False)):
+				self.request_stop(
+					{
+						"reason": str((ws.services or {}).get("abort_reason", "") or ""),
+						"detail": str((ws.services or {}).get("abort_detail", "") or ""),
+						"severity": str((ws.services or {}).get("abort_severity", "") or ""),
+						"actor_id": str((ws.services or {}).get("abort_actor_id", "") or ""),
+					}
+				)
 			return collected_events
 
 		ws.services["execute"] = execute_wrapper
 
 		# 3) Dispatch AdvanceTick events per entity, then let Reactions decide which effects to run.
 		for ent_id in list(ws.entities.keys()):
+			if not bool(self.is_running):
+				break
 			tick_event = {
 				"type": "AdvanceTick",
 				"entity_id": ent_id,

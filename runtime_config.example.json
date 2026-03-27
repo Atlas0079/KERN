@@ -16,7 +16,14 @@
     "LLM_FAILURE_COOLDOWN_TICKS": "60",
     "LLM_DEBUG_VIEW": "",
     "DIALOGUE_LOG_FULL": "1",
-    "WORLD_JSON": "World_SpaceWerewolf.json",
+    "DIALOGUE_BUDGET_LIMIT_PER_LOCATION": "4",
+    "MAX_TRIGGER_DEPTH": "4",
+    "MAX_TICKS_DEFAULT_LLM": "15",
+    "MAX_TICKS_DEFAULT_NO_LLM": "65",
+    "WORLD_JSON": "Farm/World.json",
+    "RECIPES_JSONS": "Recipes.json,Farm/Recipes.json",
+    "REACTIONS_JSONS": "Reactions.json,Farm/Reactions.json",
+    "ENTITIES_DIRS": "Entities,Farm/Entities",
     "MAX_TICKS": "50"
   }
 }

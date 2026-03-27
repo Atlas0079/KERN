@@ -23,7 +23,13 @@ def load_json(path: Path) -> Any:
 		return json.load(f)
 
 
-def load_data_bundle(project_root: Path) -> DataBundle:
+def load_data_bundle(
+	project_root: Path,
+	recipes_jsons: list[str] | None = None,
+	reactions_jsons: list[str] | None = None,
+	entities_dirs: list[str] | None = None,
+	world_json: str = "World.json",
+) -> DataBundle:
 	"""
 	Read JSON from Data directory.
 	project_root:
@@ -38,24 +44,47 @@ def load_data_bundle(project_root: Path) -> DataBundle:
 		data_dir = project_root
 	else:
 		raise FileNotFoundError(f"Data directory not found under: {project_root}")
-	entities_dir = data_dir / "Entities"
+	
+	if not entities_dirs:
+		entities_dirs = ["Entities"]
+	if not recipes_jsons:
+		recipes_jsons = ["Recipes.json"]
+	if not reactions_jsons:
+		reactions_jsons = ["Reactions.json"]
 
-	world = load_json(data_dir / "World.json")
-	recipes = load_json(data_dir / "Recipes.json")
-	reactions_path = data_dir / "Reactions.json"
-	reactions = load_json(reactions_path) if reactions_path.exists() else {"rules": []}
+	world_name = str(world_json or "World.json").strip() or "World.json"
+	world = load_json(data_dir / world_name)
+	
+	recipes: dict[str, Any] = {}
+	for r_json in recipes_jsons:
+		r_path = data_dir / r_json
+		if r_path.exists():
+			data = load_json(r_path)
+			if isinstance(data, dict):
+				recipes.update(data)
+	
+	reactions: dict[str, Any] = {"rules": []}
+	for r_json in reactions_jsons:
+		r_path = data_dir / r_json
+		if r_path.exists():
+			data = load_json(r_path)
+			if isinstance(data, dict) and isinstance(data.get("rules"), list):
+				reactions["rules"].extend(data["rules"])
 
 	# Automatically load Entities/*.json and merge
 	# Consistent with Godot DataManager.merge: Later loaded overwrites earlier loaded for same-name keys
 	entity_templates: dict[str, Any] = {}
-	for p in sorted(list(entities_dir.glob("*.json"))):
-		data = load_json(p)
-		if isinstance(data, dict):
-			entity_templates.update(data)
+	for edir in entities_dirs:
+		entities_dir = data_dir / edir
+		if entities_dir.exists():
+			for p in sorted(list(entities_dir.glob("*.json"))):
+				data = load_json(p)
+				if isinstance(data, dict):
+					entity_templates.update(data)
 
 	return DataBundle(
 		entity_templates=entity_templates,
 		recipes=recipes,
-		reactions=reactions if isinstance(reactions, dict) else {"rules": []},
+		reactions=reactions,
 		world=world,
 	)

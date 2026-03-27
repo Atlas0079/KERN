@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from ..entity_ref_resolver import resolve_entity_id
-from ..effect_contract import EFFECT_TYPES
+from ..effect_contract import EFFECT_SPECS, EFFECT_TYPES
 
 
 class BindError(RuntimeError):
@@ -21,6 +21,59 @@ def _resolve_ref_id(ref: Any, ctx: dict[str, Any]) -> str:
 	return resolve_entity_id(ref, ctx, allow_literal=False)
 
 
+def _resolve_param_token(value: Any, ctx: dict[str, Any]) -> Any:
+	if isinstance(value, str):
+		key = str(value).strip()
+		if key.startswith("param:"):
+			params = ctx.get("parameters", {}) or {}
+			if isinstance(params, dict):
+				return params.get(key[len("param:") :], "")
+			return ""
+		return value
+	if isinstance(value, list):
+		return [_resolve_param_token(v, ctx) for v in value]
+	if isinstance(value, dict):
+		return {str(k): _resolve_param_token(v, ctx) for k, v in value.items()}
+	return value
+
+
+def _require_param(params: dict[str, Any], effect_type: str, key: str) -> Any:
+	if key not in params:
+		raise BindError(effect_type, [key])
+	return params.get(key)
+
+
+def _require_str(params: dict[str, Any], effect_type: str, key: str) -> str:
+	raw = _require_param(params, effect_type, key)
+	value = str(raw or "").strip()
+	if not value:
+		raise BindError(effect_type, [key])
+	return value
+
+
+def _require_int(params: dict[str, Any], effect_type: str, key: str, ctx: dict[str, Any]) -> int:
+	raw = _resolve_param_token(_require_param(params, effect_type, key), ctx)
+	try:
+		return int(raw)
+	except Exception:
+		raise BindError(effect_type, [key])
+
+
+def _require_float(params: dict[str, Any], effect_type: str, key: str, ctx: dict[str, Any]) -> float:
+	raw = _resolve_param_token(_require_param(params, effect_type, key), ctx)
+	try:
+		return float(raw)
+	except Exception:
+		raise BindError(effect_type, [key])
+
+
+def _require_dict(params: dict[str, Any], effect_type: str, key: str, ctx: dict[str, Any]) -> dict[str, Any]:
+	raw = _resolve_param_token(_require_param(params, effect_type, key), ctx)
+	if not isinstance(raw, dict):
+		raise BindError(effect_type, [key])
+	return dict(raw)
+
+
 def _base_bind(effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[str, dict[str, Any], dict[str, Any]]:
 	src = _as_dict(effect_data)
 	ctx = _as_dict(context)
@@ -29,305 +82,119 @@ def _base_bind(effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[st
 	return effect_type, params, ctx
 
 
-def _bind_agent_control_tick(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+def _bind_exchange_resources(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
 	effect_type, params, ctx = _base_bind(effect_data, context)
-	entity_id = str(params.get("entity_id", "") or "")
-	if entity_id and not str(ctx.get("entity_id", "") or ""):
-		ctx["entity_id"] = entity_id
-	if "max_actions_in_tick" in params and "max_actions_in_tick" not in ctx:
-		ctx["max_actions_in_tick"] = params.get("max_actions_in_tick")
-	return {"effect": effect_type, "entity_id": str(ctx.get("entity_id", "") or ""), "max_actions_in_tick": ctx.get("max_actions_in_tick", 50)}, ctx
+	source = _require_str(params, effect_type, "source")
+	target = _require_str(params, effect_type, "target")
+	transfer_mode = _require_str(params, effect_type, "transfer_mode").strip().lower()
+	if transfer_mode not in {"destroy", "transfer"}:
+		raise BindError(effect_type, ["transfer_mode"])
+	consume_items = _require_param(params, effect_type, "consume_items")
+	if not isinstance(consume_items, list):
+		raise BindError(effect_type, ["consume_items"])
+	consume_items = [str(_resolve_param_token(x, ctx)) for x in consume_items if _resolve_param_token(x, ctx)]
+	consume_money = _require_float(params, effect_type, "consume_money", ctx)
+	produce_items = _require_param(params, effect_type, "produce_items")
+	if not isinstance(produce_items, list):
+		raise BindError(effect_type, ["produce_items"])
+	produce_items = [str(_resolve_param_token(x, ctx)) for x in produce_items if _resolve_param_token(x, ctx)]
+	produce_money = _resolve_param_token(_require_param(params, effect_type, "produce_money"), ctx)
+	if produce_money != "eval_price":
+		try:
+			produce_money = float(produce_money)
+		except Exception:
+			raise BindError(effect_type, ["produce_money"])
+	return {
+		"effect": effect_type,
+		"source": source,
+		"target": target,
+		"transfer_mode": transfer_mode,
+		"consume_items": consume_items,
+		"consume_money": consume_money,
+		"produce_items": produce_items,
+		"produce_money": produce_money,
+	}, ctx
 
 
-def _bind_worker_tick(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+def _bind_abort_simulation(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
 	effect_type, params, ctx = _base_bind(effect_data, context)
-	entity_id = str(params.get("entity_id", "") or "")
-	if entity_id and not str(ctx.get("entity_id", "") or ""):
-		ctx["entity_id"] = entity_id
-	if "ticks" in params and "ticks" not in ctx:
-		ctx["ticks"] = params.get("ticks")
-	return {"effect": effect_type, "entity_id": str(ctx.get("entity_id", "") or ""), "ticks": int(ctx.get("ticks", 1) or 1)}, ctx
+	reason = str(_resolve_param_token(_require_param(params, effect_type, "reason"), ctx) or "").strip()
+	detail = str(_resolve_param_token(_require_param(params, effect_type, "detail"), ctx) or "").strip()
+	severity = str(_resolve_param_token(_require_param(params, effect_type, "severity"), ctx) or "").strip().lower()
+	if severity not in {"info", "warning", "error", "fatal"}:
+		raise BindError(effect_type, ["severity"])
+	stop_raw = _resolve_param_token(_require_param(params, effect_type, "stop"), ctx)
+	stop = bool(stop_raw)
+	if isinstance(stop_raw, str):
+		stop = str(stop_raw).strip().lower() not in {"0", "false", "no", ""}
+	return {
+		"effect": effect_type,
+		"reason": reason,
+		"detail": detail,
+		"severity": severity,
+		"stop": stop,
+	}, ctx
 
 
-def _bind_modify_property(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	target = str(params.get("target", ctx.get("target", "")) or "")
-	component = str(params.get("component", ctx.get("component", "")) or "")
-	prop = str(params.get("property", ctx.get("property", "")) or "")
-	has_change = "change" in params
-	has_value = "value" in params
-	missing: list[str] = []
-	if not target:
-		missing.append("target")
-	if not component:
-		missing.append("component")
-	if not prop:
-		missing.append("property")
-	if not has_change and not has_value:
-		missing.append("change_or_value")
-	if has_change and has_value:
-		missing.append("change_or_value_xor")
-	if missing:
-		raise BindError(effect_type, missing)
-	ctx["target"] = target
-	ctx["component"] = component
-	ctx["property"] = prop
-	out: dict[str, Any] = {"effect": effect_type, "target": target, "component": component, "property": prop}
-	if has_change:
-		change = float(params.get("change", 0.0) or 0.0)
-		ctx["change"] = change
-		out["change"] = change
-	elif has_value:
-		value = params.get("value", None)
-		ctx["value"] = value
-		out["value"] = value
-	return out, ctx
+def _build_binders() -> dict[str, Any]:
+	# Reminder: keep each effect's binder close to its execute logic in the same domain file.
+	# This file should stay focused on shared helpers and binder registration only.
+	from ._effect_agent import _bind_agent_control_tick, _bind_apply_meta_action, _bind_attach_details, _bind_worker_tick
+	from ._effect_conversation import _bind_start_conversation
+	from ._effect_entity import _bind_create_entity, _bind_destroy_entity, _bind_kill_entity, _bind_move_entity
+	from ._effect_event import _bind_emit_event
+	from ._effect_memory import _bind_add_memory_note
+	from ._effect_property import _bind_add_tag, _bind_modify_property, _bind_remove_tag
+	from ._effect_task import (
+		_bind_accept_task,
+		_bind_add_status,
+		_bind_consume_inputs,
+		_bind_create_task,
+		_bind_finish_task,
+		_bind_progress_task,
+		_bind_remove_status,
+		_bind_status_tick,
+		_bind_update_task_status,
+	)
+
+	available = {
+		"_bind_agent_control_tick": _bind_agent_control_tick,
+		"_bind_worker_tick": _bind_worker_tick,
+		"_bind_status_tick": _bind_status_tick,
+		"_bind_modify_property": _bind_modify_property,
+		"_bind_add_tag": _bind_add_tag,
+		"_bind_remove_tag": _bind_remove_tag,
+		"_bind_apply_meta_action": _bind_apply_meta_action,
+		"_bind_attach_details": _bind_attach_details,
+		"_bind_create_entity": _bind_create_entity,
+		"_bind_destroy_entity": _bind_destroy_entity,
+		"_bind_move_entity": _bind_move_entity,
+		"_bind_add_status": _bind_add_status,
+		"_bind_remove_status": _bind_remove_status,
+		"_bind_consume_inputs": _bind_consume_inputs,
+		"_bind_create_task": _bind_create_task,
+		"_bind_accept_task": _bind_accept_task,
+		"_bind_progress_task": _bind_progress_task,
+		"_bind_update_task_status": _bind_update_task_status,
+		"_bind_finish_task": _bind_finish_task,
+		"_bind_kill_entity": _bind_kill_entity,
+		"_bind_start_conversation": _bind_start_conversation,
+		"_bind_add_memory_note": _bind_add_memory_note,
+		"_bind_emit_event": _bind_emit_event,
+		"_bind_exchange_resources": _bind_exchange_resources,
+		"_bind_abort_simulation": _bind_abort_simulation,
+	}
+	out: dict[str, Any] = {}
+	for effect_name, spec in EFFECT_SPECS.items():
+		binder_name = str((spec or {}).get("binder", "") or "")
+		binder = available.get(binder_name, None)
+		if not callable(binder):
+			raise RuntimeError(f"effect binder not found: {effect_name} -> {binder_name}")
+		out[str(effect_name)] = binder
+	return out
 
 
-def _bind_add_tag(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	target = str(params.get("target", ctx.get("target", "target")) or "target")
-	tag = str(params.get("tag", ctx.get("tag", "")) or "").strip()
-	missing: list[str] = []
-	if not tag:
-		missing.append("tag")
-	if missing:
-		raise BindError(effect_type, missing)
-	ctx["target"] = target
-	ctx["tag"] = tag
-	return {"effect": effect_type, "target": target, "tag": tag}, ctx
-
-
-def _bind_remove_tag(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	target = str(params.get("target", ctx.get("target", "target")) or "target")
-	tag = str(params.get("tag", ctx.get("tag", "")) or "").strip()
-	missing: list[str] = []
-	if not tag:
-		missing.append("tag")
-	if missing:
-		raise BindError(effect_type, missing)
-	ctx["target"] = target
-	ctx["tag"] = tag
-	return {"effect": effect_type, "target": target, "tag": tag}, ctx
-
-
-def _bind_apply_meta_action(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	target = str(params.get("target", ctx.get("target", "self")) or "self")
-	action_type = str(params.get("action_type", ctx.get("action_type", "")) or "")
-	meta_params = params.get("params", ctx.get("params", {}))
-	if not isinstance(meta_params, dict):
-		meta_params = {}
-	if not action_type:
-		raise BindError(effect_type, ["action_type"])
-	return {"effect": effect_type, "target": target, "action_type": action_type, "params": dict(meta_params)}, ctx
-
-
-def _bind_attach_interrupt_preset_details(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, _params, ctx = _base_bind(effect_data, context)
-	return {"effect": effect_type}, ctx
-
-
-def _bind_create_entity(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	out: dict[str, Any] = {"effect": effect_type}
-	for k in ["template", "destination", "instance_id", "spawn_patch", "overrides"]:
-		if k in params:
-			out[k] = params[k]
-		elif k in ctx:
-			out[k] = ctx[k]
-	return out, ctx
-
-
-def _bind_destroy_entity(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	target = str(params.get("target", ctx.get("target", "entity_to_destroy")) or "entity_to_destroy")
-	return {"effect": effect_type, "target": target}, ctx
-
-
-def _bind_move_entity(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	legacy_keys = [k for k in ["entity_id", "source_id", "destination_id", "target", "source", "destination"] if k in params]
-	if legacy_keys:
-		raise BindError(effect_type, [f"deprecated_keys:{','.join(sorted(legacy_keys))}"])
-	entity_ref = params.get("entity_ref", ctx.get("entity_ref", ""))
-	from_ref = params.get("from_ref", ctx.get("from_ref", ""))
-	to_ref = params.get("to_ref", ctx.get("to_ref", ""))
-	entity_id = _resolve_ref_id(entity_ref, ctx)
-	source_id = _resolve_ref_id(from_ref, ctx)
-	destination_id = _resolve_ref_id(to_ref, ctx)
-	ctx["entity_id"] = entity_id
-	ctx["source_id"] = source_id
-	ctx["destination_id"] = destination_id
-	missing: list[str] = []
-	if not entity_id:
-		missing.append("entity_id")
-	if not source_id:
-		missing.append("source_id")
-	if not destination_id:
-		missing.append("destination_id")
-	if missing:
-		raise BindError(effect_type, missing)
-	return {"effect": effect_type}, ctx
-
-
-def _bind_add_condition(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	target = str(params.get("target", ctx.get("target", "")) or "")
-	condition_id = str(params.get("condition_id", ctx.get("condition_id", "")) or "")
-	missing: list[str] = []
-	if not target:
-		missing.append("target")
-	if not condition_id:
-		missing.append("condition_id")
-	if missing:
-		raise BindError(effect_type, missing)
-	return {"effect": effect_type, "target": target, "condition_id": condition_id}, ctx
-
-
-def _bind_remove_condition(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	target = str(params.get("target", ctx.get("target", "")) or "")
-	condition_id = str(params.get("condition_id", ctx.get("condition_id", "")) or "")
-	missing: list[str] = []
-	if not target:
-		missing.append("target")
-	if not condition_id:
-		missing.append("condition_id")
-	if missing:
-		raise BindError(effect_type, missing)
-	return {"effect": effect_type, "target": target, "condition_id": condition_id}, ctx
-
-
-def _bind_consume_inputs(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, _params, ctx = _base_bind(effect_data, context)
-	return {"effect": effect_type}, ctx
-
-
-def _bind_create_task(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, _params, ctx = _base_bind(effect_data, context)
-	if not str(ctx.get("target_id", "") or ""):
-		raise BindError(effect_type, ["target_id"])
-	recipe = ctx.get("recipe", {})
-	if not isinstance(recipe, dict) or not recipe:
-		raise BindError(effect_type, ["recipe"])
-	return {"effect": effect_type}, ctx
-
-
-def _bind_accept_task(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	target = str(params.get("target", ctx.get("target", "target")) or "target")
-	return {"effect": effect_type, "target": target}, ctx
-
-
-def _bind_progress_task(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	task_id = str(params.get("task_id", ctx.get("task_id", "")) or "")
-	delta = float(params.get("delta", ctx.get("delta", 0.0)) or 0.0)
-	if not task_id:
-		raise BindError(effect_type, ["task_id"])
-	return {"effect": effect_type, "task_id": task_id, "delta": delta}, ctx
-
-
-def _bind_update_task_status(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	task_id = str(params.get("task_id", ctx.get("task_id", "")) or "")
-	status = str(params.get("status", ctx.get("status", "")) or "")
-	missing: list[str] = []
-	if not task_id:
-		missing.append("task_id")
-	if not status:
-		missing.append("status")
-	if missing:
-		raise BindError(effect_type, missing)
-	return {"effect": effect_type, "task_id": task_id, "status": status}, ctx
-
-
-def _bind_finish_task(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, _params, ctx = _base_bind(effect_data, context)
-	return {"effect": effect_type}, ctx
-
-
-def _bind_kill_entity(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	target = str(params.get("target", ctx.get("target", "target")) or "target")
-	corpse_template = str(params.get("corpse_template", ctx.get("corpse_template", "Corpse")) or "Corpse")
-	reason = str(params.get("reason", ctx.get("reason", "killed")) or "killed")
-	return {"effect": effect_type, "target": target, "corpse_template": corpse_template, "reason": reason}, ctx
-
-
-def _bind_start_conversation(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	max_utterances = int(params.get("max_utterances_per_tick", ctx.get("max_utterances_per_tick", 4)) or 4)
-	opening_text = ""
-	ctx_params = ctx.get("parameters", {}) or {}
-	if isinstance(ctx_params, dict):
-		opening_text = str(ctx_params.get("text", "") or "")
-	return {"effect": effect_type, "max_utterances_per_tick": max_utterances, "opening_text": opening_text}, ctx
-
-
-def _bind_set_cooldown(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	target = str(params.get("target", ctx.get("target", "self")) or "self")
-	key = str(params.get("key", ctx.get("key", "")) or "")
-	if not key:
-		raise BindError(effect_type, ["key"])
-	return {"effect": effect_type, "target": target, "key": key}, ctx
-
-
-def _bind_add_memory_note(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	target = str(params.get("target", ctx.get("target", "self")) or "self")
-	text = str(params.get("text", ctx.get("text", "")) or "").strip()
-	if not text:
-		raise BindError(effect_type, ["text"])
-	out: dict[str, Any] = {"effect": effect_type, "target": target, "text": text}
-	if "importance" in params:
-		out["importance"] = params.get("importance")
-	if "tags" in params:
-		out["tags"] = params.get("tags")
-	return out, ctx
-
-
-def _bind_emit_event(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-	effect_type, params, ctx = _base_bind(effect_data, context)
-	event_type = str(params.get("event_type", ctx.get("event_type", "")) or "").strip()
-	if not event_type:
-		raise BindError(effect_type, ["event_type"])
-	payload = params.get("payload", ctx.get("payload", {}))
-	if payload is None:
-		payload = {}
-	if not isinstance(payload, dict):
-		raise BindError(effect_type, ["payload_object"])
-	return {"effect": effect_type, "event_type": event_type, "payload": dict(payload)}, ctx
-
-
-_BINDERS: dict[str, Any] = {
-	"AgentControlTick": _bind_agent_control_tick,
-	"WorkerTick": _bind_worker_tick,
-	"ModifyProperty": _bind_modify_property,
-	"AddTag": _bind_add_tag,
-	"RemoveTag": _bind_remove_tag,
-	"ApplyMetaAction": _bind_apply_meta_action,
-	"AttachInterruptPresetDetails": _bind_attach_interrupt_preset_details,
-	"CreateEntity": _bind_create_entity,
-	"DestroyEntity": _bind_destroy_entity,
-	"MoveEntity": _bind_move_entity,
-	"AddCondition": _bind_add_condition,
-	"RemoveCondition": _bind_remove_condition,
-	"ConsumeInputs": _bind_consume_inputs,
-	"CreateTask": _bind_create_task,
-	"AcceptTask": _bind_accept_task,
-	"ProgressTask": _bind_progress_task,
-	"UpdateTaskStatus": _bind_update_task_status,
-	"FinishTask": _bind_finish_task,
-	"KillEntity": _bind_kill_entity,
-	"StartConversation": _bind_start_conversation,
-	"SetCooldown": _bind_set_cooldown,
-	"AddMemoryNote": _bind_add_memory_note,
-	"EmitEvent": _bind_emit_event,
-}
+_BINDERS: dict[str, Any] = _build_binders()
 
 
 def get_binder_effect_types() -> set[str]:

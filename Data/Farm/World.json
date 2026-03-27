@@ -1,0 +1,97 @@
+{
+    "locations": [
+        {
+            "location_id": "farm_loc",
+            "location_name": "静谧农场",
+            "entities": [
+                {
+                    "instance_id": "farmer_1",
+                    "template_id": "human",
+                    "component_overrides": {
+                        "AgentSetting": {
+                            "agent_name": "Noah",
+                            "personality_summary": "你是一个用于测试游戏世界的agent，你需要完成记忆中的设定目标。仅当出现你无法解决的问题时，请使用AbortSimulation动作来终止模拟。",
+                            "money": 50
+                        },
+                        "MemoryComponent": {
+                            "mid_term_queue": [
+                                {
+                                    "tick_start": 0,
+                                    "tick_end": 0,
+                                    "summary": "设定：你是农场游戏测试玩家。记得看看自己身上的游戏教程。",
+                                    "tags": ["setup", "goal", "farm_test"]
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "instance_id": "farmland_1",
+                    "template_id": "Farmland"
+                },
+                {
+                    "instance_id": "farmland_2",
+                    "template_id": "Farmland"
+                }
+            ]
+        },
+        {
+            "location_id": "shop_loc",
+            "location_name": "商店",
+            "entities": [
+                {
+                    "instance_id": "merchant_1",
+                    "template_id": "MerchantNPC"
+                }
+            ]
+        }
+    ],
+    "paths": [
+        {
+            "path_id": "farm_to_shop",
+            "from_location_id": "farm_loc",
+            "to_location_id": "shop_loc",
+            "distance": 2,
+            "is_blocked": false
+        },
+        {
+            "path_id": "shop_to_farm",
+            "from_location_id": "shop_loc",
+            "to_location_id": "farm_loc",
+            "distance": 2,
+            "is_blocked": false
+        }
+    ],
+    "entities": [
+        {
+            "instance_id": "watering_can_1",
+            "template_id": "WateringCan",
+            "parent_container": "farmer_1"
+        },
+        {
+            "instance_id": "tutorial_note_1",
+            "template_id": "FarmTutorialNote",
+            "parent_container": "farmer_1"
+        },
+        {
+            "instance_id": "commodity_seed_1",
+            "template_id": "TomatoSeed",
+            "parent_container": "merchant_1"
+        },
+        {
+            "instance_id": "commodity_seed_2",
+            "template_id": "TomatoSeed",
+            "parent_container": "merchant_1"
+        },
+        {
+            "instance_id": "commodity_blueberry_1",
+            "template_id": "BlueberrySeed",
+            "parent_container": "merchant_1"
+        },
+        {
+            "instance_id": "commodity_golden_can_1",
+            "template_id": "GoldenWateringCan",
+            "parent_container": "merchant_1"
+        }
+    ]
+}

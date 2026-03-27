@@ -3,7 +3,49 @@ from __future__ import annotations
 from typing import Any
 
 from ..log_manager import get_logger
+from ..entity_ref_resolver import resolve_entity
 from ..models.components import DecisionArbiterComponent, WorkerComponent
+from ._effect_binder import BindError, _base_bind, _require_dict, _require_int, _require_str, _resolve_param_token
+
+
+def _bind_agent_control_tick(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	entity_id = str((ctx or {}).get("entity_id", "") or "")
+	max_actions = _require_int(params, effect_type, "max_actions_in_tick", ctx)
+	return {"effect": effect_type, "entity_id": entity_id, "max_actions_in_tick": max_actions}, ctx
+
+
+def _bind_worker_tick(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	entity_id = str((ctx or {}).get("entity_id", "") or "")
+	ticks = _require_int(params, effect_type, "ticks", ctx)
+	return {"effect": effect_type, "entity_id": entity_id, "ticks": ticks}, ctx
+
+
+def _bind_apply_meta_action(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	target = _require_str(params, effect_type, "target")
+	action_type = _require_str(params, effect_type, "action_type")
+	meta_params = _require_dict(params, effect_type, "params", ctx)
+	resolved_meta_params = _resolve_param_token(dict(meta_params), ctx)
+	if not isinstance(resolved_meta_params, dict):
+		resolved_meta_params = {}
+	return {"effect": effect_type, "target": target, "action_type": action_type, "params": dict(resolved_meta_params)}, ctx
+
+
+def _bind_attach_details(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	detail_type = _require_str(params, effect_type, "detail_type").lower()
+	if detail_type not in {"entity", "interrupt_preset"}:
+		raise BindError(effect_type, ["detail_type"])
+	out: dict[str, Any] = {"effect": effect_type, "detail_type": detail_type}
+	if detail_type == "entity":
+		out["target"] = _require_str(params, effect_type, "target")
+		return out, ctx
+	preset_id = str(_resolve_param_token(params.get("preset_id", ""), ctx) or "").strip()
+	if preset_id:
+		out["preset_id"] = preset_id
+	return out, ctx
 
 
 def execute_agent_control_tick(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
@@ -117,7 +159,7 @@ def execute_agent_control_tick(executor: Any, ws: Any, data: dict[str, Any], con
 		return []
 	if interaction_engine is None:
 		return []
-	max_actions_in_tick = int(data.get("max_actions_in_tick", 50) or 50)
+	max_actions_in_tick = int(data.get("max_actions_in_tick"))
 	actions_executed = 0
 	reason = str(getattr(interrupt, "reason", "") or "")
 	while True:
@@ -198,6 +240,7 @@ def execute_agent_control_tick(executor: Any, ws: Any, data: dict[str, Any], con
 			status = str((result or {}).get("status", "") or "")
 			if status != "success":
 				reason_code = str((result or {}).get("reason", "") or "")
+				mismatch_reasons = (result or {}).get("mismatch_reasons", []) or []
 				logger.warn(
 					"interaction",
 					"command_failed",
@@ -206,9 +249,13 @@ def execute_agent_control_tick(executor: Any, ws: Any, data: dict[str, Any], con
 						"verb": verb,
 						"target_id": target_id,
 						"reason": reason_code,
+						"mismatch_reasons": list(mismatch_reasons) if isinstance(mismatch_reasons, list) else [],
 						"action": dict(action_dict),
 					},
 				)
+				extra: dict[str, Any] = {}
+				if isinstance(mismatch_reasons, list) and mismatch_reasons:
+					extra["mismatch_reasons"] = [dict(x) for x in mismatch_reasons if isinstance(x, dict)]
 				ws.record_interaction_attempt(
 					actor_id=self_id,
 					verb=verb,
@@ -216,7 +263,7 @@ def execute_agent_control_tick(executor: Any, ws: Any, data: dict[str, Any], con
 					status="failed",
 					reason=reason_code,
 					recipe_id="",
-					extra=None,
+					extra=extra if extra else None,
 				)
 				return []
 			ctx = (result or {}).get("context", {}) or {}
@@ -314,7 +361,7 @@ def execute_worker_tick(_executor: Any, ws: Any, data: dict[str, Any], context: 
 		worker.stop_task()
 		return []
 	from ..progressors import get_progressor
-	ticks = int(data.get("ticks", data.get("delta_ticks", 1)) or 1)
+	ticks = int(data.get("ticks"))
 	pid = str(getattr(task, "progressor_id", "") or "Linear")
 	progressor = get_progressor(pid)
 	delta = float(progressor.compute_progress_delta(ws, self_id, task, ticks))
@@ -367,7 +414,7 @@ def execute_worker_tick(_executor: Any, ws: Any, data: dict[str, Any], context: 
 
 
 def execute_apply_meta_action(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
-	target_key = data.get("target", "self")
+	target_key = data.get("target")
 	target = executor._resolve_entity_from_ctx(ws, context, str(target_key))
 	if target is None:
 		return [{"type": "ExecutorError", "message": "ApplyMetaAction: target missing"}]
@@ -427,34 +474,70 @@ def execute_apply_meta_action(executor: Any, ws: Any, data: dict[str, Any], cont
 	return [{"type": "ExecutorError", "message": f"ApplyMetaAction: unknown action_type: {action_type}"}]
 
 
-def execute_attach_interrupt_preset_details(_executor: Any, ws: Any, _data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+def execute_attach_details(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	import json
-	self_id = str((context or {}).get("self_id", "") or "")
-	agent = ws.get_entity_by_id(self_id) if self_id else None
-	arb = agent.get_component("DecisionArbiterComponent") if agent is not None else None
-	if not isinstance(arb, DecisionArbiterComponent):
-		return [{"type": "ExecutorError", "message": "AttachInterruptPresetDetails: DecisionArbiterComponent missing"}]
-	preset_id = ""
-	params = (context or {}).get("parameters", {}) or {}
-	if isinstance(params, dict):
-		preset_id = str(params.get("preset_id", "") or "").strip()
-	presets = arb.interrupt_presets or {}
-	descs = getattr(arb, "interrupt_preset_descriptions", {}) or {}
-	if preset_id:
-		selected = {preset_id: presets.get(preset_id)} if preset_id in presets else {}
-	else:
-		selected = dict(presets)
-	lines: list[str] = []
-	for pid in sorted(selected.keys()):
-		desc = str(descs.get(pid, "") or "")
-		lines.append(f"Preset {pid}: {desc}".strip())
-	details = {"descriptions": dict(descs), "presets": selected}
-	details_text = "\n".join([x for x in lines if x] + ["", json.dumps(details, ensure_ascii=False, indent=2)])
+	def _safe(v: Any, depth: int = 0) -> Any:
+		if depth > 4:
+			return str(v)
+		if v is None or isinstance(v, (str, int, float, bool)):
+			return v
+		if isinstance(v, list):
+			return [_safe(x, depth + 1) for x in v]
+		if isinstance(v, dict):
+			return {str(k): _safe(val, depth + 1) for k, val in v.items()}
+		d = getattr(v, "__dict__", None)
+		if isinstance(d, dict):
+			return {str(k): _safe(val, depth + 1) for k, val in d.items()}
+		return str(v)
+	detail_type = str((data or {}).get("detail_type", "") or "").strip().lower()
+	if detail_type == "interrupt_preset":
+		self_id = str((context or {}).get("self_id", "") or "")
+		agent = ws.get_entity_by_id(self_id) if self_id else None
+		arb = agent.get_component("DecisionArbiterComponent") if agent is not None else None
+		if not isinstance(arb, DecisionArbiterComponent):
+			return [{"type": "ExecutorError", "message": "AttachDetails: DecisionArbiterComponent missing"}]
+		preset_id = str((data or {}).get("preset_id", "") or "").strip()
+		presets = arb.interrupt_presets or {}
+		descs = getattr(arb, "interrupt_preset_descriptions", {}) or {}
+		if preset_id:
+			selected = {preset_id: presets.get(preset_id)} if preset_id in presets else {}
+		else:
+			selected = dict(presets)
+		lines: list[str] = []
+		for pid in sorted(selected.keys()):
+			desc = str(descs.get(pid, "") or "")
+			lines.append(f"Preset {pid}: {desc}".strip())
+		details = {"descriptions": dict(descs), "presets": selected}
+		details_text = "\n".join([x for x in lines if x] + ["", json.dumps(details, ensure_ascii=False, indent=2)])
+		log = getattr(ws, "interaction_log", None)
+		if not isinstance(log, list) or not log:
+			return [{"type": "ExecutorError", "message": "AttachDetails: interaction_log missing"}]
+		last = log[-1]
+		if isinstance(last, dict):
+			last["details_text"] = details_text
+			last["private_to_actor"] = True
+		return []
+	if detail_type != "entity":
+		return [{"type": "ExecutorError", "message": f"AttachDetails: unknown detail_type: {detail_type}"}]
+	target_ref = str((data or {}).get("target", (context or {}).get("target_id", "target")) or "target")
+	target = resolve_entity(ws, target_ref, context or {}, allow_literal=True)
+	if target is None:
+		return [{"type": "ExecutorError", "message": "AttachDetails: target missing"}]
+	payload = {
+		"entity_id": str(getattr(target, "entity_id", "") or ""),
+		"template_id": str(getattr(target, "template_id", "") or ""),
+		"name": str(getattr(target, "entity_name", "") or ""),
+		"tags": list(target.get_all_tags()) if hasattr(target, "get_all_tags") else [],
+		"components": {},
+	}
+	comps = getattr(target, "components", {}) or {}
+	if isinstance(comps, dict):
+		for cname, comp in comps.items():
+			payload["components"][str(cname)] = _safe(comp)
 	log = getattr(ws, "interaction_log", None)
-	if not isinstance(log, list) or not log:
-		return [{"type": "ExecutorError", "message": "AttachInterruptPresetDetails: interaction_log missing"}]
-	last = log[-1]
-	if isinstance(last, dict):
-		last["details_text"] = details_text
-		last["private_to_actor"] = True
-	return []
+	if isinstance(log, list) and log:
+		last = log[-1]
+		if isinstance(last, dict):
+			last["details_text"] = json.dumps(payload, ensure_ascii=False, indent=2)
+			last["private_to_actor"] = True
+	return [{"type": "DetailsAttached", "detail_type": "entity", "entity_id": payload["entity_id"]}]

@@ -10,12 +10,18 @@ from ..models.components import (
 	ContainerSlot,
 	CreatureComponent,
 	DecisionArbiterComponent,
+	DescriptionComponent,
+	EdibleComponent,
+	EquipmentComponent,
 	LogicControlComponent,
 	MemoryComponent,
+	PerceptionComponent,
 	PlayerControlComponent,
+	StatusComponent,
 	TagComponent,
 	TaskHostComponent,
 	UnknownComponent,
+	ValuableComponent,
 	WorkerComponent,
 )
 from ..models.entity import Entity
@@ -47,6 +53,8 @@ def _task_from_dict(raw: dict[str, Any]) -> Task:
 	task.progressor_id = str(raw.get("progressor_id", "") or "")
 	pp = raw.get("progressor_params", {}) or {}
 	if isinstance(pp, dict):
+		if "progress_contributors" in pp:
+			raise ValueError("task progressor_params.progress_contributors is removed; use add_terms/mul_terms")
 		task.progressor_params = dict(pp)
 	te = raw.get("tick_effects", []) or []
 	if isinstance(te, list):
@@ -251,6 +259,8 @@ def build_world_state(bundle_world: dict[str, Any], entity_templates: dict[str, 
 			raise ValueError(f"task[{task_id}] missing progressor_id")
 		pp = tdata.get("progressor_params", {}) or {}
 		if isinstance(pp, dict):
+			if "progress_contributors" in pp:
+				raise ValueError(f"task[{task_id}] progressor_params.progress_contributors is removed; use add_terms/mul_terms")
 			task_kwargs["progressor_params"] = dict(pp)
 		else:
 			raise ValueError(f"task[{task_id}] progressor_params must be object")
@@ -309,10 +319,18 @@ def _build_component(component_name: str, comp_data: Any):
 
 	if component_name == "CreatureComponent":
 		d = comp_data or {}
+		current_hp = d.get("current_hp", None)
+		max_energy = d.get("max_energy", 100.0)
+		current_energy = d.get("current_energy", None)
+		max_nutrition = d.get("max_nutrition", 100.0)
+		current_nutrition = d.get("current_nutrition", None)
 		return CreatureComponent(
 			max_hp=float(d.get("max_hp", 100.0)),
-			max_energy=float(d.get("max_energy", 100.0)),
-			max_nutrition=float(d.get("max_nutrition", 100.0)),
+			max_energy=float(max_energy),
+			max_nutrition=float(max_nutrition),
+			current_hp=float(current_hp) if current_hp is not None else None,
+			current_energy=float(current_energy) if current_energy is not None else None,
+			current_nutrition=float(current_nutrition) if current_nutrition is not None else None,
 		)
 
 	if component_name == "AgentSetting":
@@ -323,6 +341,7 @@ def _build_component(component_name: str, comp_data: Any):
 			agent_name=str(d.get("agent_name", "")),
 			personality_summary=str(d.get("personality_summary", "")),
 			common_knowledge_summary=str(d.get("common_knowledge_summary", "")),
+			money=float(d.get("money", 0.0) or 0.0),
 		)
 
 	if component_name == "AgentControlComponent":
@@ -388,6 +407,68 @@ def _build_component(component_name: str, comp_data: Any):
 			return DecisionArbiterComponent.from_template_data(d)
 		return DecisionArbiterComponent.from_template_data({})
 
+	if component_name == "DescriptionComponent":
+		d = comp_data or {}
+		if not isinstance(d, dict):
+			d = {}
+		return DescriptionComponent(
+			description=str(d.get("description", "") or ""),
+		)
+
+	if component_name == "EdibleComponent":
+		d = comp_data or {}
+		if not isinstance(d, dict):
+			d = {}
+		return EdibleComponent(
+			effects_on_consume=[dict(x) for x in list(d.get("effects_on_consume", []) or []) if isinstance(x, dict)],
+		)
+
+	if component_name == "PerceptionComponent":
+		d = comp_data or {}
+		if not isinstance(d, dict):
+			d = {}
+		return PerceptionComponent(
+			enabled=bool(d.get("enabled", True)),
+		)
+
+	if component_name == "EquipmentComponent":
+		d = comp_data or {}
+		if not isinstance(d, dict):
+			d = {}
+		slots_raw = d.get("slots", {}) or {}
+		return EquipmentComponent(
+			slots=dict(slots_raw) if isinstance(slots_raw, dict) else {},
+		)
+
+	if component_name == "StatusComponent":
+		d = comp_data or {}
+		if not isinstance(d, dict):
+			d = {}
+		raw_statuses = list(d.get("statuses", []) or [])
+		expire_raw = d.get("expire_at_tick", {}) or {}
+		expire_map: dict[str, int] = {}
+		if isinstance(expire_raw, dict):
+			for k, v in expire_raw.items():
+				key = str(k or "").strip()
+				if not key:
+					continue
+				try:
+					expire_map[key] = int(v)
+				except Exception:
+					continue
+		return StatusComponent(
+			statuses=[str(x) for x in raw_statuses],
+			expire_at_tick=expire_map,
+		)
+
+	if component_name == "ValuableComponent":
+		d = comp_data or {}
+		if not isinstance(d, dict):
+			d = {}
+		return ValuableComponent(
+			price=float(d.get("price", 0.0) or 0.0),
+		)
+
 	if component_name == "TaskHostComponent":
 		return TaskHostComponent()
 
@@ -399,7 +480,7 @@ def _build_component(component_name: str, comp_data: Any):
 			current_task_id=str(d.get("current_task_id", "") or ""),
 		)
 
-	# Unmigrated components (Edible/Perception/...)
+	# Unmigrated components
 	raw = comp_data if isinstance(comp_data, dict) else {"value": comp_data}
 	return UnknownComponent(data=raw)
 

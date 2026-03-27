@@ -4,6 +4,59 @@ from typing import Any
 from uuid import uuid4
 
 from ..models.components import ContainerComponent, WorkerComponent
+from ._effect_binder import BindError, _base_bind, _require_dict, _require_param, _require_str, _resolve_ref_id
+
+
+def _bind_create_entity(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	template = _require_str(params, effect_type, "template")
+	destination = _require_dict(params, effect_type, "destination", ctx)
+	out: dict[str, Any] = {"effect": effect_type, "template": template, "destination": destination}
+	if "instance_id" in params:
+		out["instance_id"] = _require_str(params, effect_type, "instance_id")
+	if "spawn_patch" in params:
+		out["spawn_patch"] = _require_dict(params, effect_type, "spawn_patch", ctx)
+	return out, ctx
+
+
+def _bind_destroy_entity(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	target = _require_str(params, effect_type, "target")
+	return {"effect": effect_type, "target": target}, ctx
+
+
+def _bind_move_entity(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	legacy_keys = [k for k in ["entity_id", "source_id", "destination_id", "target", "source", "destination"] if k in params]
+	if legacy_keys:
+		raise BindError(effect_type, [f"deprecated_keys:{','.join(sorted(legacy_keys))}"])
+	entity_ref = _require_param(params, effect_type, "entity_ref")
+	from_ref = _require_param(params, effect_type, "from_ref")
+	to_ref = _require_param(params, effect_type, "to_ref")
+	entity_id = _resolve_ref_id(entity_ref, ctx)
+	source_id = _resolve_ref_id(from_ref, ctx)
+	destination_id = _resolve_ref_id(to_ref, ctx)
+	missing: list[str] = []
+	if not entity_id:
+		missing.append("entity_id")
+	if not source_id:
+		missing.append("source_id")
+	if not destination_id:
+		missing.append("destination_id")
+	if missing:
+		raise BindError(effect_type, missing)
+	return {"effect": effect_type, "entity_id": entity_id, "source_id": source_id, "destination_id": destination_id}, ctx
+
+
+def _bind_kill_entity(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	target = _require_str(params, effect_type, "target")
+	out: dict[str, Any] = {"effect": effect_type, "target": target}
+	if "corpse_template" in params:
+		out["corpse_template"] = _require_str(params, effect_type, "corpse_template")
+	if "reason" in params:
+		out["reason"] = _require_str(params, effect_type, "reason")
+	return out, ctx
 
 
 def execute_create_entity(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
@@ -20,8 +73,6 @@ def execute_create_entity(executor: Any, ws: Any, data: dict[str, Any], context:
 	new_id = str(data.get("instance_id") or f"{template_id}_{uuid4().hex[:8]}")
 	new_entity = create_entity_from_template(str(template_id), new_id, executor.entity_templates)
 	overrides = data.get("spawn_patch")
-	if not isinstance(overrides, dict):
-		overrides = data.get("overrides")
 	if isinstance(overrides, dict):
 		fmt_ctx = {"template_id": template_id}
 		self_ent = executor._resolve_entity_from_ctx(ws, context, "self")
@@ -175,8 +226,14 @@ def _execute_move_entity_core(executor: Any, ws: Any, context: dict[str, Any]) -
 	]
 
 
-def execute_move_entity(executor: Any, ws: Any, _data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
-	return _execute_move_entity_core(executor, ws, context)
+def execute_move_entity(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+	exec_ctx = dict(context or {})
+	if isinstance(data, dict):
+		for key, value in data.items():
+			if str(key) == "effect":
+				continue
+			exec_ctx[str(key)] = value
+	return _execute_move_entity_core(executor, ws, exec_ctx)
 
 
 def execute_kill_entity(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:

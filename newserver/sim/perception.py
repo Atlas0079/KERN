@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from ..models.components import AgentSetting, ContainerComponent, DecisionArbiterComponent, MemoryComponent, TaskHostComponent, WorkerComponent
+from ..models.components import AgentSetting, ContainerComponent, DecisionArbiterComponent, MemoryComponent, StatusComponent, TaskHostComponent, WorkerComponent
 
 
 @dataclass
@@ -16,7 +16,7 @@ class TaskView:
 	assigned_agent_ids: list[str] = field(default_factory=list)
 	is_available: bool = True
 	required_item_tag: str = ""
-	done_condition_id: str = ""
+	done_status_id: str = ""
 
 	def to_dict(self) -> dict[str, Any]:
 		return {
@@ -28,7 +28,7 @@ class TaskView:
 			"assigned_agent_ids": list(self.assigned_agent_ids),
 			"is_available": bool(self.is_available),
 			"required_item_tag": self.required_item_tag,
-			"done_condition_id": self.done_condition_id,
+			"done_status_id": self.done_status_id,
 		}
 
 
@@ -37,6 +37,7 @@ class EntityView:
 	entity_id: str = ""
 	name: str = ""
 	tags: list[str] = field(default_factory=list)
+	statuses: list[str] = field(default_factory=list)
 	contained_in: str = ""
 	contained_in_slot: str = ""
 	is_top_level: bool = False
@@ -47,6 +48,7 @@ class EntityView:
 			"id": self.entity_id,
 			"name": self.name,
 			"tags": list(self.tags),
+			"statuses": list(self.statuses),
 			"contained_in": self.contained_in,
 			"contained_in_slot": self.contained_in_slot,
 			"is_top_level": bool(self.is_top_level),
@@ -59,6 +61,7 @@ class AgentStateView:
 	agent_name: str = ""
 	personality_summary: str = ""
 	common_knowledge_summary: str = ""
+	money: float = 0.0
 	mid_term_summary: str = ""
 	short_term_memory_text: str = ""
 	short_term_memory_items: list[dict[str, Any]] = field(default_factory=list)
@@ -76,6 +79,7 @@ class AgentStateView:
 			"agent_name": self.agent_name,
 			"personality_summary": self.personality_summary,
 			"common_knowledge_summary": self.common_knowledge_summary,
+			"money": self.money,
 			"mid_term_summary": self.mid_term_summary,
 			"short_term_memory_text": self.short_term_memory_text,
 			"short_term_memory_items": list(self.short_term_memory_items),
@@ -176,11 +180,13 @@ class PerceptionSystem:
 			containment = containment_index.get(str(eid), {})
 			contained_in = str((containment or {}).get("container_id", "") or "")
 			contained_in_slot = str((containment or {}).get("slot_id", "") or "")
+			statuses = self._get_statuses(ent)
 			entities.append(
 				EntityView(
 					entity_id=str(ent.entity_id),
 					name=self._get_entity_visible_name(ent),
 					tags=list(ent.get_all_tags()),
+					statuses=statuses,
 					contained_in=contained_in,
 					contained_in_slot=contained_in_slot,
 					is_top_level=bool(str(eid) in location_entity_ids) and not bool(contained_in),
@@ -215,10 +221,10 @@ class PerceptionSystem:
 		assigned_ids = [str(x) for x in list(assigned) if str(x)]
 		params = getattr(task, "parameters", {}) or {}
 		required_item_tag = ""
-		done_condition_id = ""
+		done_status_id = ""
 		if isinstance(params, dict):
 			required_item_tag = str(params.get("required_item_tag", "") or "")
-			done_condition_id = str(params.get("done_condition_id", "") or "")
+			done_status_id = str(params.get("done_status_id", "") or "")
 		return TaskView(
 			task_id=str(getattr(task, "task_id", "") or ""),
 			task_type=str(getattr(task, "task_type", "") or ""),
@@ -228,7 +234,7 @@ class PerceptionSystem:
 			assigned_agent_ids=assigned_ids,
 			is_available=not bool(assigned_ids),
 			required_item_tag=required_item_tag,
-			done_condition_id=done_condition_id,
+			done_status_id=done_status_id,
 		)
 
 	def _build_reachable_locations(self, ws: Any, location_id: str) -> list[dict[str, Any]]:
@@ -261,6 +267,7 @@ class PerceptionSystem:
 			"agent_name": str(agent_state_data.get("agent_name", "") or ""),
 			"personality_summary": str(agent_state_data.get("personality_summary", "") or ""),
 			"common_knowledge_summary": str(agent_state_data.get("common_knowledge_summary", "") or ""),
+			"money": float(agent_state_data.get("money", 0.0) or 0.0),
 			"short_term_memory_text": str(agent_state_data.get("short_term_memory_text", "") or ""),
 			"short_term_memory_items": list(agent_state_data.get("short_term_memory_items", []) or []),
 			"mid_term_summary": str(agent_state_data.get("mid_term_summary", "") or ""),
@@ -291,6 +298,7 @@ class PerceptionSystem:
 			state.agent_name = str(getattr(agent_comp, "agent_name", "") or "")
 			state.personality_summary = str(getattr(agent_comp, "personality_summary", "") or "")
 			state.common_knowledge_summary = str(getattr(agent_comp, "common_knowledge_summary", "") or "")
+			state.money = float(getattr(agent_comp, "money", 0.0) or 0.0)
 		arb = agent.get_component("DecisionArbiterComponent")
 		if isinstance(arb, DecisionArbiterComponent):
 			state.active_interrupt_preset_id = str(getattr(arb, "active_interrupt_preset_id", "") or "")
@@ -415,20 +423,21 @@ class PerceptionSystem:
 			for item_id in slot.items:
 				item = ws.get_entity_by_id(item_id)
 				if item:
-					conditions: list[str] = []
-					cond_comp = item.get_component("ConditionComponent")
-					if hasattr(cond_comp, "data") and isinstance(getattr(cond_comp, "data"), dict):
-						raw = (getattr(cond_comp, "data") or {}).get("conditions", []) or []
-						if isinstance(raw, list):
-							conditions = [str(x) for x in raw]
+					statuses = self._get_statuses(item)
 					inventory.append({
 						"id": item.entity_id,
 						"name": item.entity_name,
 						"tags": list(item.get_all_tags()),
 						"slot": slot_name,
-						"conditions": conditions,
+						"statuses": statuses,
 					})
 		return inventory
+
+	def _get_statuses(self, ent: Any) -> list[str]:
+		status_comp = ent.get_component("StatusComponent") if hasattr(ent, "get_component") else None
+		if not isinstance(status_comp, StatusComponent):
+			return []
+		return [str(x) for x in list(status_comp.statuses or [])]
 
 	def _expand_transparent_contents(self, ws: Any, seed_visible_ids: list[str]) -> list[str]:
 		"""

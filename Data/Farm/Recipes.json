@@ -1,0 +1,644 @@
+{
+    "farm_plant_seed_tomato": {
+        "verb": "PlantSeed",
+        "planner_hint": "在空农田上播种。",
+        "grounder_hint": "target_id 是空的 farmland。parameters 必须包含 seed_id，且在背包中。番茄种子会触发番茄生长。",
+        "selector": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "has_tag",
+                    "target": "param:seed_id",
+                    "tag": "seed"
+                },
+                {
+                    "type": "not",
+                    "condition": {
+                        "type": "has_tag",
+                        "target": "param:seed_id",
+                        "tag": "blueberry"
+                    }
+                }
+            ]
+        },
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "has_tags",
+                    "target": "target",
+                    "tags": ["farmland"],
+                    "match": "all"
+                },
+                {
+                    "type": "inventory_contains",
+                    "owner": "self",
+                    "item_ref": "param:seed_id"
+                },
+                {
+                    "type": "same_location",
+                    "left": "self",
+                    "right": "target"
+                },
+                {
+                    "type": "not",
+                    "condition": {
+                        "type": "has_status",
+                        "target": "target",
+                        "status_id": "growing"
+                    }
+                },
+                {
+                    "type": "not",
+                    "condition": {
+                        "type": "has_status",
+                        "target": "target",
+                        "status_id": "ready_tomato"
+                    }
+                },
+                {
+                    "type": "not",
+                    "condition": {
+                        "type": "has_status",
+                        "target": "target",
+                        "status_id": "ready_blueberry"
+                    }
+                },
+                {
+                    "type": "not",
+                    "condition": {
+                        "type": "inventory_has_tag",
+                        "owner": "target",
+                        "tag": "item",
+                        "min_count": 1
+                    }
+                }
+            ]
+        },
+        "narrative_success": "{actor}在{target}上种下了种子",
+        "narrative_fail": "{actor}想在{target}上播种，但失败了",
+        "process": {
+            "required_progress": 2,
+            "assign_to": "self"
+        },
+        "outputs": [
+            {
+                "effect": "DestroyEntity",
+                "target": "param:seed_id"
+            },
+            {
+                "effect": "AddStatus",
+                "target": "target",
+                "status_id": "growing"
+            },
+            {
+                "effect": "CreateTask",
+                "assign_to": "target",
+                "recipe": {
+                    "verb": "GrowTomato",
+                    "process": {
+                        "required_progress": 8
+                    },
+                    "progression": {
+                        "progressor": "Linear",
+                        "params": {
+                            "base_progress_per_tick": 1.0,
+                            "add_terms": [],
+                            "mul_terms": [
+                                {
+                                    "when": {
+                                        "type": "has_status",
+                                        "target": "self",
+                                        "status_id": "watered"
+                                    },
+                                    "value": 2.0
+                                }
+                            ]
+                        }
+                    },
+                    "outputs": [
+                        {
+                            "effect": "AddStatus",
+                            "target": "target",
+                            "status_id": "ready_tomato"
+                        },
+                        {
+                            "effect": "RemoveStatus",
+                            "target": "target",
+                            "status_id": "growing"
+                        },
+                        {
+                            "effect": "RemoveStatus",
+                            "target": "target",
+                            "status_id": "watered"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "farm_plant_seed_blueberry": {
+        "verb": "PlantSeed",
+        "planner_hint": "在空农田上播种。",
+        "grounder_hint": "target_id 是空的 farmland。parameters 必须包含 seed_id，且在背包中。蓝莓种子会触发蓝莓生长。",
+        "selector": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "has_tag",
+                    "target": "param:seed_id",
+                    "tag": "seed"
+                },
+                {
+                    "type": "has_tag",
+                    "target": "param:seed_id",
+                    "tag": "blueberry"
+                }
+            ]
+        },
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "has_tags",
+                    "target": "target",
+                    "tags": ["farmland"],
+                    "match": "all"
+                },
+                {
+                    "type": "inventory_contains",
+                    "owner": "self",
+                    "item_ref": "param:seed_id"
+                },
+                {
+                    "type": "same_location",
+                    "left": "self",
+                    "right": "target"
+                },
+                {
+                    "type": "not",
+                    "condition": {
+                        "type": "has_status",
+                        "target": "target",
+                        "status_id": "growing"
+                    }
+                },
+                {
+                    "type": "not",
+                    "condition": {
+                        "type": "has_status",
+                        "target": "target",
+                        "status_id": "ready_tomato"
+                    }
+                },
+                {
+                    "type": "not",
+                    "condition": {
+                        "type": "has_status",
+                        "target": "target",
+                        "status_id": "ready_blueberry"
+                    }
+                },
+                {
+                    "type": "not",
+                    "condition": {
+                        "type": "inventory_has_tag",
+                        "owner": "target",
+                        "tag": "item",
+                        "min_count": 1
+                    }
+                }
+            ]
+        },
+        "narrative_success": "{actor}在{target}上种下了种子",
+        "narrative_fail": "{actor}想在{target}上播种，但失败了",
+        "process": {
+            "required_progress": 2,
+            "assign_to": "self"
+        },
+        "outputs": [
+            {
+                "effect": "DestroyEntity",
+                "target": "param:seed_id"
+            },
+            {
+                "effect": "AddStatus",
+                "target": "target",
+                "status_id": "growing"
+            },
+            {
+                "effect": "CreateTask",
+                "assign_to": "target",
+                "recipe": {
+                    "verb": "GrowBlueberry",
+                    "process": {
+                        "required_progress": 12
+                    },
+                    "progression": {
+                        "progressor": "Linear",
+                        "params": {
+                            "base_progress_per_tick": 1.0,
+                            "add_terms": [],
+                            "mul_terms": [
+                                {
+                                    "when": {
+                                        "type": "has_status",
+                                        "target": "self",
+                                        "status_id": "watered"
+                                    },
+                                    "value": 2.0
+                                }
+                            ]
+                        }
+                    },
+                    "outputs": [
+                        {
+                            "effect": "AddStatus",
+                            "target": "target",
+                            "status_id": "ready_blueberry"
+                        },
+                        {
+                            "effect": "RemoveStatus",
+                            "target": "target",
+                            "status_id": "growing"
+                        },
+                        {
+                            "effect": "RemoveStatus",
+                            "target": "target",
+                            "status_id": "watered"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "farm_water_crop": {
+        "verb": "WaterCrop",
+        "planner_hint": "给正在生长的农田浇水，可以加速生长任务。",
+        "grounder_hint": "target_id 必须是 farmland。自己背包里必须有水壶(watering_can)。如果地块已有 watered 状态，就不需要再浇水。",
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "has_tags",
+                    "target": "target",
+                    "tags": ["farmland"],
+                    "match": "all"
+                },
+                {
+                    "type": "has_status",
+                    "target": "target",
+                    "status_id": "growing"
+                },
+                {
+                    "type": "inventory_has_tag",
+                    "owner": "self",
+                    "tag": "watering_can",
+                    "min_count": 1
+                },
+                {
+                    "type": "same_location",
+                    "left": "self",
+                    "right": "target"
+                },
+                {
+                    "type": "not",
+                    "condition": {
+                        "type": "has_status",
+                        "target": "target",
+                        "status_id": "watered"
+                    }
+                }
+            ]
+        },
+        "narrative_success": "{actor}给{target}浇了水",
+        "narrative_fail": "{actor}想浇水，但失败了",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "AddStatus",
+                "target": "target",
+                "status_id": "watered"
+            }
+        ]
+    },
+    "farm_harvest_tomato": {
+        "verb": "HarvestCrop",
+        "planner_hint": "在农田地块上收获成熟作物。",
+        "grounder_hint": "target_id 必须是 farmland，且地块带有 ready_tomato 状态。",
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "has_tags",
+                    "target": "target",
+                    "tags": ["farmland"],
+                    "match": "all"
+                },
+                {
+                    "type": "has_status",
+                    "target": "target",
+                    "status_id": "ready_tomato"
+                }
+            ]
+        },
+        "narrative_success": "{actor}从{target}收获了作物",
+        "narrative_fail": "{actor}想收获，但失败了",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "CreateEntity",
+                "template": "TomatoCrop",
+                "destination": {
+                    "type": "container",
+                    "target": "self"
+                }
+            },
+            {
+                "effect": "RemoveStatus",
+                "target": "target",
+                "status_id": "ready_tomato"
+            }
+        ]
+    },
+    "farm_harvest_blueberry": {
+        "verb": "HarvestCrop",
+        "planner_hint": "在农田地块上收获成熟作物。",
+        "grounder_hint": "target_id 必须是 farmland，且地块带有 ready_blueberry 状态。",
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "has_tags",
+                    "target": "target",
+                    "tags": ["farmland"],
+                    "match": "all"
+                },
+                {
+                    "type": "has_status",
+                    "target": "target",
+                    "status_id": "ready_blueberry"
+                }
+            ]
+        },
+        "narrative_success": "{actor}从{target}收获了作物",
+        "narrative_fail": "{actor}想收获，但失败了",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "CreateEntity",
+                "template": "BlueberryCrop",
+                "destination": {
+                    "type": "container",
+                    "target": "self"
+                }
+            },
+            {
+                "effect": "RemoveStatus",
+                "target": "target",
+                "status_id": "ready_blueberry"
+            }
+        ]
+    },
+    "farm_sell_item": {
+        "verb": "SellItem",
+        "planner_hint": "把物品卖给商人换钱。",
+        "grounder_hint": "target_id 是商人。parameters 必须包含 item_id（你要卖的物品）。",
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "has_tags",
+                    "target": "target",
+                    "tags": ["merchant"],
+                    "match": "all"
+                },
+                {
+                    "type": "has_component",
+                    "target": "param:item_id",
+                    "component": "ValuableComponent"
+                },
+                {
+                    "type": "inventory_contains",
+                    "owner": "self",
+                    "item_ref": "param:item_id"
+                },
+                {
+                    "type": "same_location",
+                    "left": "self",
+                    "right": "target"
+                }
+            ]
+        },
+        "narrative_success": "{actor}卖掉了物品",
+        "narrative_fail": "{actor}想卖东西，但失败了",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "ExchangeResources",
+                "source": "self",
+                "target": "target",
+                "transfer_mode": "transfer",
+                "consume_items": ["param:item_id"],
+                "consume_money": 0,
+                "produce_items": [],
+                "produce_money": "eval_price"
+            }
+        ]
+    },
+    "farm_buy_item": {
+        "verb": "BuyItem",
+        "planner_hint": "向商人购买货架上的商品。",
+        "grounder_hint": "target_id 是商人。parameters 必须包含 item_id（你想买的那个商品实体ID，它应该在商人的透明背包里且带有 commodity 标签）。",
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "has_tags",
+                    "target": "target",
+                    "tags": ["merchant"],
+                    "match": "all"
+                },
+                {
+                    "type": "has_tags",
+                    "target": "param:item_id",
+                    "tags": ["commodity"],
+                    "match": "all"
+                },
+                {
+                    "type": "inventory_contains",
+                    "owner": "target",
+                    "item_ref": "param:item_id"
+                },
+                {
+                    "type": "same_location",
+                    "left": "self",
+                    "right": "target"
+                }
+            ]
+        },
+        "narrative_success": "{actor}购买了物品",
+        "narrative_fail": "{actor}想买物品，但钱不够或商人不卖",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "ExchangeResources",
+                "source": "target",
+                "target": "self",
+                "transfer_mode": "transfer",
+                "consume_items": ["param:item_id"],
+                "consume_money": 0,
+                "produce_items": [],
+                "produce_money": "eval_price"
+            },
+            {
+                "effect": "RemoveTag",
+                "target": "param:item_id",
+                "tag": "commodity"
+            }
+        ]
+    },
+    "farm_inspect_shop": {
+        "verb": "InspectShop",
+        "planner_hint": "查看售货机正在售卖什么东西。",
+        "grounder_hint": "target_id 是售货机。",
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "has_tags",
+                    "target": "target",
+                    "tags": ["merchant"],
+                    "match": "all"
+                },
+                {
+                    "type": "same_location",
+                    "left": "self",
+                    "right": "target"
+                }
+            ]
+        },
+        "narrative_success": "{actor}查看了售货机商品",
+        "narrative_fail": "{actor}想看售货机商品，但售货机不理你",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "EmitEvent",
+                "event_type": "MessageBroadcasted",
+                "payload": {
+                    "source_ref": "target",
+                    "message": "我这里有 番茄种子(10元) 、蓝莓种子(30元)和黄金水壶（100元），要买点什么吗？"
+                }
+            }
+        ]
+    },
+    "farm_read_note": {
+        "verb": "ReadNote",
+        "planner_hint": "阅读教程或笔记，获取明确的玩法目标和流程提示。",
+        "grounder_hint": "target_id 必须是带 readable 标签的可见实体（通常是背包里的教程笔记）。",
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "has_tags",
+                    "target": "target",
+                    "tags": ["readable"],
+                    "match": "all"
+                },
+                {
+                    "type": "any",
+                    "conditions": [
+                        {
+                            "type": "inventory_contains",
+                            "owner": "self",
+                            "item_ref": "target"
+                        },
+                        {
+                            "type": "same_location",
+                            "left": "self",
+                            "right": "target"
+                        }
+                    ]
+                }
+            ]
+        },
+        "narrative_success": "{actor}阅读了{target}",
+        "narrative_fail": "{actor}想阅读{target}，但失败了",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "EmitEvent",
+                "event_type": "MessageBroadcasted",
+                "payload": {
+                    "source_ref": "target",
+                    "message": "教程：你是农场玩法测试玩家。目标是尽快赚到300块。先去商店购买种子和工具，再回农田播种、浇水、生长、收获并卖出。"
+                }
+            }
+        ]
+    },
+    "generic_take_item": {
+        "verb": "TakeItem",
+        "planner_hint": "把可见物品从来源容器拿到自己背包。商店货物请使用 BuyItem，而不是直接拿取。",
+        "grounder_hint": "target_id 是要拿取的物品ID。parameters 必须包含 source_id。若 source_id 是售货机(merchant)，应改用 BuyItem。",
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "has_tags",
+                    "target": "target",
+                    "tags": ["item"],
+                    "match": "all"
+                },
+                {
+                    "type": "not",
+                    "condition": {
+                        "type": "inventory_contains",
+                        "owner": "self",
+                        "item_ref": "target"
+                    }
+                },
+                {
+                    "type": "not",
+                    "condition": {
+                        "type": "has_tags",
+                        "target": "param:source_id",
+                        "tags": ["merchant"],
+                        "match": "all"
+                    }
+                },
+                {
+                    "type": "same_location",
+                    "left": "self",
+                    "right": "param:source_id"
+                }
+            ]
+        },
+        "narrative_success": "{actor}捡起了{target}",
+        "narrative_fail": "{actor}想拿起{target}，但失败了：{reason}",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "MoveEntity",
+                "entity_ref": "target",
+                "from_ref": "param:source_id",
+                "to_ref": "self"
+            }
+        ]
+    }
+}

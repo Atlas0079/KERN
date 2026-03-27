@@ -5,7 +5,6 @@ from pathlib import Path
 
 from newserver.log_manager import configure_logger, get_logger
 from newserver.data.loader import load_data_bundle
-from newserver.data.loader import load_json
 from newserver.data.checkpoint import resolve_checkpoint_file, restore_world_state_from_checkpoint
 from newserver.data.validator import validate_bundle
 from newserver.data.builder import build_world_state
@@ -22,12 +21,12 @@ def _load_runtime_config(project_root: Path) -> dict[str, str]:
 	if not config_path.exists():
 		raise FileNotFoundError(f"runtime config not found: {config_path}")
 	raw = json.loads(config_path.read_text(encoding="utf-8"))
-	env_map: dict[str, object] = {}
-	if isinstance(raw, dict):
-		if isinstance(raw.get("env"), dict):
-			env_map = dict(raw.get("env") or {})
-		else:
-			env_map = dict(raw)
+	if not isinstance(raw, dict):
+		raise ValueError("runtime config must be object with key 'env'")
+	env_raw = raw.get("env")
+	if not isinstance(env_raw, dict):
+		raise ValueError("runtime config must use {'env': {...}} format")
+	env_map: dict[str, object] = dict(env_raw)
 	out: dict[str, str] = {}
 	for k, v in env_map.items():
 		key = str(k or "").strip()
@@ -67,12 +66,18 @@ def main() -> None:
 	)
 	logger = get_logger()
 
-	bundle = load_data_bundle(project_root)
+	recipes_jsons = [x.strip() for x in _cfg_get(cfg, "RECIPES_JSONS", "Recipes.json").split(",") if x.strip()]
+	reactions_jsons = [x.strip() for x in _cfg_get(cfg, "REACTIONS_JSONS", "Reactions.json").split(",") if x.strip()]
+	entities_dirs = [x.strip() for x in _cfg_get(cfg, "ENTITIES_DIRS", "Entities").split(",") if x.strip()]
+	world_json_name = _cfg_get(cfg, "WORLD_JSON", "World.json")
 
-	world_json_name = _cfg_get(cfg, "WORLD_JSON", "")
-	if world_json_name:
-		world_path = project_root / "Data" / world_json_name
-		bundle.world = load_json(world_path)
+	bundle = load_data_bundle(
+		project_root,
+		recipes_jsons=recipes_jsons,
+		reactions_jsons=reactions_jsons,
+		entities_dirs=entities_dirs,
+		world_json=world_json_name,
+	)
 	restore_file_env = _cfg_get(cfg, "CHECKPOINT_RESTORE_FILE", "")
 	restore_dir_env = _cfg_get(cfg, "CHECKPOINT_RESTORE_DIR", "")
 	restore_path = resolve_checkpoint_file(restore_file_env, restore_dir_env)
@@ -155,7 +160,11 @@ def main() -> None:
 		if worker is not None:
 			worker.stop_task()
 		logger.info("task", "task_stopped_for_demo", context={"current_task_id": getattr(worker, "current_task_id", "") if worker else ""})
-		sleep_result = InteractionEngine(recipe_db=bundle.recipes).process_command(ws, agent_id, {"verb": "Sleep", "target_id": agent_id})
+		sleep_result = InteractionEngine(recipe_db=bundle.recipes).process_command(
+			ws,
+			agent_id,
+			{"verb": "Wait", "target_id": agent_id, "parameters": {"wait_ticks": 6}},
+		)
 		logger.info(
 			"interaction",
 			"sleep_command_result",
@@ -169,7 +178,11 @@ def main() -> None:
 	use_llm = _cfg_bool(cfg, "USE_LLM", False)
 	action_provider = build_default_llm_provider(cfg) if use_llm else SimplePolicyActionProvider()
 	max_ticks_env = _cfg_get(cfg, "MAX_TICKS", "")
-	max_ticks = int(max_ticks_env) if max_ticks_env else (15 if use_llm else 65)
+	default_max_ticks_llm = _cfg_int(cfg, "MAX_TICKS_DEFAULT_LLM", 15)
+	default_max_ticks_no_llm = _cfg_int(cfg, "MAX_TICKS_DEFAULT_NO_LLM", 65)
+	max_ticks = int(max_ticks_env) if max_ticks_env else (default_max_ticks_llm if use_llm else default_max_ticks_no_llm)
+	max_trigger_depth = _cfg_int(cfg, "MAX_TRIGGER_DEPTH", 4)
+	dialogue_budget_limit_per_location = _cfg_int(cfg, "DIALOGUE_BUDGET_LIMIT_PER_LOCATION", 4)
 	checkpoint_enabled = _cfg_bool(cfg, "CHECKPOINT_EVERY_TICK", True)
 	checkpoint_include_logs = _cfg_bool(cfg, "CHECKPOINT_INCLUDE_LOGS", True)
 	dialogue_log_full = _cfg_bool(cfg, "DIALOGUE_LOG_FULL", False)
@@ -183,6 +196,8 @@ def main() -> None:
 		perception_system=PerceptionSystem(),
 		action_provider=action_provider,
 		reaction_rules=list((bundle.reactions or {}).get("rules", []) or []),
+		max_trigger_depth=max_trigger_depth,
+		dialogue_budget_limit_per_location=dialogue_budget_limit_per_location,
 		checkpoint_enabled=checkpoint_enabled,
 		checkpoint_dir=checkpoint_dir,
 		checkpoint_include_logs=checkpoint_include_logs,

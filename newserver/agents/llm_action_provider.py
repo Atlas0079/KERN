@@ -35,6 +35,7 @@ def _entities_table(entities: list[dict[str, Any]]) -> str:
 		eid = str(e.get("id", "") or "")
 		name = str(e.get("name", "") or "")
 		tags = e.get("tags", []) or []
+		statuses = [str(x) for x in list(e.get("statuses", []) or [])]
 		contained_in = str(e.get("contained_in", "") or "")
 		contained_in_slot = str(e.get("contained_in_slot", "") or "")
 		is_top_level = bool(e.get("is_top_level", False))
@@ -54,19 +55,19 @@ def _entities_table(entities: list[dict[str, Any]]) -> str:
 				assigned_cnt = len(list(assigned)) if isinstance(assigned, list) else 0
 				avail = bool(t.get("is_available", False))
 				required_tool = str(t.get("required_item_tag", "") or "").strip()
-				done_condition = str(t.get("done_condition_id", "") or "").strip()
+				done_status = str(t.get("done_status_id", "") or "").strip()
 				extras: list[str] = []
 				if required_tool:
 					extras.append(f"requires:{required_tool}")
-				if done_condition:
-					extras.append(f"done_when:{done_condition}")
+				if done_status:
+					extras.append(f"done_when:{done_status}")
 				extra_text = f",{','.join(extras)}" if extras else ""
 				summaries.append(
 					f"{ttype}({prog:g}/{req:g},{status or 'Unknown'},{'available' if avail else f'assigned:{assigned_cnt}'}{extra_text})"
 				)
 			if summaries:
 				task_text = f", tasks: [{'; '.join(summaries)}]"
-		lines.append(f"- id: {eid}, name: {name}, tags: {list(tags)}, where: {where}{task_text}")
+		lines.append(f"- id: {eid}, name: {name}, tags: {list(tags)}, statuses: {list(statuses)}, where: {where}{task_text}")
 	return "\n".join(lines) if lines else "(No visible entities)"
 
 
@@ -77,6 +78,7 @@ def _entities_table_planner(entities: list[dict[str, Any]]) -> str:
 			continue
 		name = str(e.get("name", "") or "")
 		tags = [str(x) for x in list(e.get("tags", []) or [])]
+		statuses = [str(x) for x in list(e.get("statuses", []) or [])]
 		contained_in = str(e.get("contained_in", "") or "")
 		is_top_level = bool(e.get("is_top_level", False))
 		where = "地面可见" if is_top_level else ("容器内可见" if contained_in else "位置未知")
@@ -89,15 +91,17 @@ def _entities_table_planner(entities: list[dict[str, Any]]) -> str:
 					continue
 				ttype = str(t.get("task_type", "") or "")
 				status = str(t.get("task_status", "") or "")
+				prog = float(t.get("progress", 0.0) or 0.0)
+				req = float(t.get("required_progress", 0.0) or 0.0)
 				assigned = t.get("assigned_agent_ids", []) or []
 				assigned_cnt = len(list(assigned)) if isinstance(assigned, list) else 0
 				avail = bool(t.get("is_available", False))
 				required_tool = str(t.get("required_item_tag", "") or "").strip()
 				extra = f"，需工具:{required_tool}" if required_tool else ""
-				summaries.append(f"{ttype}({status or 'Unknown'},{'可接取' if avail else f'已分配:{assigned_cnt}'}{extra})")
+				summaries.append(f"{ttype}({prog:g}/{req:g},{status or 'Unknown'},{'可接取' if avail else f'已分配:{assigned_cnt}'}{extra})")
 			if summaries:
 				task_text = f"，任务: {'; '.join(summaries)}"
-		lines.append(f"- {name}（tags:{tags}，{where}{task_text}）")
+		lines.append(f"- {name}（tags:{tags}，状态:{statuses if statuses else '无'}，{where}{task_text}）")
 	return "\n".join(lines) if lines else "(No visible entities)"
 
 
@@ -110,8 +114,8 @@ def _inventory_table(inventory: list[dict[str, Any]]) -> str:
 		name = str(item.get("name", "") or "")
 		tags = item.get("tags", []) or []
 		slot = str(item.get("slot", "") or "")
-		conditions = item.get("conditions", []) or []
-		lines.append(f"- id: {eid}, name: {name}, tags: {list(tags)}, conditions: {list(conditions)}, slot: {slot}")
+		statuses = item.get("statuses", []) or []
+		lines.append(f"- id: {eid}, name: {name}, tags: {list(tags)}, statuses: {list(statuses)}, slot: {slot}")
 	return "\n".join(lines) if lines else "(Empty)"
 
 
@@ -122,8 +126,8 @@ def _inventory_table_planner(inventory: list[dict[str, Any]]) -> str:
 			continue
 		name = str(item.get("name", "") or "")
 		tags = [str(x) for x in list(item.get("tags", []) or [])]
-		conditions = [str(x) for x in list(item.get("conditions", []) or [])]
-		lines.append(f"- {name}（tags:{tags}，状态:{conditions if conditions else '无'}）")
+		statuses = [str(x) for x in list(item.get("statuses", []) or [])]
+		lines.append(f"- {name}（tags:{tags}，状态:{statuses if statuses else '无'}）")
 	return "\n".join(lines) if lines else "(Empty)"
 
 
@@ -171,6 +175,92 @@ def _map_topology_text(map_topology: list[dict[str, Any]]) -> str:
 	return "\n".join(lines) if lines else "(No map topology)"
 
 
+def _participants_table(participants: list[str]) -> str:
+	lines = [f"- {str(x)}" for x in list(participants or []) if str(x)]
+	return "\n".join(lines) if lines else "(No participants)"
+
+
+def _conversation_transcript_text(transcript: list[dict[str, Any]]) -> str:
+	lines: list[str] = []
+	for item in list(transcript or []):
+		if not isinstance(item, dict):
+			continue
+		utterance_index = int(item.get("utterance_index", 0) or 0)
+		speaker_name = str(item.get("speaker_name", "") or item.get("speaker_id", "") or "unknown")
+		text = str(item.get("text", "") or "").strip()
+		pass_turn = bool(item.get("pass", False))
+		body = "PASS" if pass_turn or not text else text
+		lines.append(f"- [{utterance_index}] {speaker_name}: {body}")
+	return "\n".join(lines) if lines else "(No transcript yet)"
+
+
+def _interrupt_preset_summaries_text(summaries: list[dict[str, Any]]) -> str:
+	lines: list[str] = []
+	for item in list(summaries or []):
+		if not isinstance(item, dict):
+			continue
+		pid = str(item.get("preset_id", "") or "")
+		desc = str(item.get("description", "") or "")
+		if pid and desc:
+			lines.append(f"- {pid}: {desc}")
+		elif pid:
+			lines.append(f"- {pid}")
+	return "\n".join(lines) if lines else ""
+
+
+def _task_summary_from_perception(perception: dict[str, Any]) -> str:
+	task_id = str((perception or {}).get("current_task_id", "") or "")
+	if not task_id:
+		return "无当前任务"
+	task_type = str((perception or {}).get("current_task_type", "") or "")
+	task_status = str((perception or {}).get("current_task_status", "") or "")
+	progress = float((perception or {}).get("current_task_progress", 0.0) or 0.0)
+	required_progress = float((perception or {}).get("current_task_required_progress", 0.0) or 0.0)
+	return f"{task_id} / {task_type or 'Unknown'} / {task_status or 'Unknown'} / {progress:g}/{required_progress:g}"
+
+
+def _with_mode_context(perception: dict[str, Any], mode: str, mode_context: dict[str, Any] | None = None) -> dict[str, Any]:
+	out = dict(perception or {})
+	out["mode"] = str(mode or "").strip()
+	out["mode_context"] = dict(mode_context or {})
+	return out
+
+
+def _build_agent_context(perception: dict[str, Any], self_id: str) -> dict[str, Any]:
+	p = dict(perception or {})
+	loc = p.get("location", {}) or {}
+	mode_context = p.get("mode_context", {}) or {}
+	return {
+		"self_id": str(self_id or p.get("self_id", "") or ""),
+		"agent_name": str(p.get("agent_name", "") or self_id),
+		"personality_summary": str(p.get("personality_summary", "") or ""),
+		"common_knowledge_summary": str(p.get("common_knowledge_summary", "") or ""),
+		"short_term_memory_text": str(p.get("short_term_memory_text", "") or ""),
+		"short_term_memory_items": list(p.get("short_term_memory_items", []) or []),
+		"mid_term_summary": str(p.get("mid_term_summary", "") or ""),
+		"tick": p.get("tick", None),
+		"tick_str": str(p.get("tick", "") or ""),
+		"location": {"id": str((loc or {}).get("id", "") or ""), "name": str((loc or {}).get("name", "") or "")},
+		"map_topology": list(p.get("map_topology", []) or []),
+		"reachable_locations": list(p.get("reachable_locations", []) or []),
+		"visible_entities": list(p.get("entities", []) or []),
+		"inventory": list(p.get("inventory", []) or []),
+		"can_start_conversation_here": bool(p.get("can_start_conversation_here", True)),
+		"current_task_id": str(p.get("current_task_id", "") or ""),
+		"current_task_type": str(p.get("current_task_type", "") or ""),
+		"current_task_status": str(p.get("current_task_status", "") or ""),
+		"current_task_progress": float(p.get("current_task_progress", 0.0) or 0.0),
+		"current_task_required_progress": float(p.get("current_task_required_progress", 0.0) or 0.0),
+		"current_task_summary": _task_summary_from_perception(p),
+		"active_interrupt_preset_id": str(p.get("active_interrupt_preset_id", "") or ""),
+		"available_interrupt_presets": list(p.get("available_interrupt_presets", []) or []),
+		"interrupt_preset_summaries": list(p.get("interrupt_preset_summaries", []) or []),
+		"interrupt_preset_summaries_text": _interrupt_preset_summaries_text(list(p.get("interrupt_preset_summaries", []) or [])),
+		"mode": str(p.get("mode", "") or ""),
+		"mode_context": dict(mode_context) if isinstance(mode_context, dict) else {},
+	}
+
+
 def _build_available_verbs(
 	recipe_db: dict[str, Any],
 	visible_entities: list[dict[str, Any]],
@@ -184,6 +274,14 @@ def _build_available_verbs(
 	- available_verbs_with_duration: verb + instant/duration for planner (text)
 	- allowed_verbs_set: for validation
 	"""
+
+	def _is_duration_process(process_data: dict[str, Any]) -> bool:
+		process = dict(process_data or {}) if isinstance(process_data, dict) else {}
+		duration = process.get("duration", {}) or {}
+		if isinstance(duration, dict) and duration:
+			return True
+		required_progress = float(process.get("required_progress", 0) or 0)
+		return required_progress != 0
 
 	# Visible tag set (n)
 	visible_tags: set[str] = set()
@@ -214,15 +312,15 @@ def _build_available_verbs(
 			if str(tag) in tags:
 				return True
 		return False
-	def _inv_has_condition(tag: str, condition_id: str) -> bool:
+	def _inv_has_status(tag: str, status_id: str) -> bool:
 		for it in list(inventory or []):
 			if not isinstance(it, dict):
 				continue
 			tags = [str(x) for x in list(it.get("tags", []) or [])]
 			if str(tag) not in tags:
 				continue
-			conds = [str(x) for x in list(it.get("conditions", []) or [])]
-			if str(condition_id) in conds:
+			statuses = [str(x) for x in list(it.get("statuses", []) or [])]
+			if str(status_id) in statuses:
 				return True
 		return False
 	for _rid, recipe in (recipe_db or {}).items():
@@ -250,17 +348,16 @@ def _build_available_verbs(
 			continue
 		if verb == "AcceptTask" and not _has_available_task_host():
 			continue
-		if verb == "ShootRevolver" and not _inv_has_condition("revolver", "revolver_loaded"):
+		if verb == "ShootRevolver" and not _inv_has_status("revolver", "revolver_loaded"):
 			continue
-		if verb == "ReloadRevolver" and (not _inv_has_condition("revolver", "revolver_unloaded") or not _inv_has_tag("bullet")):
+		if verb == "ReloadRevolver" and (not _inv_has_status("revolver", "revolver_unloaded") or not _inv_has_tag("bullet")):
 			continue
-		if verb == "ShootShockPistol" and not _inv_has_condition("shock_pistol", "shock_charged"):
+		if verb == "ShootShockPistol" and not _inv_has_status("shock_pistol", "shock_charged"):
 			continue
-		if verb == "RechargeShockPistol" and not _inv_has_condition("shock_pistol", "shock_uncharged"):
+		if verb == "RechargeShockPistol" and not _inv_has_status("shock_pistol", "shock_uncharged"):
 			continue
 		process = recipe.get("process", {}) or {}
-		required_progress = float((process or {}).get("required_progress", 0) or 0)
-		verbs[verb] = "duration" if required_progress != 0 else "instant"
+		verbs[verb] = "duration" if _is_duration_process(process) else "instant"
 
 	allowed = set(verbs.keys())
 
@@ -436,17 +533,24 @@ Output rules:
 	def decide(self, perception: dict[str, Any], reason: str, self_id: str | None = None) -> list[dict[str, Any]]:
 		logger = get_logger()
 		self_id = str(self_id or perception.get("self_id", "") or "")
-		visible_entities = list((perception or {}).get("entities", []) or [])
-		reachable_locations = list((perception or {}).get("reachable_locations", []) or [])
-		can_start_conversation_here = bool((perception or {}).get("can_start_conversation_here", True))
-		short_term_memory_text = str((perception or {}).get("short_term_memory_text", "") or "")
-		short_term_memory_items = list((perception or {}).get("short_term_memory_items", []) or [])
-		inventory = list((perception or {}).get("inventory", []) or [])
-		loc = (perception or {}).get("location", {}) or {}
+		decision_mode_context = {
+			"reason": str(reason or ""),
+			"interrupt_decision_mode": bool((perception or {}).get("interrupt_decision_mode", False)),
+			"interrupt_reason": str((perception or {}).get("interrupt_reason", "") or ""),
+		}
+		perception = _with_mode_context(perception if isinstance(perception, dict) else {}, "decision", decision_mode_context)
+		agent_context = _build_agent_context(perception, self_id)
+		visible_entities = list(agent_context.get("visible_entities", []) or [])
+		reachable_locations = list(agent_context.get("reachable_locations", []) or [])
+		can_start_conversation_here = bool(agent_context.get("can_start_conversation_here", True))
+		short_term_memory_text = str(agent_context.get("short_term_memory_text", "") or "")
+		short_term_memory_items = list(agent_context.get("short_term_memory_items", []) or [])
+		inventory = list(agent_context.get("inventory", []) or [])
+		loc = agent_context.get("location", {}) or {}
 		loc_id = str((loc or {}).get("id", "") or "")
 		loc_name = str((loc or {}).get("name", "") or "")
-		tick = (perception or {}).get("tick", None)
-		tick_str = str(tick) if tick is not None else ""
+		tick = agent_context.get("tick", None)
+		tick_str = str(agent_context.get("tick_str", "") or "")
 		tick_i: int | None = None
 		try:
 			tick_i = int(tick) if tick is not None else None
@@ -489,39 +593,36 @@ Output rules:
 			extra_grounder = "- ContinueCurrentTask: 仅在中断决策阶段可用，输出格式为 {\"verb\":\"ContinueCurrentTask\",\"parameters\":{}}，不得提供 target_id。"
 			planner_recipe_hints = f"{planner_recipe_hints}\n{extra_planner}".strip() if planner_recipe_hints else extra_planner
 			grounder_recipe_hints = f"{grounder_recipe_hints}\n{extra_grounder}".strip() if grounder_recipe_hints else extra_grounder
-
-		summaries = list((perception or {}).get("interrupt_preset_summaries", []) or [])
-		summ_lines: list[str] = []
-		for it in summaries:
-			if not isinstance(it, dict):
-				continue
-			pid = str(it.get("preset_id", "") or "")
-			desc = str(it.get("description", "") or "")
-			if pid and desc:
-				summ_lines.append(f"- {pid}: {desc}")
-			elif pid:
-				summ_lines.append(f"- {pid}")
-		interrupt_preset_summaries_text = "\n".join(summ_lines) if summ_lines else ""
+		perception["mode_context"] = {
+			**dict(agent_context.get("mode_context", {}) or {}),
+			"available_verbs": sorted(list(allowed_verbs)),
+			"available_verbs_with_duration": str(available_verbs_with_duration),
+			"planner_recipe_hints": str(planner_recipe_hints),
+			"grounder_recipe_hints": str(grounder_recipe_hints),
+			"continue_current_task_available": bool(interrupt_mode and current_task_id_for_interrupt),
+		}
+		agent_context = _build_agent_context(perception, self_id)
 
 		planner_template = _read_text(self.planner_template_path)
 		planner_mapping = {
-			"agent_name": str((perception or {}).get("agent_name", "") or self_id),
-			"personality_summary": str((perception or {}).get("personality_summary", "") or ""),
-			"common_knowledge_summary": str((perception or {}).get("common_knowledge_summary", "") or ""),
+			"agent_name": str(agent_context.get("agent_name", "") or self_id),
+			"personality_summary": str(agent_context.get("personality_summary", "") or ""),
+			"common_knowledge_summary": str(agent_context.get("common_knowledge_summary", "") or ""),
 			"long_term_memory": "",
-			"mid_term_summary": str((perception or {}).get("mid_term_summary", "") or ""),
+			"mid_term_summary": str(agent_context.get("mid_term_summary", "") or ""),
 			"current_goal": "",
 			"current_plan": "",
-			"current_task_id": str((perception or {}).get("current_task_id", "") or ""),
-			"active_interrupt_preset_id": str((perception or {}).get("active_interrupt_preset_id", "") or ""),
-			"available_interrupt_presets": ", ".join([str(x) for x in list((perception or {}).get("available_interrupt_presets", []) or [])]),
-			"interrupt_preset_summaries": interrupt_preset_summaries_text,
+			"current_task_id": str(agent_context.get("current_task_id", "") or ""),
+			"current_task_summary": str(agent_context.get("current_task_summary", "") or ""),
+			"active_interrupt_preset_id": str(agent_context.get("active_interrupt_preset_id", "") or ""),
+			"available_interrupt_presets": ", ".join([str(x) for x in list(agent_context.get("available_interrupt_presets", []) or [])]),
+			"interrupt_preset_summaries": str(agent_context.get("interrupt_preset_summaries_text", "") or ""),
 			"tick": tick_str,
 			"location_id": loc_id,
 			"location_name": loc_name,
 			"available_verbs_with_duration": available_verbs_with_duration,
 			"planner_recipe_hints": planner_recipe_hints,
-			"map_topology_text": _map_topology_text(list((perception or {}).get("map_topology", []) or [])),
+			"map_topology_text": _map_topology_text(list(agent_context.get("map_topology", []) or [])),
 			"reachable_locations_table": _reachable_locations_text_planner(reachable_locations),
 			"can_start_conversation_here": str(can_start_conversation_here).lower(),
 			"visible_entities_table": _entities_table_planner(visible_entities),
@@ -535,9 +636,11 @@ Output rules:
 			"self_id": self_id,
 			"tick": tick,
 			"location": {"id": loc_id, "name": loc_name},
-			"current_task_id": str((perception or {}).get("current_task_id", "") or ""),
-			"current_task_type": str((perception or {}).get("current_task_type", "") or ""),
-			"current_task_status": str((perception or {}).get("current_task_status", "") or ""),
+			"mode": str(agent_context.get("mode", "") or ""),
+			"mode_context": dict(agent_context.get("mode_context", {}) or {}),
+			"current_task_id": str(agent_context.get("current_task_id", "") or ""),
+			"current_task_type": str(agent_context.get("current_task_type", "") or ""),
+			"current_task_status": str(agent_context.get("current_task_status", "") or ""),
 			"entities": list(visible_entities),
 			"inventory": list(inventory),
 			"reachable_locations": list(reachable_locations),
@@ -583,7 +686,7 @@ Output rules:
 					{"role": "system", "content": self.PLANNER_SYSTEM_PROMPT},
 					{"role": "user", "content": planner_prompt},
 				],
-				temperature=0.4,
+				temperature=1,
 			).strip()
 		except LLMRequestError as e:
 			self._on_llm_failure(logger, self_id, tick_i, "planner", str(e))
@@ -609,7 +712,7 @@ Output rules:
 				"location_name": loc_name,
 				"active_interrupt_preset_id": str((perception or {}).get("active_interrupt_preset_id", "") or ""),
 				"available_interrupt_presets": ", ".join([str(x) for x in list((perception or {}).get("available_interrupt_presets", []) or [])]),
-				"interrupt_preset_summaries": interrupt_preset_summaries_text,
+				"interrupt_preset_summaries": str(agent_context.get("interrupt_preset_summaries_text", "") or ""),
 				"self_id": self_id,
 				"reachable_locations_table": _reachable_locations_text(reachable_locations),
 				"can_start_conversation_here": str(can_start_conversation_here).lower(),
@@ -653,7 +756,7 @@ Output rules:
 					{"role": "system", "content": self.GROUNDER_SYSTEM_PROMPT},
 					{"role": "user", "content": grounder_prompt},
 				],
-				temperature=0.2,
+				temperature=1,
 			).strip()
 		except LLMRequestError as e:
 			self._on_llm_failure(logger, self_id, tick_i, "grounder", str(e))
@@ -731,25 +834,43 @@ Output rules:
 	def decide_dialogue(self, perception: dict[str, Any], conversation_context: dict[str, Any], self_id: str | None = None) -> str:
 		logger = get_logger()
 		self_id = str(self_id or perception.get("self_id", "") or "")
-		loc = (perception or {}).get("location", {}) or {}
+		perception = _with_mode_context(perception if isinstance(perception, dict) else {}, "dialogue", conversation_context if isinstance(conversation_context, dict) else {})
+		agent_context = _build_agent_context(perception, self_id)
+		loc = agent_context.get("location", {}) or {}
 		loc_id = str((loc or {}).get("id", "") or "")
 		loc_name = str((loc or {}).get("name", "") or "")
-		visible_entities = list((perception or {}).get("entities", []) or [])
-		short_term_memory_text = str((perception or {}).get("short_term_memory_text", "") or "")
+		visible_entities = list(agent_context.get("visible_entities", []) or [])
+		short_term_memory_text = str(agent_context.get("short_term_memory_text", "") or "")
+		inventory = list(agent_context.get("inventory", []) or [])
+		reachable_locations = list(agent_context.get("reachable_locations", []) or [])
+		mode_context = dict(agent_context.get("mode_context", {}) or {})
+		utterance_index = int(mode_context.get("utterance_index", 0) or 0)
+		max_utterances_per_tick = int(mode_context.get("max_utterances_per_tick", 0) or 0)
+		remaining_utterances = max(0, max_utterances_per_tick - utterance_index)
 		dialogue_template = _read_text(self.dialogue_template_path)
 		dialogue_prompt = _fill_template(
 			dialogue_template,
 			{
 				"self_id": self_id,
-				"agent_name": str((perception or {}).get("agent_name", "") or self_id),
-				"personality_summary": str((perception or {}).get("personality_summary", "") or ""),
-				"common_knowledge_summary": str((perception or {}).get("common_knowledge_summary", "") or ""),
+				"agent_name": str(agent_context.get("agent_name", "") or self_id),
+				"personality_summary": str(agent_context.get("personality_summary", "") or ""),
+				"common_knowledge_summary": str(agent_context.get("common_knowledge_summary", "") or ""),
+				"mid_term_summary": str(agent_context.get("mid_term_summary", "") or ""),
+				"current_task_summary": str(agent_context.get("current_task_summary", "") or ""),
+				"mode": str(agent_context.get("mode", "") or ""),
 				"location_id": loc_id,
 				"location_name": loc_name,
-				"participants_table": "\n".join([f"- {x}" for x in list((conversation_context or {}).get("participants", []) or [])]),
-				"utterance_index": str((conversation_context or {}).get("utterance_index", 0)),
-				"max_utterances_per_tick": str((conversation_context or {}).get("max_utterances_per_tick", 0)),
+				"participants_table": _participants_table(list(mode_context.get("participants", []) or [])),
+				"utterance_index": str(utterance_index),
+				"max_utterances_per_tick": str(max_utterances_per_tick),
+				"remaining_utterances_in_tick": str(remaining_utterances),
+				"conversation_id": str(mode_context.get("conversation_id", "") or ""),
+				"dialogue_phase": str(mode_context.get("dialogue_phase", "") or "dialogue"),
+				"initiator_id": str(mode_context.get("initiator_id", "") or ""),
+				"conversation_transcript": _conversation_transcript_text(list(mode_context.get("transcript", []) or [])),
 				"visible_entities_table": _entities_table(visible_entities),
+				"inventory_table": _inventory_table(inventory),
+				"reachable_locations_table": _reachable_locations_text(reachable_locations),
 				"recent_interactions_text": short_term_memory_text,
 			},
 		)
@@ -772,7 +893,7 @@ Output rules:
 				{"role": "system", "content": self.DIALOGUE_SYSTEM_PROMPT},
 				{"role": "user", "content": dialogue_prompt},
 			],
-			temperature=0.7,
+			temperature=1,
 		).strip()
 		if "\n" in line:
 			line = line.splitlines()[0].strip()
@@ -791,7 +912,7 @@ def build_default_llm_provider(config: dict[str, Any] | None = None) -> LLMActio
 	def _cfg(key: str, default: str = "") -> str:
 		if key in cfg and cfg.get(key) is not None:
 			return str(cfg.get(key) or "").strip()
-		return str(__import__("os").environ.get(key, default) or "").strip()
+		return str(default or "").strip()
 	def _cfg_bool(key: str, default: bool = False) -> bool:
 		v = _cfg(key, "1" if default else "0").lower()
 		return v in {"1", "true", "yes", "on"}

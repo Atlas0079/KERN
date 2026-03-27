@@ -178,7 +178,8 @@
                                     "progressor_id": "Linear",
                                     "progressor_params": {
                                         "base_progress_per_tick": 1.0,
-                                        "progress_contributors": []
+                                        "add_terms": [],
+                                        "mul_terms": []
                                     },
                                     "tick_effects": [],
                                     "completion_effects": [
@@ -231,7 +232,8 @@
                                     "progressor_id": "Linear",
                                     "progressor_params": {
                                         "base_progress_per_tick": 1.0,
-                                        "progress_contributors": []
+                                        "add_terms": [],
+                                        "mul_terms": []
                                     },
                                     "tick_effects": [],
                                     "completion_effects": [
@@ -266,19 +268,20 @@
                                     "task_status": "Inactive",
                                     "parameters": {
                                         "required_item_tag": "task_tool_c",
-                                        "done_condition_id": "task_c_done"
+                                        "done_status_id": "task_c_done"
                                     },
                                     "progressor_id": "Linear",
                                     "progressor_params": {
                                         "base_progress_per_tick": 1.0,
-                                        "progress_contributors": []
+                                        "add_terms": [],
+                                        "mul_terms": []
                                     },
                                     "tick_effects": [],
                                     "completion_effects": [
                                         {
-                                            "effect": "AddCondition",
+                                            "effect": "AddStatus",
                                             "target": "target",
-                                            "condition_id": "task_c_done"
+                                            "status_id": "task_c_done"
                                         }
                                     ]
                                 }
@@ -322,7 +325,8 @@
                                     "progressor_id": "Linear",
                                     "progressor_params": {
                                         "base_progress_per_tick": 1.0,
-                                        "progress_contributors": []
+                                        "add_terms": [],
+                                        "mul_terms": []
                                     },
                                     "tick_effects": [],
                                     "completion_effects": [
@@ -375,7 +379,8 @@
                                     "progressor_id": "Linear",
                                     "progressor_params": {
                                         "base_progress_per_tick": 1.0,
-                                        "progress_contributors": []
+                                        "add_terms": [],
+                                        "mul_terms": []
                                     },
                                     "tick_effects": [],
                                     "completion_effects": [
@@ -410,19 +415,20 @@
                                     "task_status": "Inactive",
                                     "parameters": {
                                         "required_item_tag": "task_tool_a",
-                                        "done_condition_id": "task_a_done"
+                                        "done_status_id": "task_a_done"
                                     },
                                     "progressor_id": "Linear",
                                     "progressor_params": {
                                         "base_progress_per_tick": 1.0,
-                                        "progress_contributors": []
+                                        "add_terms": [],
+                                        "mul_terms": []
                                     },
                                     "tick_effects": [],
                                     "completion_effects": [
                                         {
-                                            "effect": "AddCondition",
+                                            "effect": "AddStatus",
                                             "target": "target",
-                                            "condition_id": "task_a_done"
+                                            "status_id": "task_a_done"
                                         }
                                     ]
                                 }
@@ -466,7 +472,8 @@
                                     "progressor_id": "Linear",
                                     "progressor_params": {
                                         "base_progress_per_tick": 1.0,
-                                        "progress_contributors": []
+                                        "add_terms": [],
+                                        "mul_terms": []
                                     },
                                     "tick_effects": [],
                                     "completion_effects": [
@@ -501,19 +508,20 @@
                                     "task_status": "Inactive",
                                     "parameters": {
                                         "required_item_tag": "task_tool_b",
-                                        "done_condition_id": "task_b_done"
+                                        "done_status_id": "task_b_done"
                                     },
                                     "progressor_id": "Linear",
                                     "progressor_params": {
                                         "base_progress_per_tick": 1.0,
-                                        "progress_contributors": []
+                                        "add_terms": [],
+                                        "mul_terms": []
                                     },
                                     "tick_effects": [],
                                     "completion_effects": [
                                         {
-                                            "effect": "AddCondition",
+                                            "effect": "AddStatus",
                                             "target": "target",
-                                            "condition_id": "task_b_done"
+                                            "status_id": "task_b_done"
                                         }
                                     ]
                                 }

@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from ..models.components import CreatureComponent, TagComponent
+from ._effect_binder import BindError, _base_bind, _require_float, _require_str, _resolve_param_token
 
 
 def _set_nested_value(obj: Any, path: str, value: Any, delta_mode: bool = False) -> Any:
@@ -41,6 +42,42 @@ def _set_nested_value(obj: Any, path: str, value: Any, delta_mode: bool = False)
 		setattr(current, last_key, new_val)
 		return new_val
 	return None
+
+
+def _bind_modify_property(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	target = _require_str(params, effect_type, "target")
+	component = _require_str(params, effect_type, "component")
+	prop = _require_str(params, effect_type, "property")
+	has_change = "change" in params
+	has_value = "value" in params
+	missing: list[str] = []
+	if not has_change and not has_value:
+		missing.append("change_or_value")
+	if has_change and has_value:
+		missing.append("change_or_value_xor")
+	if missing:
+		raise BindError(effect_type, missing)
+	out: dict[str, Any] = {"effect": effect_type, "target": target, "component": component, "property": prop}
+	if has_change:
+		out["change"] = _require_float(params, effect_type, "change", ctx)
+	elif has_value:
+		out["value"] = _resolve_param_token(params.get("value", None), ctx)
+	return out, ctx
+
+
+def _bind_add_tag(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	target = _require_str(params, effect_type, "target")
+	tag = _require_str(params, effect_type, "tag")
+	return {"effect": effect_type, "target": target, "tag": tag}, ctx
+
+
+def _bind_remove_tag(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	target = _require_str(params, effect_type, "target")
+	tag = _require_str(params, effect_type, "tag")
+	return {"effect": effect_type, "target": target, "tag": tag}, ctx
 
 
 def execute_modify_property(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:

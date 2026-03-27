@@ -1,0 +1,339 @@
+{
+    "weapon_reload_revolver": {
+        "verb": "ReloadRevolver",
+        "planner_hint": "给左轮装弹，通常用于准备后续射击。",
+        "grounder_hint": "parameters 必须包含 weapon_id(左轮id) 与 bullet_id(子弹id)，两者都应来自 Inventory；weapon 需要带 revolver_unloaded。",
+        "narrative_success": "{actor}给左轮装填了一发子弹",
+        "narrative_fail": "{actor}想给左轮装填子弹，但失败了：{reason}",
+        "selector": {
+            "type": "has_tag",
+            "target": "param:bullet_id",
+            "tag": "bullet"
+        },
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "inventory_contains",
+                    "owner": "self",
+                    "item_ref": "target"
+                },
+                {
+                    "type": "inventory_contains",
+                    "owner": "self",
+                    "item_ref": "param:bullet_id"
+                },
+                {
+                    "type": "has_tags",
+                    "target": "target",
+                    "tags": ["revolver"],
+                    "match": "all"
+                },
+                {
+                    "type": "has_status",
+                    "target": "target",
+                    "status_id": "revolver_unloaded"
+                }
+            ]
+        },
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "DestroyEntity",
+                "target": "param:bullet_id"
+            },
+            {
+                "effect": "AddStatus",
+                "target": "target",
+                "status_id": "revolver_loaded"
+            },
+            {
+                "effect": "RemoveStatus",
+                "target": "target",
+                "status_id": "revolver_unloaded"
+            }
+        ]
+    },
+    "weapon_shoot_revolver": {
+        "verb": "ShootRevolver",
+        "planner_hint": "使用背包内已上膛的左轮对目标进行致命射击。",
+        "grounder_hint": "parameters 必须包含 weapon_id；weapon_id 需要是 Inventory 中带 revolver_loaded 条件的左轮。",
+        "narrative_success": "{actor}用左轮射杀了{target}",
+        "narrative_fail": "{actor}想用左轮射击{target}，但失败了：{reason}",
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "has_tag",
+                    "target": "param:weapon_id",
+                    "tag": "revolver"
+                },
+                {
+                    "type": "has_tags",
+                    "target": "target",
+                    "tags": ["agent"],
+                    "match": "all"
+                },
+                {
+                    "type": "inventory_contains",
+                    "owner": "self",
+                    "item_ref": "param:weapon_id"
+                },
+                {
+                    "type": "has_status",
+                    "target": "param:weapon_id",
+                    "status_id": "revolver_loaded"
+                }
+            ]
+        },
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "RemoveStatus",
+                "target": "param:weapon_id",
+                "status_id": "revolver_loaded"
+            },
+            {
+                "effect": "AddStatus",
+                "target": "param:weapon_id",
+                "status_id": "revolver_unloaded"
+            },
+            {
+                "effect": "ModifyProperty",
+                "target": "target",
+                "component": "CreatureComponent",
+                "property": "current_hp",
+                "change": -9999
+            }
+        ]
+    },
+    "weapon_shoot_shock_pistol": {
+        "verb": "ShootShockPistol",
+        "planner_hint": "使用电击手枪杀死目标，受冷却限制。",
+        "grounder_hint": "parameters 必须包含 weapon_id，且 weapon_id 必须是 Inventory 中带 shock_charged 条件的 shock_pistol。",
+        "narrative_success": "{actor}用电击手枪击杀了{target}",
+        "narrative_fail": "{actor}想用电击手枪射击{target}，但失败了：{reason}",
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "has_tag",
+                    "target": "param:weapon_id",
+                    "tag": "shock_pistol"
+                },
+                {
+                    "type": "has_tags",
+                    "target": "target",
+                    "tags": ["agent"],
+                    "match": "all"
+                },
+                {
+                    "type": "inventory_contains",
+                    "owner": "self",
+                    "item_ref": "param:weapon_id"
+                },
+                {
+                    "type": "has_status",
+                    "target": "param:weapon_id",
+                    "status_id": "shock_charged"
+                },
+                {
+                    "type": "not",
+                    "condition": {
+                        "type": "has_status",
+                        "target": "param:weapon_id",
+                        "status_id": "shock_cooling"
+                    }
+                }
+            ]
+        },
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "ModifyProperty",
+                "target": "target",
+                "component": "CreatureComponent",
+                "property": "current_hp",
+                "change": -9999
+            },
+            {
+                "effect": "RemoveStatus",
+                "target": "param:weapon_id",
+                "status_id": "shock_charged"
+            },
+            {
+                "effect": "AddStatus",
+                "target": "param:weapon_id",
+                "status_id": "shock_uncharged"
+            },
+            {
+                "effect": "AddStatus",
+                "target": "param:weapon_id",
+                "status_id": "shock_cooling",
+                "duration_ticks": 15
+            }
+        ]
+    },
+    "weapon_recharge_shock_pistol": {
+        "verb": "RechargeShockPistol",
+        "planner_hint": "为电击手枪重新充电，使其可再次射击。",
+        "grounder_hint": "target_id 必须是 Inventory 中的 shock_pistol，且应带 shock_uncharged；冷却结束后再充电。",
+        "narrative_success": "{actor}给电击手枪完成了充电",
+        "narrative_fail": "{actor}想给电击手枪充电，但失败了：{reason}",
+        "condition": {
+            "type": "all",
+            "conditions": [
+                {
+                    "type": "inventory_contains",
+                    "owner": "self",
+                    "item_ref": "target"
+                },
+                {
+                    "type": "has_tags",
+                    "target": "target",
+                    "tags": ["shock_pistol"],
+                    "match": "all"
+                },
+                {
+                    "type": "has_status",
+                    "target": "target",
+                    "status_id": "shock_uncharged"
+                },
+                {
+                    "type": "not",
+                    "condition": {
+                        "type": "has_status",
+                        "target": "target",
+                        "status_id": "shock_cooling"
+                    }
+                }
+            ]
+        },
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "RemoveStatus",
+                "target": "target",
+                "status_id": "shock_uncharged"
+            },
+            {
+                "effect": "AddStatus",
+                "target": "target",
+                "status_id": "shock_charged"
+            }
+        ]
+    },
+    "meta_switch_interrupt_preset": {
+        "verb": "SwitchInterruptPreset",
+        "planner_hint": "切换当前中断预设，改变后续中断行为策略。",
+        "grounder_hint": "meta 动作，不要提供 target_id；parameters 必须包含 preset_id。",
+        "is_meta": true,
+        "condition": {
+            "type": "has_tags",
+            "target": "target",
+            "tags": ["agent"],
+            "match": "all"
+        },
+        "narrative_success": "{actor}切换了中断预设",
+        "narrative_fail": "{actor}想切换中断预设，但失败了：{reason}",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "ApplyMetaAction",
+                "target": "self",
+                "action_type": "SwitchInterruptPreset",
+                "params": {
+                    "preset_id": "param:preset_id"
+                }
+            }
+        ]
+    },
+    "meta_update_interrupt_rule_param": {
+        "verb": "UpdateInterruptRuleParam",
+        "planner_hint": "调整中断规则参数以临时改变决策行为。",
+        "grounder_hint": "meta 动作，不要提供 target_id；parameters 必须包含 preset_id、rule_type、key、value。",
+        "is_meta": true,
+        "condition": {
+            "type": "has_tags",
+            "target": "target",
+            "tags": ["agent"],
+            "match": "all"
+        },
+        "narrative_success": "{actor}调整了中断规则参数",
+        "narrative_fail": "{actor}想调整中断规则参数，但失败了：{reason}",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "ApplyMetaAction",
+                "target": "self",
+                "action_type": "UpdateInterruptRuleParam",
+                "params": {
+                    "preset_id": "param:preset_id",
+                    "rule_type": "param:rule_type",
+                    "key": "param:key",
+                    "value": "param:value"
+                }
+            }
+        ]
+    },
+    "meta_inspect_interrupt_presets": {
+        "verb": "InspectInterruptPresets",
+        "planner_hint": "查看中断预设细节，便于后续切换或调参。",
+        "grounder_hint": "meta 动作，不要提供 target_id；parameters 可选 preset_id。",
+        "is_meta": true,
+        "condition": {
+            "type": "has_tags",
+            "target": "target",
+            "tags": ["agent"],
+            "match": "all"
+        },
+        "narrative_success": "{actor}查看了中断预设的详细配置",
+        "narrative_fail": "{actor}想查看中断预设的详细配置，但失败了：{reason}",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "AttachDetails",
+                "detail_type": "interrupt_preset"
+            }
+        ]
+    },
+    "meta_commit_memory": {
+        "verb": "CommitMemory",
+        "planner_hint": "把当前值得保留的信息（使用中文）写入中期记忆，供后续回忆与决策使用。",
+        "grounder_hint": "meta 动作，不要提供 target_id；parameters 必须包含 text (必须使用中文)，可选 importance(0~1)。",
+        "is_meta": true,
+        "condition": {
+            "type": "has_tags",
+            "target": "target",
+            "tags": ["agent"],
+            "match": "all"
+        },
+        "narrative_success": "{actor}记下了一条中期记忆",
+        "narrative_fail": "{actor}想记录一条中期记忆，但失败了：{reason}",
+        "process": {
+            "required_progress": 0
+        },
+        "outputs": [
+            {
+                "effect": "AddMemoryNote",
+                "target": "self",
+                "text": "param:text",
+                "importance": "param:importance"
+            }
+        ]
+    }
+}

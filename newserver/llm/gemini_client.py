@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import os
 import time
 from dataclasses import dataclass
 from typing import Any
@@ -13,9 +12,9 @@ from ..log_manager import get_logger
 from .openai_compat_client import LLMRequestError
 
 
-DEFAULT_GEMINI_BASE_URL = os.environ.get("GEMINI_BASE_URL", "https://generativelanguage.googleapis.com")
-DEFAULT_GEMINI_API_PREFIX = os.environ.get("GEMINI_API_PREFIX", "/v1beta")
-DEFAULT_GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyCzeZXBGPE3Hu9ZX4XQJA5LX9pV8OE8qi8")
+DEFAULT_GEMINI_BASE_URL = "https://generativelanguage.googleapis.com"
+DEFAULT_GEMINI_API_PREFIX = "/v1beta"
+DEFAULT_GEMINI_API_KEY = "REPLACE_ME"
 
 
 def _join_url(base_url: str, path: str) -> str:
