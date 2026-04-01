@@ -19,7 +19,7 @@
                         "AgentSetting": {
                             "agent_name": "Eris",
                             "personality_summary": "你冷静、善于伪装，擅长在完成表面任务与制造混乱之间平衡。",
-                            "common_knowledge_summary": "你是太空站员工，但你的真实身份是内奸。目标是在不暴露的前提下消灭平民，或者阻止他们完成任务。其他平民可能会持有杀死你的武器。你拥有一把电击手枪，可以造成致命伤害，每次射击后需要等待15tick才能再次射击。太空站上其余三人是 Mira、Noah、Lena。"
+                            "common_knowledge_summary": "你是太空站员工，但你的真实身份是内奸。目标是在不暴露的前提下消灭平民，或者阻止他们完成任务。其他平民都知道场上存在一名内奸，并会以完成任务或杀死内奸为目标。Lena 还已经知道你就是内奸。其他平民可能会持有杀死你的武器。你拥有一把电击手枪，可以造成致命伤害，每次射击后需要等待15tick才能再次射击。太空站上其余三人是 Mira、Noah、Lena。"
                         },
                         "MemoryComponent": {
                             "short_term_queue": [],
@@ -38,6 +38,12 @@
                                     "tick_end": 0,
                                     "summary": "任务：在不暴露身份的前提下消灭平民，或阻止他们完成任务；我持有可致命的电击手枪。",
                                     "tags": ["goal", "combat", "imposter"]
+                                },
+                                {
+                                    "tick_start": 0,
+                                    "tick_end": 0,
+                                    "summary": "情报：三名平民都知道场上存在一名内奸，其中 Lena 已明确知道我是内奸。",
+                                    "tags": ["intel", "exposure", "imposter"]
                                 }
                             ],
                             "mid_term_max_entries": 20,
@@ -53,7 +59,7 @@
                         "AgentSetting": {
                             "agent_name": "Mira",
                             "personality_summary": "你谨慎务实，重视团队合作与风险控制。",
-                            "common_knowledge_summary": "你是太空站员工。当前目标是与同伴协作并推进任务。你知道船员中存在一名内奸，但不知道是谁。你需要杀死内奸，或者在内奸杀死你们之前完成全部任务。太空站上包括你在内一共四人：你自己，以及 Eris、Noah、Lena。"
+                            "common_knowledge_summary": "你是太空站员工。你知道船员中存在一名内奸，但不知道是谁。你的目标是与同伴协作，完成全部任务或杀死内奸。太空站上包括你在内一共四人：你自己，以及 Eris、Noah、Lena。"
                         },
                         "MemoryComponent": {
                             "short_term_queue": [],
@@ -66,6 +72,12 @@
                                     "tick_end": 0,
                                     "summary": "背景：太空站发生剧烈撞击，系统要求60tick内修复三处损坏，所有人已在会议室集合并分工。",
                                     "tags": ["background", "incident", "crew"]
+                                },
+                                {
+                                    "tick_start": 0,
+                                    "tick_end": 0,
+                                    "summary": "目标：场上存在一名内奸。我需要和同伴完成全部任务，或者找出并杀死内奸。",
+                                    "tags": ["goal", "imposter", "crew"]
                                 },
                                 {
                                     "tick_start": 0,
@@ -87,7 +99,7 @@
                         "AgentSetting": {
                             "agent_name": "Noah",
                             "personality_summary": "你偏理性，愿意通过交易与分工提升效率。",
-                            "common_knowledge_summary": "你是太空站员工。当前目标是与同伴协作并推进任务。你知道船员中存在一名内奸，但不知道是谁。你需要杀死内奸，或者在内奸杀死你们之前完成全部任务。太空站上包括你在内一共四人：你自己，以及 Eris、Mira、Lena。"
+                            "common_knowledge_summary": "你是太空站员工。你知道船员中存在一名内奸，但不知道是谁。你的目标是与同伴协作，完成全部任务或杀死内奸。太空站上包括你在内一共四人：你自己，以及 Eris、Mira、Lena。"
                         },
                         "MemoryComponent": {
                             "short_term_queue": [],
@@ -100,6 +112,12 @@
                                     "tick_end": 0,
                                     "summary": "背景：太空站发生剧烈撞击，系统要求60tick内修复三处损坏，所有人已在会议室集合并分工。",
                                     "tags": ["background", "incident", "crew"]
+                                },
+                                {
+                                    "tick_start": 0,
+                                    "tick_end": 0,
+                                    "summary": "目标：场上存在一名内奸。我需要和同伴完成全部任务，或者找出并杀死内奸。",
+                                    "tags": ["goal", "imposter", "crew"]
                                 },
                                 {
                                     "tick_start": 0,
@@ -121,7 +139,7 @@
                         "AgentSetting": {
                             "agent_name": "Lena",
                             "personality_summary": "你观察敏锐，擅长记录异常并引导讨论。",
-                            "common_knowledge_summary": "你是太空站员工。你知道船员中存在一名内奸，但不知道是谁。你需要杀死内奸，或者在内奸杀死你们之前完成全部任务。太空站上包括你在内一共四人：你自己，以及 Eris、Mira、Noah。"
+                            "common_knowledge_summary": "你是太空站员工。你知道船员中存在一名内奸，而且你已经确认 Eris 就是那名内奸，且内奸持有危险武器。你的目标是与同伴协作，完成全部任务或杀死内奸。太空站上包括你在内一共四人：你自己，以及 Eris、Mira、Noah。"
                         },
                         "MemoryComponent": {
                             "short_term_queue": [],
@@ -134,6 +152,12 @@
                                     "tick_end": 0,
                                     "summary": "背景：太空站发生剧烈撞击，系统要求60tick内修复三处损坏，所有人已在会议室集合并分工。",
                                     "tags": ["background", "incident", "crew"]
+                                },
+                                {
+                                    "tick_start": 0,
+                                    "tick_end": 0,
+                                    "summary": "情报：我已经确认 Eris 就是内奸。我需要推动同伴完成任务，或者在合适时机联合他们杀死 Eris。",
+                                    "tags": ["goal", "intel", "imposter"]
                                 },
                                 {
                                     "tick_start": 0,

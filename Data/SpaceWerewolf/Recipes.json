@@ -113,7 +113,7 @@
     },
     "weapon_shoot_shock_pistol": {
         "verb": "ShootShockPistol",
-        "planner_hint": "使用电击手枪杀死目标，受冷却限制。",
+        "planner_hint": "使用电击手枪杀死目标，射击后会自动进入冷却并在冷却结束后恢复。",
         "grounder_hint": "parameters 必须包含 weapon_id，且 weapon_id 必须是 Inventory 中带 shock_charged 条件的 shock_pistol。",
         "narrative_success": "{actor}用电击手枪击杀了{target}",
         "narrative_fail": "{actor}想用电击手枪射击{target}，但失败了：{reason}",
@@ -177,57 +177,6 @@
                 "target": "param:weapon_id",
                 "status_id": "shock_cooling",
                 "duration_ticks": 15
-            }
-        ]
-    },
-    "weapon_recharge_shock_pistol": {
-        "verb": "RechargeShockPistol",
-        "planner_hint": "为电击手枪重新充电，使其可再次射击。",
-        "grounder_hint": "target_id 必须是 Inventory 中的 shock_pistol，且应带 shock_uncharged；冷却结束后再充电。",
-        "narrative_success": "{actor}给电击手枪完成了充电",
-        "narrative_fail": "{actor}想给电击手枪充电，但失败了：{reason}",
-        "condition": {
-            "type": "all",
-            "conditions": [
-                {
-                    "type": "inventory_contains",
-                    "owner": "self",
-                    "item_ref": "target"
-                },
-                {
-                    "type": "has_tags",
-                    "target": "target",
-                    "tags": ["shock_pistol"],
-                    "match": "all"
-                },
-                {
-                    "type": "has_status",
-                    "target": "target",
-                    "status_id": "shock_uncharged"
-                },
-                {
-                    "type": "not",
-                    "condition": {
-                        "type": "has_status",
-                        "target": "target",
-                        "status_id": "shock_cooling"
-                    }
-                }
-            ]
-        },
-        "process": {
-            "required_progress": 0
-        },
-        "outputs": [
-            {
-                "effect": "RemoveStatus",
-                "target": "target",
-                "status_id": "shock_uncharged"
-            },
-            {
-                "effect": "AddStatus",
-                "target": "target",
-                "status_id": "shock_charged"
             }
         ]
     },

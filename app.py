@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import argparse
 import json
+import os
 from pathlib import Path
 
 from newserver.log_manager import configure_logger, get_logger
@@ -16,16 +18,26 @@ from newserver.agents.simple_policy import SimplePolicyActionProvider
 from newserver.agents.llm_action_provider import build_default_llm_provider
 
 
-def _load_runtime_config(project_root: Path) -> dict[str, str]:
-	config_path = project_root / "runtime_config.json"
+def _resolve_runtime_config_path(project_root: Path, cli_config_path: str = "") -> Path:
+	raw_cli = str(cli_config_path or "").strip()
+	raw_env = str(os.environ.get("RUNTIME_CONFIG_FILE", "") or "").strip()
+	raw = raw_cli or raw_env or "runtime_config.json"
+	p = Path(raw)
+	if p.is_absolute():
+		return p
+	return project_root / p
+
+
+def _load_runtime_config(project_root: Path, cli_config_path: str = "") -> tuple[dict[str, str], Path]:
+	config_path = _resolve_runtime_config_path(project_root, cli_config_path)
 	if not config_path.exists():
 		raise FileNotFoundError(f"runtime config not found: {config_path}")
 	raw = json.loads(config_path.read_text(encoding="utf-8"))
 	if not isinstance(raw, dict):
-		raise ValueError("runtime config must be object with key 'env'")
+		raise ValueError(f"runtime config must be object with key 'env': {config_path}")
 	env_raw = raw.get("env")
 	if not isinstance(env_raw, dict):
-		raise ValueError("runtime config must use {'env': {...}} format")
+		raise ValueError(f"runtime config must use {{'env': {{...}}}} format: {config_path}")
 	env_map: dict[str, object] = dict(env_raw)
 	out: dict[str, str] = {}
 	for k, v in env_map.items():
@@ -35,7 +47,7 @@ def _load_runtime_config(project_root: Path) -> dict[str, str]:
 		if v is None:
 			continue
 		out[key] = str(v)
-	return out
+	return out, config_path
 
 
 def _cfg_get(cfg: dict[str, str], key: str, default: str = "") -> str:
@@ -55,9 +67,12 @@ def _cfg_int(cfg: dict[str, str], key: str, default: int) -> int:
 		return int(default)
 
 
-def main() -> None:
+def main(argv: list[str] | None = None) -> None:
+	parser = argparse.ArgumentParser()
+	parser.add_argument("--config", dest="config_path", default="", help="runtime config file path")
+	args = parser.parse_args(argv)
 	project_root = Path(__file__).resolve().parent
-	cfg = _load_runtime_config(project_root)
+	cfg, cfg_path = _load_runtime_config(project_root, str(args.config_path or ""))
 	configure_logger(
 		level=_cfg_get(cfg, "LOG_LEVEL", "info"),
 		categories=_cfg_get(cfg, "LOG_CATEGORIES", "*"),
@@ -65,6 +80,7 @@ def main() -> None:
 		buffer_size=_cfg_int(cfg, "LOG_BUFFER_SIZE", 1000),
 	)
 	logger = get_logger()
+	logger.info("system", "runtime_config_loaded", context={"path": str(cfg_path)})
 
 	recipes_jsons = [x.strip() for x in _cfg_get(cfg, "RECIPES_JSONS", "Recipes.json").split(",") if x.strip()]
 	reactions_jsons = [x.strip() for x in _cfg_get(cfg, "REACTIONS_JSONS", "Reactions.json").split(",") if x.strip()]

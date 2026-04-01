@@ -26,6 +26,118 @@
 					"reason": "zero_hp"
 				}
 			]
+		},
+		{
+			"id": "shock_pistol_auto_recharge_on_cooling_expired",
+			"on_event": "StatusExpired",
+			"selector": {
+				"type": "event_field_eq",
+				"field": "status_id",
+				"value": "shock_cooling"
+			},
+			"condition": {
+				"type": "all",
+				"conditions": [
+					{
+						"type": "has_tag",
+						"target": "event_entity",
+						"tag": "shock_pistol"
+					},
+					{
+						"type": "has_status",
+						"target": "event_entity",
+						"status_id": "shock_uncharged"
+					}
+				]
+			},
+			"effects": [
+				{
+					"effect": "RemoveStatus",
+					"target": "event_entity",
+					"status_id": "shock_uncharged"
+				},
+				{
+					"effect": "AddStatus",
+					"target": "event_entity",
+					"status_id": "shock_charged"
+				}
+			]
+		},
+		{
+			"id": "crew_win_when_all_repairs_done",
+			"on_event": "StatusAdded",
+			"selector": {
+				"type": "any",
+				"conditions": [
+					{ "type": "event_field_eq", "field": "status_id", "value": "task_a_done" },
+					{ "type": "event_field_eq", "field": "status_id", "value": "task_b_done" },
+					{ "type": "event_field_eq", "field": "status_id", "value": "task_c_done" }
+				]
+			},
+			"condition": {
+				"type": "all",
+				"conditions": [
+					{ "type": "has_status", "target": "task_station_a_01", "status_id": "task_a_done" },
+					{ "type": "has_status", "target": "task_station_b_01", "status_id": "task_b_done" },
+					{ "type": "has_status", "target": "task_station_c_01", "status_id": "task_c_done" }
+				]
+			},
+			"effects": [
+				{
+					"effect": "AbortSimulation",
+					"reason": "crew_victory_tasks_completed",
+					"detail": "三个修复任务均已完成，平民获胜。",
+					"severity": "info",
+					"stop": true
+				}
+			]
+		},
+		{
+			"id": "crew_win_when_imposter_dies",
+			"on_event": "EntityDied",
+			"selector": {
+				"type": "event_field_eq",
+				"field": "entity_id",
+				"value": "imposter_01"
+			},
+			"effects": [
+				{
+					"effect": "AbortSimulation",
+					"reason": "crew_victory_imposter_eliminated",
+					"detail": "内奸已死亡，平民获胜。",
+					"severity": "info",
+					"stop": true
+				}
+			]
+		},
+		{
+			"id": "imposter_win_when_all_civilians_die",
+			"on_event": "EntityDied",
+			"selector": {
+				"type": "any",
+				"conditions": [
+					{ "type": "event_field_eq", "field": "entity_id", "value": "civilian_01" },
+					{ "type": "event_field_eq", "field": "entity_id", "value": "civilian_02" },
+					{ "type": "event_field_eq", "field": "entity_id", "value": "civilian_03" }
+				]
+			},
+			"condition": {
+				"type": "all",
+				"conditions": [
+					{ "type": "not", "condition": { "type": "has_component", "target": "civilian_01", "component": "AgentControlComponent" } },
+					{ "type": "not", "condition": { "type": "has_component", "target": "civilian_02", "component": "AgentControlComponent" } },
+					{ "type": "not", "condition": { "type": "has_component", "target": "civilian_03", "component": "AgentControlComponent" } }
+				]
+			},
+			"effects": [
+				{
+					"effect": "AbortSimulation",
+					"reason": "imposter_victory_all_civilians_dead",
+					"detail": "所有平民均已死亡，内奸获胜。",
+					"severity": "info",
+					"stop": true
+				}
+			]
 		}
 	]
 }

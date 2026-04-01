@@ -14,6 +14,16 @@ _LEVEL_VALUE = {
 	"error": 50,
 }
 
+_LEVEL_ANSI = {
+	"trace": "\x1b[90m",
+	"debug": "\x1b[36m",
+	"info": "\x1b[37m",
+	"warn": "\x1b[31m",
+	"error": "\x1b[91m",
+}
+
+_ANSI_RESET = "\x1b[0m"
+
 
 def _normalize_level(v: str) -> str:
 	key = str(v or "").strip().lower()
@@ -29,6 +39,13 @@ def _parse_categories(v: str) -> set[str]:
 	parts = [str(x).strip().lower() for x in text.split(",")]
 	out = {x for x in parts if x}
 	return out or {"*"}
+
+
+def _colorize_line(level: str, text: str) -> str:
+	code = _LEVEL_ANSI.get(_normalize_level(level), "")
+	if not code:
+		return text
+	return f"{code}{text}{_ANSI_RESET}"
 
 
 @dataclass
@@ -74,13 +91,13 @@ class LogManager:
 			ctx = record["context"] or {}
 			ctx_text = json.dumps(ctx, ensure_ascii=False) if ctx else ""
 			if msg and ctx_text:
-				print(f"{prefix} {msg} {ctx_text}")
+				print(_colorize_line(record["level"], f"{prefix} {msg} {ctx_text}"))
 			elif msg:
-				print(f"{prefix} {msg}")
+				print(_colorize_line(record["level"], f"{prefix} {msg}"))
 			elif ctx_text:
-				print(f"{prefix} {ctx_text}")
+				print(_colorize_line(record["level"], f"{prefix} {ctx_text}"))
 			else:
-				print(prefix)
+				print(_colorize_line(record["level"], prefix))
 
 	def trace(self, category: str, event: str, message: str = "", context: dict[str, Any] | None = None) -> None:
 		self.log("trace", category, event, message, context)

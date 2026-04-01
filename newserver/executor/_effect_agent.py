@@ -426,6 +426,10 @@ def execute_apply_meta_action(executor: Any, ws: Any, data: dict[str, Any], cont
 		arb = target.get_component("DecisionArbiterComponent")
 		if not isinstance(arb, DecisionArbiterComponent):
 			return [{"type": "ExecutorError", "message": "ApplyMetaAction: DecisionArbiterComponent missing"}]
+		# TODO: this API exposes preset switching directly to agents.
+		# That works, but it leaks internal configuration concepts into agent actions.
+		# Future design should prefer higher-level intent actions such as changing alertness,
+		# task focus, or threat sensitivity, then map those intents to arbiter configuration.
 		preset_id = str(params.get("preset_id", "") or "").strip()
 		if not preset_id:
 			return [{"type": "ExecutorError", "message": "ApplyMetaAction: missing preset_id"}]
@@ -446,6 +450,10 @@ def execute_apply_meta_action(executor: Any, ws: Any, data: dict[str, Any], cont
 		arb = target.get_component("DecisionArbiterComponent")
 		if not isinstance(arb, DecisionArbiterComponent):
 			return [{"type": "ExecutorError", "message": "ApplyMetaAction: DecisionArbiterComponent missing"}]
+		# TODO: this is effectively a low-level key/value patch endpoint for interrupt rules.
+		# It is powerful, but not a very natural agent-facing abstraction.
+		# Future refactor should consider replacing it with explicit preference/intent updates,
+		# while keeping rule-level mutation as an internal or tooling-only capability.
 		preset_id = str(params.get("preset_id", "") or "").strip()
 		rule_type = str(params.get("rule_type", "") or "").strip()
 		key = str(params.get("key", "") or "").strip()

@@ -14,6 +14,12 @@ class DecisionArbiterComponent:
 	- Holds ruleset
 	- Calls `check_if_interrupt_is_needed` every tick
 	"""
+	# TODO: interrupt preference modeling is currently too low-level:
+	# presets, mutable rule params, and runtime latch/cooldown state live side by side here.
+	# Future refactor should separate:
+	# 1) preset library,
+	# 2) active runtime overrides,
+	# 3) internal runtime state used only by the arbiter.
 
 	ruleset: list[Any] = field(default_factory=list)
 	active_interrupt_preset_id: str = ""
@@ -45,6 +51,9 @@ class DecisionArbiterComponent:
 	def _ensure_runtime_preset_tracking(self) -> None:
 		pid = str(self.active_interrupt_preset_id or "")
 		if pid != str(self._runtime_preset_id or ""):
+			# TODO: switching preset currently resets runtime trigger state as a side effect.
+			# If we later separate preference state from runtime state, revisit whether this reset
+			# should still happen, and on which transitions it is actually desired.
 			self._runtime_preset_id = pid
 			self._reset_interrupt_runtime()
 

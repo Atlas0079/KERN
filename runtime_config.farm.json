@@ -1,0 +1,13 @@
+{
+  "env": {
+    "USE_LLM": "1",
+    "WORLD_JSON": "Farm/World.json",
+    "RECIPES_JSONS": "Recipes.json,Farm/Recipes.json",
+    "REACTIONS_JSONS": "Reactions.json,Farm/Reactions.json",
+    "ENTITIES_DIRS": "Entities,Farm/Entities",
+    "LOG_LEVEL": "debug",
+    "LOG_CATEGORIES": "interaction,executor,task,dialogue",
+    "DIALOGUE_LOG_FULL": "1",
+    "MAX_TICKS": "60"
+  }
+}

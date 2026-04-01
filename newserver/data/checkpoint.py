@@ -11,6 +11,9 @@ from ..models.world_state import WorldState
 from .builder import build_world_state
 
 
+GLOBAL_LOG_FILE_NAME = "simulation_log.json"
+
+
 def resolve_checkpoint_file(checkpoint_file: str, checkpoint_dir: str) -> Path | None:
 	file_raw = str(checkpoint_file or "").strip()
 	if file_raw:
@@ -26,6 +29,15 @@ def resolve_checkpoint_file(checkpoint_file: str, checkpoint_dir: str) -> Path |
 	if not candidates:
 		return None
 	return candidates[-1]
+
+
+def resolve_global_log_file(checkpoint_dir: str | Path) -> Path:
+	dir_raw = str(checkpoint_dir or "").strip()
+	if not dir_raw:
+		base_dir = Path.cwd() / "checkpoints"
+	else:
+		base_dir = Path(dir_raw)
+	return base_dir / GLOBAL_LOG_FILE_NAME
 
 
 def _serialize_any(value: Any) -> Any:
@@ -206,39 +218,111 @@ def _world_dict_from_world_state(ws: WorldState) -> dict[str, Any]:
 	return world
 
 
-def build_checkpoint_payload_from_world_state(ws: WorldState, include_logs: bool = True) -> dict[str, Any]:
+def _build_combined_log_rows(
+	ws: WorldState,
+	*,
+	tick: int | None = None,
+	tick_max: int | None = None,
+) -> list[dict[str, Any]]:
+	rows: list[dict[str, Any]] = []
+
+	def _include(rec: dict[str, Any]) -> bool:
+		rec_tick = int(rec.get("tick", 0) or 0)
+		if tick is not None and rec_tick != int(tick):
+			return False
+		if tick_max is not None and rec_tick > int(tick_max):
+			return False
+		return True
+
+	for rec in list(getattr(ws, "event_log", []) or []):
+		if not isinstance(rec, dict) or not _include(rec):
+			continue
+		row = dict(rec)
+		row["kind"] = "event"
+		rows.append(row)
+	for rec in list(getattr(ws, "interaction_log", []) or []):
+		if not isinstance(rec, dict) or not _include(rec):
+			continue
+		row = dict(rec)
+		row["kind"] = "interaction"
+		rows.append(row)
+	rows.sort(key=lambda x: (int((x or {}).get("tick", 0) or 0), int((x or {}).get("seq", 0) or 0), str((x or {}).get("kind", ""))))
+	return rows
+
+
+def build_checkpoint_payload_from_world_state(ws: WorldState, include_logs: bool = True, run_id: str = "") -> dict[str, Any]:
 	tick = int(getattr(ws.game_time, "total_ticks", 0) or 0)
 	payload: dict[str, Any] = {
-		"meta": {"schema_version": "checkpoint.v3", "tick": tick, "time_str": ws.game_time.time_to_string()},
+		"meta": {"schema_version": "checkpoint.v4", "tick": tick, "time_str": ws.game_time.time_to_string()},
 		"world": _world_dict_from_world_state(ws),
 	}
+	if str(run_id or "").strip():
+		payload["meta"]["run_id"] = str(run_id).strip()
 	if include_logs:
-		combined: list[dict[str, Any]] = []
-		for rec in list(getattr(ws, "event_log", []) or []):
-			if isinstance(rec, dict):
-				row = dict(rec)
-				row["kind"] = "event"
-				combined.append(row)
-		for rec in list(getattr(ws, "interaction_log", []) or []):
-			if isinstance(rec, dict):
-				row = dict(rec)
-				row["kind"] = "interaction"
-				combined.append(row)
-		combined.sort(key=lambda x: (int((x or {}).get("tick", 0) or 0), int((x or {}).get("seq", 0) or 0), str((x or {}).get("kind", ""))))
-		payload["log"] = combined
+		payload["meta"]["log_scope"] = "tick"
+		payload["log"] = _build_combined_log_rows(ws, tick=tick)
 	return payload
+
+
+def build_simulation_log_payload_from_world_state(ws: WorldState, run_id: str = "") -> dict[str, Any]:
+	tick = int(getattr(ws.game_time, "total_ticks", 0) or 0)
+	meta: dict[str, Any] = {
+		"schema_version": "simlog.v1",
+		"last_tick": tick,
+		"time_str": ws.game_time.time_to_string(),
+	}
+	if str(run_id or "").strip():
+		meta["run_id"] = str(run_id).strip()
+	return {
+		"meta": meta,
+		"log": _build_combined_log_rows(ws),
+	}
+
+
+def _load_history_log_rows(checkpoint_path: Path, checkpoint_meta: dict[str, Any]) -> list[dict[str, Any]]:
+	run_id = str((checkpoint_meta or {}).get("run_id", "") or "").strip()
+	if not run_id:
+		return []
+	log_path = resolve_global_log_file(checkpoint_path.parent)
+	if not log_path.exists():
+		return []
+	try:
+		payload = json.loads(log_path.read_text(encoding="utf-8"))
+	except Exception:
+		return []
+	if not isinstance(payload, dict):
+		return []
+	meta = payload.get("meta", {}) or {}
+	if str(meta.get("run_id", "") or "").strip() != run_id:
+		return []
+	tick_limit = int((checkpoint_meta or {}).get("tick", 0) or 0)
+	rows = payload.get("log", []) or []
+	if not isinstance(rows, list):
+		return []
+	out: list[dict[str, Any]] = []
+	for row in rows:
+		if not isinstance(row, dict):
+			continue
+		if int(row.get("tick", 0) or 0) > tick_limit:
+			continue
+		out.append(dict(row))
+	out.sort(key=lambda x: (int((x or {}).get("tick", 0) or 0), int((x or {}).get("seq", 0) or 0), str((x or {}).get("kind", ""))))
+	return out
 
 
 def restore_world_state_from_checkpoint(checkpoint_path: Path, entity_templates: dict[str, Any]) -> WorldState:
 	with checkpoint_path.open("r", encoding="utf-8") as f:
 		payload = json.load(f)
+	meta = (payload or {}).get("meta", {}) or {}
 	world = (payload or {}).get("world", {}) or {}
 	if not isinstance(world, dict) or not world:
 		raise ValueError("checkpoint world missing")
 	if not isinstance(entity_templates, dict) or not entity_templates:
 		raise ValueError("checkpoint restore requires non-empty entity_templates")
-	ws = build_world_state(world, entity_templates, {}).world_state
-	log_rows = (payload or {}).get("log", []) or []
+	ws = build_world_state(world, entity_templates, {}, check_container_snapshot_consistency=True).world_state
+	log_rows = _load_history_log_rows(checkpoint_path, meta)
+	if not log_rows:
+		log_rows = (payload or {}).get("log", []) or []
 	if not isinstance(log_rows, list):
 		log_rows = []
 	event_log: list[dict[str, Any]] = []
@@ -257,4 +341,5 @@ def restore_world_state_from_checkpoint(checkpoint_path: Path, entity_templates:
 	ws.interaction_log = interaction_log
 	ws._event_seq = max([int((x or {}).get("seq", 0) or 0) for x in ws.event_log], default=0)
 	ws._interaction_seq = max([int((x or {}).get("seq", 0) or 0) for x in ws.interaction_log], default=0)
+	setattr(ws, "_checkpoint_run_id", str(meta.get("run_id", "") or "").strip())
 	return ws

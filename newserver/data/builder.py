@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from ..log_manager import get_logger
 from ..models.components import (
 	AgentSetting,
 	AgentControlComponent,
@@ -94,7 +95,12 @@ def _attach_tasks_from_snapshot(ws: WorldState, host_entity: Entity, snapshot: d
 			host.add_task(task)
 
 
-def build_world_state(bundle_world: dict[str, Any], entity_templates: dict[str, Any], _recipe_db: dict[str, Any]) -> BuildResult:
+def build_world_state(
+	bundle_world: dict[str, Any],
+	entity_templates: dict[str, Any],
+	_recipe_db: dict[str, Any],
+	check_container_snapshot_consistency: bool = False,
+) -> BuildResult:
 	ws = WorldState()
 	world_state_data = bundle_world.get("world_state", {})
 	ws.game_time.total_ticks = int(world_state_data.get("current_tick", 0))
@@ -156,7 +162,7 @@ def build_world_state(bundle_world: dict[str, Any], entity_templates: dict[str, 
 			loc.add_entity_id(ent.entity_id)
 
 			overrides = snapshot.get("component_overrides", {}) or {}
-			apply_component_overrides(ent, overrides)
+			apply_component_overrides(ent, overrides, restore_container_items=False)
 			_attach_tasks_from_snapshot(ws, ent, snapshot)
 
 	for snapshot in list(bundle_world.get("entities", []) or []):
@@ -174,7 +180,7 @@ def build_world_state(bundle_world: dict[str, Any], entity_templates: dict[str, 
 		ws.register_entity(ent)
 		nested_snapshots_by_entity_id[str(ent.entity_id)] = snapshot
 		overrides = snapshot.get("component_overrides", {}) or {}
-		apply_component_overrides(ent, overrides)
+		apply_component_overrides(ent, overrides, restore_container_items=False)
 		_attach_tasks_from_snapshot(ws, ent, snapshot)
 
 	for entity_id, snapshot in nested_snapshots_by_entity_id.items():
@@ -191,6 +197,40 @@ def build_world_state(bundle_world: dict[str, Any], entity_templates: dict[str, 
 			cc = parent_entity.get_component("ContainerComponent")
 			if not isinstance(cc, ContainerComponent):
 				raise ValueError(f"parent_container '{parent_id}' has no ContainerComponent for child '{entity_id}'")
+			parent_snapshot = nested_snapshots_by_entity_id.get(parent_id)
+			if parent_snapshot is None:
+				for loc_data in bundle_world.get("locations", []):
+					if not isinstance(loc_data, dict):
+						continue
+					for root_snapshot in loc_data.get("entities", []):
+						if not isinstance(root_snapshot, dict):
+							continue
+						if str(root_snapshot.get("instance_id", "") or "").strip() == parent_id:
+							parent_snapshot = root_snapshot
+							break
+					if parent_snapshot is not None:
+						break
+			recorded_in_parent = False
+			if isinstance(parent_snapshot, dict):
+				parent_overrides = parent_snapshot.get("component_overrides", {}) or {}
+				if isinstance(parent_overrides, dict):
+					container_patch = parent_overrides.get("ContainerComponent", {}) or {}
+					if isinstance(container_patch, dict):
+						slots_patch = container_patch.get("slots", {}) or {}
+						if isinstance(slots_patch, dict):
+							for slot_patch in slots_patch.values():
+								if not isinstance(slot_patch, dict):
+									continue
+								items = slot_patch.get("items", []) or []
+								if isinstance(items, list) and entity_id in [str(x) for x in items]:
+									recorded_in_parent = True
+									break
+			if check_container_snapshot_consistency and not recorded_in_parent:
+				get_logger().warn(
+					"checkpoint",
+					"parent_container_missing_child_record",
+					context={"parent_id": parent_id, "child_id": entity_id},
+				)
 			if not cc.add_entity(child):
 				raise ValueError(f"failed to add nested entity '{entity_id}' into parent_container '{parent_id}'")
 			continue
@@ -485,7 +525,7 @@ def _build_component(component_name: str, comp_data: Any):
 	return UnknownComponent(data=raw)
 
 
-def apply_component_overrides(entity: Entity, overrides: dict[str, Any]) -> None:
+def apply_component_overrides(entity: Entity, overrides: dict[str, Any], restore_container_items: bool = True) -> None:
 	"""
 	MVP Override Strategy: If component is UnknownComponent, shallow merge dict directly;
 	Migrated components (Tag/Creature/Agent/Container) do not do complex override first, avoid semantic inconsistency.
@@ -520,7 +560,7 @@ def apply_component_overrides(entity: Entity, overrides: dict[str, Any]) -> None
 						comp.slots[sid] = ContainerSlot(config={}, items=[])
 					if "config" in slot_p and isinstance(slot_p["config"], dict):
 						comp.slots[sid].config.update(dict(slot_p["config"]))
-					if "items" in slot_p and isinstance(slot_p["items"], list):
+					if restore_container_items and "items" in slot_p and isinstance(slot_p["items"], list):
 						comp.slots[sid].items = [str(x) for x in slot_p["items"]]
 			continue
 

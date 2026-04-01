@@ -354,8 +354,6 @@ def _build_available_verbs(
 			continue
 		if verb == "ShootShockPistol" and not _inv_has_status("shock_pistol", "shock_charged"):
 			continue
-		if verb == "RechargeShockPistol" and not _inv_has_status("shock_pistol", "shock_uncharged"):
-			continue
 		process = recipe.get("process", {}) or {}
 		verbs[verb] = "duration" if _is_duration_process(process) else "instant"
 

@@ -4,8 +4,9 @@ import json
 from dataclasses import asdict, dataclass, field, is_dataclass
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
-from ..data.checkpoint import build_checkpoint_payload_from_world_state
+from ..data.checkpoint import build_checkpoint_payload_from_world_state, build_simulation_log_payload_from_world_state, resolve_global_log_file
 from ..log_manager import get_logger
 from ..models.world_state import WorldState
 from .memory_capture import MemoryCaptureSystem
@@ -49,9 +50,11 @@ class WorldManager:
 	checkpoint_enabled: bool = True
 	checkpoint_dir: str = ""
 	checkpoint_include_logs: bool = True
+	checkpoint_write_global_log: bool = True
 	dialogue_log_full: bool = False
 	dialogue_budget_limit_per_location: int = 4
 	last_stop_info: dict[str, Any] = field(default_factory=dict)
+	run_id: str = ""
 
 	def __post_init__(self) -> None:
 		if self.trigger_system is None:
@@ -64,6 +67,12 @@ class WorldManager:
 				base_dir = str(Path.cwd() / "checkpoints")
 			self.checkpoint_dir = base_dir
 			Path(self.checkpoint_dir).mkdir(parents=True, exist_ok=True)
+		run_id = str(self.run_id or "").strip()
+		if not run_id:
+			run_id = str(getattr(self.world_state, "_checkpoint_run_id", "") or "").strip()
+		if not run_id:
+			run_id = uuid4().hex
+		self.run_id = run_id
 
 	def run(self, max_ticks: int = 100) -> list[dict[str, Any]]:
 		self.is_running = True
@@ -72,6 +81,7 @@ class WorldManager:
 		# Initial snapshot (Tick 0)
 		self._capture_snapshot(events_in_tick=[])
 		self._save_checkpoint()
+		self._save_simulation_log()
 
 		while self.is_running and self.world_state.game_time.total_ticks < max_ticks:
 			tick_events = self.step()
@@ -80,6 +90,7 @@ class WorldManager:
 			# Capture snapshot at end of tick
 			self._capture_snapshot(events_in_tick=tick_events)
 			self._save_checkpoint()
+			self._save_simulation_log()
 
 		return all_events
 
@@ -235,7 +246,14 @@ class WorldManager:
 		}
 
 	def _build_checkpoint_payload(self) -> dict[str, Any]:
-		return build_checkpoint_payload_from_world_state(self.world_state, include_logs=bool(self.checkpoint_include_logs))
+		return build_checkpoint_payload_from_world_state(
+			self.world_state,
+			include_logs=bool(self.checkpoint_include_logs),
+			run_id=str(self.run_id or "").strip(),
+		)
+
+	def _build_simulation_log_payload(self) -> dict[str, Any]:
+		return build_simulation_log_payload_from_world_state(self.world_state, run_id=str(self.run_id or "").strip())
 
 	def _save_checkpoint(self) -> None:
 		if not self.checkpoint_enabled:
@@ -255,6 +273,24 @@ class WorldManager:
 			logger.debug("checkpoint", "saved", context={"tick": tick, "path": str(target_path)})
 		except Exception as e:
 			logger.warn("checkpoint", "save_failed", context={"tick": tick, "path": str(target_path), "error": str(e)})
+
+	def _save_simulation_log(self) -> None:
+		if not self.checkpoint_enabled or not self.checkpoint_write_global_log:
+			return
+		logger = get_logger()
+		ws = self.world_state
+		tick = int(getattr(ws.game_time, "total_ticks", 0) or 0)
+		log_path = resolve_global_log_file(self.checkpoint_dir)
+		log_path.parent.mkdir(parents=True, exist_ok=True)
+		tmp_path = log_path.with_suffix(".tmp")
+		payload = self._build_simulation_log_payload()
+		try:
+			with tmp_path.open("w", encoding="utf-8") as f:
+				json.dump(payload, f, ensure_ascii=False, indent=2)
+			tmp_path.replace(log_path)
+			logger.debug("checkpoint", "global_log_saved", context={"tick": tick, "path": str(log_path)})
+		except Exception as e:
+			logger.warn("checkpoint", "global_log_save_failed", context={"tick": tick, "path": str(log_path), "error": str(e)})
 
 	def stop(self) -> None:
 		self.is_running = False

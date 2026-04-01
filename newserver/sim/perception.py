@@ -301,6 +301,9 @@ class PerceptionSystem:
 			state.money = float(getattr(agent_comp, "money", 0.0) or 0.0)
 		arb = agent.get_component("DecisionArbiterComponent")
 		if isinstance(arb, DecisionArbiterComponent):
+			# TODO: perception currently exposes preset-oriented interrupt controls to the agent.
+			# If interrupt preference is redesigned around higher-level intent/state,
+			# this payload should expose that higher-level model instead of raw preset metadata.
 			state.active_interrupt_preset_id = str(getattr(arb, "active_interrupt_preset_id", "") or "")
 			presets = getattr(arb, "interrupt_presets", {}) or {}
 			available_interrupt_presets = sorted([str(x) for x in presets.keys()])
