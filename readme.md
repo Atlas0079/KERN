@@ -119,3 +119,11 @@ flowchart LR
 在当前实现中，世界知识主要以 JSON 形式描述，包括实体模板、交互配方、反应规则、任务链和地图结构等。运行时，框架会将这些配置装载为统一的 WorldState，并通过 tick 驱动的调度器持续推进模拟。每一轮推进中，系统会处理事件传播、任务进度、状态变化、交互日志和记忆更新，并支持 checkpoint 保存与恢复。因此，当前版本已经具备一个相对完整的“可运行沙盒”能力，而不只是静态规则解析器。
 
 在智能体层面，当前系统已经支持两类控制方式：一种是简单策略驱动的自动行为，另一种是基于大语言模型的决策流程。LLM 在现阶段主要承担高层语义规划与动作选择的角色，它依据感知结果、短期记忆和可用动作集合生成命令，但不会直接修改底层世界。换言之，当前实现已经具备“LLM 负责想，执行器负责做”的基本架构雏形，并且已经验证了任务执行、对话、物品交互、状态变化和规则触发等多个闭环。
+
+## License
+
+This repository is licensed under `GNU GPL v3.0`. See [LICENSE](file:///e:/MyProgram/LLMSandBoxv2/LICENSE).
+
+In addition, redistributed or publicly published modified versions must
+preserve attribution to the original project name, author, and project URL
+in a user-visible project document. See [NOTICE](file:///e:/MyProgram/LLMSandBoxv2/NOTICE).

@@ -1,0 +1,39 @@
+KERN / LLMSandBox Additional Attribution Terms
+==============================================
+
+This repository is licensed under GNU GPL v3.0. In addition, under GPLv3
+Section 7, the following attribution-preservation terms apply when you
+convey this work or a modified version of it to others.
+
+Required Attribution
+--------------------
+
+If you distribute, publish, or publicly provide a modified version of this
+project, you must preserve attribution to the original project in at least
+one user-visible project document, such as:
+
+- `README`
+- `ABOUT`
+- project homepage
+- release notes
+- equivalent public-facing documentation
+
+The attribution must include all of the following:
+
+1. Original project name: `KERN / LLMSandBox`
+2. Original author name: `Atlas0079`
+3. Original project URL: `https://github.com/Atlas0079/LLMSandBox`
+
+Recommended attribution text
+----------------------------
+
+This project is based on `KERN / LLMSandBox` by `Atlas0079`:
+https://github.com/Atlas0079/LLMSandBox
+
+Clarification
+-------------
+
+- This notice is intended as a reasonable attribution-preservation term
+  under GPLv3 Section 7.
+- Modified versions should also clearly indicate that changes were made.
+- This notice does not replace the GPL; it supplements it.
