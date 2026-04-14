@@ -1,34 +1,100 @@
 from __future__ import annotations
 
+from functools import lru_cache
+import importlib
+import re
+
 EFFECT_SPECS: dict[str, dict[str, str]] = {
-	"AgentControlTick": {"binder": "_bind_agent_control_tick", "handler": "_execute_agent_control_tick"},
-	"WorkerTick": {"binder": "_bind_worker_tick", "handler": "_execute_worker_tick"},
-	"StatusTick": {"binder": "_bind_status_tick", "handler": "_execute_status_tick"},
-	"ModifyProperty": {"binder": "_bind_modify_property", "handler": "_execute_modify_property"},
-	"AddTag": {"binder": "_bind_add_tag", "handler": "_execute_add_tag"},
-	"RemoveTag": {"binder": "_bind_remove_tag", "handler": "_execute_remove_tag"},
-	"ApplyMetaAction": {"binder": "_bind_apply_meta_action", "handler": "_execute_apply_meta_action"},
-	"AttachDetails": {"binder": "_bind_attach_details", "handler": "_execute_attach_details"},
-	"CreateEntity": {"binder": "_bind_create_entity", "handler": "_execute_create_entity"},
-	"DestroyEntity": {"binder": "_bind_destroy_entity", "handler": "_execute_destroy_entity"},
-	"MoveEntity": {"binder": "_bind_move_entity", "handler": "_execute_move_entity"},
-	"AddStatus": {"binder": "_bind_add_status", "handler": "_execute_add_status"},
-	"RemoveStatus": {"binder": "_bind_remove_status", "handler": "_execute_remove_status"},
-	"ConsumeInputs": {"binder": "_bind_consume_inputs", "handler": "_execute_consume_inputs"},
-	"CreateTask": {"binder": "_bind_create_task", "handler": "_execute_create_task"},
-	"AcceptTask": {"binder": "_bind_accept_task", "handler": "_execute_accept_task"},
-	"ProgressTask": {"binder": "_bind_progress_task", "handler": "_execute_progress_task"},
-	"UpdateTaskStatus": {"binder": "_bind_update_task_status", "handler": "_execute_update_task_status"},
-	"FinishTask": {"binder": "_bind_finish_task", "handler": "_execute_finish_task"},
-	"KillEntity": {"binder": "_bind_kill_entity", "handler": "_execute_kill_entity"},
-	"StartConversation": {"binder": "_bind_start_conversation", "handler": "_execute_start_conversation"},
-	"AddMemoryNote": {"binder": "_bind_add_memory_note", "handler": "_execute_add_memory_note"},
-	"EmitEvent": {"binder": "_bind_emit_event", "handler": "_execute_emit_event"},
-	"ExchangeResources": {"binder": "_bind_exchange_resources", "handler": "_execute_exchange_resources"},
-	"AbortSimulation": {"binder": "_bind_abort_simulation", "handler": "_execute_abort_simulation"},
+	"AgentControlTick": {"module": "newserver.executor._effect_agent"},
+	"WorkerTick": {"module": "newserver.executor._effect_agent"},
+	"StatusTick": {"module": "newserver.executor._effect_task"},
+	"ModifyProperty": {"module": "newserver.executor._effect_property"},
+	"AddTag": {"module": "newserver.executor._effect_property"},
+	"RemoveTag": {"module": "newserver.executor._effect_property"},
+	"ApplyMetaAction": {"module": "newserver.executor._effect_agent"},
+	"AttachDetails": {"module": "newserver.executor._effect_agent"},
+	"CreateEntity": {"module": "newserver.executor._effect_entity"},
+	"DestroyEntity": {"module": "newserver.executor._effect_entity"},
+	"MoveEntity": {"module": "newserver.executor._effect_entity"},
+	"AddStatus": {"module": "newserver.executor._effect_task"},
+	"RemoveStatus": {"module": "newserver.executor._effect_task"},
+	"ConsumeInputs": {"module": "newserver.executor._effect_task"},
+	"CreateTask": {"module": "newserver.executor._effect_task"},
+	"AcceptTask": {"module": "newserver.executor._effect_task"},
+	"ProgressTask": {"module": "newserver.executor._effect_task"},
+	"UpdateTaskStatus": {"module": "newserver.executor._effect_task"},
+	"FinishTask": {"module": "newserver.executor._effect_task"},
+	"InterruptTask": {"module": "newserver.executor._effect_task"},
+	"ResumeTask": {"module": "newserver.executor._effect_task"},
+	"CancelTask": {"module": "newserver.executor._effect_task"},
+	"KillEntity": {"module": "newserver.executor._effect_entity"},
+	"StartConversation": {"module": "newserver.executor._effect_conversation"},
+	"AddMemoryNote": {"module": "newserver.executor._effect_memory"},
+	"EmitEvent": {"module": "newserver.executor._effect_event"},
+	"ExchangeResources": {"module": "newserver.executor._effect_resource"},
+	"AbortSimulation": {"module": "newserver.executor._effect_resource"},
 }
 
 EFFECT_TYPES = frozenset(EFFECT_SPECS.keys())
+
+
+def _camel_to_snake(name: str) -> str:
+	text = str(name or "").strip()
+	if not text:
+		return ""
+	s1 = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", text)
+	return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
+
+
+def _default_binder_name(effect_name: str) -> str:
+	return f"_bind_{_camel_to_snake(effect_name)}"
+
+
+def _default_handler_name(effect_name: str) -> str:
+	return f"execute_{_camel_to_snake(effect_name)}"
+
+
+def _resolve_effect_callable(effect_name: str, kind: str):
+	spec = EFFECT_SPECS.get(str(effect_name), {}) or {}
+	module_path = str(spec.get("module", "") or "").strip()
+	if not module_path:
+		return None
+	if kind == "binder":
+		func_name = str(spec.get("binder", "") or "").strip() or _default_binder_name(str(effect_name))
+	else:
+		func_name = str(spec.get("handler", "") or "").strip() or _default_handler_name(str(effect_name))
+	if not func_name:
+		return None
+	try:
+		module = importlib.import_module(module_path)
+	except Exception:
+		return None
+	candidate = getattr(module, func_name, None)
+	if not callable(candidate):
+		return None
+	return candidate
+
+
+@lru_cache(maxsize=None)
+def resolve_effect_binder_callable(effect_name: str):
+	return _resolve_effect_callable(str(effect_name), "binder")
+
+
+@lru_cache(maxsize=None)
+def resolve_effect_handler_callable(effect_name: str):
+	return _resolve_effect_callable(str(effect_name), "handler")
+
+
+def get_effect_module_path(effect_name: str) -> str:
+	spec = EFFECT_SPECS.get(str(effect_name), {}) or {}
+	return str(spec.get("module", "") or "").strip()
+
+
+def get_effect_callable_names(effect_name: str) -> tuple[str, str]:
+	spec = EFFECT_SPECS.get(str(effect_name), {}) or {}
+	binder_name = str(spec.get("binder", "") or "").strip() or _default_binder_name(str(effect_name))
+	handler_name = str(spec.get("handler", "") or "").strip() or _default_handler_name(str(effect_name))
+	return binder_name, handler_name
 
 
 def diff_effect_types(actual: set[str] | frozenset[str], expected: set[str] | frozenset[str], actual_name: str) -> list[str]:

@@ -73,6 +73,9 @@ class AgentStateView:
 	current_task_status: str = ""
 	current_task_progress: float = 0.0
 	current_task_required_progress: float = 0.0
+	current_task_interrupt_mode: str = ""
+	current_task_can_interrupt: bool = False
+	current_task_can_cancel: bool = False
 
 	def to_dict(self) -> dict[str, Any]:
 		return {
@@ -91,6 +94,9 @@ class AgentStateView:
 			"current_task_status": self.current_task_status,
 			"current_task_progress": float(self.current_task_progress),
 			"current_task_required_progress": float(self.current_task_required_progress),
+			"current_task_interrupt_mode": self.current_task_interrupt_mode,
+			"current_task_can_interrupt": bool(self.current_task_can_interrupt),
+			"current_task_can_cancel": bool(self.current_task_can_cancel),
 		}
 
 
@@ -143,6 +149,9 @@ class PerceptionSystem:
 			"current_task_status": str(agent_state_data.get("current_task_status", "") or ""),
 			"current_task_progress": float(agent_state_data.get("current_task_progress", 0.0) or 0.0),
 			"current_task_required_progress": float(agent_state_data.get("current_task_required_progress", 0.0) or 0.0),
+			"current_task_interrupt_mode": str(agent_state_data.get("current_task_interrupt_mode", "") or ""),
+			"current_task_can_interrupt": bool(agent_state_data.get("current_task_can_interrupt", False)),
+			"current_task_can_cancel": bool(agent_state_data.get("current_task_can_cancel", False)),
 			"active_interrupt_preset_id": str(agent_state_data.get("active_interrupt_preset_id", "") or ""),
 			"available_interrupt_presets": list(agent_state_data.get("available_interrupt_presets", []) or []),
 			"interrupt_preset_summaries": list(agent_state_data.get("interrupt_preset_summaries", []) or []),
@@ -281,6 +290,9 @@ class PerceptionSystem:
 			"current_task_status": str(agent_state_data.get("current_task_status", "") or ""),
 			"current_task_progress": float(agent_state_data.get("current_task_progress", 0.0) or 0.0),
 			"current_task_required_progress": float(agent_state_data.get("current_task_required_progress", 0.0) or 0.0),
+			"current_task_interrupt_mode": str(agent_state_data.get("current_task_interrupt_mode", "") or ""),
+			"current_task_can_interrupt": bool(agent_state_data.get("current_task_can_interrupt", False)),
+			"current_task_can_cancel": bool(agent_state_data.get("current_task_can_cancel", False)),
 			"active_interrupt_preset_id": str(agent_state_data.get("active_interrupt_preset_id", "") or ""),
 			"available_interrupt_presets": list(agent_state_data.get("available_interrupt_presets", []) or []),
 			"interrupt_preset_summaries": list(agent_state_data.get("interrupt_preset_summaries", []) or []),
@@ -332,7 +344,34 @@ class PerceptionSystem:
 		state.current_task_status = str(getattr(task, "task_status", "") or "")
 		state.current_task_progress = float(getattr(task, "progress", 0.0) or 0.0)
 		state.current_task_required_progress = float(getattr(task, "required_progress", 0.0) or 0.0)
+		task_policy = self._normalize_task_policy(task)
+		mode = str(task_policy.get("interrupt_mode", "") or "")
+		state.current_task_interrupt_mode = mode
+		state.current_task_can_interrupt = mode not in {"", "forbidden"}
+		state.current_task_can_cancel = bool(task_policy.get("allow_voluntary_cancel", True))
 		return state
+
+	def _normalize_task_policy(self, task: Any) -> dict[str, Any]:
+		params = getattr(task, "parameters", {}) or {}
+		if not isinstance(params, dict):
+			params = {}
+		raw = params.get("task_policy", {}) or {}
+		policy = dict(raw) if isinstance(raw, dict) else {}
+		mode = str(policy.get("interrupt_mode", "pause_keep_progress") or "").strip().lower()
+		alias_map = {
+			"pausable": "pause_keep_progress",
+			"restartable": "pause_reset_progress",
+			"cancellable": "cancel",
+			"fail_on_interrupt": "fail",
+		}
+		mode = alias_map.get(mode, mode)
+		if mode not in {"forbidden", "pause_keep_progress", "pause_reset_progress", "cancel", "fail"}:
+			mode = "pause_keep_progress"
+		return {
+			"interrupt_mode": mode,
+			"allow_voluntary_interrupt": bool(policy.get("allow_voluntary_interrupt", True)),
+			"allow_voluntary_cancel": bool(policy.get("allow_voluntary_cancel", True)),
+		}
 
 	def _count_hidden_entities(self, containment_index: dict[str, dict[str, str]], visible_ids: list[str]) -> int:
 		contained_ids = set(containment_index.keys())

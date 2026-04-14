@@ -466,6 +466,7 @@ INTENT: <1-3句，给Grounder使用的实际意图，必须可执行>
 - Travel（non-meta）：target_id 必须是 self id，parameters 必须包含 `{"to_location_id": "<reachable_locations.to_location_id 之一>"}`。
 - Talk（non-meta）：不得提供 target_id；parameters 必须包含 `{"text": "<非空开场白>"}`。执行后会触发“当前地点群体对话”，该 text 作为第一轮发言，然后同地点其他角色按轮次继续。
 - ContinueCurrentTask（non-meta，仅在中断决策阶段可用）：不得提供 target_id；parameters 必须为空对象 `{}`。
+- YieldCurrentTask（non-meta，仅在中断决策阶段可用）：不得提供 target_id；parameters 必须为空对象 `{}`，表示先放下当前任务，再进入常规决策。
 - Give（non-meta）：target_id 必须是一个可见 agent 的 id，且 parameters 必须包含 `{"item_id": "<你背包中物品的id>"}`。
 - 对于出现在 Recipe Grounder Hints 中的动词，你必须满足对应 hint 约束。
 """
@@ -575,8 +576,9 @@ Output rules:
 		interrupt_mode = bool((perception or {}).get("interrupt_decision_mode", False))
 		current_task_id_for_interrupt = str((perception or {}).get("current_task_id", "") or "")
 		if interrupt_mode and current_task_id_for_interrupt:
-			allowed_verbs = set(allowed_verbs)
+			allowed_verbs = set()
 			allowed_verbs.add("ContinueCurrentTask")
+			allowed_verbs.add("YieldCurrentTask")
 			verb_lines = [f"- {v}" for v in sorted(allowed_verbs)]
 			available_verbs_list = "\n".join(verb_lines) if verb_lines else "(No available verbs)"
 			if "ContinueCurrentTask" not in str(available_verbs_with_duration):
@@ -585,12 +587,22 @@ Output rules:
 					if available_verbs_with_duration
 					else "- ContinueCurrentTask: instant"
 				)
+			if "YieldCurrentTask" not in str(available_verbs_with_duration):
+				available_verbs_with_duration = (
+					f"{available_verbs_with_duration}\n- YieldCurrentTask: instant".strip()
+					if available_verbs_with_duration
+					else "- YieldCurrentTask: instant"
+				)
 		planner_recipe_hints, grounder_recipe_hints = _build_recipe_hints(recipe_db, allowed_verbs)
 		if interrupt_mode and current_task_id_for_interrupt:
 			extra_planner = "- ContinueCurrentTask: 当你被中断但判断当前任务更优先时，选择该动作以继续当前任务，不切换目标。"
 			extra_grounder = "- ContinueCurrentTask: 仅在中断决策阶段可用，输出格式为 {\"verb\":\"ContinueCurrentTask\",\"parameters\":{}}，不得提供 target_id。"
 			planner_recipe_hints = f"{planner_recipe_hints}\n{extra_planner}".strip() if planner_recipe_hints else extra_planner
 			grounder_recipe_hints = f"{grounder_recipe_hints}\n{extra_grounder}".strip() if grounder_recipe_hints else extra_grounder
+			yield_planner = "- YieldCurrentTask: 当你决定先放下当前任务去处理打断事件时，选择该动作。放下后任务按 task_policy 自动处理（通常保留为 Paused）。"
+			yield_grounder = "- YieldCurrentTask: 仅在中断决策阶段可用，输出格式为 {\"verb\":\"YieldCurrentTask\",\"parameters\":{}}，不得提供 target_id。"
+			planner_recipe_hints = f"{planner_recipe_hints}\n{yield_planner}".strip()
+			grounder_recipe_hints = f"{grounder_recipe_hints}\n{yield_grounder}".strip()
 		perception["mode_context"] = {
 			**dict(agent_context.get("mode_context", {}) or {}),
 			"available_verbs": sorted(list(allowed_verbs)),
@@ -598,6 +610,7 @@ Output rules:
 			"planner_recipe_hints": str(planner_recipe_hints),
 			"grounder_recipe_hints": str(grounder_recipe_hints),
 			"continue_current_task_available": bool(interrupt_mode and current_task_id_for_interrupt),
+			"yield_current_task_available": bool(interrupt_mode and current_task_id_for_interrupt),
 		}
 		agent_context = _build_agent_context(perception, self_id)
 

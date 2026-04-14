@@ -103,54 +103,61 @@ def execute_agent_control_tick(executor: Any, ws: Any, data: dict[str, Any], con
 				first = dict(actions[0]) if isinstance(actions[0], dict) else {}
 				first_verb = str(first.get("verb", "") or "")
 				if first_verb == "ContinueCurrentTask":
-					ws.record_event(
-						{"type": "TaskContinueChosen", "task_id": current_task_id, "reason": reason},
-						{"actor_id": self_id},
+					return []
+				if first_verb == "YieldCurrentTask":
+					if not callable(execute):
+						return []
+					events = execute(
+						{
+							"effect": "InterruptTask",
+							"task_id": current_task_id,
+							"reason": reason,
+							"interrupt_source": "arbiter",
+							"is_voluntary": False,
+						},
+						{"self_id": self_id, "task_id": current_task_id},
 					)
+					rejected = any(
+						isinstance(ev, dict) and str(ev.get("type", "") or "") in {"TaskInterruptRejected", "ExecutorError", "BindError"}
+						for ev in list(events or [])
+					)
+					if rejected:
+						ws.record_interaction_attempt(
+							actor_id=self_id,
+							verb="YieldCurrentTask",
+							target_id=self_id,
+							status="failed",
+							reason="TASK_INTERRUPT_REJECTED",
+							recipe_id="system.yield_current_task",
+							extra={"interrupt_reason": reason, "task_id": current_task_id},
+						)
+						return []
 					ws.record_interaction_attempt(
 						actor_id=self_id,
-						verb="ContinueCurrentTask",
+						verb="YieldCurrentTask",
 						target_id=self_id,
 						status="success",
 						reason="",
-						recipe_id="system.continue_current_task",
+						recipe_id="system.yield_current_task",
 						extra={"interrupt_reason": reason, "task_id": current_task_id},
 					)
+					pending_actions = None
+				else:
+					ws.record_interaction_attempt(
+						actor_id=self_id,
+						verb=first_verb or "Unknown",
+						target_id=self_id,
+						status="failed",
+						reason="INVALID_INTERRUPT_GATE_ACTION",
+						recipe_id="system.interrupt_gate",
+						extra={"allowed": ["ContinueCurrentTask", "YieldCurrentTask"], "task_id": current_task_id},
+					)
 					return []
-				pending_actions = [dict(x) for x in list(actions or []) if isinstance(x, dict)]
 			else:
-				ws.record_event(
-					{"type": "TaskContinueChosen", "task_id": current_task_id, "reason": reason, "decision": "no_new_action"},
-					{"actor_id": self_id},
-				)
 				return []
 		task = ws.get_task_by_id(current_task_id)
-		if task is not None:
-			is_shared_task = str(getattr(task, "target_entity_id", "") or "") != str(self_id)
-			if is_shared_task:
-				if hasattr(task, "assigned_agent_ids") and isinstance(getattr(task, "assigned_agent_ids"), list):
-					task.assigned_agent_ids = []
-				if hasattr(task, "task_status"):
-					task.task_status = "Inactive"
-				ws.record_event(
-					{"type": "TaskReleased", "task_id": current_task_id, "reason": str(getattr(interrupt, "reason", "") or "")},
-					{"actor_id": self_id},
-				)
-			elif hasattr(task, "task_status") and callable(execute):
-				execute(
-					{
-						"effect": "UpdateTaskStatus",
-						"task_id": current_task_id,
-						"status": "Paused",
-					},
-					{"self_id": self_id, "task_id": current_task_id},
-				)
-		worker.stop_task()
-		if task is not None and str(getattr(task, "target_entity_id", "") or "") == str(self_id):
-			ws.record_event(
-				{"type": "TaskInterrupted", "task_id": current_task_id, "reason": str(getattr(interrupt, "reason", "") or "")},
-				{"actor_id": self_id},
-			)
+		if task is not None and str(getattr(task, "task_status", "") or "") == "InProgress":
+			return []
 	elif not getattr(interrupt, "interrupt", False):
 		return []
 	if action_provider is None:
@@ -208,15 +215,6 @@ def execute_agent_control_tick(executor: Any, ws: Any, data: dict[str, Any], con
 			if verb == "ContinueCurrentTask":
 				worker_now = agent.get_component("WorkerComponent")
 				if worker_now is not None and bool(getattr(worker_now, "current_task_id", "")):
-					ws.record_interaction_attempt(
-						actor_id=self_id,
-						verb=verb,
-						target_id=self_id,
-						status="success",
-						reason="",
-						recipe_id="system.continue_current_task",
-						extra=None,
-					)
 					return []
 				logger.warn(
 					"interaction",
@@ -233,6 +231,63 @@ def execute_agent_control_tick(executor: Any, ws: Any, data: dict[str, Any], con
 					extra=None,
 				)
 				return []
+			if verb == "YieldCurrentTask":
+				worker_now = agent.get_component("WorkerComponent")
+				task_id_now = str(getattr(worker_now, "current_task_id", "") or "") if worker_now is not None else ""
+				if not task_id_now:
+					logger.warn(
+						"interaction",
+						"command_failed",
+						context={"self_id": self_id, "verb": verb, "target_id": self_id, "reason": "NO_CURRENT_TASK_TO_CANCEL", "action": dict(action_dict)},
+					)
+					ws.record_interaction_attempt(
+						actor_id=self_id,
+						verb=verb,
+						target_id=self_id,
+						status="failed",
+						reason="NO_CURRENT_TASK_TO_YIELD",
+						recipe_id="system.yield_current_task",
+						extra=None,
+					)
+					return []
+				interrupt_events = execute(
+					{
+						"effect": "InterruptTask",
+						"task_id": task_id_now,
+						"reason": str(reason or ""),
+						"interrupt_source": "manual_yield",
+						"is_voluntary": True,
+					},
+					{"self_id": self_id, "task_id": task_id_now},
+				)
+				yield_failed = any(
+					isinstance(ev, dict) and str(ev.get("type", "") or "") in {"TaskInterruptRejected", "ExecutorError", "BindError"}
+					for ev in list(interrupt_events or [])
+				)
+				if yield_failed:
+					ws.record_interaction_attempt(
+						actor_id=self_id,
+						verb=verb,
+						target_id=self_id,
+						status="failed",
+						reason="TASK_INTERRUPT_REJECTED",
+						recipe_id="system.yield_current_task",
+						extra={"task_id": task_id_now},
+					)
+					return []
+				ws.record_interaction_attempt(
+					actor_id=self_id,
+					verb=verb,
+					target_id=self_id,
+					status="success",
+					reason="",
+					recipe_id="system.yield_current_task",
+					extra={"task_id": task_id_now},
+				)
+				actions_executed += 1
+				if actions_executed >= max_actions_in_tick:
+					return []
+				continue
 			if verb in meta_verbs:
 				action_dict["target_id"] = str(self_id)
 				target_id = str(self_id)

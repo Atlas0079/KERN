@@ -46,6 +46,17 @@ def _parse_param_token(effect_type: str, token: Any, field: str) -> str:
 	return key
 
 
+def _as_bool(raw: Any) -> bool:
+	if isinstance(raw, bool):
+		return raw
+	text = str(raw or "").strip().lower()
+	if text in {"1", "true", "yes", "on"}:
+		return True
+	if text in {"0", "false", "no", "off", ""}:
+		return False
+	return bool(raw)
+
+
 def _clone_recipe_with_required_progress(recipe: dict[str, Any], required_progress: float) -> dict[str, Any]:
 	recipe_out = _clone_recipe(recipe)
 	process = _as_process_dict(recipe_out)
@@ -225,6 +236,97 @@ def _bind_finish_task(_ws: Any, effect_data: dict[str, Any], context: dict[str, 
 	return {"effect": effect_type}, ctx
 
 
+def _bind_interrupt_task(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	task_id = _require_str(params, effect_type, "task_id")
+	reason = str(_resolve_param_token(params.get("reason", ""), ctx) or "").strip()
+	interrupt_source = str(_resolve_param_token(params.get("interrupt_source", "system"), ctx) or "system").strip() or "system"
+	is_voluntary_raw = _resolve_param_token(params.get("is_voluntary", False), ctx)
+	force_raw = _resolve_param_token(params.get("force", False), ctx)
+	return {
+		"effect": effect_type,
+		"task_id": task_id,
+		"reason": reason,
+		"interrupt_source": interrupt_source,
+		"is_voluntary": _as_bool(is_voluntary_raw),
+		"force": _as_bool(force_raw),
+	}, ctx
+
+
+def _bind_resume_task(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	task_id = _require_str(params, effect_type, "task_id")
+	return {"effect": effect_type, "task_id": task_id}, ctx
+
+
+def _bind_cancel_task(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	task_id = _require_str(params, effect_type, "task_id")
+	reason = str(_resolve_param_token(params.get("reason", ""), ctx) or "").strip()
+	force_raw = _resolve_param_token(params.get("force", False), ctx)
+	return {"effect": effect_type, "task_id": task_id, "reason": reason, "force": _as_bool(force_raw)}, ctx
+
+
+def _get_task_policy(task: Task) -> dict[str, Any]:
+	params = getattr(task, "parameters", {}) or {}
+	if not isinstance(params, dict):
+		params = {}
+	raw_policy = params.get("task_policy", {}) or {}
+	policy = dict(raw_policy) if isinstance(raw_policy, dict) else {}
+	mode = str(policy.get("interrupt_mode", "pause_keep_progress") or "").strip().lower()
+	alias_map = {
+		"pausable": "pause_keep_progress",
+		"restartable": "pause_reset_progress",
+		"cancellable": "cancel",
+		"fail_on_interrupt": "fail",
+	}
+	mode = alias_map.get(mode, mode)
+	if mode not in {"forbidden", "pause_keep_progress", "pause_reset_progress", "cancel", "fail"}:
+		mode = "pause_keep_progress"
+	policy["interrupt_mode"] = mode
+	policy["allow_voluntary_interrupt"] = bool(policy.get("allow_voluntary_interrupt", True))
+	policy["allow_voluntary_cancel"] = bool(policy.get("allow_voluntary_cancel", True))
+	return policy
+
+
+def _extract_task_policy_from_recipe(recipe: dict[str, Any]) -> dict[str, Any]:
+	process = recipe.get("process", {}) or {}
+	if not isinstance(process, dict):
+		process = {}
+	policy = process.get("task_policy", None)
+	if policy is None:
+		policy = recipe.get("task_policy", None)
+	return dict(policy) if isinstance(policy, dict) else {}
+
+
+def _try_stop_worker_task(ws: Any, worker_id: str, task_id: str) -> None:
+	if not worker_id:
+		return
+	ent = ws.get_entity_by_id(worker_id) if hasattr(ws, "get_entity_by_id") else None
+	if ent is None:
+		return
+	worker = ent.get_component("WorkerComponent")
+	if not isinstance(worker, WorkerComponent):
+		return
+	if str(getattr(worker, "current_task_id", "") or "") == str(task_id):
+		worker.stop_task()
+
+
+def _remove_task_from_host_and_world(ws: Any, task: Task, context: dict[str, Any]) -> None:
+	host_entity = None
+	self_id = str((context or {}).get("self_id", "") or "")
+	if self_id:
+		host_entity = ws.get_entity_by_id(self_id)
+	if host_entity is None:
+		host_entity = ws.get_entity_by_id(task.target_entity_id)
+	if host_entity is not None:
+		host = host_entity.get_component("TaskHostComponent")
+		if isinstance(host, TaskHostComponent):
+			host.remove_task(task.task_id)
+	if hasattr(ws, "unregister_task"):
+		ws.unregister_task(task.task_id)
+
+
 def execute_add_status(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	target_key = data.get("target")
 	status_id = data.get("status_id")
@@ -346,6 +448,9 @@ def execute_create_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 		task.parameters["recipe_id"] = recipe_id
 	process = recipe.get("process", {}) or {}
 	task.required_progress = float(process.get("required_progress", 1))
+	task_policy = _extract_task_policy_from_recipe(recipe)
+	if task_policy:
+		task.parameters["task_policy"] = dict(task_policy)
 	task.completion_effects = [x for x in (recipe.get("outputs", []) or []) if isinstance(x, dict)]
 	if not task.completion_effects:
 		return [{"type": "ExecutorError", "message": "CreateTask: recipe has no outputs (completion_effects)"}]
@@ -466,6 +571,8 @@ def execute_progress_task(_executor: Any, ws: Any, data: dict[str, Any], context
 	task = ws.get_task_by_id(task_id) if hasattr(ws, "get_task_by_id") else None
 	if task is None:
 		return [{"type": "ExecutorError", "message": f"ProgressTask: task not found {task_id}"}]
+	if str(getattr(task, "task_status", "") or "") != "InProgress":
+		return [{"type": "TaskProgressSkipped", "task_id": task.task_id, "reason": f"status={getattr(task, 'task_status', '')}"}]
 	task.progress += delta
 	return [
 		{
@@ -527,16 +634,8 @@ def execute_finish_task(executor: Any, ws: Any, _data: dict[str, Any], context: 
 		task.task_status = "Failed"
 		events.append({"type": "TaskFinishFailed", "task_id": task.task_id})
 		return events
-	host_entity = None
+	task.task_status = "Completed"
 	self_id = str((context or {}).get("self_id", "") or "")
-	if self_id:
-		host_entity = ws.get_entity_by_id(self_id)
-	if host_entity is None:
-		host_entity = ws.get_entity_by_id(task.target_entity_id)
-	if host_entity is not None:
-		host = host_entity.get_component("TaskHostComponent")
-		if isinstance(host, TaskHostComponent):
-			host.remove_task(task.task_id)
 	if (
 		str(getattr(task, "task_type", "") or "") == "Travel"
 		and self_id
@@ -568,6 +667,140 @@ def execute_finish_task(executor: Any, ws: Any, _data: dict[str, Any], context: 
 				"source_location_id": source_location_id,
 			},
 		)
-	ws.unregister_task(task.task_id)
+	_remove_task_from_host_and_world(ws, task, context)
 	events.append({"type": "TaskFinished", "task_id": task.task_id})
 	return events
+
+
+def execute_interrupt_task(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+	task_id = str(data.get("task_id") or (context or {}).get("task_id", "") or "")
+	reason = str(data.get("reason", "") or "")
+	interrupt_source = str(data.get("interrupt_source", "system") or "system")
+	is_voluntary = bool(data.get("is_voluntary", False))
+	force = bool(data.get("force", False))
+	task = ws.get_task_by_id(task_id) if hasattr(ws, "get_task_by_id") else None
+	if task is None:
+		return [{"type": "ExecutorError", "message": f"InterruptTask: task not found {task_id}"}]
+	old_status = str(getattr(task, "task_status", "") or "")
+	if old_status in {"Completed", "Cancelled", "Failed"}:
+		return [{"type": "TaskInterruptRejected", "task_id": task_id, "reason": f"terminal_status:{old_status}"}]
+	policy = _get_task_policy(task)
+	mode = str(policy.get("interrupt_mode", "pause_keep_progress") or "pause_keep_progress")
+	if is_voluntary and not bool(policy.get("allow_voluntary_interrupt", True)) and not force:
+		return [{"type": "TaskInterruptRejected", "task_id": task_id, "reason": "voluntary_interrupt_forbidden"}]
+	if mode == "forbidden" and not force:
+		return [{"type": "TaskInterruptRejected", "task_id": task_id, "reason": "interrupt_forbidden"}]
+	worker_id = str(data.get("worker_id") or (context or {}).get("self_id", "") or "")
+	if mode == "pause_reset_progress":
+		task.progress = 0.0
+	if mode in {"pause_keep_progress", "pause_reset_progress", "forbidden"}:
+		task.task_status = "Paused"
+		_try_stop_worker_task(ws, worker_id, task.task_id)
+		if isinstance(getattr(task, "assigned_agent_ids", None), list):
+			task.assigned_agent_ids = []
+		return [
+			{
+				"type": "TaskInterrupted",
+				"task_id": task.task_id,
+				"old_status": old_status,
+				"new_status": "Paused",
+				"reason": reason,
+				"interrupt_source": interrupt_source,
+				"interrupt_mode": mode,
+				"worker_id": worker_id,
+			}
+		]
+	if mode == "cancel":
+		task.task_status = "Cancelled"
+		_try_stop_worker_task(ws, worker_id, task.task_id)
+		_remove_task_from_host_and_world(ws, task, context)
+		return [
+			{
+				"type": "TaskCancelled",
+				"task_id": task.task_id,
+				"old_status": old_status,
+				"reason": reason,
+				"interrupt_source": interrupt_source,
+				"worker_id": worker_id,
+			}
+		]
+	task.task_status = "Failed"
+	_try_stop_worker_task(ws, worker_id, task.task_id)
+	_remove_task_from_host_and_world(ws, task, context)
+	return [
+		{
+			"type": "TaskFailed",
+			"task_id": task.task_id,
+			"old_status": old_status,
+			"reason": reason or "interrupted",
+			"interrupt_source": interrupt_source,
+			"worker_id": worker_id,
+		}
+	]
+
+
+def execute_resume_task(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+	task_id = str(data.get("task_id") or (context or {}).get("task_id", "") or "")
+	task = ws.get_task_by_id(task_id) if hasattr(ws, "get_task_by_id") else None
+	if task is None:
+		return [{"type": "ExecutorError", "message": f"ResumeTask: task not found {task_id}"}]
+	old_status = str(getattr(task, "task_status", "") or "")
+	if old_status not in {"Paused", "Inactive"}:
+		return [{"type": "TaskResumeRejected", "task_id": task.task_id, "reason": f"invalid_status:{old_status}"}]
+	policy = _get_task_policy(task)
+	mode = str(policy.get("interrupt_mode", "pause_keep_progress") or "pause_keep_progress")
+	if mode in {"cancel", "fail"}:
+		return [{"type": "TaskResumeRejected", "task_id": task.task_id, "reason": f"interrupt_mode_not_resumable:{mode}"}]
+	worker_id = str(data.get("worker_id") or (context or {}).get("self_id", "") or "")
+	if not worker_id:
+		return [{"type": "TaskResumeRejected", "task_id": task.task_id, "reason": "missing_worker_id"}]
+	worker_ent = ws.get_entity_by_id(worker_id) if hasattr(ws, "get_entity_by_id") else None
+	if worker_ent is None:
+		return [{"type": "TaskResumeRejected", "task_id": task.task_id, "reason": "worker_not_found"}]
+	worker = worker_ent.get_component("WorkerComponent")
+	if not isinstance(worker, WorkerComponent):
+		return [{"type": "TaskResumeRejected", "task_id": task.task_id, "reason": "worker_component_missing"}]
+	current = str(getattr(worker, "current_task_id", "") or "")
+	if current and current != task.task_id:
+		return [{"type": "TaskResumeRejected", "task_id": task.task_id, "reason": f"worker_busy:{current}"}]
+	worker.assign_task(task.task_id)
+	if worker_id not in task.assigned_agent_ids:
+		task.assigned_agent_ids.append(worker_id)
+	task.task_status = "InProgress"
+	return [
+		{
+			"type": "TaskResumed",
+			"task_id": task.task_id,
+			"old_status": old_status,
+			"new_status": "InProgress",
+			"worker_id": worker_id,
+		}
+	]
+
+
+def execute_cancel_task(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+	task_id = str(data.get("task_id") or (context or {}).get("task_id", "") or "")
+	reason = str(data.get("reason", "") or "")
+	force = bool(data.get("force", False))
+	task = ws.get_task_by_id(task_id) if hasattr(ws, "get_task_by_id") else None
+	if task is None:
+		return [{"type": "ExecutorError", "message": f"CancelTask: task not found {task_id}"}]
+	old_status = str(getattr(task, "task_status", "") or "")
+	if old_status in {"Completed", "Cancelled", "Failed"}:
+		return [{"type": "TaskCancelRejected", "task_id": task.task_id, "reason": f"terminal_status:{old_status}"}]
+	policy = _get_task_policy(task)
+	if not bool(policy.get("allow_voluntary_cancel", True)) and not force:
+		return [{"type": "TaskCancelRejected", "task_id": task.task_id, "reason": "voluntary_cancel_forbidden"}]
+	worker_id = str(data.get("worker_id") or (context or {}).get("self_id", "") or "")
+	_try_stop_worker_task(ws, worker_id, task.task_id)
+	task.task_status = "Cancelled"
+	_remove_task_from_host_and_world(ws, task, context)
+	return [
+		{
+			"type": "TaskCancelled",
+			"task_id": task.task_id,
+			"old_status": old_status,
+			"reason": reason,
+			"worker_id": worker_id,
+		}
+	]

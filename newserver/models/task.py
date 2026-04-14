@@ -22,7 +22,7 @@ class Task:
 	multiple_entity: bool = False
 	assigned_agent_ids: list[str] = field(default_factory=list)
 
-	task_status: str = "Inactive"  # Inactive/InProgress/Paused/Completed
+	task_status: str = "Inactive"  # Inactive/InProgress/Paused/Completed/Cancelled/Failed
 	parameters: dict[str, Any] = field(default_factory=dict)
 
 	# --- Progressor configuration: Solidified into task by recipe ---
@@ -38,4 +38,3 @@ class Task:
 
 	def get_remaining_progress(self) -> float:
 		return max(0.0, float(self.required_progress) - float(self.progress))
-
