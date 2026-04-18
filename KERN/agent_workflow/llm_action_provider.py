@@ -19,7 +19,7 @@ from .workflow_contract import (
 
 
 def _repo_root() -> Path:
-	# newserver/agent_workflow/llm_action_provider.py -> repo root
+	# KERN/agent_workflow/llm_action_provider.py -> repo root
 	return Path(__file__).resolve().parents[2]
 
 

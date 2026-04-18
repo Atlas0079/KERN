@@ -12,15 +12,15 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
 	sys.path.insert(0, str(ROOT))
 
-from newserver.data.builder import build_world_state
-from newserver.data.loader import load_data_bundle, load_json
-from newserver.entity_ref_resolver import resolve_entity
-from newserver.effect_contract import EFFECT_TYPES
-from newserver.executor._effect_binder import BindError, bind_effect_input, get_binder_effect_types
-from newserver.executor.executor import WorldExecutor, get_executor_effect_types
-from newserver.models.components import TagComponent, UnknownComponent
-from newserver.interaction.engine import InteractionEngine
-from newserver.sim.trigger_system import TriggerSystem
+from KERN.data.builder import build_world_state
+from KERN.data.loader import load_data_bundle, load_json
+from KERN.entity_ref_resolver import resolve_entity
+from KERN.effect_contract import EFFECT_TYPES
+from KERN.executor._effect_binder import BindError, bind_effect_input, get_binder_effect_types
+from KERN.executor.executor import WorldExecutor, get_executor_effect_types
+from KERN.models.components import TagComponent, UnknownComponent
+from KERN.interaction.engine import InteractionEngine
+from KERN.sim.trigger_system import TriggerSystem
 
 
 PARAM_REF_RE = re.compile(r"^param:([A-Za-z0-9_]+)$")

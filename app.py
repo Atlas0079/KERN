@@ -5,18 +5,18 @@ import json
 import os
 from pathlib import Path
 
-from newserver.log_manager import configure_logger, get_logger
-from newserver.data.loader import load_data_bundle
-from newserver.data.checkpoint import resolve_checkpoint_file, restore_world_state_from_checkpoint
-from newserver.data.validator import validate_bundle
-from newserver.data.builder import build_world_state
-from newserver.sim.manager import WorldManager
-from newserver.interaction.engine import InteractionEngine
-from newserver.executor.executor import WorldExecutor
-from newserver.agent_workflow.simple_policy import SimplePolicyActionProvider
-from newserver.agent_workflow.llm_action_provider import build_default_llm_provider
-from newserver.agent_workflow.full_ws_view_builder import build_full_ws_view
-from newserver.agent_workflow.observer import build_agent_perception
+from KERN.log_manager import configure_logger, get_logger
+from KERN.data.loader import load_data_bundle
+from KERN.data.checkpoint import resolve_checkpoint_file, restore_world_state_from_checkpoint
+from KERN.data.validator import validate_bundle
+from KERN.data.builder import build_world_state
+from KERN.sim.manager import WorldManager
+from KERN.interaction.engine import InteractionEngine
+from KERN.executor.executor import WorldExecutor
+from KERN.agent_workflow.simple_policy import SimplePolicyActionProvider
+from KERN.agent_workflow.llm_action_provider import build_default_llm_provider
+from KERN.agent_workflow.full_ws_view_builder import build_full_ws_view
+from KERN.agent_workflow.observer import build_agent_perception
 
 
 def _resolve_runtime_config_path(project_root: Path, cli_config_path: str = "") -> Path:
