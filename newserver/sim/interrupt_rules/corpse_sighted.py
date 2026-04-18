@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from ...agent_workflow.full_ws_view_builder import build_full_ws_view
+from ...agent_workflow.observer import build_agent_perception
 from .base import InterruptResult
 
 
@@ -32,12 +34,9 @@ class CorpseSightedRule:
 				cooldown_ticks = int(params.get("cooldown_ticks", 0) or 0)
 			except Exception:
 				cooldown_ticks = 0
-		perception_system = (getattr(ws, "services", {}) or {}).get("perception_system")
-		if perception_system is None:
+		perception = build_agent_perception(build_full_ws_view(ws, agent_id, "", {}), agent_id)
+		if not (perception or {}).get("location"):
 			return InterruptResult(interrupt=False, reason="", rule_type="CorpseSighted", priority=self.priority)
-		if hasattr(perception_system, "is_observation_blocked") and bool(perception_system.is_observation_blocked(ws, agent_id)):
-			return InterruptResult(interrupt=False, reason="", rule_type="CorpseSighted", priority=self.priority)
-		perception = perception_system.perceive(ws, agent_id)
 		entities = list((perception or {}).get("entities", []) or [])
 		corpse_ids: set[str] = set()
 		corpse_labels: list[str] = []

@@ -9,10 +9,17 @@ from typing import Any
 from ..log_manager import get_logger
 from ..llm.openai_compat_client import DualModelLLM, OpenAICompatClient, LLMRequestError
 from ..llm.gemini_client import GeminiClient
+from .memory_policy import build_memory_patch
+from .observer import build_agent_perception
+from .workflow_contract import (
+	build_apply_commands_decision,
+	build_error_decision,
+	build_noop_decision,
+)
 
 
 def _repo_root() -> Path:
-	# newserver/agents/llm_action_provider.py -> repo root
+	# newserver/agent_workflow/llm_action_provider.py -> repo root
 	return Path(__file__).resolve().parents[2]
 
 
@@ -529,7 +536,67 @@ Output rules:
 			return
 		logger.warn("llm", str(event), context=dict(context or {}))
 
-	def decide(self, perception: dict[str, Any], reason: str, self_id: str | None = None) -> list[dict[str, Any]]:
+	def decide(
+		self,
+		ws_view: Any,
+		recipe_db: dict[str, Any] | None,
+		actor_id: str,
+		reason: str,
+		mode_context: dict[str, Any] | None = None,
+	) -> dict[str, Any]:
+		view_payload = dict(ws_view or {}) if isinstance(ws_view, dict) else {}
+		full_ws_view = dict(view_payload.get("full_ws_view", {}) or {}) if isinstance(view_payload.get("full_ws_view", {}), dict) else {}
+		if not full_ws_view:
+			return build_error_decision(
+				kind="contract",
+				code="WORKFLOW_INPUT_MISSING_FULL_WS_VIEW",
+				message="ws_view.full_ws_view is required",
+				meta={"provider": "llm_workflow"},
+			)
+		perception = build_agent_perception(full_ws_view, str(actor_id))
+		recipe_db_view = dict(recipe_db or {}) if isinstance(recipe_db, dict) else {}
+		mode_ctx = dict(mode_context or view_payload.get("mode_context", {}) or {})
+		if mode_ctx:
+			perception["mode_context"] = dict(mode_ctx)
+		perception["interrupt_reason"] = str(reason or "")
+		try:
+			actions = self._decide_actions_from_perception(perception, recipe_db_view, reason, str(actor_id))
+		except ValueError as e:
+			return build_error_decision(
+				kind="contract",
+				code="WORKFLOW_OUTPUT_PARSE_FAILED",
+				message=str(e),
+				meta={"provider": "llm_workflow"},
+			)
+		except Exception as e:
+			return build_error_decision(
+				kind="temporary",
+				code="WORKFLOW_DECIDE_RUNTIME_ERROR",
+				message=str(e),
+				meta={"provider": "llm_workflow"},
+			)
+		if not list(actions or []):
+			return build_noop_decision(meta={"provider": "llm_workflow", "reason": "no_actions"})
+		return build_apply_commands_decision(
+			commands=[dict(x) for x in list(actions or []) if isinstance(x, dict)],
+			meta={"provider": "llm_workflow"},
+		)
+
+	def build_memory_patch_data(self, ws_view: Any, recipe_db: dict[str, Any] | None, actor_id: str) -> dict[str, Any] | None:
+		view_payload = dict(ws_view or {}) if isinstance(ws_view, dict) else {}
+		full_ws_view = dict(view_payload.get("full_ws_view", {}) or {}) if isinstance(view_payload.get("full_ws_view", {}), dict) else {}
+		if not full_ws_view:
+			return None
+		recipe_db_view = dict(recipe_db or {}) if isinstance(recipe_db, dict) else {}
+		return build_memory_patch(full_ws_view=full_ws_view, recipe_db=recipe_db_view, actor_id=str(actor_id))
+
+	def _decide_actions_from_perception(
+		self,
+		perception: dict[str, Any],
+		recipe_db: dict[str, Any],
+		reason: str,
+		self_id: str | None = None,
+	) -> list[dict[str, Any]]:
 		logger = get_logger()
 		self_id = str(self_id or perception.get("self_id", "") or "")
 		decision_mode_context = {
@@ -564,11 +631,6 @@ Output rules:
 					context={"self_id": self_id, "tick": int(tick_i), "cooldown_until_tick": int(self.cooldown_until_tick)},
 				)
 			return []
-
-		recipe_db: dict[str, Any] = {}
-		# Convention: perception can carry recipe_db (Injected by upper layer); otherwise degrade to no available verbs
-		if isinstance((perception or {}).get("recipe_db", None), dict):
-			recipe_db = dict((perception or {}).get("recipe_db") or {})
 
 		available_verbs_list, available_verbs_with_duration, allowed_verbs = _build_available_verbs(
 			recipe_db, visible_entities, inventory, reachable_locations, can_start_conversation_here

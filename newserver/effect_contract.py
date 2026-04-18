@@ -30,6 +30,7 @@ EFFECT_SPECS: dict[str, dict[str, str]] = {
 	"KillEntity": {"module": "newserver.executor._effect_entity"},
 	"StartConversation": {"module": "newserver.executor._effect_conversation"},
 	"AddMemoryNote": {"module": "newserver.executor._effect_memory"},
+	"ApplyMemoryPatch": {"module": "newserver.executor._effect_memory"},
 	"EmitEvent": {"module": "newserver.executor._effect_event"},
 	"ExchangeResources": {"module": "newserver.executor._effect_resource"},
 	"AbortSimulation": {"module": "newserver.executor._effect_resource"},

@@ -5,6 +5,8 @@ from typing import Any
 from ..log_manager import get_logger
 from ..entity_ref_resolver import resolve_entity
 from ..models.components import DecisionArbiterComponent, WorkerComponent
+from ..agent_workflow.interrupt_runtime import check_if_interrupt_is_needed
+from ..agent_workflow.runtime import run_workflow_cycle, workflow_contract_error_policy
 from ._effect_binder import BindError, _base_bind, _require_dict, _require_int, _require_str, _resolve_param_token
 
 
@@ -48,7 +50,39 @@ def _bind_attach_details(_ws: Any, effect_data: dict[str, Any], context: dict[st
 	return out, ctx
 
 
-def execute_agent_control_tick(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+def _record_workflow_error_event(ws: Any, actor_id: str, stage: str, detail: dict[str, Any]) -> None:
+	ws.record_event({"type": "WorkflowDecisionError", "stage": str(stage or ""), "detail": dict(detail or {})}, {"actor_id": actor_id})
+
+
+def _apply_operations(ws: Any, actor_id: str, operations: list[dict[str, Any]]) -> tuple[bool, bool]:
+	execute = (getattr(ws, "services", {}) or {}).get("execute")
+	if not callable(execute):
+		_record_workflow_error_event(
+			ws,
+			actor_id,
+			"execute_missing",
+			{"reason": "ws.services.execute not callable"},
+		)
+		return True, False
+	ops = [dict(x) for x in list(operations or []) if isinstance(x, dict)]
+	for op in list(ops):
+		eff = op.get("effect", {}) or {}
+		ctx = op.get("context", {}) or {}
+		if not isinstance(eff, dict) or not isinstance(ctx, dict):
+			_record_workflow_error_event(ws, actor_id, "operation_invalid", {"operation": dict(op) if isinstance(op, dict) else str(op)})
+			return True, False
+		evs = execute(dict(eff), dict(ctx))
+		for ev in list(evs or []):
+			if not isinstance(ev, dict):
+				continue
+			ev_type = str(ev.get("type", "") or "")
+			if ev_type in {"ExecutorError", "BindError"}:
+				_record_workflow_error_event(ws, actor_id, "executor_failed", {"effect": dict(eff), "error_event": dict(ev)})
+				return True, False
+	return False, bool(ops)
+
+
+def execute_agent_control_tick(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	logger = get_logger()
 	self_id = str(
 		data.get("entity_id")
@@ -67,329 +101,78 @@ def execute_agent_control_tick(executor: Any, ws: Any, data: dict[str, Any], con
 	arb = agent.get_component("DecisionArbiterComponent")
 	if arb is None:
 		return []
-	interrupt = arb.check_if_interrupt_is_needed(ws, self_id)
-	execute = (getattr(ws, "services", {}) or {}).get("execute")
 	services = getattr(ws, "services", {}) or {}
-	perception_system = services.get("perception_system")
-	interaction_engine = services.get("interaction_engine")
-	default_action_provider = services.get("default_action_provider")
+	default_provider = services.get("default_action_provider")
 	action_providers = services.get("action_providers", {}) or {}
-	pid = str(getattr(ctrl, "provider_id", "") or "").strip()
-	action_provider = default_action_provider if not pid else action_providers.get(pid)
-	pending_actions: list[dict[str, Any]] | None = None
-	worker = agent.get_component("WorkerComponent")
-	current_task_id = str(getattr(worker, "current_task_id", "") or "") if worker is not None else ""
-	if worker is not None and current_task_id:
-		if not getattr(interrupt, "interrupt", False):
-			return []
-		reason = str(getattr(interrupt, "reason", "") or "")
-		if action_provider is not None and perception_system is not None and interaction_engine is not None:
-			perception = perception_system.perceive(ws, self_id)
-			engine = (getattr(ws, "services", {}) or {}).get("interaction_engine")
-			if engine is not None and hasattr(engine, "recipe_db") and isinstance(getattr(engine, "recipe_db"), dict):
-				perception["recipe_db"] = dict(getattr(engine, "recipe_db"))
-			perception["interrupt_decision_mode"] = True
-			perception["interrupt_reason"] = reason
-			try:
-				actions = action_provider.decide(perception, reason, self_id)
-			except TypeError:
-				try:
-					actions = action_provider.decide(perception, reason)
-				except Exception:
-					actions = []
-			except Exception:
-				actions = []
-			if actions:
-				first = dict(actions[0]) if isinstance(actions[0], dict) else {}
-				first_verb = str(first.get("verb", "") or "")
-				if first_verb == "ContinueCurrentTask":
-					return []
-				if first_verb == "YieldCurrentTask":
-					if not callable(execute):
-						return []
-					events = execute(
-						{
-							"effect": "InterruptTask",
-							"task_id": current_task_id,
-							"reason": reason,
-							"interrupt_source": "arbiter",
-							"is_voluntary": False,
-						},
-						{"self_id": self_id, "task_id": current_task_id},
-					)
-					rejected = any(
-						isinstance(ev, dict) and str(ev.get("type", "") or "") in {"TaskInterruptRejected", "ExecutorError", "BindError"}
-						for ev in list(events or [])
-					)
-					if rejected:
-						ws.record_interaction_attempt(
-							actor_id=self_id,
-							verb="YieldCurrentTask",
-							target_id=self_id,
-							status="failed",
-							reason="TASK_INTERRUPT_REJECTED",
-							recipe_id="system.yield_current_task",
-							extra={"interrupt_reason": reason, "task_id": current_task_id},
-						)
-						return []
-					ws.record_interaction_attempt(
-						actor_id=self_id,
-						verb="YieldCurrentTask",
-						target_id=self_id,
-						status="success",
-						reason="",
-						recipe_id="system.yield_current_task",
-						extra={"interrupt_reason": reason, "task_id": current_task_id},
-					)
-					pending_actions = None
-				else:
-					ws.record_interaction_attempt(
-						actor_id=self_id,
-						verb=first_verb or "Unknown",
-						target_id=self_id,
-						status="failed",
-						reason="INVALID_INTERRUPT_GATE_ACTION",
-						recipe_id="system.interrupt_gate",
-						extra={"allowed": ["ContinueCurrentTask", "YieldCurrentTask"], "task_id": current_task_id},
-					)
-					return []
-			else:
-				return []
-		task = ws.get_task_by_id(current_task_id)
-		if task is not None and str(getattr(task, "task_status", "") or "") == "InProgress":
-			return []
-	elif not getattr(interrupt, "interrupt", False):
+	provider_id = str(getattr(ctrl, "provider_id", "") or "").strip()
+	workflow = default_provider if not provider_id else action_providers.get(provider_id)
+	if workflow is None or not hasattr(workflow, "decide"):
 		return []
-	if action_provider is None:
-		return []
-	if perception_system is None:
-		return []
-	if interaction_engine is None:
-		return []
-	max_actions_in_tick = int(data.get("max_actions_in_tick"))
+	max_actions_in_tick = max(1, int(data.get("max_actions_in_tick") or 1))
 	actions_executed = 0
-	reason = str(getattr(interrupt, "reason", "") or "")
-	while True:
+	while actions_executed < max_actions_in_tick:
+		interrupt = check_if_interrupt_is_needed(ws=ws, agent_id=self_id, arb=arb)
+		if not bool(getattr(interrupt, "interrupt", False)):
+			break
+		reason = str(getattr(interrupt, "reason", "") or "")
 		worker = agent.get_component("WorkerComponent")
-		if worker is not None and bool(getattr(worker, "current_task_id", "")):
+		current_task_id = str(getattr(worker, "current_task_id", "") or "") if worker is not None else ""
+		mode_context = {
+			"interrupt_decision_mode": bool(current_task_id),
+			"interrupt_reason": reason,
+		}
+		outcome = run_workflow_cycle(ws, self_id, workflow, reason, mode_context)
+		otype = str((outcome or {}).get("type", "") or "")
+		if otype == "error":
+			err = dict((outcome or {}).get("error", {}) or {})
+			kind = str(err.get("kind", "") or "")
+			code = str(err.get("code", "") or "")
+			message = str(err.get("message", "") or "")
+			if kind == "contract" and workflow_contract_error_policy(ws) == "fail_fast":
+				execute = (services or {}).get("execute")
+				if callable(execute):
+					execute(
+						{
+							"effect": "AbortSimulation",
+							"reason": "workflow_contract_violation",
+							"detail": f"{code}: {message}",
+							"severity": "error",
+							"stop": True,
+						},
+						{"self_id": self_id},
+					)
 			break
-		if pending_actions is None:
-			interrupt = arb.check_if_interrupt_is_needed(ws, self_id)
-			if not getattr(interrupt, "interrupt", False):
-				break
-			reason = str(getattr(interrupt, "reason", "") or "")
-		perception = perception_system.perceive(ws, self_id)
-		engine = (getattr(ws, "services", {}) or {}).get("interaction_engine")
-		if engine is not None and hasattr(engine, "recipe_db") and isinstance(getattr(engine, "recipe_db"), dict):
-			perception["recipe_db"] = dict(getattr(engine, "recipe_db"))
-		if pending_actions is not None:
-			actions = list(pending_actions)
-			pending_actions = None
-		else:
-			try:
-				actions = action_provider.decide(perception, reason, self_id)
-			except TypeError:
-				try:
-					actions = action_provider.decide(perception, reason)
-				except Exception as e:
-					ws.record_event({"type": "ActionProviderError", "stage": "decide", "error": str(e)}, {"actor_id": self_id})
-					return []
-			except Exception as e:
-				ws.record_event({"type": "ActionProviderError", "stage": "decide", "error": str(e)}, {"actor_id": self_id})
-				return []
-		if not actions:
+		if otype == "noop":
 			break
-		meta_verbs: set[str] = set()
-		recipe_db = getattr(interaction_engine, "recipe_db", {}) or {}
-		if isinstance(recipe_db, dict):
-			for r in recipe_db.values():
-				if not isinstance(r, dict) or not bool(r.get("is_meta", False)):
-					continue
-				v = str(r.get("verb", "") or "").strip()
-				if v:
-					meta_verbs.add(v)
-		for action in actions:
-			action_dict = dict(action) if isinstance(action, dict) else {}
-			verb = str(action_dict.get("verb", "") or "")
-			target_id = str(action_dict.get("target_id", "") or "")
-			if verb == "ContinueCurrentTask":
-				worker_now = agent.get_component("WorkerComponent")
-				if worker_now is not None and bool(getattr(worker_now, "current_task_id", "")):
-					return []
-				logger.warn(
-					"interaction",
-					"command_failed",
-					context={"self_id": self_id, "verb": verb, "target_id": self_id, "reason": "NO_CURRENT_TASK_TO_CONTINUE", "action": dict(action_dict)},
-				)
-				ws.record_interaction_attempt(
-					actor_id=self_id,
-					verb=verb,
-					target_id=self_id,
-					status="failed",
-					reason="NO_CURRENT_TASK_TO_CONTINUE",
-					recipe_id="system.continue_current_task",
-					extra=None,
-				)
-				return []
-			if verb == "YieldCurrentTask":
-				worker_now = agent.get_component("WorkerComponent")
-				task_id_now = str(getattr(worker_now, "current_task_id", "") or "") if worker_now is not None else ""
-				if not task_id_now:
-					logger.warn(
-						"interaction",
-						"command_failed",
-						context={"self_id": self_id, "verb": verb, "target_id": self_id, "reason": "NO_CURRENT_TASK_TO_CANCEL", "action": dict(action_dict)},
+		if otype != "apply_operations":
+			_record_workflow_error_event(ws, self_id, "workflow_runtime_invalid_outcome_type", {"type": otype})
+			if workflow_contract_error_policy(ws) == "fail_fast":
+				execute = (services or {}).get("execute")
+				if callable(execute):
+					execute(
+						{
+							"effect": "AbortSimulation",
+							"reason": "workflow_runtime_invalid_outcome_type",
+							"detail": str(otype),
+							"severity": "error",
+							"stop": True,
+						},
+						{"self_id": self_id},
 					)
-					ws.record_interaction_attempt(
-						actor_id=self_id,
-						verb=verb,
-						target_id=self_id,
-						status="failed",
-						reason="NO_CURRENT_TASK_TO_YIELD",
-						recipe_id="system.yield_current_task",
-						extra=None,
-					)
-					return []
-				interrupt_events = execute(
-					{
-						"effect": "InterruptTask",
-						"task_id": task_id_now,
-						"reason": str(reason or ""),
-						"interrupt_source": "manual_yield",
-						"is_voluntary": True,
-					},
-					{"self_id": self_id, "task_id": task_id_now},
-				)
-				yield_failed = any(
-					isinstance(ev, dict) and str(ev.get("type", "") or "") in {"TaskInterruptRejected", "ExecutorError", "BindError"}
-					for ev in list(interrupt_events or [])
-				)
-				if yield_failed:
-					ws.record_interaction_attempt(
-						actor_id=self_id,
-						verb=verb,
-						target_id=self_id,
-						status="failed",
-						reason="TASK_INTERRUPT_REJECTED",
-						recipe_id="system.yield_current_task",
-						extra={"task_id": task_id_now},
-					)
-					return []
-				ws.record_interaction_attempt(
-					actor_id=self_id,
-					verb=verb,
-					target_id=self_id,
-					status="success",
-					reason="",
-					recipe_id="system.yield_current_task",
-					extra={"task_id": task_id_now},
-				)
-				actions_executed += 1
-				if actions_executed >= max_actions_in_tick:
-					return []
-				continue
-			if verb in meta_verbs:
-				action_dict["target_id"] = str(self_id)
-				target_id = str(self_id)
-			result = interaction_engine.process_command(ws, self_id, action_dict)
-			status = str((result or {}).get("status", "") or "")
-			if status != "success":
-				reason_code = str((result or {}).get("reason", "") or "")
-				mismatch_reasons = (result or {}).get("mismatch_reasons", []) or []
-				logger.warn(
-					"interaction",
-					"command_failed",
-					context={
-						"self_id": self_id,
-						"verb": verb,
-						"target_id": target_id,
-						"reason": reason_code,
-						"mismatch_reasons": list(mismatch_reasons) if isinstance(mismatch_reasons, list) else [],
-						"action": dict(action_dict),
-					},
-				)
-				extra: dict[str, Any] = {}
-				if isinstance(mismatch_reasons, list) and mismatch_reasons:
-					extra["mismatch_reasons"] = [dict(x) for x in mismatch_reasons if isinstance(x, dict)]
-				ws.record_interaction_attempt(
-					actor_id=self_id,
-					verb=verb,
-					target_id=target_id,
-					status="failed",
-					reason=reason_code,
-					recipe_id="",
-					extra=extra if extra else None,
-				)
-				return []
-			ctx = (result or {}).get("context", {}) or {}
-			effective_target_id = str((ctx or {}).get("target_id", "") or target_id)
-			recipe_id = str(((ctx or {}).get("recipe", {}) or {}).get("id", "") or "")
-			extra = {}
-			if isinstance(ctx, dict) and isinstance(ctx.get("interaction_extra", None), dict):
-				extra = dict(ctx.get("interaction_extra") or {})
-			target_name_snapshot = ""
-			target_ent_before = ws.get_entity_by_id(effective_target_id) if hasattr(ws, "get_entity_by_id") else None
-			if target_ent_before is not None:
-				target_name_snapshot = str(getattr(target_ent_before, "entity_name", "") or "")
-				if hasattr(target_ent_before, "get_component"):
-					target_setting = target_ent_before.get_component("AgentSetting")
-					if target_setting is not None:
-						target_name_snapshot = str(getattr(target_setting, "agent_name", "") or target_name_snapshot)
-			if target_name_snapshot and not str(extra.get("target_name", "") or "").strip():
-				extra["target_name"] = target_name_snapshot
-			effect_failed = False
-			effect_fail_reason = ""
-			for eff in (result or {}).get("effects", []) or []:
-				if isinstance(eff, dict) and isinstance(ctx, dict):
-					evs = execute(eff, ctx)
-					for ev in list(evs or []):
-						if not isinstance(ev, dict):
-							continue
-						ev_type = str(ev.get("type", "") or "")
-						if ev_type in {"ExecutorError", "BindError"}:
-							effect_failed = True
-							effect_fail_reason = str(ev.get("message", "") or ev_type)
-							break
-					if effect_failed:
-						break
-			if effect_failed:
-				logger.warn(
-					"interaction",
-					"command_effect_failed",
-					context={
-						"self_id": self_id,
-						"verb": verb,
-						"target_id": effective_target_id,
-						"recipe_id": recipe_id,
-						"reason": effect_fail_reason,
-						"action": dict(action_dict),
-					},
-				)
-				ws.record_interaction_attempt(
-					actor_id=self_id,
-					verb=verb,
-					target_id=effective_target_id,
-					status="failed",
-					reason=effect_fail_reason,
-					recipe_id=recipe_id,
-					extra=extra,
-				)
-				return []
-			ws.record_interaction_attempt(
-				actor_id=self_id,
-				verb=verb,
-				target_id=effective_target_id,
-				status="success",
-				reason="",
-				recipe_id=recipe_id,
-				extra=extra,
-			)
-			worker_after = agent.get_component("WorkerComponent")
-			if worker_after is not None and bool(getattr(worker_after, "current_task_id", "")):
-				return []
+			break
+		stop_loop, consumed = _apply_operations(ws, self_id, list((outcome or {}).get("operations", []) or []))
+		if consumed:
 			actions_executed += 1
-			if actions_executed >= max_actions_in_tick:
-				return []
+		if stop_loop:
+			break
+		worker_after = agent.get_component("WorkerComponent")
+		if worker_after is not None and bool(getattr(worker_after, "current_task_id", "")):
+			break
+		logger.debug(
+			"workflow",
+			"decision_applied",
+			context={"self_id": self_id, "actions_executed": int(actions_executed), "max_actions_in_tick": int(max_actions_in_tick)},
+		)
 	return []
 
 

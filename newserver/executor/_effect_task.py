@@ -4,6 +4,15 @@ from typing import Any
 
 from ..models.components import StatusComponent, TaskHostComponent, WorkerComponent
 from ..models.task import Task
+from ..task_policy import (
+	INTERRUPT_MODE_CANCEL,
+	INTERRUPT_MODE_FORBIDDEN,
+	INTERRUPT_MODE_PAUSE_KEEP,
+	INTERRUPT_MODE_PAUSE_RESET,
+	extract_task_policy_from_recipe,
+	get_task_policy_from_task,
+	is_interrupt_mode_resumable,
+)
 from ._effect_binder import BindError, _base_bind, _require_float, _require_str, _resolve_param_token
 
 
@@ -267,38 +276,6 @@ def _bind_cancel_task(_ws: Any, effect_data: dict[str, Any], context: dict[str, 
 	return {"effect": effect_type, "task_id": task_id, "reason": reason, "force": _as_bool(force_raw)}, ctx
 
 
-def _get_task_policy(task: Task) -> dict[str, Any]:
-	params = getattr(task, "parameters", {}) or {}
-	if not isinstance(params, dict):
-		params = {}
-	raw_policy = params.get("task_policy", {}) or {}
-	policy = dict(raw_policy) if isinstance(raw_policy, dict) else {}
-	mode = str(policy.get("interrupt_mode", "pause_keep_progress") or "").strip().lower()
-	alias_map = {
-		"pausable": "pause_keep_progress",
-		"restartable": "pause_reset_progress",
-		"cancellable": "cancel",
-		"fail_on_interrupt": "fail",
-	}
-	mode = alias_map.get(mode, mode)
-	if mode not in {"forbidden", "pause_keep_progress", "pause_reset_progress", "cancel", "fail"}:
-		mode = "pause_keep_progress"
-	policy["interrupt_mode"] = mode
-	policy["allow_voluntary_interrupt"] = bool(policy.get("allow_voluntary_interrupt", True))
-	policy["allow_voluntary_cancel"] = bool(policy.get("allow_voluntary_cancel", True))
-	return policy
-
-
-def _extract_task_policy_from_recipe(recipe: dict[str, Any]) -> dict[str, Any]:
-	process = recipe.get("process", {}) or {}
-	if not isinstance(process, dict):
-		process = {}
-	policy = process.get("task_policy", None)
-	if policy is None:
-		policy = recipe.get("task_policy", None)
-	return dict(policy) if isinstance(policy, dict) else {}
-
-
 def _try_stop_worker_task(ws: Any, worker_id: str, task_id: str) -> None:
 	if not worker_id:
 		return
@@ -448,7 +425,7 @@ def execute_create_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 		task.parameters["recipe_id"] = recipe_id
 	process = recipe.get("process", {}) or {}
 	task.required_progress = float(process.get("required_progress", 1))
-	task_policy = _extract_task_policy_from_recipe(recipe)
+	task_policy = extract_task_policy_from_recipe(recipe)
 	if task_policy:
 		task.parameters["task_policy"] = dict(task_policy)
 	task.completion_effects = [x for x in (recipe.get("outputs", []) or []) if isinstance(x, dict)]
@@ -684,16 +661,16 @@ def execute_interrupt_task(_executor: Any, ws: Any, data: dict[str, Any], contex
 	old_status = str(getattr(task, "task_status", "") or "")
 	if old_status in {"Completed", "Cancelled", "Failed"}:
 		return [{"type": "TaskInterruptRejected", "task_id": task_id, "reason": f"terminal_status:{old_status}"}]
-	policy = _get_task_policy(task)
-	mode = str(policy.get("interrupt_mode", "pause_keep_progress") or "pause_keep_progress")
+	policy = get_task_policy_from_task(task)
+	mode = str(policy.get("interrupt_mode", INTERRUPT_MODE_PAUSE_KEEP) or INTERRUPT_MODE_PAUSE_KEEP)
 	if is_voluntary and not bool(policy.get("allow_voluntary_interrupt", True)) and not force:
 		return [{"type": "TaskInterruptRejected", "task_id": task_id, "reason": "voluntary_interrupt_forbidden"}]
-	if mode == "forbidden" and not force:
+	if mode == INTERRUPT_MODE_FORBIDDEN and not force:
 		return [{"type": "TaskInterruptRejected", "task_id": task_id, "reason": "interrupt_forbidden"}]
 	worker_id = str(data.get("worker_id") or (context or {}).get("self_id", "") or "")
-	if mode == "pause_reset_progress":
+	if mode == INTERRUPT_MODE_PAUSE_RESET:
 		task.progress = 0.0
-	if mode in {"pause_keep_progress", "pause_reset_progress", "forbidden"}:
+	if mode in {INTERRUPT_MODE_PAUSE_KEEP, INTERRUPT_MODE_PAUSE_RESET, INTERRUPT_MODE_FORBIDDEN}:
 		task.task_status = "Paused"
 		_try_stop_worker_task(ws, worker_id, task.task_id)
 		if isinstance(getattr(task, "assigned_agent_ids", None), list):
@@ -710,7 +687,7 @@ def execute_interrupt_task(_executor: Any, ws: Any, data: dict[str, Any], contex
 				"worker_id": worker_id,
 			}
 		]
-	if mode == "cancel":
+	if mode == INTERRUPT_MODE_CANCEL:
 		task.task_status = "Cancelled"
 		_try_stop_worker_task(ws, worker_id, task.task_id)
 		_remove_task_from_host_and_world(ws, task, context)
@@ -747,9 +724,9 @@ def execute_resume_task(_executor: Any, ws: Any, data: dict[str, Any], context: 
 	old_status = str(getattr(task, "task_status", "") or "")
 	if old_status not in {"Paused", "Inactive"}:
 		return [{"type": "TaskResumeRejected", "task_id": task.task_id, "reason": f"invalid_status:{old_status}"}]
-	policy = _get_task_policy(task)
-	mode = str(policy.get("interrupt_mode", "pause_keep_progress") or "pause_keep_progress")
-	if mode in {"cancel", "fail"}:
+	policy = get_task_policy_from_task(task)
+	mode = str(policy.get("interrupt_mode", INTERRUPT_MODE_PAUSE_KEEP) or INTERRUPT_MODE_PAUSE_KEEP)
+	if not is_interrupt_mode_resumable(mode):
 		return [{"type": "TaskResumeRejected", "task_id": task.task_id, "reason": f"interrupt_mode_not_resumable:{mode}"}]
 	worker_id = str(data.get("worker_id") or (context or {}).get("self_id", "") or "")
 	if not worker_id:
@@ -788,7 +765,7 @@ def execute_cancel_task(_executor: Any, ws: Any, data: dict[str, Any], context: 
 	old_status = str(getattr(task, "task_status", "") or "")
 	if old_status in {"Completed", "Cancelled", "Failed"}:
 		return [{"type": "TaskCancelRejected", "task_id": task.task_id, "reason": f"terminal_status:{old_status}"}]
-	policy = _get_task_policy(task)
+	policy = get_task_policy_from_task(task)
 	if not bool(policy.get("allow_voluntary_cancel", True)) and not force:
 		return [{"type": "TaskCancelRejected", "task_id": task.task_id, "reason": "voluntary_cancel_forbidden"}]
 	worker_id = str(data.get("worker_id") or (context or {}).get("self_id", "") or "")

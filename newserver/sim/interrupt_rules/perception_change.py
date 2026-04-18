@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from ...agent_workflow.full_ws_view_builder import build_full_ws_view
+from ...agent_workflow.observer import build_agent_perception
 from .base import InterruptResult
 
 
@@ -73,19 +75,15 @@ class PerceptionChangeRule:
 			if "trigger_on_agent_left" in params:
 				on_left = bool(params.get("trigger_on_agent_left", on_left))
 
-		# 2. Get Perception System
-		services = getattr(ws, "services", {}) or {}
-		perception_system = services.get("perception_system")
-		if perception_system is None:
-			return InterruptResult(interrupt=False, reason="No perception system", rule_type="PerceptionChange", priority=self.priority)
-		if hasattr(perception_system, "is_observation_blocked") and bool(perception_system.is_observation_blocked(ws, agent_id)):
+		# 2. Build workflow-side perception (no sim-side perception dependency)
+		full_ws_view = build_full_ws_view(ws, agent_id, "", {})
+		perception = build_agent_perception(full_ws_view, agent_id)
+		if not (perception or {}).get("location"):
 			rt = arb._get_rule_runtime("PerceptionChange")
 			rt["known_ids"] = []
 			return InterruptResult(interrupt=False, reason="", rule_type="PerceptionChange", priority=self.priority)
 
 		# 3. Perceive current visible entities
-		# We only need the entity list, not events/interactions
-		perception = perception_system.perceive(ws, agent_id)
 		current_entities = perception.get("entities", []) or []
 		current_ids = set()
 		for ent_data in current_entities:

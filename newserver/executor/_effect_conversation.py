@@ -70,21 +70,18 @@ def execute_start_conversation(_executor: Any, ws: Any, data: dict[str, Any], co
 	]
 
 	def _build_perception_for_dialogue(speaker_id: str, spoken_so_far: int, transcript: list[dict[str, Any]]) -> dict[str, Any]:
-		perception_system = services.get("perception_system")
-		perception = {}
-		if perception_system is not None and hasattr(perception_system, "perceive"):
-			perception = perception_system.perceive(ws, speaker_id)
-		else:
-			perception = {"self_id": speaker_id, "location": {"id": location_id, "name": str(getattr(location, "location_name", "") or "")}, "entities": []}
-		if isinstance(perception, dict):
-			engine = services.get("interaction_engine")
-			if engine is not None and hasattr(engine, "recipe_db") and isinstance(getattr(engine, "recipe_db"), dict):
-				perception["recipe_db"] = dict(getattr(engine, "recipe_db"))
-			used_now = int(used + spoken_so_far)
-			perception["can_start_conversation_here"] = bool(used_now < limit_default)
-			perception["tick"] = int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
-			perception["conversation_transcript"] = [dict(x) for x in list(transcript or [])]
-		return dict(perception) if isinstance(perception, dict) else {}
+		from ..agent_workflow.observer import build_agent_perception
+		from ..agent_workflow.full_ws_view_builder import build_full_ws_view
+		full_ws_view = build_full_ws_view(ws, speaker_id, "", {})
+		perception = build_agent_perception(full_ws_view, speaker_id)
+		engine = services.get("interaction_engine")
+		if engine is not None and hasattr(engine, "recipe_db") and isinstance(getattr(engine, "recipe_db"), dict):
+			perception["recipe_db"] = dict(getattr(engine, "recipe_db"))
+		used_now = int(used + spoken_so_far)
+		perception["can_start_conversation_here"] = bool(used_now < limit_default)
+		perception["tick"] = int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
+		perception["conversation_transcript"] = [dict(x) for x in list(transcript or [])]
+		return dict(perception)
 
 	def _resolve_provider_and_name(speaker_id: str) -> tuple[Any, str]:
 		ent = ws.get_entity_by_id(speaker_id)

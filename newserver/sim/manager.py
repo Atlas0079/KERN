@@ -9,7 +9,6 @@ from uuid import uuid4
 from ..data.checkpoint import build_checkpoint_payload_from_world_state, build_simulation_log_payload_from_world_state, resolve_global_log_file
 from ..log_manager import get_logger
 from ..models.world_state import WorldState
-from .memory_capture import MemoryCaptureSystem
 from .trigger_system import TriggerSystem
 
 
@@ -31,7 +30,6 @@ class WorldManager:
 	world_state: WorldState
 	interaction_engine: Any
 	executor: Any
-	perception_system: Any
 	action_provider: Any
 
 	is_running: bool = False
@@ -43,7 +41,6 @@ class WorldManager:
 	action_providers: dict[str, Any] = field(default_factory=dict)
 	reaction_rules: list[dict[str, Any]] = field(default_factory=list)
 	trigger_system: TriggerSystem | None = None
-	memory_capture_system: MemoryCaptureSystem | None = None
 
 	# Snapshot storage
 	snapshots: list[dict[str, Any]] = field(default_factory=list)
@@ -53,14 +50,13 @@ class WorldManager:
 	checkpoint_write_global_log: bool = True
 	dialogue_log_full: bool = False
 	dialogue_budget_limit_per_location: int = 4
+	workflow_contract_on_error: str = "fail_fast"
 	last_stop_info: dict[str, Any] = field(default_factory=dict)
 	run_id: str = ""
 
 	def __post_init__(self) -> None:
 		if self.trigger_system is None:
 			self.trigger_system = TriggerSystem(rules=list(self.reaction_rules or []))
-		if self.memory_capture_system is None:
-			self.memory_capture_system = MemoryCaptureSystem()
 		if self.checkpoint_enabled:
 			base_dir = str(self.checkpoint_dir or "").strip()
 			if not base_dir:
@@ -313,14 +309,13 @@ class WorldManager:
 			self.trigger_system.begin_tick()
 
 		self.world_state.services = {
-			"perception_system": self.perception_system,
 			"interaction_engine": self.interaction_engine,
 			"default_action_provider": self.action_provider,
 			"action_providers": dict(self.action_providers or {}),
 			"dialogue_budget_limit_per_location": int(self.dialogue_budget_limit_per_location),
 			"dialogue_budget_used_per_location": {},
 			"dialogue_log_full": bool(self.dialogue_log_full),
-			"memory_capture_system": self.memory_capture_system,
+			"workflow_contract_on_error": str(self.workflow_contract_on_error or "fail_fast"),
 			"request_stop": self.request_stop,
 			"abort_requested": False,
 			"abort_reason": "",
@@ -453,9 +448,6 @@ class WorldManager:
 				rctx = req.get("context", {}) or {}
 				if isinstance(reff, dict) and isinstance(rctx, dict):
 					execute_wrapper(reff, rctx)
-
-		if self.memory_capture_system is not None and hasattr(self.memory_capture_system, "summarize_all"):
-			self.memory_capture_system.summarize_all(ws)
 
 		events_in_tick_records: list[dict[str, Any]] = []
 		for rec in list(getattr(ws, "event_log", []) or []):

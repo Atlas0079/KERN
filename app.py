@@ -11,11 +11,12 @@ from newserver.data.checkpoint import resolve_checkpoint_file, restore_world_sta
 from newserver.data.validator import validate_bundle
 from newserver.data.builder import build_world_state
 from newserver.sim.manager import WorldManager
-from newserver.sim.perception import PerceptionSystem
 from newserver.interaction.engine import InteractionEngine
 from newserver.executor.executor import WorldExecutor
-from newserver.agents.simple_policy import SimplePolicyActionProvider
-from newserver.agents.llm_action_provider import build_default_llm_provider
+from newserver.agent_workflow.simple_policy import SimplePolicyActionProvider
+from newserver.agent_workflow.llm_action_provider import build_default_llm_provider
+from newserver.agent_workflow.full_ws_view_builder import build_full_ws_view
+from newserver.agent_workflow.observer import build_agent_perception
 
 
 def _resolve_runtime_config_path(project_root: Path, cli_config_path: str = "") -> Path:
@@ -152,8 +153,8 @@ def main(argv: list[str] | None = None) -> None:
 				},
 			)
 
-	# Print perception results once to confirm if container hiding is effective
-	perception = PerceptionSystem().perceive(ws, agent_id)
+	# Print perception results once to confirm if observer filtering is effective
+	perception = build_agent_perception(build_full_ws_view(ws, agent_id, "", {}), agent_id)
 	logger.info(
 		"interaction",
 		"perception_snapshot",
@@ -202,6 +203,7 @@ def main(argv: list[str] | None = None) -> None:
 	checkpoint_enabled = _cfg_bool(cfg, "CHECKPOINT_EVERY_TICK", True)
 	checkpoint_include_logs = _cfg_bool(cfg, "CHECKPOINT_INCLUDE_LOGS", True)
 	dialogue_log_full = _cfg_bool(cfg, "DIALOGUE_LOG_FULL", False)
+	workflow_contract_on_error = _cfg_get(cfg, "WORKFLOW_CONTRACT_ON_ERROR", "fail_fast").lower() or "fail_fast"
 	default_checkpoint_dir = project_root / "checkpoints" / (world_json_name or "default")
 	checkpoint_dir_env = _cfg_get(cfg, "CHECKPOINT_DIR", "")
 	checkpoint_dir = checkpoint_dir_env if checkpoint_dir_env else str(default_checkpoint_dir)
@@ -209,11 +211,11 @@ def main(argv: list[str] | None = None) -> None:
 		world_state=ws,
 		interaction_engine=InteractionEngine(recipe_db=bundle.recipes),
 		executor=WorldExecutor(entity_templates=bundle.entity_templates),
-		perception_system=PerceptionSystem(),
 		action_provider=action_provider,
 		reaction_rules=list((bundle.reactions or {}).get("rules", []) or []),
 		max_trigger_depth=max_trigger_depth,
 		dialogue_budget_limit_per_location=dialogue_budget_limit_per_location,
+		workflow_contract_on_error=workflow_contract_on_error,
 		checkpoint_enabled=checkpoint_enabled,
 		checkpoint_dir=checkpoint_dir,
 		checkpoint_include_logs=checkpoint_include_logs,
@@ -224,8 +226,7 @@ def main(argv: list[str] | None = None) -> None:
 
 	# LLM demo: Print a segment of "interactive narrative" to make behavior look more intuitive
 	if use_llm:
-		ps = PerceptionSystem()
-		perception = ps.perceive(ws, agent_id)
+		perception = build_agent_perception(build_full_ws_view(ws, agent_id, "", {}), agent_id)
 		logger.info(
 			"interaction",
 			"short_term_memory_rendered",

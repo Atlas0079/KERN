@@ -28,7 +28,6 @@ class WorldState:
 
 	# Runtime service registry (Injected by WorldManager, used by executor/effects and systems)
 	# Convention keys (Extensible):
-	# - "perception_system"
 	# - "interaction_engine"
 	# - "default_action_provider"
 	# - "action_providers"
@@ -48,32 +47,6 @@ class WorldState:
 	# - Record necessary "name snapshots" to avoid inability to render narrative after entity destruction
 	interaction_log: list[dict[str, Any]] = field(default_factory=list)
 	_interaction_seq: int = 0
-
-	def _notify_memory_capture_interaction(self, record: dict[str, Any]) -> None:
-		services = getattr(self, "services", {}) or {}
-		memory_capture = services.get("memory_capture_system")
-		if memory_capture is None or not hasattr(memory_capture, "capture_from_interaction"):
-			return
-		try:
-			memory_capture.capture_from_interaction(self, dict(record))
-		except Exception as e:
-			raise RuntimeError(
-				f"memory_capture interaction failed: seq={int((record or {}).get('seq', 0) or 0)} "
-				f"actor_id={str((record or {}).get('actor_id', '') or '')}"
-			) from e
-
-	def _notify_memory_capture_event(self, record: dict[str, Any]) -> None:
-		services = getattr(self, "services", {}) or {}
-		memory_capture = services.get("memory_capture_system")
-		if memory_capture is None or not hasattr(memory_capture, "capture_from_event"):
-			return
-		try:
-			memory_capture.capture_from_event(self, dict(record))
-		except Exception as e:
-			raise RuntimeError(
-				f"memory_capture event failed: seq={int((record or {}).get('seq', 0) or 0)} "
-				f"actor_id={str((record or {}).get('actor_id', '') or '')}"
-			) from e
 
 	def record_interaction_attempt(
 		self,
@@ -139,7 +112,6 @@ class WorldState:
 			for k, val in extra.items():
 				record[str(k)] = val
 		self.interaction_log.append(record)
-		self._notify_memory_capture_interaction(record)
 
 	def record_event(self, event: dict[str, Any], context: dict[str, Any] | None = None) -> None:
 		"""
@@ -171,7 +143,6 @@ class WorldState:
 			"event": dict(event),
 		}
 		self.event_log.append(record)
-		self._notify_memory_capture_event(record)
 
 	def register_entity(self, entity: Entity) -> None:
 		if entity.entity_id in self.entities:
