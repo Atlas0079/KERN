@@ -8,7 +8,6 @@ from pathlib import Path
 from KERN.log_manager import configure_logger, get_logger
 from KERN.data.loader import load_data_bundle
 from KERN.data.checkpoint import resolve_checkpoint_file, restore_world_state_from_checkpoint
-from KERN.data.validator import validate_bundle
 from KERN.data.builder import build_world_state
 from KERN.sim.manager import WorldManager
 from KERN.interaction.engine import InteractionEngine
@@ -17,6 +16,7 @@ from KERN.agent_workflow.simple_policy import SimplePolicyActionProvider
 from KERN.agent_workflow.llm_action_provider import build_default_llm_provider
 from KERN.agent_workflow.full_ws_view_builder import build_full_ws_view
 from KERN.agent_workflow.observer import build_agent_perception
+from tools.scenario_lint import lint_bundle
 
 
 def _resolve_runtime_config_path(project_root: Path, cli_config_path: str = "") -> Path:
@@ -71,6 +71,7 @@ def _cfg_int(cfg: dict[str, str], key: str, default: int) -> int:
 def main(argv: list[str] | None = None) -> None:
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--config", dest="config_path", default="", help="runtime config file path")
+	parser.add_argument("--skip-validation", action="store_true", help="skip startup scenario data validation")
 	args = parser.parse_args(argv)
 	project_root = Path(__file__).resolve().parent
 	cfg, cfg_path = _load_runtime_config(project_root, str(args.config_path or ""))
@@ -105,10 +106,25 @@ def main(argv: list[str] | None = None) -> None:
 		logger.info("checkpoint", "restored", context={"path": str(restore_path), "tick": int(ws.game_time.total_ticks)})
 	else:
 		validation_mode = _cfg_get(cfg, "VALIDATION_MODE", "fast").lower() or "fast"
-		report = validate_bundle(bundle, mode=validation_mode)
-		if not report.ok:
-			raise ValueError("Data validation failed:\n" + "\n".join(report.errors))
-		logger.info("system", "data_validated", context={"mode": report.mode, "warnings": len(report.warnings)})
+		skip_validation = bool(args.skip_validation) or _cfg_bool(cfg, "SKIP_VALIDATION", False) or validation_mode == "off"
+		if skip_validation:
+			logger.warn("system", "data_validation_skipped", context={"mode": validation_mode, "cli_skip": bool(args.skip_validation)})
+		else:
+			lint = lint_bundle(
+				project_root=project_root,
+				config_path=cfg_path,
+				env=cfg,
+				bundle=bundle,
+				world_json=world_json_name,
+				recipes_jsons=recipes_jsons,
+				reactions_jsons=reactions_jsons,
+				entities_dirs=entities_dirs,
+			)
+			errors = [x for x in lint.issues if x.severity == "ERROR"]
+			warnings = [x for x in lint.issues if x.severity == "WARN"]
+			if errors:
+				raise ValueError("Data validation failed:\n" + "\n".join(f"{x.where}: {x.message}" for x in errors))
+			logger.info("system", "data_validated", context={"mode": "scenario_lint", "warnings": len(warnings)})
 		result = build_world_state(bundle.world, bundle.entity_templates, bundle.recipes)
 		ws = result.world_state
 	logger.info(

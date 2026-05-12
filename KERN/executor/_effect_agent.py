@@ -5,8 +5,7 @@ from typing import Any
 from ..log_manager import get_logger
 from ..entity_ref_resolver import resolve_entity
 from ..models.components import DecisionArbiterComponent, WorkerComponent
-from ..agent_workflow.interrupt_runtime import check_if_interrupt_is_needed
-from ..agent_workflow.runtime import run_workflow_cycle, workflow_contract_error_policy
+from ..agent_workflow.runtime import run_agent_control_tick
 from ._effect_binder import BindError, _base_bind, _require_dict, _require_int, _require_str, _resolve_param_token
 
 
@@ -50,40 +49,7 @@ def _bind_attach_details(_ws: Any, effect_data: dict[str, Any], context: dict[st
 	return out, ctx
 
 
-def _record_workflow_error_event(ws: Any, actor_id: str, stage: str, detail: dict[str, Any]) -> None:
-	ws.record_event({"type": "WorkflowDecisionError", "stage": str(stage or ""), "detail": dict(detail or {})}, {"actor_id": actor_id})
-
-
-def _apply_operations(ws: Any, actor_id: str, operations: list[dict[str, Any]]) -> tuple[bool, bool]:
-	execute = (getattr(ws, "services", {}) or {}).get("execute")
-	if not callable(execute):
-		_record_workflow_error_event(
-			ws,
-			actor_id,
-			"execute_missing",
-			{"reason": "ws.services.execute not callable"},
-		)
-		return True, False
-	ops = [dict(x) for x in list(operations or []) if isinstance(x, dict)]
-	for op in list(ops):
-		eff = op.get("effect", {}) or {}
-		ctx = op.get("context", {}) or {}
-		if not isinstance(eff, dict) or not isinstance(ctx, dict):
-			_record_workflow_error_event(ws, actor_id, "operation_invalid", {"operation": dict(op) if isinstance(op, dict) else str(op)})
-			return True, False
-		evs = execute(dict(eff), dict(ctx))
-		for ev in list(evs or []):
-			if not isinstance(ev, dict):
-				continue
-			ev_type = str(ev.get("type", "") or "")
-			if ev_type in {"ExecutorError", "BindError"}:
-				_record_workflow_error_event(ws, actor_id, "executor_failed", {"effect": dict(eff), "error_event": dict(ev)})
-				return True, False
-	return False, bool(ops)
-
-
 def execute_agent_control_tick(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
-	logger = get_logger()
 	self_id = str(
 		data.get("entity_id")
 		or (context or {}).get("entity_id", "")
@@ -98,9 +64,6 @@ def execute_agent_control_tick(_executor: Any, ws: Any, data: dict[str, Any], co
 	ctrl = agent.get_component("AgentControlComponent")
 	if ctrl is None or not bool(getattr(ctrl, "enabled", True)):
 		return []
-	arb = agent.get_component("DecisionArbiterComponent")
-	if arb is None:
-		return []
 	services = getattr(ws, "services", {}) or {}
 	default_provider = services.get("default_action_provider")
 	action_providers = services.get("action_providers", {}) or {}
@@ -109,70 +72,7 @@ def execute_agent_control_tick(_executor: Any, ws: Any, data: dict[str, Any], co
 	if workflow is None or not hasattr(workflow, "decide"):
 		return []
 	max_actions_in_tick = max(1, int(data.get("max_actions_in_tick") or 1))
-	actions_executed = 0
-	while actions_executed < max_actions_in_tick:
-		interrupt = check_if_interrupt_is_needed(ws=ws, agent_id=self_id, arb=arb)
-		if not bool(getattr(interrupt, "interrupt", False)):
-			break
-		reason = str(getattr(interrupt, "reason", "") or "")
-		worker = agent.get_component("WorkerComponent")
-		current_task_id = str(getattr(worker, "current_task_id", "") or "") if worker is not None else ""
-		mode_context = {
-			"interrupt_decision_mode": bool(current_task_id),
-			"interrupt_reason": reason,
-		}
-		outcome = run_workflow_cycle(ws, self_id, workflow, reason, mode_context)
-		otype = str((outcome or {}).get("type", "") or "")
-		if otype == "error":
-			err = dict((outcome or {}).get("error", {}) or {})
-			kind = str(err.get("kind", "") or "")
-			code = str(err.get("code", "") or "")
-			message = str(err.get("message", "") or "")
-			if kind == "contract" and workflow_contract_error_policy(ws) == "fail_fast":
-				execute = (services or {}).get("execute")
-				if callable(execute):
-					execute(
-						{
-							"effect": "AbortSimulation",
-							"reason": "workflow_contract_violation",
-							"detail": f"{code}: {message}",
-							"severity": "error",
-							"stop": True,
-						},
-						{"self_id": self_id},
-					)
-			break
-		if otype == "noop":
-			break
-		if otype != "apply_operations":
-			_record_workflow_error_event(ws, self_id, "workflow_runtime_invalid_outcome_type", {"type": otype})
-			if workflow_contract_error_policy(ws) == "fail_fast":
-				execute = (services or {}).get("execute")
-				if callable(execute):
-					execute(
-						{
-							"effect": "AbortSimulation",
-							"reason": "workflow_runtime_invalid_outcome_type",
-							"detail": str(otype),
-							"severity": "error",
-							"stop": True,
-						},
-						{"self_id": self_id},
-					)
-			break
-		stop_loop, consumed = _apply_operations(ws, self_id, list((outcome or {}).get("operations", []) or []))
-		if consumed:
-			actions_executed += 1
-		if stop_loop:
-			break
-		worker_after = agent.get_component("WorkerComponent")
-		if worker_after is not None and bool(getattr(worker_after, "current_task_id", "")):
-			break
-		logger.debug(
-			"workflow",
-			"decision_applied",
-			context={"self_id": self_id, "actions_executed": int(actions_executed), "max_actions_in_tick": int(max_actions_in_tick)},
-		)
+	run_agent_control_tick(ws=ws, actor_id=self_id, workflow=workflow, max_actions_in_tick=max_actions_in_tick)
 	return []
 
 

@@ -1,7 +1,7 @@
 from __future__ import annotations
 import json
 
-from dataclasses import asdict, dataclass, field, is_dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
@@ -177,70 +177,6 @@ class WorldManager:
 		
 		self.snapshots.append(snapshot)
 
-	def _serialize_any(self, value: Any) -> Any:
-		if value is None or isinstance(value, (str, int, float, bool)):
-			return value
-		if str(getattr(getattr(value, "__class__", None), "__name__", "")) == "DecisionArbiterComponent":
-			return self._serialize_arbiter_component(value)
-		if isinstance(value, dict):
-			return {str(k): self._serialize_any(v) for k, v in value.items()}
-		if isinstance(value, (list, tuple, set)):
-			return [self._serialize_any(v) for v in value]
-		if is_dataclass(value):
-			return self._serialize_any(asdict(value))
-		if hasattr(value, "__dict__"):
-			return self._serialize_any(dict(vars(value)))
-		return str(value)
-
-	def _serialize_arbiter_component(self, arb: Any) -> dict[str, Any]:
-		rules_out: list[dict[str, Any]] = []
-		for r in list(getattr(arb, "ruleset", []) or []):
-			if isinstance(r, dict):
-				rule_type = str(r.get("type", "") or "").strip()
-				if rule_type:
-					rules_out.append({str(k): self._serialize_any(v) for k, v in r.items()})
-				continue
-			rule_class = str(getattr(getattr(r, "__class__", None), "__name__", "") or "")
-			priority = int(getattr(r, "priority", 999) or 999)
-			if rule_class == "LowNutritionRule":
-				rules_out.append(
-					{
-						"type": "LowNutrition",
-						"priority": priority,
-						"threshold": float(getattr(r, "threshold", 50.0) or 50.0),
-					}
-				)
-				continue
-			if rule_class == "PerceptionChangeRule":
-				rules_out.append(
-					{
-						"type": "PerceptionChange",
-						"priority": priority,
-						"trigger_on_agent_sighted": bool(getattr(r, "trigger_on_agent_sighted", True)),
-						"trigger_on_agent_left": bool(getattr(r, "trigger_on_agent_left", True)),
-					}
-				)
-				continue
-			if rule_class == "CorpseSightedRule":
-				rules_out.append(
-					{
-						"type": "CorpseSighted",
-						"priority": priority,
-						"trigger_on_new_corpse": bool(getattr(r, "trigger_on_new_corpse", True)),
-					}
-				)
-				continue
-			if rule_class == "IdleRule":
-				rules_out.append({"type": "Idle", "priority": priority})
-		return {
-			"rules": rules_out,
-			"active_interrupt_preset_id": str(getattr(arb, "active_interrupt_preset_id", "") or ""),
-			"interrupt_presets": self._serialize_any(dict(getattr(arb, "interrupt_presets", {}) or {})),
-			"interrupt_preset_descriptions": self._serialize_any(dict(getattr(arb, "interrupt_preset_descriptions", {}) or {})),
-			"interrupt_runtime_state": self._serialize_any(dict(getattr(arb, "interrupt_runtime_state", {}) or {})),
-			"_runtime_preset_id": str(getattr(arb, "_runtime_preset_id", "") or ""),
-		}
-
 	def _build_checkpoint_payload(self) -> dict[str, Any]:
 		return build_checkpoint_payload_from_world_state(
 			self.world_state,
@@ -305,6 +241,8 @@ class WorldManager:
 		start_event_seq = int(getattr(ws, "_event_seq", 0) or 0)
 
 		# 1) Inject runtime services for effect execution stack.
+		# TODO(architecture): Deliberately keep ws.services for now.
+		# Do not spread new keys casually; plan a single migration to typed RuntimeContext later.
 		if self.trigger_system is not None:
 			self.trigger_system.begin_tick()
 

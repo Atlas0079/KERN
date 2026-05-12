@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from .full_ws_view_builder import build_full_ws_view
+from .interrupt_runtime import check_if_interrupt_is_needed
 from .workflow_contract import validate_workflow_decision
 
 
@@ -160,6 +161,34 @@ def _decision_to_outcome(ws: Any, actor_id: str, reason: str, decision: dict[str
 	return {"type": "error", "error": {"kind": "contract", "code": "INVALID_DECISION_TYPE", "message": str(dtype)}}
 
 
+def _apply_operations(ws: Any, actor_id: str, operations: list[dict[str, Any]]) -> tuple[bool, bool]:
+	execute = (getattr(ws, "services", {}) or {}).get("execute")
+	if not callable(execute):
+		_record_workflow_error_event(
+			ws,
+			actor_id,
+			"execute_missing",
+			{"reason": "ws.services.execute not callable"},
+		)
+		return True, False
+	ops = [dict(x) for x in list(operations or []) if isinstance(x, dict)]
+	for op in list(ops):
+		eff = op.get("effect", {}) or {}
+		ctx = op.get("context", {}) or {}
+		if not isinstance(eff, dict) or not isinstance(ctx, dict):
+			_record_workflow_error_event(ws, actor_id, "operation_invalid", {"operation": dict(op) if isinstance(op, dict) else str(op)})
+			return True, False
+		evs = execute(dict(eff), dict(ctx))
+		for ev in list(evs or []):
+			if not isinstance(ev, dict):
+				continue
+			ev_type = str(ev.get("type", "") or "")
+			if ev_type in {"ExecutorError", "BindError"}:
+				_record_workflow_error_event(ws, actor_id, "executor_failed", {"effect": dict(eff), "error_event": dict(ev)})
+				return True, False
+	return False, bool(ops)
+
+
 def run_workflow_cycle(ws: Any, actor_id: str, workflow: Any, reason: str, mode_context: dict[str, Any]) -> dict[str, Any]:
 	ws_view = _build_workflow_ws_view(ws, actor_id, reason, mode_context)
 	recipe_db = _build_workflow_recipe_db(ws)
@@ -197,3 +226,73 @@ def run_workflow_cycle(ws: Any, actor_id: str, workflow: Any, reason: str, mode_
 		_record_workflow_error_event(ws, actor_id, "contract_invalid", {"error": str(err), "raw": str(decision_raw)})
 		return {"type": "error", "error": {"kind": "contract", "code": "WORKFLOW_CONTRACT_INVALID_DECISION", "message": str(err)}}
 	return _decision_to_outcome(ws, actor_id, str(reason or ""), decision)
+
+
+def run_agent_control_tick(ws: Any, actor_id: str, workflow: Any, max_actions_in_tick: int) -> None:
+	agent = ws.get_entity_by_id(actor_id) if hasattr(ws, "get_entity_by_id") else None
+	if agent is None:
+		return
+	arb = agent.get_component("DecisionArbiterComponent") if hasattr(agent, "get_component") else None
+	if arb is None:
+		return
+	services = getattr(ws, "services", {}) or {}
+	actions_executed = 0
+	max_actions = max(1, int(max_actions_in_tick or 1))
+	while actions_executed < max_actions:
+		interrupt = check_if_interrupt_is_needed(ws=ws, agent_id=actor_id, arb=arb)
+		if not bool(getattr(interrupt, "interrupt", False)):
+			break
+		reason = str(getattr(interrupt, "reason", "") or "")
+		worker = agent.get_component("WorkerComponent") if hasattr(agent, "get_component") else None
+		current_task_id = str(getattr(worker, "current_task_id", "") or "") if worker is not None else ""
+		mode_context = {
+			"interrupt_decision_mode": bool(current_task_id),
+			"interrupt_reason": reason,
+		}
+		outcome = run_workflow_cycle(ws, actor_id, workflow, reason, mode_context)
+		otype = str((outcome or {}).get("type", "") or "")
+		if otype == "error":
+			err = dict((outcome or {}).get("error", {}) or {})
+			kind = str(err.get("kind", "") or "")
+			code = str(err.get("code", "") or "")
+			message = str(err.get("message", "") or "")
+			if kind == "contract" and workflow_contract_error_policy(ws) == "fail_fast":
+				execute = (services or {}).get("execute")
+				if callable(execute):
+					execute(
+						{
+							"effect": "AbortSimulation",
+							"reason": "workflow_contract_violation",
+							"detail": f"{code}: {message}",
+							"severity": "error",
+							"stop": True,
+						},
+						{"self_id": actor_id},
+					)
+			break
+		if otype == "noop":
+			break
+		if otype != "apply_operations":
+			_record_workflow_error_event(ws, actor_id, "workflow_runtime_invalid_outcome_type", {"type": otype})
+			if workflow_contract_error_policy(ws) == "fail_fast":
+				execute = (services or {}).get("execute")
+				if callable(execute):
+					execute(
+						{
+							"effect": "AbortSimulation",
+							"reason": "workflow_runtime_invalid_outcome_type",
+							"detail": str(otype),
+							"severity": "error",
+							"stop": True,
+						},
+						{"self_id": actor_id},
+					)
+			break
+		stop_loop, consumed = _apply_operations(ws, actor_id, list((outcome or {}).get("operations", []) or []))
+		if consumed:
+			actions_executed += 1
+		if stop_loop:
+			break
+		worker_after = agent.get_component("WorkerComponent") if hasattr(agent, "get_component") else None
+		if worker_after is not None and bool(getattr(worker_after, "current_task_id", "")):
+			break

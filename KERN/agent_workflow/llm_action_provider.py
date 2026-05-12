@@ -873,38 +873,143 @@ Output rules:
 		return ("", s)
 
 	def _parse_actions(self, raw: str) -> list[dict[str, Any]]:
-		# Allow model output ```json fenced block```, try best effort extraction
+		def _normalize_json_text(s: str) -> str:
+			text = str(s or "").strip()
+			if text.lower().startswith("json"):
+				lines = text.splitlines()
+				if len(lines) > 1:
+					text = "\n".join(lines[1:]).strip()
+			return text
+
+		def _from_loaded(value: Any) -> list[dict[str, Any]] | None:
+			# Preferred shape: top-level list[dict]
+			if isinstance(value, list):
+				out = [dict(item) for item in value if isinstance(item, dict)]
+				return out
+			# Tolerate wrapped shapes: {"actions":[...]} / {"commands":[...]}
+			if isinstance(value, dict):
+				for key in ["actions", "commands"]:
+					v = value.get(key, None)
+					if isinstance(v, list):
+						out = [dict(item) for item in v if isinstance(item, dict)]
+						return out
+			return None
+
+		def _extract_code_fence_bodies(s: str) -> list[str]:
+			out: list[str] = []
+			for m in re.finditer(r"```(?:json|JSON)?\s*([\s\S]*?)```", s):
+				body = str(m.group(1) or "").strip()
+				if body:
+					out.append(body)
+			return out
+
+		def _extract_balanced_json_spans(s: str) -> list[str]:
+			# Best-effort scanner for balanced JSON objects/arrays in mixed text.
+			out: list[str] = []
+			n = len(s)
+			i = 0
+			while i < n:
+				ch = s[i]
+				if ch not in "[{":
+					i += 1
+					continue
+				stack = ["]" if ch == "[" else "}"]
+				in_str = False
+				escape = False
+				j = i + 1
+				while j < n:
+					c = s[j]
+					if in_str:
+						if escape:
+							escape = False
+						elif c == "\\":
+							escape = True
+						elif c == '"':
+							in_str = False
+						j += 1
+						continue
+					if c == '"':
+						in_str = True
+						j += 1
+						continue
+					if c in "[{":
+						stack.append("]" if c == "[" else "}")
+						j += 1
+						continue
+					if c in "]}":
+						if not stack or c != stack[-1]:
+							break
+						stack.pop()
+						if not stack:
+							out.append(s[i : j + 1])
+							break
+					j += 1
+				i += 1
+			return out
+
+		def _try_parse_candidate(candidate: str) -> list[dict[str, Any]] | None:
+			text = _normalize_json_text(candidate)
+			if not text:
+				return None
+			try:
+				loaded = json.loads(text)
+			except Exception:
+				return None
+			return _from_loaded(loaded)
+
 		s = str(raw or "").strip()
-		if "```" in s:
-			parts = s.split("```")
-			# Select the part containing '['
-			for p in parts:
-				if "[" in p and "]" in p:
-					s = p
-					break
-		s = s.strip()
-		# Remove possible "json" tag line
-		if s.lower().startswith("json"):
-			s = "\n".join(s.splitlines()[1:]).strip()
+		if not s:
+			raise ValueError("[LLM] Invalid JSON output from Grounder: <empty>")
 
-		try:
-			data = json.loads(s)
-		except Exception as e:
-			# Critical: Malformed JSON -> System Error
-			# We must stop the simulation or force a crash so the developer can fix the prompt/model.
-			raise ValueError(f"[LLM] Invalid JSON output from Grounder: {s}") from e
-			
-		if not isinstance(data, list):
-			# Also a format error
-			raise ValueError(f"[LLM] Grounder output is not a list: {s}")
+		candidates: list[str] = [s]
+		candidates.extend(_extract_code_fence_bodies(s))
+		without_thought = re.sub(r"<thought>[\s\S]*?</thought>", "", s, flags=re.IGNORECASE).strip()
+		if without_thought and without_thought != s:
+			candidates.append(without_thought)
 
-		out: list[dict[str, Any]] = []
-		for item in data:
-			if isinstance(item, dict):
-				out.append(dict(item))
-		return out
+		for text in [s, without_thought]:
+			if not text:
+				continue
+			candidates.extend(_extract_balanced_json_spans(text))
+
+		seen: set[str] = set()
+		for c in candidates:
+			clean = str(c or "").strip()
+			if not clean or clean in seen:
+				continue
+			seen.add(clean)
+			actions = _try_parse_candidate(clean)
+			if actions is not None:
+				return actions
+
+		raw_excerpt = s if len(s) <= 1200 else (s[:1200] + "...<truncated>")
+		raise ValueError(f"[LLM] Invalid JSON output from Grounder: {raw_excerpt}")
 
 	def decide_dialogue(self, perception: dict[str, Any], conversation_context: dict[str, Any], self_id: str | None = None) -> str:
+		def _sanitize_dialogue_output(raw: str) -> str:
+			s = str(raw or "").strip()
+			if not s:
+				return "PASS"
+
+			# Remove complete <thought>...</thought> blocks first.
+			s = re.sub(r"<\s*thought\s*>[\s\S]*?<\s*/\s*thought\s*>", "", s, flags=re.IGNORECASE).strip()
+
+			# If model outputs an opening thought tag without close tag, drop from tag start.
+			open_idx = re.search(r"<\s*thought\s*>", s, flags=re.IGNORECASE)
+			if open_idx is not None:
+				s = s[: open_idx.start()].strip()
+
+			# If model still has "THOUGHT: ..." style chain-of-thought, keep content after the last line break.
+			if re.search(r"\bTHOUGHT\s*:", s, flags=re.IGNORECASE):
+				lines = [ln.strip() for ln in s.splitlines() if ln.strip()]
+				if lines:
+					s = lines[-1]
+
+			# Dialogue contract: one-line output only.
+			if "\n" in s:
+				s = s.splitlines()[0].strip()
+			return s or "PASS"
+
 		logger = get_logger()
 		self_id = str(self_id or perception.get("self_id", "") or "")
 		perception = _with_mode_context(perception if isinstance(perception, dict) else {}, "dialogue", conversation_context if isinstance(conversation_context, dict) else {})
@@ -968,8 +1073,7 @@ Output rules:
 			],
 			temperature=1,
 		).strip()
-		if "\n" in line:
-			line = line.splitlines()[0].strip()
+		line = _sanitize_dialogue_output(line)
 		self._focus_log(logger, "focus_dialogue_output", self_id, {"self_id": self_id, "line": line})
 		return str(line or "PASS")
 

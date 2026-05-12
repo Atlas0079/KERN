@@ -31,6 +31,8 @@ class WorldState:
 	# - "interaction_engine"
 	# - "default_action_provider"
 	# - "action_providers"
+	# TODO(architecture): Keep `services` as a string-key registry for now to unblock iteration.
+	# Revisit once the workflow/executor boundary is stable, then replace with a typed runtime context.
 	services: dict[str, Any] = field(default_factory=dict)
 
 

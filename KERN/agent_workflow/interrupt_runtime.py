@@ -2,7 +2,13 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..sim.interrupt_rules import IdleRule, InterruptResult, LowNutritionRule
+from .interrupt_rules import (
+	CorpseSightedRule,
+	IdleRule,
+	InterruptResult,
+	LowNutritionRule,
+	PerceptionChangeRule,
+)
 from ..models.components.controller_resolver import resolve_enabled_controller_component
 
 
@@ -65,7 +71,8 @@ def _check_low_nutrition_with_latch(ws: Any, agent_id: str, arb: Any, rule: LowN
 	now_tick = _get_now_tick(ws)
 
 	cur, max_nut = _get_creature_nutrition(ws, agent_id)
-	threshold_on_raw = params.get("threshold_on", params.get("threshold", getattr(rule, "threshold", 50.0))) if isinstance(params, dict) else getattr(rule, "threshold", 50.0)
+	default_threshold = getattr(rule, "nutrition_threshold", 30)
+	threshold_on_raw = params.get("threshold_on", params.get("threshold", default_threshold)) if isinstance(params, dict) else default_threshold
 	threshold_off_raw = params.get("threshold_off", threshold_on_raw) if isinstance(params, dict) else threshold_on_raw
 	threshold_off_val = _normalize_threshold_value(threshold_off_raw, max_nut)
 
@@ -97,6 +104,48 @@ def _check_low_nutrition_with_latch(ws: Any, agent_id: str, arb: Any, rule: LowN
 	return result
 
 
+def _rule_from_data(rule_data: dict[str, Any]) -> Any | None:
+	rule_type = str((rule_data or {}).get("type", "") or "").strip()
+	priority_raw = (rule_data or {}).get("priority", 999999)
+	try:
+		priority = int(priority_raw)
+	except Exception:
+		priority = 999999
+	if rule_type == "Idle":
+		return IdleRule(priority=priority)
+	if rule_type == "LowNutrition":
+		threshold_raw = (rule_data or {}).get("nutrition_threshold", (rule_data or {}).get("threshold", 30))
+		try:
+			threshold = float(threshold_raw)
+		except Exception:
+			threshold = 30.0
+		return LowNutritionRule(priority=priority, nutrition_threshold=threshold)
+	if rule_type == "PerceptionChange":
+		cd_raw = (rule_data or {}).get("cooldown_ticks", 2)
+		try:
+			cooldown_ticks = int(cd_raw)
+		except Exception:
+			cooldown_ticks = 2
+		return PerceptionChangeRule(
+			priority=priority,
+			cooldown_ticks=cooldown_ticks,
+			trigger_on_agent_sighted=bool((rule_data or {}).get("trigger_on_agent_sighted", True)),
+			trigger_on_agent_left=bool((rule_data or {}).get("trigger_on_agent_left", True)),
+		)
+	if rule_type == "CorpseSighted":
+		cd_raw = (rule_data or {}).get("cooldown_ticks", 0)
+		try:
+			cooldown_ticks = int(cd_raw)
+		except Exception:
+			cooldown_ticks = 0
+		return CorpseSightedRule(
+			priority=priority,
+			trigger_on_new_corpse=bool((rule_data or {}).get("trigger_on_new_corpse", True)),
+			cooldown_ticks=cooldown_ticks,
+		)
+	return None
+
+
 def check_if_interrupt_is_needed(ws: Any, agent_id: str, arb: Any) -> InterruptResult:
 	_ensure_runtime_preset_tracking(arb)
 	agent = ws.get_entity_by_id(agent_id) if hasattr(ws, "get_entity_by_id") else None
@@ -106,7 +155,12 @@ def check_if_interrupt_is_needed(ws: Any, agent_id: str, arb: Any) -> InterruptR
 	worker = agent.get_component("WorkerComponent") if agent is not None else None
 	has_task = bool(getattr(worker, "current_task_id", "") or "") if worker is not None else False
 	ruleset = list(getattr(arb, "ruleset", []) or [])
-	for rule in list(ruleset):
+	for item in list(ruleset):
+		rule = item
+		if isinstance(item, dict):
+			rule = _rule_from_data(item)
+		if rule is None:
+			continue
 		if has_task and isinstance(rule, IdleRule):
 			continue
 		if isinstance(rule, LowNutritionRule):

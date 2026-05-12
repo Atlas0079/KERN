@@ -3,23 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from ...sim.interrupt_rules import CorpseSightedRule, IdleRule, LowNutritionRule, PerceptionChangeRule, InterruptResult
-from ...agent_workflow.interrupt_runtime import check_if_interrupt_is_needed as check_interrupt_in_workflow
-
-
 @dataclass
 class DecisionArbiterComponent:
-	"""
-	Align with Godot `DecisionArbiterComponent.gd`:
-	- Holds ruleset
-	- Calls `check_if_interrupt_is_needed` every tick
-	"""
-	# TODO: interrupt preference modeling is currently too low-level:
-	# presets, mutable rule params, and runtime latch/cooldown state live side by side here.
-	# Future refactor should separate:
-	# 1) preset library,
-	# 2) active runtime overrides,
-	# 3) internal runtime state used only by the arbiter.
+	"""Pure data component for interrupt configuration and runtime state."""
 
 	ruleset: list[Any] = field(default_factory=list)
 	active_interrupt_preset_id: str = ""
@@ -42,6 +28,9 @@ class DecisionArbiterComponent:
 		params = preset.get(str(rule_type), {})
 		return dict(params) if isinstance(params, dict) else {}
 
+	def get_rule_runtime(self, rule_type: str) -> dict[str, Any]:
+		return self._get_rule_runtime(rule_type)
+
 	def _get_rule_runtime(self, rule_type: str) -> dict[str, Any]:
 		rt = (self.interrupt_runtime_state or {}).get(rule_type, None)
 		if not isinstance(rt, dict):
@@ -57,39 +46,20 @@ class DecisionArbiterComponent:
 		ruleset: list[Any] = []
 
 		for rd in rules_raw:
-			rule_type = (rd or {}).get("type")
-			if rule_type == "Idle":
-				ruleset.append(IdleRule(priority=int((rd or {}).get("priority", 999))))
-			elif rule_type == "LowNutrition":
-				ruleset.append(
-					LowNutritionRule(
-						priority=int((rd or {}).get("priority", 10)),
-						threshold=float((rd or {}).get("threshold", 50)),
-					)
-				)
-			elif rule_type == "PerceptionChange":
-				ruleset.append(
-					PerceptionChangeRule(
-						priority=int((rd or {}).get("priority", 50)),
-						trigger_on_agent_sighted=bool((rd or {}).get("trigger_on_agent_sighted", True)),
-						trigger_on_agent_left=bool((rd or {}).get("trigger_on_agent_left", True)),
-					)
-				)
-			elif rule_type == "CorpseSighted":
-				ruleset.append(
-					CorpseSightedRule(
-						priority=int((rd or {}).get("priority", 30)),
-						trigger_on_new_corpse=bool((rd or {}).get("trigger_on_new_corpse", True)),
-					)
-				)
-			else:
-				# Unmigrated rules: Ignore
-				# Assuming existence: UnknownInterruptRule
-				# Intent: Keep unknown rule data for debugging; Necessity: Facilitates gradual migration as rule types increase.
+			if not isinstance(rd, dict):
 				continue
+			rule_type = str(rd.get("type", "") or "").strip()
+			if not rule_type:
+				continue
+			item = dict(rd)
+			item["type"] = rule_type
+			try:
+				item["priority"] = int(item.get("priority", 999999))
+			except Exception:
+				item["priority"] = 999999
+			ruleset.append(item)
 
-		# Check lower priority first (consistent with your Godot version)
-		ruleset.sort(key=lambda r: int(getattr(r, "priority", 999999)))
+		ruleset.sort(key=lambda r: int((r or {}).get("priority", 999999)))
 		active_interrupt_preset_id = str((component_data or {}).get("active_interrupt_preset_id", "") or "")
 		interrupt_presets = (component_data or {}).get("interrupt_presets", {}) or {}
 		interrupt_preset_descriptions = (component_data or {}).get("interrupt_preset_descriptions", {}) or {}
@@ -103,6 +73,3 @@ class DecisionArbiterComponent:
 			interrupt_presets=dict(interrupt_presets),
 			interrupt_preset_descriptions={str(k): str(v or "") for k, v in dict(interrupt_preset_descriptions).items()},
 		)
-
-	def check_if_interrupt_is_needed(self, ws: Any, agent_id: str) -> InterruptResult:
-		return check_interrupt_in_workflow(ws=ws, agent_id=str(agent_id or ""), arb=self)
