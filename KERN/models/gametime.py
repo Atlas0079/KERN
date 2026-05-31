@@ -33,9 +33,6 @@ class GameTime:
 		new_day = self.total_ticks // self.ticks_per_day
 		return new_day > old_day
 
-	def advance_minutes(self, minutes_to_add: int) -> bool:
-		return self.advance_ticks(int(minutes_to_add) * self.TICKS_PER_MINUTE)
-
 	def get_year(self) -> int:
 		den = self.ticks_per_day * self.DAYS_PER_WEEK * self.WEEKS_PER_MONTH * self.MONTHS_PER_YEAR
 		return 1 + (self.total_ticks // den)

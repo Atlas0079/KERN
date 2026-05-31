@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+from ..effect_bundle import effect_bundle_from_raw
 from ..sim.condition_evaluator import ConditionEvaluator
 
 
@@ -58,16 +59,26 @@ class InteractionEngine:
 		# context only carries invocation environment; effect-private config must stay in effect data.
 		context = {"self_id": self_id, "target_id": str(target_id), "parameters": dict(resolved_params)}
 
-		expanded_effects = self._expand_dynamic_outputs(target, recipe.get("outputs", []) or [])
-		recipe["outputs"] = expanded_effects
-
 		process_data = recipe.get("process", {}) or {}
 		if self._is_duration_process(process_data):
 			if assign_to not in {"self", "target"}:
 				return {"status": "failed", "reason": "invalid_process_assign_to"}
-			return {"status": "success", "effects": [{"effect": "CreateTask", "recipe": recipe, "assign_to": assign_to}], "context": context}
+			return {
+				"status": "success",
+				"bundle": {
+					"effects": [
+						{
+							"effect": "CreateTask",
+							"recipe": recipe,
+							"assign_to": assign_to,
+						}
+					]
+				},
+				"context": context,
+			}
 
-		return {"status": "success", "effects": expanded_effects, "context": context}
+		bundle = effect_bundle_from_raw(recipe.get("bundle", {}) or {})
+		return {"status": "success", "bundle": bundle.to_dict(), "context": context}
 
 	def _find_matching_recipe(self, ws: Any, verb: str, self_id: str, target: Any, params: dict[str, Any]) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
 		mismatch_reasons: list[dict[str, Any]] = []
@@ -113,23 +124,3 @@ class InteractionEngine:
 			return result, []
 
 		return None, mismatch_reasons[:8]
-
-	def _expand_dynamic_outputs(self, target: Any, outputs: list[dict[str, Any]]) -> list[dict[str, Any]]:
-		effects: list[dict[str, Any]] = []
-		for eff in outputs:
-			if "dynamic_outputs_from_component" in eff:
-				dyn = eff["dynamic_outputs_from_component"] or {}
-				comp_name = dyn.get("component")
-				prop_name = dyn.get("property")
-				comp = target.get_component(str(comp_name))
-				val = None
-				if hasattr(comp, "data") and isinstance(getattr(comp, "data"), dict):
-					val = comp.data.get(str(prop_name))
-				else:
-					val = getattr(comp, str(prop_name), None)
-				if isinstance(val, list):
-					effects.extend([x for x in val if isinstance(x, dict)])
-			else:
-				if isinstance(eff, dict):
-					effects.append(eff)
-		return effects

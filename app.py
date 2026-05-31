@@ -204,8 +204,8 @@ def main(argv: list[str] | None = None) -> None:
 			context={"status": sleep_result.get("status"), "reason": sleep_result.get("reason"), "message": sleep_result.get("message")},
 		)
 		if sleep_result.get("status") == "success":
-			for effect in sleep_result.get("effects", []):
-				WorldExecutor(entity_templates=bundle.entity_templates).execute(ws, effect, sleep_result.get("context", {}) or {})
+			executor = WorldExecutor(entity_templates=bundle.entity_templates)
+			executor.execute_bundle(ws, sleep_result.get("bundle", {}) or {}, sleep_result.get("context", {}) or {})
 		logger.info("task", "task_after_sleep", context={"current_task_id": getattr(worker, "current_task_id", "") if worker else ""})
 
 	use_llm = _cfg_bool(cfg, "USE_LLM", False)

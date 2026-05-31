@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ..execution_errors import executor_error
 from ..models.components import MemoryComponent
 from ._effect_binder import BindError, _base_bind, _require_param, _require_str, _resolve_param_token
 
@@ -22,12 +23,12 @@ def _bind_add_memory_note(_ws: Any, effect_data: dict[str, Any], context: dict[s
 
 def execute_add_memory_note(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	target_key = str(data.get("target", "self") or "self")
-	target = executor._resolve_entity_from_ctx(ws, context, target_key)
-	if target is None:
-		return [{"type": "ExecutorError", "message": "AddMemoryNote: target missing"}]
+	target, err = executor.require_entity(ws, context, target_key, "AddMemoryNote", "target")
+	if err is not None:
+		return err
 	text = str(data.get("text", "") or "").strip()
 	if not text:
-		return [{"type": "ExecutorError", "message": "AddMemoryNote: text missing"}]
+		return executor_error("AddMemoryNote: text missing")
 	imp_raw = data.get("importance", 0.5)
 	try:
 		importance = float(imp_raw)
@@ -66,9 +67,9 @@ def _bind_apply_memory_patch(_ws: Any, effect_data: dict[str, Any], context: dic
 
 def execute_apply_memory_patch(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	target_key = str(data.get("target", "self") or "self")
-	target = executor._resolve_entity_from_ctx(ws, context, target_key)
-	if target is None:
-		return [{"type": "ExecutorError", "message": "ApplyMemoryPatch: target missing"}]
+	target, err = executor.require_entity(ws, context, target_key, "ApplyMemoryPatch", "target")
+	if err is not None:
+		return err
 	mem = target.get_component("MemoryComponent")
 	if not isinstance(mem, MemoryComponent):
 		mem = MemoryComponent()

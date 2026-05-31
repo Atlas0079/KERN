@@ -7,6 +7,8 @@ from typing import Any
 from uuid import uuid4
 
 from ..data.checkpoint import build_checkpoint_payload_from_world_state, build_simulation_log_payload_from_world_state, resolve_global_log_file
+from ..effect_bundle import effect_bundle_from_raw
+from ..execution_errors import executor_error, is_execution_error_event
 from ..log_manager import get_logger
 from ..models.world_state import WorldState
 from .trigger_system import TriggerSystem
@@ -250,11 +252,13 @@ class WorldManager:
 			"interaction_engine": self.interaction_engine,
 			"default_action_provider": self.action_provider,
 			"action_providers": dict(self.action_providers or {}),
+			"request_stop": self.request_stop,
+		}
+		self.world_state.runtime_state = {
 			"dialogue_budget_limit_per_location": int(self.dialogue_budget_limit_per_location),
 			"dialogue_budget_used_per_location": {},
 			"dialogue_log_full": bool(self.dialogue_log_full),
 			"workflow_contract_on_error": str(self.workflow_contract_on_error or "fail_fast"),
-			"request_stop": self.request_stop,
 			"abort_requested": False,
 			"abort_reason": "",
 			"abort_detail": "",
@@ -274,53 +278,51 @@ class WorldManager:
 		logger.debug("tick", "tick_advanced", context=dict(events[-1]))
 		ws.record_event(events[-1], {"actor_id": ""})
 
-		# Effect execution wrapper with recursive reaction chaining.
-		def execute_wrapper(effect: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+		# Bundle execution wrapper with recursive reaction chaining.
+		def execute_wrapper(bundle_data: Any, context: dict[str, Any]) -> list[dict[str, Any]]:
 			collected_events: list[dict[str, Any]] = []
-			def execute_with_reactions(eff: dict[str, Any], ctx: dict[str, Any], depth: int) -> None:
-				if not bool(self.is_running):
-					return
-				logger.debug("effect", "execute", context={"effect": dict(eff or {}), "context": dict(ctx or {}), "depth": int(depth)})
-				result_events = self.executor.execute(ws, eff, ctx)
+
+			def _record_reaction_result(ctx: dict[str, Any], reaction_failed: bool, reaction_fail_reason: str, effect_type: str) -> None:
 				reaction_rule_id = str((ctx or {}).get("reaction_rule_id", "") or "")
+				if not reaction_rule_id or not hasattr(ws, "record_interaction_attempt"):
+					return
+				actor_id = str((ctx or {}).get("self_id", "") or "")
+				target_id = str((ctx or {}).get("target_id", "") or "")
+				ws.record_interaction_attempt(
+					actor_id=actor_id,
+					verb=f"ReactionApplied:{reaction_rule_id}",
+					target_id=target_id,
+					status="failed" if reaction_failed else "success",
+					reason=reaction_fail_reason if reaction_failed else "",
+					recipe_id=f"reaction_applied:{reaction_rule_id}",
+					extra={
+						"is_reaction": True,
+						"reaction_phase": "failed" if reaction_failed else "applied",
+						"reaction_rule_id": reaction_rule_id,
+						"trigger_event": str((ctx or {}).get("reaction_trigger_event_type", "") or ""),
+						"effect_type": str(effect_type or ""),
+					},
+				)
+
+			def _process_result_events(result_events: list[dict[str, Any]], ctx: dict[str, Any], depth: int, effect_type: str) -> None:
 				reaction_failed = False
 				reaction_fail_reason = ""
 				for _ev in list(result_events or []):
-					if not isinstance(_ev, dict):
-						continue
-					ev_type = str(_ev.get("type", "") or "")
-					if ev_type in {"ExecutorError", "BindError"}:
+					if is_execution_error_event(_ev):
 						reaction_failed = True
-						reaction_fail_reason = str(_ev.get("message", "") or ev_type)
+						reaction_fail_reason = str(_ev.get("message", "") or _ev.get("type", "") or "")
 						logger.warn(
 							"executor",
 							"effect_failed",
 							context={
-								"effect": dict(eff or {}),
+								"effect_type": str(effect_type or ""),
 								"context": dict(ctx or {}),
 								"error_event": dict(_ev),
 								"depth": int(depth),
 							},
 						)
 						break
-				if reaction_rule_id and hasattr(ws, "record_interaction_attempt"):
-					actor_id = str((ctx or {}).get("self_id", "") or "")
-					target_id = str((ctx or {}).get("target_id", "") or "")
-					ws.record_interaction_attempt(
-						actor_id=actor_id,
-						verb=f"ReactionApplied:{reaction_rule_id}",
-						target_id=target_id,
-						status="failed" if reaction_failed else "success",
-						reason=reaction_fail_reason if reaction_failed else "",
-						recipe_id=f"reaction_applied:{reaction_rule_id}",
-						extra={
-							"is_reaction": True,
-							"reaction_phase": "failed" if reaction_failed else "applied",
-							"reaction_rule_id": reaction_rule_id,
-							"trigger_event": str((ctx or {}).get("reaction_trigger_event_type", "") or ""),
-							"effect_type": str((eff or {}).get("effect", "") or ""),
-						},
-					)
+				_record_reaction_result(ctx, reaction_failed, reaction_fail_reason, effect_type)
 				for ev in list(result_events or []):
 					if not isinstance(ev, dict):
 						continue
@@ -328,7 +330,7 @@ class WorldManager:
 					ws.record_event(ev, ctx)
 					events.append(ev)
 					logger.trace("event", "record", context={"event": dict(ev), "context": dict(ctx or {}), "depth": int(depth)})
-					if bool((ws.services or {}).get("abort_requested", False)):
+					if bool((ws.runtime_state or {}).get("abort_requested", False)):
 						return
 					if depth >= int(self.max_trigger_depth):
 						limit_event = {
@@ -345,21 +347,49 @@ class WorldManager:
 						continue
 					reqs = self.trigger_system.build_reaction_effects(ws, ev, ctx)
 					for req in list(reqs or []):
-						reff = req.get("effect", {}) or {}
+						rbundle = req.get("bundle", {}) or {}
 						rctx = req.get("context", {}) or {}
-						if isinstance(reff, dict) and isinstance(rctx, dict):
-							execute_with_reactions(reff, rctx, depth + 1)
-							if bool((ws.services or {}).get("abort_requested", False)):
+						if isinstance(rctx, dict):
+							execute_bundle_with_reactions(rbundle, rctx, depth + 1)
+							if bool((ws.runtime_state or {}).get("abort_requested", False)):
 								return
 
-			execute_with_reactions(effect, context, 0)
-			if bool((ws.services or {}).get("abort_requested", False)):
+			def execute_effect_with_reactions(eff: dict[str, Any], ctx: dict[str, Any], depth: int) -> None:
+				if not bool(self.is_running):
+					return
+				logger.debug("effect", "execute", context={"effect": dict(eff or {}), "context": dict(ctx or {}), "depth": int(depth)})
+				result_events = self.executor.execute(ws, eff, ctx)
+				_process_result_events(result_events, ctx, depth, str((eff or {}).get("effect", "") or ""))
+
+			def execute_bundle_with_reactions(raw_bundle: Any, ctx: dict[str, Any], depth: int) -> None:
+				if not bool(self.is_running):
+					return
+				try:
+					bundle = effect_bundle_from_raw(raw_bundle)
+				except Exception as exc:
+					result_events = executor_error(f"invalid bundle ({exc})")
+					_process_result_events(result_events, ctx, depth, "Bundle")
+					return
+				if bool(bundle.react_per_effect):
+					for inner_eff in list(bundle.effects or []):
+						if not isinstance(inner_eff, dict):
+							continue
+						execute_effect_with_reactions(dict(inner_eff), dict(ctx or {}), depth)
+						if bool((ws.runtime_state or {}).get("abort_requested", False)) or not bool(self.is_running):
+							return
+					return
+				logger.debug("bundle", "execute", context={"bundle": bundle.to_dict(), "context": dict(ctx or {}), "depth": int(depth)})
+				result_events = self.executor.execute_bundle(ws, bundle, ctx)
+				_process_result_events(result_events, ctx, depth, "Bundle")
+
+			execute_bundle_with_reactions(bundle_data, context, 0)
+			if bool((ws.runtime_state or {}).get("abort_requested", False)):
 				self.request_stop(
 					{
-						"reason": str((ws.services or {}).get("abort_reason", "") or ""),
-						"detail": str((ws.services or {}).get("abort_detail", "") or ""),
-						"severity": str((ws.services or {}).get("abort_severity", "") or ""),
-						"actor_id": str((ws.services or {}).get("abort_actor_id", "") or ""),
+						"reason": str((ws.runtime_state or {}).get("abort_reason", "") or ""),
+						"detail": str((ws.runtime_state or {}).get("abort_detail", "") or ""),
+						"severity": str((ws.runtime_state or {}).get("abort_severity", "") or ""),
+						"actor_id": str((ws.runtime_state or {}).get("abort_actor_id", "") or ""),
 					}
 				)
 			return collected_events
@@ -382,10 +412,10 @@ class WorldManager:
 				continue
 			reqs = self.trigger_system.build_reaction_effects(ws, tick_event, tick_ctx)
 			for req in list(reqs or []):
-				reff = req.get("effect", {}) or {}
+				rbundle = req.get("bundle", {}) or {}
 				rctx = req.get("context", {}) or {}
-				if isinstance(reff, dict) and isinstance(rctx, dict):
-					execute_wrapper(reff, rctx)
+				if isinstance(rctx, dict):
+					execute_wrapper(rbundle, rctx)
 
 		events_in_tick_records: list[dict[str, Any]] = []
 		for rec in list(getattr(ws, "event_log", []) or []):

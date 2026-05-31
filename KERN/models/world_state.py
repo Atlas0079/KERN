@@ -31,9 +31,9 @@ class WorldState:
 	# - "interaction_engine"
 	# - "default_action_provider"
 	# - "action_providers"
-	# TODO(architecture): Keep `services` as a string-key registry for now to unblock iteration.
-	# Revisit once the workflow/executor boundary is stable, then replace with a typed runtime context.
 	services: dict[str, Any] = field(default_factory=dict)
+
+	runtime_state: dict[str, Any] = field(default_factory=dict)
 
 
 
@@ -224,17 +224,7 @@ class WorldState:
 		if entity_id not in loc.entities_in_location:
 			loc.entities_in_location.append(entity_id)
 
-	def ensure_entity_removed_from_location(self, entity_id: str, location_id: str) -> None:
-		loc = self.get_location_by_id(location_id)
-		if loc is None:
-			return
-		if entity_id in loc.entities_in_location:
-			loc.entities_in_location.remove(entity_id)
 
-	def move_ids_between_locations(self, ids: list[str], from_location_id: str, to_location_id: str) -> None:
-		for eid in ids:
-			self.ensure_entity_removed_from_location(eid, from_location_id)
-			self.ensure_entity_in_location(eid, to_location_id)
 
 	def collect_descendant_item_ids(self, root_entity_id: str) -> list[str]:
 		"""

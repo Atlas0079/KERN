@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+
+from ...effect_bundle import EffectBundle
 
 
 @dataclass
 class EdibleComponent:
-	effects_on_consume: list[dict[str, Any]] = field(default_factory=list)
+	on_consume_bundle: EffectBundle = field(default_factory=EffectBundle)

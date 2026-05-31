@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from ..effect_bundle import effect_bundle_from_raw
+from ..execution_errors import executor_error, is_execution_error_event
 from ..models.components import StatusComponent, TaskHostComponent, WorkerComponent
 from ..models.task import Task
 from ..task_policy import (
@@ -27,8 +29,7 @@ def _clone_recipe(recipe: dict[str, Any]) -> dict[str, Any]:
 	cloned = dict(recipe)
 	process = cloned.get("process", {}) or {}
 	cloned["process"] = dict(process) if isinstance(process, dict) else {}
-	outputs = cloned.get("outputs", []) or []
-	cloned["outputs"] = [dict(x) for x in outputs if isinstance(x, dict)]
+	cloned["bundle"] = effect_bundle_from_raw(cloned.get("bundle", {}) or {}).to_dict()
 	return cloned
 
 
@@ -307,12 +308,12 @@ def _remove_task_from_host_and_world(ws: Any, task: Task, context: dict[str, Any
 def execute_add_status(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	target_key = data.get("target")
 	status_id = data.get("status_id")
-	target = executor._resolve_entity_from_ctx(ws, context, str(target_key))
-	if target is None:
-		return [{"type": "ExecutorError", "message": "AddStatus: target missing"}]
+	target, err = executor.require_entity(ws, context, str(target_key), "AddStatus", "target")
+	if err is not None:
+		return err
 	status_list = _get_or_create_statuses_list(target)
 	if status_list is None:
-		return [{"type": "ExecutorError", "message": "AddStatus: StatusComponent missing"}]
+		return executor_error("AddStatus: StatusComponent missing")
 	sid = str(status_id)
 	if sid not in status_list:
 		status_list.append(sid)
@@ -336,12 +337,12 @@ def execute_add_status(executor: Any, ws: Any, data: dict[str, Any], context: di
 def execute_remove_status(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	target_key = data.get("target")
 	status_id = data.get("status_id")
-	target = executor._resolve_entity_from_ctx(ws, context, str(target_key))
-	if target is None:
-		return [{"type": "ExecutorError", "message": "RemoveStatus: target missing"}]
+	target, err = executor.require_entity(ws, context, str(target_key), "RemoveStatus", "target")
+	if err is not None:
+		return err
 	status_list = _get_or_create_statuses_list(target)
 	if status_list is None:
-		return [{"type": "ExecutorError", "message": "RemoveStatus: StatusComponent missing"}]
+		return executor_error("RemoveStatus: StatusComponent missing")
 	sid = str(status_id)
 	if sid in status_list:
 		status_list.remove(sid)
@@ -396,13 +397,13 @@ def execute_consume_inputs(executor: Any, ws: Any, _data: dict[str, Any], contex
 
 
 def execute_create_task(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
-	target = executor._resolve_entity_from_ctx(ws, context, "target")
-	if target is None:
-		return [{"type": "ExecutorError", "message": "CreateTask: target missing"}]
+	target, err = executor.require_entity(ws, context, "target", "CreateTask", "target")
+	if err is not None:
+		return err
 	
 	recipe = (data or {}).get("recipe", {}) or {}
 	if not isinstance(recipe, dict) or not recipe:
-		return [{"type": "ExecutorError", "message": "CreateTask: recipe missing in effect data"}]
+		return executor_error("CreateTask: recipe missing in effect data")
 	
 	# Determine Host: Default to target (Workstation/Item), unless context specifies otherwise
 	host_entity = target
@@ -428,9 +429,12 @@ def execute_create_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 	task_policy = extract_task_policy_from_recipe(recipe)
 	if task_policy:
 		task.parameters["task_policy"] = dict(task_policy)
-	task.completion_effects = [x for x in (recipe.get("outputs", []) or []) if isinstance(x, dict)]
-	if not task.completion_effects:
-		return [{"type": "ExecutorError", "message": "CreateTask: recipe has no outputs (completion_effects)"}]
+	try:
+		task.completion_bundle = effect_bundle_from_raw(recipe.get("bundle", {}) or {})
+	except Exception as exc:
+		return [{"type": "ExecutorError", "message": f"CreateTask: invalid recipe bundle ({exc})"}]
+	if task.completion_bundle.is_empty():
+		return [{"type": "ExecutorError", "message": "CreateTask: recipe has empty completion_bundle"}]
 	prog = recipe.get("progression", None)
 	if prog is None:
 		prog = process.get("progression", {}) or {}
@@ -441,7 +445,10 @@ def execute_create_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 			if "progress_contributors" in params:
 				return [{"type": "ExecutorError", "message": "CreateTask: progressor_params.progress_contributors is removed; use add_terms/mul_terms"}]
 			task.progressor_params = dict(params)
-		task.tick_effects = [x for x in (prog.get("tick_effects", []) or []) if isinstance(x, dict)]
+		try:
+			task.tick_bundle = effect_bundle_from_raw(prog.get("tick_bundle", {}) or {"effects": []})
+		except Exception as exc:
+			return [{"type": "ExecutorError", "message": f"CreateTask: invalid tick_bundle ({exc})"}]
 	
 	host.add_task(task)
 	ws.register_task(task)
@@ -474,26 +481,26 @@ def execute_create_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 
 def execute_accept_task(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	self_id = str((context or {}).get("self_id", "") or "")
-	agent = ws.get_entity_by_id(self_id)
-	if agent is None:
-		return [{"type": "ExecutorError", "message": "AcceptTask: self missing"}]
+	agent, err = executor.require_entity(ws, context, "self", "AcceptTask", "self")
+	if err is not None:
+		return err
 	
 	target_key = data.get("target", "target")
-	host_entity = executor._resolve_entity_from_ctx(ws, context, str(target_key))
-	if host_entity is None:
-		return [{"type": "ExecutorError", "message": "AcceptTask: host missing"}]
+	host_entity, err = executor.require_entity(ws, context, str(target_key), "AcceptTask", "host")
+	if err is not None:
+		return err
 	
 	host = host_entity.get_component("TaskHostComponent")
 	if not isinstance(host, TaskHostComponent):
-		return [{"type": "ExecutorError", "message": "AcceptTask: target is not a TaskHost"}]
+		return executor_error("AcceptTask: target is not a TaskHost")
 	
 	tasks = host.get_available_tasks()
 	if not tasks:
-		return [{"type": "ExecutorError", "message": "AcceptTask: no available tasks on host"}]
+		return executor_error("AcceptTask: no available tasks on host")
 
 	worker = agent.get_component("WorkerComponent")
 	if not isinstance(worker, WorkerComponent):
-		return [{"type": "ExecutorError", "message": "AcceptTask: agent has no WorkerComponent"}]
+		return executor_error("AcceptTask: agent has no WorkerComponent")
 	
 	def _agent_has_item_with_tag(tag: str) -> bool:
 		cc = agent.get_component("ContainerComponent")
@@ -597,16 +604,14 @@ def execute_finish_task(executor: Any, ws: Any, _data: dict[str, Any], context: 
 				if str(k) not in merged_params:
 					merged_params[str(k)] = v
 			context["parameters"] = merged_params
-	effects = list(task.completion_effects or [])
-	if not effects:
-		return [{"type": "ExecutorError", "message": f"FinishTask: task has no completion_effects: {task_id}"}]
-	events: list[dict[str, Any]] = []
-	for eff in effects:
-		events.extend(executor.execute(ws, eff, context))
-	has_finish_error = any(
-		isinstance(ev, dict) and str(ev.get("type", "") or "") in {"ExecutorError", "BindError"}
-		for ev in list(events or [])
-	)
+	bundle = getattr(task, "completion_bundle", None)
+	if bundle is None or bundle.is_empty():
+		return [{"type": "ExecutorError", "message": f"FinishTask: task has empty completion_bundle: {task_id}"}]
+	execute = (getattr(ws, "services", {}) or {}).get("execute")
+	if not callable(execute):
+		return [{"type": "ExecutorError", "message": "FinishTask: execute service missing"}]
+	events = execute(bundle.to_dict(), context)
+	has_finish_error = any(is_execution_error_event(ev) for ev in list(events or []))
 	if has_finish_error:
 		task.task_status = "Failed"
 		events.append({"type": "TaskFinishFailed", "task_id": task.task_id})

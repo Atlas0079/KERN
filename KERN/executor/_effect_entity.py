@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 from uuid import uuid4
 
+from ..execution_errors import is_execution_error_event
 from ..models.components import ContainerComponent, WorkerComponent
 from ._effect_binder import BindError, _base_bind, _require_dict, _require_param, _require_str, _resolve_ref_id
 
@@ -283,10 +284,7 @@ def execute_kill_entity(executor: Any, ws: Any, data: dict[str, Any], context: d
 	destroy_ctx = {"target_id": str(target.entity_id)}
 	destroy_events = executor.execute(ws, destroy_req, destroy_ctx)
 	events.extend(destroy_events)
-	destroy_failed = any(
-		isinstance(ev, dict) and str(ev.get("type", "") or "") in {"ExecutorError", "BindError"}
-		for ev in list(destroy_events or [])
-	)
+	destroy_failed = any(is_execution_error_event(ev) for ev in list(destroy_events or []))
 	if not destroy_failed and ws.get_entity_by_id(str(target.entity_id)) is None:
 		events.append({
 			"type": "EntityDied",

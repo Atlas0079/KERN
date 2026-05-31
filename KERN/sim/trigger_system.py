@@ -63,12 +63,14 @@ class TriggerSystem:
 						"trigger_event": event_type,
 					},
 				)
-			effects = rule.get("effects", []) or []
-			for eff in list(effects):
-				if not isinstance(eff, dict):
-					continue
-				req_ctx = dict(base_ctx)
-				req_ctx["reaction_rule_id"] = rule_id
-				req_ctx["reaction_trigger_event_type"] = event_type
-				requests.append({"effect": dict(eff), "context": req_ctx})
+			bundle = rule.get("bundle", {}) or {}
+			req_ctx = dict(base_ctx)
+			req_ctx["reaction_rule_id"] = rule_id
+			req_ctx["reaction_trigger_event_type"] = event_type
+			requests.append(
+				{
+					"bundle": dict(bundle) if isinstance(bundle, dict) else {},
+					"context": req_ctx,
+				}
+			)
 		return requests

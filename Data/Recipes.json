@@ -4,7 +4,9 @@
         "condition": {
             "type": "has_tags",
             "target": "target",
-            "tags": ["edible"],
+            "tags": [
+                "edible"
+            ],
             "match": "all"
         },
         "narrative_success": "{actor}吃了{target}",
@@ -12,18 +14,20 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "dynamic_outputs_from_component": {
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "InvokeBundle",
+                    "target": "target",
                     "component": "EdibleComponent",
-                    "property": "effects_on_consume"
+                    "property": "on_consume_bundle"
+                },
+                {
+                    "effect": "DestroyEntity",
+                    "target": "target"
                 }
-            },
-            {
-                "effect": "DestroyEntity",
-                "target": "target"
-            }
-        ]
+            ]
+        }
     },
     "generic_sleep": {
         "verb": "Wait",
@@ -32,7 +36,9 @@
         "condition": {
             "type": "has_tags",
             "target": "target",
-            "tags": ["agent"],
+            "tags": [
+                "agent"
+            ],
             "match": "all"
         },
         "narrative_success": "{actor}开始等待",
@@ -46,15 +52,6 @@
             },
             "assign_to": "self"
         },
-        "outputs": [
-            {
-                "effect": "ModifyProperty",
-                "target": "target",
-                "component": "CreatureComponent",
-                "property": "current_energy",
-                "change": 10
-            }
-        ],
         "progression": {
             "progressor": "Linear",
             "params": {
@@ -62,7 +59,20 @@
                 "add_terms": [],
                 "mul_terms": []
             },
-            "tick_effects": []
+            "tick_bundle": {
+                "effects": []
+            }
+        },
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "ModifyProperty",
+                    "target": "target",
+                    "component": "CreatureComponent",
+                    "property": "current_energy",
+                    "change": 10
+                }
+            ]
         }
     },
     "generic_rest": {
@@ -70,7 +80,9 @@
         "condition": {
             "type": "has_tags",
             "target": "target",
-            "tags": ["agent"],
+            "tags": [
+                "agent"
+            ],
             "match": "all"
         },
         "narrative_success": "{actor}开始休息",
@@ -82,15 +94,6 @@
             },
             "assign_to": "self"
         },
-        "outputs": [
-            {
-                "effect": "ModifyProperty",
-                "target": "target",
-                "component": "CreatureComponent",
-                "property": "current_energy",
-                "change": 5
-            }
-        ],
         "progression": {
             "progressor": "Linear",
             "params": {
@@ -98,7 +101,20 @@
                 "add_terms": [],
                 "mul_terms": []
             },
-            "tick_effects": []
+            "tick_bundle": {
+                "effects": []
+            }
+        },
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "ModifyProperty",
+                    "target": "target",
+                    "component": "CreatureComponent",
+                    "property": "current_energy",
+                    "change": 5
+                }
+            ]
         }
     },
     "generic_travel": {
@@ -106,7 +122,9 @@
         "condition": {
             "type": "has_tags",
             "target": "target",
-            "tags": ["agent"],
+            "tags": [
+                "agent"
+            ],
             "match": "all"
         },
         "narrative_success": "{actor}开始前往{to_location_id}",
@@ -119,14 +137,6 @@
             },
             "assign_to": "self"
         },
-        "outputs": [
-            {
-                "effect": "MoveEntity",
-                "entity_ref": "self",
-                "from_ref": "param:source_location_id",
-                "to_ref": "param:to_location_id"
-            }
-        ],
         "progression": {
             "progressor": "Linear",
             "params": {
@@ -134,7 +144,19 @@
                 "add_terms": [],
                 "mul_terms": []
             },
-            "tick_effects": []
+            "tick_bundle": {
+                "effects": []
+            }
+        },
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "MoveEntity",
+                    "entity_ref": "self",
+                    "from_ref": "param:source_location_id",
+                    "to_ref": "param:to_location_id"
+                }
+            ]
         }
     },
     "generic_talk": {
@@ -144,7 +166,9 @@
         "condition": {
             "type": "has_tags",
             "target": "target",
-            "tags": ["agent"],
+            "tags": [
+                "agent"
+            ],
             "match": "all"
         },
         "narrative_success": "{actor}开始了一段对话",
@@ -152,13 +176,15 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "StartConversation",
-                "max_utterances_per_tick": 4,
-                "opening_text": "param:text"
-            }
-        ]
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "StartConversation",
+                    "max_utterances_per_tick": 4,
+                    "opening_text": "param:text"
+                }
+            ]
+        }
     },
     "generic_give": {
         "verb": "Give",
@@ -172,7 +198,9 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["agent"],
+                    "tags": [
+                        "agent"
+                    ],
                     "match": "all"
                 },
                 {
@@ -185,14 +213,16 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "MoveEntity",
-                "entity_ref": "param:item_id",
-                "from_ref": "self",
-                "to_ref": "target"
-            }
-        ]
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "MoveEntity",
+                    "entity_ref": "param:item_id",
+                    "from_ref": "self",
+                    "to_ref": "target"
+                }
+            ]
+        }
     },
     "generic_take_item": {
         "verb": "TakeItem",
@@ -204,7 +234,9 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["item"],
+                    "tags": [
+                        "item"
+                    ],
                     "match": "all"
                 },
                 {
@@ -222,14 +254,16 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "MoveEntity",
-                "entity_ref": "target",
-                "from_ref": "param:source_id",
-                "to_ref": "self"
-            }
-        ]
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "MoveEntity",
+                    "entity_ref": "target",
+                    "from_ref": "param:source_id",
+                    "to_ref": "self"
+                }
+            ]
+        }
     },
     "interaction_accept_task": {
         "verb": "AcceptTask",
@@ -241,7 +275,10 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["container", "task_station"],
+                    "tags": [
+                        "container",
+                        "task_station"
+                    ],
                     "match": "any"
                 },
                 {
@@ -256,19 +293,23 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "AcceptTask",
-                "target": "target"
-            }
-        ]
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "AcceptTask",
+                    "target": "target"
+                }
+            ]
+        }
     },
     "interaction_close_container": {
         "verb": "CloseContainer",
         "condition": {
             "type": "has_tags",
             "target": "target",
-            "tags": ["container"],
+            "tags": [
+                "container"
+            ],
             "match": "all"
         },
         "narrative_success": "{actor}关闭了{target}",
@@ -276,15 +317,17 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "ModifyProperty",
-                "target": "target",
-                "component": "ContainerComponent",
-                "property": "slots.main.config.transparent",
-                "value": false
-            }
-        ]
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "ModifyProperty",
+                    "target": "target",
+                    "component": "ContainerComponent",
+                    "property": "slots.main.config.transparent",
+                    "value": false
+                }
+            ]
+        }
     },
     "meta_abort_simulation": {
         "verb": "AbortSimulation",
@@ -294,7 +337,9 @@
         "condition": {
             "type": "has_tags",
             "target": "target",
-            "tags": ["agent"],
+            "tags": [
+                "agent"
+            ],
             "match": "all"
         },
         "narrative_success": "{actor}上报了异常并请求中断仿真",
@@ -302,15 +347,17 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "AbortSimulation",
-                "reason": "param:reason",
-                "detail": "param:detail",
-                "severity": "param:severity",
-                "stop": true
-            }
-        ]
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "AbortSimulation",
+                    "reason": "param:reason",
+                    "detail": "param:detail",
+                    "severity": "param:severity",
+                    "stop": true
+                }
+            ]
+        }
     },
     "generic_inspect_entity": {
         "verb": "InspectEntity",
@@ -322,7 +369,18 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["agent", "item", "container", "farmland", "merchant", "crop", "seed", "tool", "task_station", "task_host"],
+                    "tags": [
+                        "agent",
+                        "item",
+                        "container",
+                        "farmland",
+                        "merchant",
+                        "crop",
+                        "seed",
+                        "tool",
+                        "task_station",
+                        "task_host"
+                    ],
                     "match": "any"
                 },
                 {
@@ -342,12 +400,14 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "AttachDetails",
-                "detail_type": "entity",
-                "target": "target"
-            }
-        ]
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "AttachDetails",
+                    "detail_type": "entity",
+                    "target": "target"
+                }
+            ]
+        }
     }
-} 
+}

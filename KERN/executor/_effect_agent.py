@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ..execution_errors import is_execution_error_event
 from ..log_manager import get_logger
 from ..entity_ref_resolver import resolve_entity
 from ..models.components import DecisionArbiterComponent, WorkerComponent
@@ -106,9 +107,13 @@ def execute_worker_tick(_executor: Any, ws: Any, data: dict[str, Any], context: 
 	execute = (getattr(ws, "services", {}) or {}).get("execute")
 	execute(
 		{
-			"effect": "ProgressTask",
-			"task_id": task.task_id,
-			"delta": delta,
+			"effects": [
+				{
+					"effect": "ProgressTask",
+					"task_id": task.task_id,
+					"delta": delta,
+				}
+			]
 		},
 		{"self_id": self_id, "task_id": task.task_id},
 	)
@@ -125,22 +130,19 @@ def execute_worker_tick(_executor: Any, ws: Any, data: dict[str, Any], context: 
 			"delta": float(delta),
 		},
 	)
-	for eff in list(getattr(task, "tick_effects", []) or []):
-		if isinstance(eff, dict):
-			execute(
-				eff,
-				{"self_id": self_id, "task_id": task.task_id, "target_id": task.target_entity_id},
-			)
+	tick_bundle = getattr(task, "tick_bundle", None)
+	if tick_bundle is not None:
+		execute(
+			tick_bundle.to_dict(),
+			{"self_id": self_id, "task_id": task.task_id, "target_id": task.target_entity_id},
+		)
 	if task.is_complete():
 		finish_events = execute(
-			{"effect": "FinishTask"},
+			{"effects": [{"effect": "FinishTask"}]},
 			{"self_id": self_id, "task_id": task.task_id, "target_id": task.target_entity_id},
 		)
 		for ev in list(finish_events or []):
-			if not isinstance(ev, dict):
-				continue
-			ev_type = str(ev.get("type", "") or "")
-			if ev_type in {"ExecutorError", "BindError"}:
+			if is_execution_error_event(ev):
 				logger.warn(
 					"task",
 					"finish_failed",

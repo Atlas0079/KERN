@@ -26,7 +26,9 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["revolver"],
+                    "tags": [
+                        "revolver"
+                    ],
                     "match": "all"
                 },
                 {
@@ -39,22 +41,24 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "DestroyEntity",
-                "target": "param:bullet_id"
-            },
-            {
-                "effect": "AddStatus",
-                "target": "target",
-                "status_id": "revolver_loaded"
-            },
-            {
-                "effect": "RemoveStatus",
-                "target": "target",
-                "status_id": "revolver_unloaded"
-            }
-        ]
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "DestroyEntity",
+                    "target": "param:bullet_id"
+                },
+                {
+                    "effect": "AddStatus",
+                    "target": "target",
+                    "status_id": "revolver_loaded"
+                },
+                {
+                    "effect": "RemoveStatus",
+                    "target": "target",
+                    "status_id": "revolver_unloaded"
+                }
+            ]
+        }
     },
     "weapon_shoot_revolver": {
         "verb": "ShootRevolver",
@@ -73,7 +77,9 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["agent"],
+                    "tags": [
+                        "agent"
+                    ],
                     "match": "all"
                 },
                 {
@@ -91,25 +97,27 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "RemoveStatus",
-                "target": "param:weapon_id",
-                "status_id": "revolver_loaded"
-            },
-            {
-                "effect": "AddStatus",
-                "target": "param:weapon_id",
-                "status_id": "revolver_unloaded"
-            },
-            {
-                "effect": "ModifyProperty",
-                "target": "target",
-                "component": "CreatureComponent",
-                "property": "current_hp",
-                "change": -9999
-            }
-        ]
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "RemoveStatus",
+                    "target": "param:weapon_id",
+                    "status_id": "revolver_loaded"
+                },
+                {
+                    "effect": "AddStatus",
+                    "target": "param:weapon_id",
+                    "status_id": "revolver_unloaded"
+                },
+                {
+                    "effect": "ModifyProperty",
+                    "target": "target",
+                    "component": "CreatureComponent",
+                    "property": "current_hp",
+                    "change": -9999
+                }
+            ]
+        }
     },
     "weapon_shoot_shock_pistol": {
         "verb": "ShootShockPistol",
@@ -128,7 +136,9 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["agent"],
+                    "tags": [
+                        "agent"
+                    ],
                     "match": "all"
                 },
                 {
@@ -154,31 +164,33 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "ModifyProperty",
-                "target": "target",
-                "component": "CreatureComponent",
-                "property": "current_hp",
-                "change": -9999
-            },
-            {
-                "effect": "RemoveStatus",
-                "target": "param:weapon_id",
-                "status_id": "shock_charged"
-            },
-            {
-                "effect": "AddStatus",
-                "target": "param:weapon_id",
-                "status_id": "shock_uncharged"
-            },
-            {
-                "effect": "AddStatus",
-                "target": "param:weapon_id",
-                "status_id": "shock_cooling",
-                "duration_ticks": 15
-            }
-        ]
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "ModifyProperty",
+                    "target": "target",
+                    "component": "CreatureComponent",
+                    "property": "current_hp",
+                    "change": -9999
+                },
+                {
+                    "effect": "RemoveStatus",
+                    "target": "param:weapon_id",
+                    "status_id": "shock_charged"
+                },
+                {
+                    "effect": "AddStatus",
+                    "target": "param:weapon_id",
+                    "status_id": "shock_uncharged"
+                },
+                {
+                    "effect": "AddStatus",
+                    "target": "param:weapon_id",
+                    "status_id": "shock_cooling",
+                    "duration_ticks": 15
+                }
+            ]
+        }
     },
     "meta_switch_interrupt_preset": {
         "verb": "SwitchInterruptPreset",
@@ -188,7 +200,9 @@
         "condition": {
             "type": "has_tags",
             "target": "target",
-            "tags": ["agent"],
+            "tags": [
+                "agent"
+            ],
             "match": "all"
         },
         "narrative_success": "{actor}切换了中断预设",
@@ -196,16 +210,18 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "ApplyMetaAction",
-                "target": "self",
-                "action_type": "SwitchInterruptPreset",
-                "params": {
-                    "preset_id": "param:preset_id"
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "ApplyMetaAction",
+                    "target": "self",
+                    "action_type": "SwitchInterruptPreset",
+                    "params": {
+                        "preset_id": "param:preset_id"
+                    }
                 }
-            }
-        ]
+            ]
+        }
     },
     "meta_update_interrupt_rule_param": {
         "verb": "UpdateInterruptRuleParam",
@@ -215,7 +231,9 @@
         "condition": {
             "type": "has_tags",
             "target": "target",
-            "tags": ["agent"],
+            "tags": [
+                "agent"
+            ],
             "match": "all"
         },
         "narrative_success": "{actor}调整了中断规则参数",
@@ -223,19 +241,21 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "ApplyMetaAction",
-                "target": "self",
-                "action_type": "UpdateInterruptRuleParam",
-                "params": {
-                    "preset_id": "param:preset_id",
-                    "rule_type": "param:rule_type",
-                    "key": "param:key",
-                    "value": "param:value"
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "ApplyMetaAction",
+                    "target": "self",
+                    "action_type": "UpdateInterruptRuleParam",
+                    "params": {
+                        "preset_id": "param:preset_id",
+                        "rule_type": "param:rule_type",
+                        "key": "param:key",
+                        "value": "param:value"
+                    }
                 }
-            }
-        ]
+            ]
+        }
     },
     "meta_inspect_interrupt_presets": {
         "verb": "InspectInterruptPresets",
@@ -245,7 +265,9 @@
         "condition": {
             "type": "has_tags",
             "target": "target",
-            "tags": ["agent"],
+            "tags": [
+                "agent"
+            ],
             "match": "all"
         },
         "narrative_success": "{actor}查看了中断预设的详细配置",
@@ -253,12 +275,14 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "AttachDetails",
-                "detail_type": "interrupt_preset"
-            }
-        ]
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "AttachDetails",
+                    "detail_type": "interrupt_preset"
+                }
+            ]
+        }
     },
     "meta_commit_memory": {
         "verb": "CommitMemory",
@@ -268,7 +292,9 @@
         "condition": {
             "type": "has_tags",
             "target": "target",
-            "tags": ["agent"],
+            "tags": [
+                "agent"
+            ],
             "match": "all"
         },
         "narrative_success": "{actor}记下了一条中期记忆",
@@ -276,13 +302,15 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "AddMemoryNote",
-                "target": "self",
-                "text": "param:text",
-                "importance": "param:importance"
-            }
-        ]
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "AddMemoryNote",
+                    "target": "self",
+                    "text": "param:text",
+                    "importance": "param:importance"
+                }
+            ]
+        }
     }
 }

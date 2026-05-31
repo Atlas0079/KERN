@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from uuid import uuid4
 from typing import Any
 
+from ..effect_bundle import EffectBundle
+
 
 @dataclass
 class Task:
@@ -28,10 +30,10 @@ class Task:
 	# --- Progressor configuration: Solidified into task by recipe ---
 	progressor_id: str = ""
 	progressor_params: dict[str, Any] = field(default_factory=dict)
-	tick_effects: list[dict[str, Any]] = field(default_factory=list)
+	tick_bundle: EffectBundle = field(default_factory=EffectBundle)
 
-	# List of effects to execute upon task completion (Written at creation, read at completion)
-	completion_effects: list[dict[str, Any]] = field(default_factory=list)
+	# Bundle to execute upon task completion (Written at creation, read at completion)
+	completion_bundle: EffectBundle = field(default_factory=EffectBundle)
 
 	def is_complete(self) -> bool:
 		return float(self.progress) >= float(self.required_progress)

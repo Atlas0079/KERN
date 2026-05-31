@@ -3,18 +3,25 @@
         "name": "Apple",
         "components": {
             "TagComponent": {
-                "tags": ["item", "food", "apple", "edible"]
+                "tags": [
+                    "item",
+                    "food",
+                    "apple",
+                    "edible"
+                ]
             },
             "EdibleComponent": {
-                "effects_on_consume": [
-                    {
-                        "effect": "ModifyProperty",
-                        "target": "self",
-                        "component": "CreatureComponent",
-                        "property": "current_nutrition",
-                        "change": 25
-                    }
-                ]
+                "on_consume_bundle": {
+                    "effects": [
+                        {
+                            "effect": "ModifyProperty",
+                            "target": "self",
+                            "component": "CreatureComponent",
+                            "property": "current_nutrition",
+                            "change": 25
+                        }
+                    ]
+                }
             }
         }
     },
@@ -22,7 +29,10 @@
         "name": "Traveler's Backpack",
         "components": {
             "TagComponent": {
-                "tags": ["container", "backpack"]
+                "tags": [
+                    "container",
+                    "backpack"
+                ]
             },
             "ContainerComponent": {
                 "slots": {
@@ -32,7 +42,10 @@
                     },
                     "side_strap": {
                         "capacity_count": 1,
-                        "accepted_tags": ["bindable", "tool"]
+                        "accepted_tags": [
+                            "bindable",
+                            "tool"
+                        ]
                     }
                 }
             }
@@ -42,7 +55,10 @@
         "name": "Wooden Box",
         "components": {
             "TagComponent": {
-                "tags": ["container", "box"]
+                "tags": [
+                    "container",
+                    "box"
+                ]
             },
             "ContainerComponent": {
                 "slots": {

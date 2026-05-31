@@ -188,11 +188,15 @@ def execute_abort_simulation(_executor: Any, ws: Any, data: dict[str, Any], cont
 	stop = bool(data.get("stop", True))
 	actor_id = str((context or {}).get("self_id", "") or "")
 	services = getattr(ws, "services", {}) or {}
-	services["abort_requested"] = bool(stop)
-	services["abort_reason"] = reason
-	services["abort_detail"] = detail
-	services["abort_severity"] = severity
-	services["abort_actor_id"] = actor_id
+	state = getattr(ws, "runtime_state", {}) or {}
+	if not isinstance(state, dict):
+		state = {}
+		setattr(ws, "runtime_state", state)
+	state["abort_requested"] = bool(stop)
+	state["abort_reason"] = reason
+	state["abort_detail"] = detail
+	state["abort_severity"] = severity
+	state["abort_actor_id"] = actor_id
 	if bool(stop):
 		request_stop = services.get("request_stop")
 		if callable(request_stop):

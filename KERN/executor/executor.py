@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from typing import Any
 
 from ._effect_binder import BindError, bind_effect_input
+from ..effect_bundle import effect_bundle_from_raw
+from ..execution_errors import executor_error
 from ..entity_ref_resolver import resolve_entity
 from ..effect_contract import EFFECT_TYPES, resolve_effect_handler_callable
 from ..models.components import ContainerComponent
@@ -48,14 +50,22 @@ class WorldExecutor:
 			]
 		effect_type = normalized_data.get("effect")
 		if not effect_type:
-			return [{"type": "ExecutorError", "message": "missing effect type"}]
+			return executor_error("missing effect type")
 		effect_name = str(effect_type)
 		if effect_name not in EFFECT_TYPES:
-			return [{"type": "ExecutorError", "message": f"unknown effect type: {effect_type}"}]
+			return executor_error(f"unknown effect type: {effect_type}")
 		handler = resolve_effect_handler_callable(effect_name)
 		if not callable(handler):
-			return [{"type": "ExecutorError", "message": f"effect handler missing: {effect_name}"}]
+			return executor_error(f"effect handler missing: {effect_name}")
 		return handler(self, ws, normalized_data, merged_ctx)
+
+	def execute_bundle(self, ws: Any, bundle_data: Any, context: dict[str, Any]) -> list[dict[str, Any]]:
+		bundle = effect_bundle_from_raw(bundle_data)
+		events: list[dict[str, Any]] = []
+		for effect in list(bundle.effects or []):
+			if isinstance(effect, dict):
+				events.extend(self.execute(ws, effect, context))
+		return events
 
 	def _resolve_entity_from_ctx(self, ws: Any, ctx: dict[str, Any], key_or_idkey: str):
 		ctx_dict = dict(ctx) if isinstance(ctx, dict) else {}
@@ -74,6 +84,20 @@ class WorldExecutor:
 			if ent is not None:
 				return ent
 		return resolve_entity(ws, key, ctx_dict, allow_literal=True)
+
+	def require_entity(
+		self,
+		ws: Any,
+		ctx: dict[str, Any],
+		key_or_idkey: str,
+		effect_name: str,
+		missing_label: str | None = None,
+	):
+		entity = self._resolve_entity_from_ctx(ws, ctx, key_or_idkey)
+		if entity is None:
+			label = str(missing_label or key_or_idkey or "entity")
+			return None, executor_error(f"{effect_name}: {label} missing")
+		return entity, None
 
 	def _resolve_container_or_location_from_ctx(self, ws: Any, ctx: dict[str, Any], key_or_idkey: str):
 		id_key = key_or_idkey if str(key_or_idkey).endswith("_id") else f"{key_or_idkey}_id"

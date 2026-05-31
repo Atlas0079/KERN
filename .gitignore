@@ -5,6 +5,7 @@ __pycache__/
 
 # Environments
 .env
+.env.*
 .venv
 env/
 venv/
@@ -12,7 +13,7 @@ ENV/
 env.bak/
 venv.bak/
 
-# IDEs
+# IDEs and OS files
 .vscode/
 .idea/
 *.swp
@@ -23,12 +24,15 @@ venv.bak/
 
 # Local runtime config with secrets
 runtime_config.json
+runtime_config_abbao.json
+runtime_config.local.json
+runtime_config.*.local.json
 
 # Runtime artifacts
 checkpoints/
 Saves/
 video/
 
-# Private local documents
-简历草稿.md
-可视化系统需求讨论.md
+# Personal and scratch Markdown documents in repository root
+/*.md
+!/readme.md

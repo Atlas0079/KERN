@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ..execution_errors import executor_error
 from ..models.components import CreatureComponent, TagComponent
 from ._effect_binder import BindError, _base_bind, _require_float, _require_str, _resolve_param_token
 
@@ -82,9 +83,9 @@ def _bind_remove_tag(_ws: Any, effect_data: dict[str, Any], context: dict[str, A
 
 def execute_modify_property(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	target_key = data.get("target")
-	target = executor._resolve_entity_from_ctx(ws, context, str(target_key))
-	if target is None:
-		return [{"type": "ExecutorError", "message": "ModifyProperty: target missing"}]
+	target, err = executor.require_entity(ws, context, str(target_key), "ModifyProperty", "target")
+	if err is not None:
+		return err
 	comp_name = str(data.get("component", ""))
 	prop_name = str(data.get("property", ""))
 	change = data.get("change")
@@ -94,14 +95,14 @@ def execute_modify_property(executor: Any, ws: Any, data: dict[str, Any], contex
 	
 	comp = target.get_component(comp_name)
 	if comp is None:
-		return [{"type": "ExecutorError", "message": f"ModifyProperty: component missing: {comp_name}"}]
+		return executor_error(f"ModifyProperty: component missing: {comp_name}")
 
 	# Support nested property access (dot notation)
 	# e.g. "slots.main.config.transparent"
 	if "." in prop_name:
 		new_val = _set_nested_value(comp, prop_name, float(change) if has_change else val_set, delta_mode=has_change)
 		if new_val is None:
-			return [{"type": "ExecutorError", "message": f"ModifyProperty: nested property access failed: {prop_name}"}]
+			return executor_error(f"ModifyProperty: nested property access failed: {prop_name}")
 		return [
 			{
 				"type": "PropertyModified",
@@ -117,7 +118,7 @@ def execute_modify_property(executor: Any, ws: Any, data: dict[str, Any], contex
 		comp.ensure_initialized()
 		cur = getattr(comp, prop_name, None)
 		if cur is None:
-			return [{"type": "ExecutorError", "message": f"ModifyProperty: property missing: {prop_name}"}]
+			return executor_error(f"ModifyProperty: property missing: {prop_name}")
 		
 		# Allow 'value' for direct set, 'change' for delta
 		new_val = 0.0
@@ -180,18 +181,18 @@ def execute_modify_property(executor: Any, ws: Any, data: dict[str, Any], contex
 				}
 			]
 		except Exception:
-			return [{"type": "ExecutorError", "message": "ModifyProperty: failed to write UnknownComponent"}]
-	return [{"type": "ExecutorError", "message": "ModifyProperty: unsupported component type"}]
+			return executor_error("ModifyProperty: failed to write UnknownComponent")
+	return executor_error("ModifyProperty: unsupported component type")
 
 
 def execute_add_tag(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	target_key = str(data.get("target", "target") or "target")
-	target = executor._resolve_entity_from_ctx(ws, context, target_key)
-	if target is None:
-		return [{"type": "ExecutorError", "message": "AddTag: target missing"}]
+	target, err = executor.require_entity(ws, context, target_key, "AddTag", "target")
+	if err is not None:
+		return err
 	tag_name = str(data.get("tag", "") or "").strip()
 	if not tag_name:
-		return [{"type": "ExecutorError", "message": "AddTag: tag missing"}]
+		return executor_error("AddTag: tag missing")
 	tag_comp = target.get_component("TagComponent")
 	if not isinstance(tag_comp, TagComponent):
 		tag_comp = TagComponent(tags=[])
@@ -203,12 +204,12 @@ def execute_add_tag(executor: Any, ws: Any, data: dict[str, Any], context: dict[
 
 def execute_remove_tag(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	target_key = str(data.get("target", "target") or "target")
-	target = executor._resolve_entity_from_ctx(ws, context, target_key)
-	if target is None:
-		return [{"type": "ExecutorError", "message": "RemoveTag: target missing"}]
+	target, err = executor.require_entity(ws, context, target_key, "RemoveTag", "target")
+	if err is not None:
+		return err
 	tag_name = str(data.get("tag", "") or "").strip()
 	if not tag_name:
-		return [{"type": "ExecutorError", "message": "RemoveTag: tag missing"}]
+		return executor_error("RemoveTag: tag missing")
 	tag_comp = target.get_component("TagComponent")
 	if not isinstance(tag_comp, TagComponent):
 		return [{"type": "TagRemoved", "entity_id": target.entity_id, "tag": tag_name, "removed": False}]

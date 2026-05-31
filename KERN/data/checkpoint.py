@@ -68,8 +68,8 @@ def _serialize_task(task: Task) -> dict[str, Any]:
 		"parameters": _serialize_any(dict(getattr(task, "parameters", {}) or {})),
 		"progressor_id": str(getattr(task, "progressor_id", "") or ""),
 		"progressor_params": _serialize_any(dict(getattr(task, "progressor_params", {}) or {})),
-		"tick_effects": _serialize_any(list(getattr(task, "tick_effects", []) or [])),
-		"completion_effects": _serialize_any(list(getattr(task, "completion_effects", []) or [])),
+		"tick_bundle": _serialize_any(getattr(task, "tick_bundle", None)),
+		"completion_bundle": _serialize_any(getattr(task, "completion_bundle", None)),
 	}
 
 

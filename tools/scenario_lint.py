@@ -337,10 +337,8 @@ def _validate_world_task(ctx: LintContext, task: Any, where: str, entity_ids: se
 	pid = str(task.get("progressor_id", "") or "").strip()
 	if pid and pid not in _progressor_ids():
 		ctx.error(where, f"unknown progressor_id: {pid}")
-	if not isinstance(task.get("completion_effects", []), list):
-		ctx.error(where, "completion_effects must be list")
-	if not isinstance(task.get("tick_effects", []), list):
-		ctx.error(where, "tick_effects must be list")
+	_validate_bundle(ctx, task.get("completion_bundle", {}), f"{where}.completion_bundle")
+	_validate_bundle(ctx, task.get("tick_bundle", {}), f"{where}.tick_bundle")
 
 
 def _validate_component_templates(ctx: LintContext) -> None:
@@ -360,6 +358,55 @@ def _validate_component_templates(ctx: LintContext) -> None:
 				continue
 			if comp_data is not None and not isinstance(comp_data, dict):
 				ctx.error(f"{where}.components.{cname}", "component data must be object")
+				continue
+			if cname == "EdibleComponent" and isinstance(comp_data, dict):
+				_validate_bundle(ctx, comp_data.get("on_consume_bundle", {}), f"{where}.components.{cname}.on_consume_bundle")
+
+
+def _validate_query(ctx: LintContext, query: Any, where: str) -> None:
+	if not isinstance(query, dict):
+		ctx.error(where, "query must be object")
+		return
+	source = str(query.get("from", "entities") or "entities").strip()
+	if source != "entities":
+		ctx.error(where, "query.from must be entities")
+	where_clause = query.get("where", {}) or {}
+	_validate_condition(ctx, where_clause, f"{where}.where")
+	select = query.get("select", []) or []
+	if "select" in query and not isinstance(select, list):
+		ctx.error(where, "query.select must be list")
+	order_by = query.get("order_by", {}) or {}
+	if "order_by" in query:
+		if not isinstance(order_by, dict):
+			ctx.error(where, "query.order_by must be object")
+		else:
+			field = str(order_by.get("field", "") or "").strip()
+			direction = str(order_by.get("direction", "asc") or "asc").strip().lower()
+			if not field:
+				ctx.error(where, "query.order_by.field is required")
+			if direction not in {"asc", "desc"}:
+				ctx.error(where, "query.order_by.direction must be asc/desc")
+	if "limit" in query:
+		try:
+			if int(query.get("limit")) < 0:
+				ctx.error(where, "query.limit must be non-negative")
+		except Exception:
+			ctx.error(where, "query.limit must be integer")
+
+
+
+def _validate_bundle(ctx: LintContext, bundle: Any, where: str) -> None:
+	if not isinstance(bundle, dict):
+		ctx.error(where, "bundle must be object")
+		return
+	effects = bundle.get("effects", []) or []
+	if "react_per_effect" in bundle and not isinstance(bundle.get("react_per_effect"), bool):
+		ctx.error(f"{where}.react_per_effect", "bundle.react_per_effect must be bool")
+	if not isinstance(effects, list):
+		ctx.error(where, "bundle.effects must be list")
+		return
+	for idx, eff in enumerate(effects):
+		_validate_effect(ctx, eff, f"{where}.effects[{idx}]")
 
 
 def _validate_condition(ctx: LintContext, condition: Any, where: str, known_event_type: str = "") -> None:
@@ -458,20 +505,6 @@ def _validate_effect(ctx: LintContext, effect: Any, where: str) -> None:
 	if not isinstance(effect, dict):
 		ctx.error(where, "effect must be object")
 		return
-	if "dynamic_outputs_from_component" in effect:
-		dyn = effect.get("dynamic_outputs_from_component", {}) or {}
-		if not isinstance(dyn, dict):
-			ctx.error(where, "dynamic_outputs_from_component must be object")
-			return
-		comp = str(dyn.get("component", "") or "").strip()
-		prop = str(dyn.get("property", "") or "").strip()
-		if not comp:
-			ctx.error(where, "dynamic output missing component")
-		elif comp not in _known_component_names():
-			ctx.warn(where, f"dynamic output references unknown component: {comp}")
-		if not prop:
-			ctx.error(where, "dynamic output missing property")
-		return
 	eff = str(effect.get("effect", "") or "").strip()
 	if not eff:
 		ctx.error(where, "missing effect")
@@ -518,6 +551,32 @@ def _validate_effect_required_fields(ctx: LintContext, eff: str, effect: dict[st
 		assign_to = str(effect.get("assign_to", "") or "").strip()
 		if assign_to not in {"self", "target"}:
 			ctx.error(where, "CreateTask assign_to must be self/target")
+	if eff == "InvokeBundle":
+		has_inline_bundle = "bundle" in effect
+		has_component_bundle = "component" in effect or "property" in effect
+		if not has_inline_bundle and not has_component_bundle:
+			ctx.error(where, "InvokeBundle requires bundle or component/property")
+		if has_inline_bundle:
+			_validate_bundle(ctx, effect.get("bundle", {}), f"{where}.bundle")
+		if has_component_bundle:
+			if not _has_nonempty_value(effect, "target"):
+				ctx.error(where, "InvokeBundle(component) missing target")
+			if not _has_nonempty_value(effect, "component"):
+				ctx.error(where, "InvokeBundle(component) missing component")
+			if not _has_nonempty_value(effect, "property"):
+				ctx.error(where, "InvokeBundle(component) missing property")
+	if eff == "ApplyToQuery":
+		_validate_query(ctx, effect.get("query", {}), f"{where}.query")
+		_validate_bundle(ctx, effect.get("bundle", {}), f"{where}.bundle")
+		for idx, inner in enumerate(list(((effect.get("bundle", {}) or {}).get("effects", []) or []))):
+			if isinstance(inner, dict) and str(inner.get("effect", "") or "") == "ApplyToQuery":
+				ctx.warn(f"{where}.bundle.effects[{idx}]", "nested ApplyToQuery can be expensive; verify it is intentional")
+		if "limit" in effect:
+			try:
+				if int(effect.get("limit")) < 0:
+					ctx.error(where, "ApplyToQuery limit must be non-negative")
+			except Exception:
+				ctx.error(where, "ApplyToQuery limit must be integer")
 	if eff == "AgentControlTick" and "max_actions_in_tick" not in effect:
 		ctx.error(where, "AgentControlTick missing max_actions_in_tick")
 	if eff == "WorkerTick" and "ticks" not in effect:
@@ -650,12 +709,7 @@ def _validate_recipe(ctx: LintContext, rid: str, recipe: Any) -> None:
 			ctx.error(where, "duration recipe requires progression object")
 		else:
 			_validate_progression(ctx, progression, f"{where}.progression")
-	outputs = recipe.get("outputs", []) or []
-	if not isinstance(outputs, list):
-		ctx.error(where, "outputs must be list")
-	else:
-		for idx, eff in enumerate(outputs):
-			_validate_effect(ctx, eff, f"{where}.outputs[{idx}]")
+	_validate_bundle(ctx, recipe.get("bundle", {}), f"{where}.bundle")
 	for field in ["narrative_success", "narrative_fail"]:
 		if field in recipe:
 			_allowed = {"actor", "target", "reason", "to_location_id", "source_location_id"}
@@ -675,12 +729,7 @@ def _validate_progression(ctx: LintContext, progression: dict[str, Any], where: 
 		ctx.error(where, "params must be object")
 	elif pid == "Linear":
 		_validate_linear_progression_params(ctx, params, where)
-	tick_effects = progression.get("tick_effects", []) or []
-	if not isinstance(tick_effects, list):
-		ctx.error(where, "tick_effects must be list")
-	else:
-		for idx, eff in enumerate(tick_effects):
-			_validate_effect(ctx, eff, f"{where}.tick_effects[{idx}]")
+	_validate_bundle(ctx, progression.get("tick_bundle", {}), f"{where}.tick_bundle")
 
 
 def _validate_recipes(ctx: LintContext) -> None:
@@ -799,12 +848,7 @@ def _validate_reactions(ctx: LintContext) -> None:
 			ctx.warn(where, f"on_event is not in known event catalog: {event_type}")
 		_validate_condition(ctx, rule.get("selector", {}) or {}, f"{where}.selector", event_type)
 		_validate_condition(ctx, rule.get("condition", {}) or {}, f"{where}.condition", event_type)
-		effects = rule.get("effects", []) or []
-		if not isinstance(effects, list):
-			ctx.error(where, "effects must be list")
-			continue
-		for eidx, eff in enumerate(effects):
-			_validate_effect(ctx, eff, f"{where}.effects[{eidx}]")
+		_validate_bundle(ctx, rule.get("bundle", {}), f"{where}.bundle")
 
 
 def lint_bundle(

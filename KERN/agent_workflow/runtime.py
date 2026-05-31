@@ -2,14 +2,15 @@ from __future__ import annotations
 
 from typing import Any
 
+from ..execution_errors import is_execution_error_event
 from .full_ws_view_builder import build_full_ws_view
 from .interrupt_runtime import check_if_interrupt_is_needed
 from .workflow_contract import validate_workflow_decision
 
 
 def workflow_contract_error_policy(ws: Any) -> str:
-	services = getattr(ws, "services", {}) or {}
-	raw = str(services.get("workflow_contract_on_error", "fail_fast") or "fail_fast").strip().lower()
+	runtime_state = getattr(ws, "runtime_state", {}) or {}
+	raw = str(runtime_state.get("workflow_contract_on_error", "fail_fast") or "fail_fast").strip().lower()
 	if raw not in {"fail_fast", "degrade_to_noop"}:
 		return "fail_fast"
 	return raw
@@ -101,31 +102,34 @@ def _commands_to_operations(ws: Any, actor_id: str, reason: str, commands: list[
 				"message": str((result or {}).get("message", "") or "command rejected by interaction engine"),
 			}
 		ctx = dict((result or {}).get("context", {}) or {})
-		for eff in list((result or {}).get("effects", []) or []):
-			if isinstance(eff, dict):
-				ops.append({"effect": dict(eff), "context": dict(ctx)})
+		bundle = (result or {}).get("bundle", {}) or {}
+		if isinstance(bundle, dict):
+			ops.append({"bundle": dict(bundle), "context": dict(ctx)})
 	return ops, None
 
 
 def _apply_memory_patch(ws: Any, actor_id: str, mem_patch: dict[str, Any]) -> bool:
+	runtime_state = getattr(ws, "runtime_state", {}) or {}
 	services = getattr(ws, "services", {}) or {}
 	execute = (services or {}).get("execute")
 	if not callable(execute):
 		return False
 	mem_effect = {
-		"effect": "ApplyMemoryPatch",
-		"target": actor_id,
-		"notes": [dict(x) for x in list(mem_patch.get("notes", []) or []) if isinstance(x, dict)],
-		"last_event_seq_seen": int(mem_patch.get("last_event_seq_seen", 0) or 0),
-		"last_interaction_seq_seen": int(mem_patch.get("last_interaction_seq_seen", 0) or 0),
-		"mid_term_summaries": [dict(x) for x in list(mem_patch.get("mid_term_summaries", []) or []) if isinstance(x, dict)],
-		"clear_mid_term_prep": bool(mem_patch.get("clear_mid_term_prep", False)),
+		"effects": [
+			{
+				"effect": "ApplyMemoryPatch",
+				"target": actor_id,
+				"notes": [dict(x) for x in list(mem_patch.get("notes", []) or []) if isinstance(x, dict)],
+				"last_event_seq_seen": int(mem_patch.get("last_event_seq_seen", 0) or 0),
+				"last_interaction_seq_seen": int(mem_patch.get("last_interaction_seq_seen", 0) or 0),
+				"mid_term_summaries": [dict(x) for x in list(mem_patch.get("mid_term_summaries", []) or []) if isinstance(x, dict)],
+				"clear_mid_term_prep": bool(mem_patch.get("clear_mid_term_prep", False)),
+			}
+		]
 	}
 	mem_events = execute(mem_effect, {"self_id": actor_id, "target_id": actor_id})
 	for ev in list(mem_events or []):
-		if not isinstance(ev, dict):
-			continue
-		if str(ev.get("type", "") or "") in {"ExecutorError", "BindError"}:
+		if is_execution_error_event(ev):
 			return False
 	return True
 
@@ -173,18 +177,15 @@ def _apply_operations(ws: Any, actor_id: str, operations: list[dict[str, Any]]) 
 		return True, False
 	ops = [dict(x) for x in list(operations or []) if isinstance(x, dict)]
 	for op in list(ops):
-		eff = op.get("effect", {}) or {}
+		bundle = op.get("bundle", {}) or {}
 		ctx = op.get("context", {}) or {}
-		if not isinstance(eff, dict) or not isinstance(ctx, dict):
+		if not isinstance(bundle, dict) or not isinstance(ctx, dict):
 			_record_workflow_error_event(ws, actor_id, "operation_invalid", {"operation": dict(op) if isinstance(op, dict) else str(op)})
 			return True, False
-		evs = execute(dict(eff), dict(ctx))
+		evs = execute(dict(bundle), dict(ctx))
 		for ev in list(evs or []):
-			if not isinstance(ev, dict):
-				continue
-			ev_type = str(ev.get("type", "") or "")
-			if ev_type in {"ExecutorError", "BindError"}:
-				_record_workflow_error_event(ws, actor_id, "executor_failed", {"effect": dict(eff), "error_event": dict(ev)})
+			if is_execution_error_event(ev):
+				_record_workflow_error_event(ws, actor_id, "executor_failed", {"bundle": dict(bundle), "error_event": dict(ev)})
 				return True, False
 	return False, bool(ops)
 
@@ -261,11 +262,15 @@ def run_agent_control_tick(ws: Any, actor_id: str, workflow: Any, max_actions_in
 				if callable(execute):
 					execute(
 						{
-							"effect": "AbortSimulation",
-							"reason": "workflow_contract_violation",
-							"detail": f"{code}: {message}",
-							"severity": "error",
-							"stop": True,
+							"effects": [
+								{
+									"effect": "AbortSimulation",
+									"reason": "workflow_contract_violation",
+									"detail": f"{code}: {message}",
+									"severity": "error",
+									"stop": True,
+								}
+							]
 						},
 						{"self_id": actor_id},
 					)
@@ -279,11 +284,15 @@ def run_agent_control_tick(ws: Any, actor_id: str, workflow: Any, max_actions_in
 				if callable(execute):
 					execute(
 						{
-							"effect": "AbortSimulation",
-							"reason": "workflow_runtime_invalid_outcome_type",
-							"detail": str(otype),
-							"severity": "error",
-							"stop": True,
+							"effects": [
+								{
+									"effect": "AbortSimulation",
+									"reason": "workflow_runtime_invalid_outcome_type",
+									"detail": str(otype),
+									"severity": "error",
+									"stop": True,
+								}
+							]
 						},
 						{"self_id": actor_id},
 					)

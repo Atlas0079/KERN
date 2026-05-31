@@ -186,7 +186,7 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 		if int(rec.get("seq", 0) or 0) > int(last_interaction_seq_seen):
 			interaction_delta.append(dict(rec))
 
-	services = getattr(ws, "services", {}) or {}
+	runtime_state = getattr(ws, "runtime_state", {}) or {}
 	return {
 		"self_id": str(actor_id),
 		"tick": int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0),
@@ -198,6 +198,6 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 		"paths": paths_out,
 		"event_delta": event_delta,
 		"interaction_delta": interaction_delta,
-		"dialogue_budget_limit_per_location": int(services.get("dialogue_budget_limit_per_location", 4) or 4),
-		"dialogue_budget_used_per_location": dict(services.get("dialogue_budget_used_per_location", {}) or {}),
+		"dialogue_budget_limit_per_location": int(runtime_state.get("dialogue_budget_limit_per_location", 4) or 4),
+		"dialogue_budget_used_per_location": dict(runtime_state.get("dialogue_budget_used_per_location", {}) or {}),
 	}

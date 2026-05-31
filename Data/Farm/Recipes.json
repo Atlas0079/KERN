@@ -27,7 +27,9 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["farmland"],
+                    "tags": [
+                        "farmland"
+                    ],
                     "match": "all"
                 },
                 {
@@ -81,61 +83,65 @@
             "required_progress": 2,
             "assign_to": "self"
         },
-        "outputs": [
-            {
-                "effect": "DestroyEntity",
-                "target": "param:seed_id"
-            },
-            {
-                "effect": "AddStatus",
-                "target": "target",
-                "status_id": "growing"
-            },
-            {
-                "effect": "CreateTask",
-                "assign_to": "target",
-                "recipe": {
-                    "verb": "GrowTomato",
-                    "process": {
-                        "required_progress": 8
-                    },
-                    "progression": {
-                        "progressor": "Linear",
-                        "params": {
-                            "base_progress_per_tick": 1.0,
-                            "add_terms": [],
-                            "mul_terms": [
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "DestroyEntity",
+                    "target": "param:seed_id"
+                },
+                {
+                    "effect": "AddStatus",
+                    "target": "target",
+                    "status_id": "growing"
+                },
+                {
+                    "effect": "CreateTask",
+                    "assign_to": "target",
+                    "recipe": {
+                        "verb": "GrowTomato",
+                        "process": {
+                            "required_progress": 8
+                        },
+                        "progression": {
+                            "progressor": "Linear",
+                            "params": {
+                                "base_progress_per_tick": 1.0,
+                                "add_terms": [],
+                                "mul_terms": [
+                                    {
+                                        "when": {
+                                            "type": "has_status",
+                                            "target": "self",
+                                            "status_id": "watered"
+                                        },
+                                        "value": 2.0
+                                    }
+                                ]
+                            }
+                        },
+                        "bundle": {
+                            "effects": [
                                 {
-                                    "when": {
-                                        "type": "has_status",
-                                        "target": "self",
-                                        "status_id": "watered"
-                                    },
-                                    "value": 2.0
+                                    "effect": "AddStatus",
+                                    "target": "target",
+                                    "status_id": "ready_tomato"
+                                },
+                                {
+                                    "effect": "RemoveStatus",
+                                    "target": "target",
+                                    "status_id": "growing"
+                                },
+                                {
+                                    "effect": "RemoveStatus",
+                                    "target": "target",
+                                    "status_id": "watered"
                                 }
                             ]
                         }
-                    },
-                    "outputs": [
-                        {
-                            "effect": "AddStatus",
-                            "target": "target",
-                            "status_id": "ready_tomato"
-                        },
-                        {
-                            "effect": "RemoveStatus",
-                            "target": "target",
-                            "status_id": "growing"
-                        },
-                        {
-                            "effect": "RemoveStatus",
-                            "target": "target",
-                            "status_id": "watered"
-                        }
-                    ]
+                    }
                 }
-            }
-        ]
+            ]
+        }
     },
     "farm_plant_seed_blueberry": {
         "verb": "PlantSeed",
@@ -162,7 +168,9 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["farmland"],
+                    "tags": [
+                        "farmland"
+                    ],
                     "match": "all"
                 },
                 {
@@ -216,61 +224,65 @@
             "required_progress": 2,
             "assign_to": "self"
         },
-        "outputs": [
-            {
-                "effect": "DestroyEntity",
-                "target": "param:seed_id"
-            },
-            {
-                "effect": "AddStatus",
-                "target": "target",
-                "status_id": "growing"
-            },
-            {
-                "effect": "CreateTask",
-                "assign_to": "target",
-                "recipe": {
-                    "verb": "GrowBlueberry",
-                    "process": {
-                        "required_progress": 12
-                    },
-                    "progression": {
-                        "progressor": "Linear",
-                        "params": {
-                            "base_progress_per_tick": 1.0,
-                            "add_terms": [],
-                            "mul_terms": [
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "DestroyEntity",
+                    "target": "param:seed_id"
+                },
+                {
+                    "effect": "AddStatus",
+                    "target": "target",
+                    "status_id": "growing"
+                },
+                {
+                    "effect": "CreateTask",
+                    "assign_to": "target",
+                    "recipe": {
+                        "verb": "GrowBlueberry",
+                        "process": {
+                            "required_progress": 12
+                        },
+                        "progression": {
+                            "progressor": "Linear",
+                            "params": {
+                                "base_progress_per_tick": 1.0,
+                                "add_terms": [],
+                                "mul_terms": [
+                                    {
+                                        "when": {
+                                            "type": "has_status",
+                                            "target": "self",
+                                            "status_id": "watered"
+                                        },
+                                        "value": 2.0
+                                    }
+                                ]
+                            }
+                        },
+                        "bundle": {
+                            "effects": [
                                 {
-                                    "when": {
-                                        "type": "has_status",
-                                        "target": "self",
-                                        "status_id": "watered"
-                                    },
-                                    "value": 2.0
+                                    "effect": "AddStatus",
+                                    "target": "target",
+                                    "status_id": "ready_blueberry"
+                                },
+                                {
+                                    "effect": "RemoveStatus",
+                                    "target": "target",
+                                    "status_id": "growing"
+                                },
+                                {
+                                    "effect": "RemoveStatus",
+                                    "target": "target",
+                                    "status_id": "watered"
                                 }
                             ]
                         }
-                    },
-                    "outputs": [
-                        {
-                            "effect": "AddStatus",
-                            "target": "target",
-                            "status_id": "ready_blueberry"
-                        },
-                        {
-                            "effect": "RemoveStatus",
-                            "target": "target",
-                            "status_id": "growing"
-                        },
-                        {
-                            "effect": "RemoveStatus",
-                            "target": "target",
-                            "status_id": "watered"
-                        }
-                    ]
+                    }
                 }
-            }
-        ]
+            ]
+        }
     },
     "farm_water_crop": {
         "verb": "WaterCrop",
@@ -282,7 +294,9 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["farmland"],
+                    "tags": [
+                        "farmland"
+                    ],
                     "match": "all"
                 },
                 {
@@ -316,13 +330,15 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "AddStatus",
-                "target": "target",
-                "status_id": "watered"
-            }
-        ]
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "AddStatus",
+                    "target": "target",
+                    "status_id": "watered"
+                }
+            ]
+        }
     },
     "farm_harvest_tomato": {
         "verb": "HarvestCrop",
@@ -334,7 +350,9 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["farmland"],
+                    "tags": [
+                        "farmland"
+                    ],
                     "match": "all"
                 },
                 {
@@ -349,21 +367,23 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "CreateEntity",
-                "template": "TomatoCrop",
-                "destination": {
-                    "type": "container",
-                    "target": "self"
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "CreateEntity",
+                    "template": "TomatoCrop",
+                    "destination": {
+                        "type": "container",
+                        "target": "self"
+                    }
+                },
+                {
+                    "effect": "RemoveStatus",
+                    "target": "target",
+                    "status_id": "ready_tomato"
                 }
-            },
-            {
-                "effect": "RemoveStatus",
-                "target": "target",
-                "status_id": "ready_tomato"
-            }
-        ]
+            ]
+        }
     },
     "farm_harvest_blueberry": {
         "verb": "HarvestCrop",
@@ -375,7 +395,9 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["farmland"],
+                    "tags": [
+                        "farmland"
+                    ],
                     "match": "all"
                 },
                 {
@@ -390,21 +412,23 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "CreateEntity",
-                "template": "BlueberryCrop",
-                "destination": {
-                    "type": "container",
-                    "target": "self"
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "CreateEntity",
+                    "template": "BlueberryCrop",
+                    "destination": {
+                        "type": "container",
+                        "target": "self"
+                    }
+                },
+                {
+                    "effect": "RemoveStatus",
+                    "target": "target",
+                    "status_id": "ready_blueberry"
                 }
-            },
-            {
-                "effect": "RemoveStatus",
-                "target": "target",
-                "status_id": "ready_blueberry"
-            }
-        ]
+            ]
+        }
     },
     "farm_sell_item": {
         "verb": "SellItem",
@@ -416,7 +440,9 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["merchant"],
+                    "tags": [
+                        "merchant"
+                    ],
                     "match": "all"
                 },
                 {
@@ -441,18 +467,22 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "ExchangeResources",
-                "source": "self",
-                "target": "target",
-                "transfer_mode": "transfer",
-                "consume_items": ["param:item_id"],
-                "consume_money": 0,
-                "produce_items": [],
-                "produce_money": "eval_price"
-            }
-        ]
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "ExchangeResources",
+                    "source": "self",
+                    "target": "target",
+                    "transfer_mode": "transfer",
+                    "consume_items": [
+                        "param:item_id"
+                    ],
+                    "consume_money": 0,
+                    "produce_items": [],
+                    "produce_money": "eval_price"
+                }
+            ]
+        }
     },
     "farm_buy_item": {
         "verb": "BuyItem",
@@ -464,13 +494,17 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["merchant"],
+                    "tags": [
+                        "merchant"
+                    ],
                     "match": "all"
                 },
                 {
                     "type": "has_tags",
                     "target": "param:item_id",
-                    "tags": ["commodity"],
+                    "tags": [
+                        "commodity"
+                    ],
                     "match": "all"
                 },
                 {
@@ -490,23 +524,27 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "ExchangeResources",
-                "source": "target",
-                "target": "self",
-                "transfer_mode": "transfer",
-                "consume_items": ["param:item_id"],
-                "consume_money": 0,
-                "produce_items": [],
-                "produce_money": "eval_price"
-            },
-            {
-                "effect": "RemoveTag",
-                "target": "param:item_id",
-                "tag": "commodity"
-            }
-        ]
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "ExchangeResources",
+                    "source": "target",
+                    "target": "self",
+                    "transfer_mode": "transfer",
+                    "consume_items": [
+                        "param:item_id"
+                    ],
+                    "consume_money": 0,
+                    "produce_items": [],
+                    "produce_money": "eval_price"
+                },
+                {
+                    "effect": "RemoveTag",
+                    "target": "param:item_id",
+                    "tag": "commodity"
+                }
+            ]
+        }
     },
     "farm_inspect_shop": {
         "verb": "InspectShop",
@@ -518,7 +556,9 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["merchant"],
+                    "tags": [
+                        "merchant"
+                    ],
                     "match": "all"
                 },
                 {
@@ -533,16 +573,18 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "EmitEvent",
-                "event_type": "MessageBroadcasted",
-                "payload": {
-                    "source_ref": "target",
-                    "message": "我这里有 番茄种子(10元) 、蓝莓种子(30元)和黄金水壶（100元），要买点什么吗？"
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "EmitEvent",
+                    "event_type": "MessageBroadcasted",
+                    "payload": {
+                        "source_ref": "target",
+                        "message": "我这里有 番茄种子(10元) 、蓝莓种子(30元)和黄金水壶（100元），要买点什么吗？"
+                    }
                 }
-            }
-        ]
+            ]
+        }
     },
     "farm_read_note": {
         "verb": "ReadNote",
@@ -554,7 +596,9 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["readable"],
+                    "tags": [
+                        "readable"
+                    ],
                     "match": "all"
                 },
                 {
@@ -579,16 +623,18 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "EmitEvent",
-                "event_type": "MessageBroadcasted",
-                "payload": {
-                    "source_ref": "target",
-                    "message": "教程：你是农场玩法测试玩家。目标是尽快赚到300块。先去商店购买种子和工具，再回农田播种、浇水、生长、收获并卖出。"
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "EmitEvent",
+                    "event_type": "MessageBroadcasted",
+                    "payload": {
+                        "source_ref": "target",
+                        "message": "教程：你是农场玩法测试玩家。目标是尽快赚到300块。先去商店购买种子和工具，再回农田播种、浇水、生长、收获并卖出。"
+                    }
                 }
-            }
-        ]
+            ]
+        }
     },
     "generic_take_item": {
         "verb": "TakeItem",
@@ -600,7 +646,9 @@
                 {
                     "type": "has_tags",
                     "target": "target",
-                    "tags": ["item"],
+                    "tags": [
+                        "item"
+                    ],
                     "match": "all"
                 },
                 {
@@ -616,7 +664,9 @@
                     "condition": {
                         "type": "has_tags",
                         "target": "param:source_id",
-                        "tags": ["merchant"],
+                        "tags": [
+                            "merchant"
+                        ],
                         "match": "all"
                     }
                 },
@@ -632,13 +682,15 @@
         "process": {
             "required_progress": 0
         },
-        "outputs": [
-            {
-                "effect": "MoveEntity",
-                "entity_ref": "target",
-                "from_ref": "param:source_id",
-                "to_ref": "self"
-            }
-        ]
+        "bundle": {
+            "effects": [
+                {
+                    "effect": "MoveEntity",
+                    "entity_ref": "target",
+                    "from_ref": "param:source_id",
+                    "to_ref": "self"
+                }
+            ]
+        }
     }
 }

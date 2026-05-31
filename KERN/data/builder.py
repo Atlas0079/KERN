@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from ..effect_bundle import effect_bundle_from_raw
 from ..log_manager import get_logger
 from ..models.components import (
 	AgentSetting,
@@ -57,12 +58,8 @@ def _task_from_dict(raw: dict[str, Any]) -> Task:
 		if "progress_contributors" in pp:
 			raise ValueError("task progressor_params.progress_contributors is removed; use add_terms/mul_terms")
 		task.progressor_params = dict(pp)
-	te = raw.get("tick_effects", []) or []
-	if isinstance(te, list):
-		task.tick_effects = [dict(x) for x in te if isinstance(x, dict)]
-	ce = raw.get("completion_effects", []) or []
-	if isinstance(ce, list):
-		task.completion_effects = [dict(x) for x in ce if isinstance(x, dict)]
+	task.tick_bundle = effect_bundle_from_raw(raw.get("tick_bundle", {}) or {"effects": []})
+	task.completion_bundle = effect_bundle_from_raw(raw.get("completion_bundle", {}) or {"effects": []})
 	return task
 
 
@@ -288,11 +285,9 @@ def build_world_state(
 		if isinstance(params, dict):
 			task_kwargs["parameters"] = dict(params)
 
-		ce = tdata.get("completion_effects", []) or []
-		if isinstance(ce, list):
-			task_kwargs["completion_effects"] = [x for x in ce if isinstance(x, dict)]
-		if not task_kwargs.get("completion_effects"):
-			raise ValueError(f"task[{task_id}] missing completion_effects")
+		task_kwargs["completion_bundle"] = effect_bundle_from_raw(tdata.get("completion_bundle", {}) or {})
+		if task_kwargs["completion_bundle"].is_empty():
+			raise ValueError(f"task[{task_id}] missing completion_bundle")
 
 		task_kwargs["progressor_id"] = str(tdata.get("progressor_id", "") or "")
 		if not task_kwargs["progressor_id"]:
@@ -304,11 +299,7 @@ def build_world_state(
 			task_kwargs["progressor_params"] = dict(pp)
 		else:
 			raise ValueError(f"task[{task_id}] progressor_params must be object")
-		te = tdata.get("tick_effects", []) or []
-		if isinstance(te, list):
-			task_kwargs["tick_effects"] = [x for x in te if isinstance(x, dict)]
-		else:
-			raise ValueError(f"task[{task_id}] tick_effects must be list")
+		task_kwargs["tick_bundle"] = effect_bundle_from_raw(tdata.get("tick_bundle", {}) or {"effects": []})
 
 		task = Task(**task_kwargs)
 		host.add_task(task)
@@ -460,7 +451,7 @@ def _build_component(component_name: str, comp_data: Any):
 		if not isinstance(d, dict):
 			d = {}
 		return EdibleComponent(
-			effects_on_consume=[dict(x) for x in list(d.get("effects_on_consume", []) or []) if isinstance(x, dict)],
+			on_consume_bundle=effect_bundle_from_raw(d.get("on_consume_bundle", {}) or {"effects": []}),
 		)
 
 	if component_name == "PerceptionComponent":
@@ -570,7 +561,20 @@ def apply_component_overrides(entity: Entity, overrides: dict[str, Any], restore
 				comp.current_task_id = str(comp_patch.get("current_task_id", "") or "")
 			continue
 
-		# 4) DecisionArbiterComponent: Rebuild ruleset/presets from structured data to avoid raw dict rules
+		if isinstance(comp, TaskHostComponent):
+			for k, v in comp_patch.items():
+				if k == "tasks":
+					continue
+				if hasattr(comp, k):
+					try:
+						setattr(comp, k, v)
+					except Exception as e:
+						raise RuntimeError(
+							f"component override failed: entity_id={str(getattr(entity, 'entity_id', '') or '')} "
+							f"component={str(comp_name)} field={str(k)} value_type={str(type(v).__name__)}"
+						) from e
+			continue
+
 		if isinstance(comp, DecisionArbiterComponent):
 			base_data = {
 				"active_interrupt_preset_id": str(getattr(comp, "active_interrupt_preset_id", "") or ""),
