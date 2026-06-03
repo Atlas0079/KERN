@@ -16,6 +16,11 @@ class DataBundle:
 	recipes: dict[str, Any]
 	reactions: dict[str, Any]
 	world: dict[str, Any]
+	named_bundles: dict[str, Any] = None
+
+	def __post_init__(self) -> None:
+		if self.named_bundles is None:
+			self.named_bundles = {}
 
 
 def load_json(path: Path) -> Any:
@@ -29,6 +34,7 @@ def load_data_bundle(
 	reactions_jsons: list[str] | None = None,
 	entities_dirs: list[str] | None = None,
 	world_json: str = "World.json",
+	bundles_jsons: list[str] | None = None,
 ) -> DataBundle:
 	"""
 	Read JSON from Data directory.
@@ -51,6 +57,8 @@ def load_data_bundle(
 		recipes_jsons = ["Recipes.json"]
 	if not reactions_jsons:
 		reactions_jsons = ["Reactions.json"]
+	if bundles_jsons is None:
+		bundles_jsons = ["Bundles.json"]
 
 	world_name = str(world_json or "World.json").strip() or "World.json"
 	world = load_json(data_dir / world_name)
@@ -82,9 +90,18 @@ def load_data_bundle(
 				if isinstance(data, dict):
 					entity_templates.update(data)
 
+	named_bundles: dict[str, Any] = {}
+	for b_json in bundles_jsons:
+		b_path = data_dir / b_json
+		if b_path.exists():
+			data = load_json(b_path)
+			if isinstance(data, dict):
+				named_bundles.update(data)
+
 	return DataBundle(
 		entity_templates=entity_templates,
 		recipes=recipes,
 		reactions=reactions,
 		world=world,
+		named_bundles=named_bundles,
 	)

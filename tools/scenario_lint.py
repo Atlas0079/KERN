@@ -1,3 +1,25 @@
+"""
+Scenario Lint: Static Data Validation Tool
+
+This tool performs static validation of scenario data (World.json, Recipes.json, Reactions.json, Entities/*.json, Bundles.json).
+
+Scope:
+- Validates data structure and schema compliance
+- Checks references (entity templates, location IDs, named bundles, etc.)
+- Verifies effect/condition/query types are known and have required fields
+- Detects deprecated fields and common mistakes
+
+Non-Scope:
+- Does NOT validate runtime behavior or logic correctness
+- Does NOT guarantee the scenario will run without errors
+- Does NOT check business logic (e.g., whether a recipe makes sense)
+- Does NOT validate LLM interaction quality or agent behavior
+- Does NOT check performance or resource usage
+
+This is a necessary but NOT sufficient validation. Passing lint means the data is structurally valid,
+but does not guarantee the scenario will behave as intended. Always test scenarios in runtime.
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -76,6 +98,7 @@ EVENT_FIELDS: dict[str, set[str]] = {
 	"EventEmitted": {"type", "event_type", "payload"},
 	"TagAdded": {"type", "entity_id", "tag"},
 	"TagRemoved": {"type", "entity_id", "tag", "removed"},
+	"RandomBundleResolved": {"type", "table_id", "entry_id", "entry_label", "entry_index", "weight", "total_weight", "roll", "bundle_effect_count"},
 }
 
 
@@ -96,6 +119,7 @@ class LintContext:
 	recipes_jsons: list[str]
 	reactions_jsons: list[str]
 	entities_dirs: list[str]
+	bundles_jsons: list[str]
 	issues: list[Issue] = field(default_factory=list)
 
 	def error(self, where: str, message: str) -> None:
@@ -552,10 +576,17 @@ def _validate_effect_required_fields(ctx: LintContext, eff: str, effect: dict[st
 		if assign_to not in {"self", "target"}:
 			ctx.error(where, "CreateTask assign_to must be self/target")
 	if eff == "InvokeBundle":
+		has_ref = isinstance(effect.get("ref"), str) and bool(effect["ref"].strip())
 		has_inline_bundle = "bundle" in effect
 		has_component_bundle = "component" in effect or "property" in effect
-		if not has_inline_bundle and not has_component_bundle:
-			ctx.error(where, "InvokeBundle requires bundle or component/property")
+		if not has_ref and not has_inline_bundle and not has_component_bundle:
+			ctx.error(where, "InvokeBundle requires ref, bundle, or component/property")
+		if has_ref:
+			ref_id = effect["ref"].strip()
+			if ref_id not in (ctx.bundle.named_bundles or {}):
+				ctx.error(where, f"InvokeBundle ref not found in named_bundles: {ref_id!r}")
+			else:
+				_validate_bundle(ctx, ctx.bundle.named_bundles[ref_id], f"named_bundles.{ref_id}")
 		if has_inline_bundle:
 			_validate_bundle(ctx, effect.get("bundle", {}), f"{where}.bundle")
 		if has_component_bundle:
@@ -565,6 +596,35 @@ def _validate_effect_required_fields(ctx: LintContext, eff: str, effect: dict[st
 				ctx.error(where, "InvokeBundle(component) missing component")
 			if not _has_nonempty_value(effect, "property"):
 				ctx.error(where, "InvokeBundle(component) missing property")
+	if eff == "RandomBundle":
+		table_id = str(effect.get("table_id", "") or "").strip()
+		if not table_id:
+			ctx.warn(where, "RandomBundle table_id is recommended for logs and future inspection")
+		entries = effect.get("entries", []) or []
+		if not isinstance(entries, list) or not entries:
+			ctx.error(where, "RandomBundle requires non-empty entries list")
+		else:
+			total_weight = 0.0
+			for idx, entry in enumerate(entries):
+				ewhere = f"{where}.entries[{idx}]"
+				if not isinstance(entry, dict):
+					ctx.error(ewhere, "RandomBundle entry must be object")
+					continue
+				if not str(entry.get("id", "") or "").strip():
+					ctx.warn(ewhere, "RandomBundle entry.id is recommended for logs and future inspection")
+				if not str(entry.get("label", "") or "").strip():
+					ctx.warn(ewhere, "RandomBundle entry.label is recommended for logs and future inspection")
+				try:
+					weight = float(entry.get("weight", 0.0) or 0.0)
+				except Exception:
+					ctx.error(ewhere, "RandomBundle entry.weight must be number")
+					weight = 0.0
+				if weight < 0:
+					ctx.error(ewhere, "RandomBundle entry.weight must be non-negative")
+				total_weight += max(0.0, weight)
+				_validate_bundle(ctx, entry.get("bundle", {}), f"{ewhere}.bundle")
+			if total_weight <= 0:
+				ctx.error(where, "RandomBundle total positive weight must be > 0")
 	if eff == "ApplyToQuery":
 		_validate_query(ctx, effect.get("query", {}), f"{where}.query")
 		_validate_bundle(ctx, effect.get("bundle", {}), f"{where}.bundle")
@@ -851,6 +911,16 @@ def _validate_reactions(ctx: LintContext) -> None:
 		_validate_bundle(ctx, rule.get("bundle", {}), f"{where}.bundle")
 
 
+def _validate_named_bundles(ctx: LintContext) -> None:
+	for bundle_id, bundle in sorted((ctx.bundle.named_bundles or {}).items()):
+		bid = str(bundle_id or "").strip()
+		where = f"named_bundles.{bid or '<empty>'}"
+		if not bid:
+			ctx.error(where, "named bundle id is empty")
+			continue
+		_validate_bundle(ctx, bundle, where)
+
+
 def lint_bundle(
 	project_root: Path,
 	config_path: Path,
@@ -860,6 +930,7 @@ def lint_bundle(
 	recipes_jsons: list[str],
 	reactions_jsons: list[str],
 	entities_dirs: list[str],
+	bundles_jsons: list[str],
 ) -> LintContext:
 	ctx = LintContext(
 		project_root=project_root,
@@ -870,15 +941,17 @@ def lint_bundle(
 		recipes_jsons=recipes_jsons,
 		reactions_jsons=reactions_jsons,
 		entities_dirs=entities_dirs,
+		bundles_jsons=bundles_jsons,
 	)
 	ctx.info("config", f"loaded {config_path.name}")
-	ctx.info("data", f"world={world_json}, recipes={len(bundle.recipes or {})}, reactions={len((bundle.reactions or {}).get('rules', []) or [])}, templates={len(bundle.entity_templates or {})}")
+	ctx.info("data", f"world={world_json}, recipes={len(bundle.recipes or {})}, reactions={len((bundle.reactions or {}).get('rules', []) or [])}, templates={len(bundle.entity_templates or {})}, named_bundles={len(bundle.named_bundles or {})}")
 	_validate_world_shape(ctx)
 	_validate_component_templates(ctx)
 	_validate_recipes(ctx)
 	_validate_reactions(ctx)
+	_validate_named_bundles(ctx)
 	try:
-		build_world_state(bundle.world, bundle.entity_templates, bundle.recipes)
+		build_world_state(bundle.world, bundle.entity_templates, bundle.recipes, named_bundles=bundle.named_bundles)
 	except Exception as e:
 		ctx.error("build_world_state", str(e))
 	return ctx
@@ -890,12 +963,14 @@ def lint_config(project_root: Path, config_path: str) -> LintContext:
 	recipes_jsons = _split_csv(_cfg_get(env, "RECIPES_JSONS", "Recipes.json"), ["Recipes.json"])
 	reactions_jsons = _split_csv(_cfg_get(env, "REACTIONS_JSONS", "Reactions.json"), ["Reactions.json"])
 	entities_dirs = _split_csv(_cfg_get(env, "ENTITIES_DIRS", "Entities"), ["Entities"])
+	bundles_jsons = _split_csv(_cfg_get(env, "BUNDLES_JSONS", "Bundles.json"), ["Bundles.json"])
 	bundle = load_data_bundle(
 		project_root,
 		recipes_jsons=recipes_jsons,
 		reactions_jsons=reactions_jsons,
 		entities_dirs=entities_dirs,
 		world_json=world_json,
+		bundles_jsons=bundles_jsons,
 	)
 	return lint_bundle(
 		project_root=project_root,
@@ -906,6 +981,7 @@ def lint_config(project_root: Path, config_path: str) -> LintContext:
 		recipes_jsons=recipes_jsons,
 		reactions_jsons=reactions_jsons,
 		entities_dirs=entities_dirs,
+		bundles_jsons=bundles_jsons,
 	)
 
 

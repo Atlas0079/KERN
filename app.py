@@ -87,6 +87,7 @@ def main(argv: list[str] | None = None) -> None:
 	recipes_jsons = [x.strip() for x in _cfg_get(cfg, "RECIPES_JSONS", "Recipes.json").split(",") if x.strip()]
 	reactions_jsons = [x.strip() for x in _cfg_get(cfg, "REACTIONS_JSONS", "Reactions.json").split(",") if x.strip()]
 	entities_dirs = [x.strip() for x in _cfg_get(cfg, "ENTITIES_DIRS", "Entities").split(",") if x.strip()]
+	bundles_jsons = [x.strip() for x in _cfg_get(cfg, "BUNDLES_JSONS", "Bundles.json").split(",") if x.strip()]
 	world_json_name = _cfg_get(cfg, "WORLD_JSON", "World.json")
 
 	bundle = load_data_bundle(
@@ -95,12 +96,13 @@ def main(argv: list[str] | None = None) -> None:
 		reactions_jsons=reactions_jsons,
 		entities_dirs=entities_dirs,
 		world_json=world_json_name,
+		bundles_jsons=bundles_jsons,
 	)
 	restore_file_env = _cfg_get(cfg, "CHECKPOINT_RESTORE_FILE", "")
 	restore_dir_env = _cfg_get(cfg, "CHECKPOINT_RESTORE_DIR", "")
 	restore_path = resolve_checkpoint_file(restore_file_env, restore_dir_env)
 	if restore_path is not None:
-		ws = restore_world_state_from_checkpoint(restore_path, bundle.entity_templates)
+		ws = restore_world_state_from_checkpoint(restore_path, bundle.entity_templates, bundle.named_bundles)
 		if not ws.entities or not ws.locations:
 			raise ValueError(f"Invalid checkpoint format or empty world state: {restore_path}")
 		logger.info("checkpoint", "restored", context={"path": str(restore_path), "tick": int(ws.game_time.total_ticks)})
@@ -119,13 +121,14 @@ def main(argv: list[str] | None = None) -> None:
 				recipes_jsons=recipes_jsons,
 				reactions_jsons=reactions_jsons,
 				entities_dirs=entities_dirs,
+				bundles_jsons=bundles_jsons,
 			)
 			errors = [x for x in lint.issues if x.severity == "ERROR"]
 			warnings = [x for x in lint.issues if x.severity == "WARN"]
 			if errors:
 				raise ValueError("Data validation failed:\n" + "\n".join(f"{x.where}: {x.message}" for x in errors))
 			logger.info("system", "data_validated", context={"mode": "scenario_lint", "warnings": len(warnings)})
-		result = build_world_state(bundle.world, bundle.entity_templates, bundle.recipes)
+		result = build_world_state(bundle.world, bundle.entity_templates, bundle.recipes, named_bundles=bundle.named_bundles)
 		ws = result.world_state
 	logger.info(
 		"system",

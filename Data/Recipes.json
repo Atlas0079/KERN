@@ -66,11 +66,8 @@
         "bundle": {
             "effects": [
                 {
-                    "effect": "ModifyProperty",
-                    "target": "target",
-                    "component": "CreatureComponent",
-                    "property": "current_energy",
-                    "change": 10
+                    "effect": "InvokeBundle",
+                    "ref": "generic.wait.energy_recover"
                 }
             ]
         }
@@ -108,11 +105,8 @@
         "bundle": {
             "effects": [
                 {
-                    "effect": "ModifyProperty",
-                    "target": "target",
-                    "component": "CreatureComponent",
-                    "property": "current_energy",
-                    "change": 5
+                    "effect": "InvokeBundle",
+                    "ref": "generic.rest.energy_recover"
                 }
             ]
         }

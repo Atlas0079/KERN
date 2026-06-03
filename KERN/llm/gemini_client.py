@@ -5,7 +5,6 @@ import time
 from dataclasses import dataclass
 from typing import Any
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 from ..log_manager import get_logger
@@ -102,7 +101,6 @@ class GeminiClient:
 			prefix = f"/{prefix}"
 		path = f"{prefix}/models/{model_name}:generateContent"
 		url = _join_url(self.base_url, path)
-		url = f"{url}?{urlencode({'key': key})}"
 
 		system_instruction, contents = _messages_to_gemini_payload(messages)
 		payload: dict[str, Any] = {"contents": contents}
@@ -123,6 +121,7 @@ class GeminiClient:
 		headers = {
 			"Content-Type": "application/json",
 			"Accept": "application/json",
+			"x-goog-api-key": key,
 		}
 
 		last_err: Exception | None = None

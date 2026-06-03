@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from ..effect_bundle import effect_bundle_from_raw
-from ..execution_errors import executor_error, is_execution_error_event
+from ..execution_errors import executor_error
 from ..models.components import StatusComponent, TaskHostComponent, WorkerComponent
 from ..models.task import Task
 from ..task_policy import (
@@ -16,6 +16,7 @@ from ..task_policy import (
 	is_interrupt_mode_resumable,
 )
 from ._effect_binder import BindError, _base_bind, _require_float, _require_str, _resolve_param_token
+from ._effect_child_bundle import run_child_bundle
 
 
 def _get_or_create_statuses_list(entity: Any) -> list[str] | None:
@@ -400,7 +401,7 @@ def execute_create_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 	target, err = executor.require_entity(ws, context, "target", "CreateTask", "target")
 	if err is not None:
 		return err
-	
+
 	recipe = (data or {}).get("recipe", {}) or {}
 	if not isinstance(recipe, dict) or not recipe:
 		return executor_error("CreateTask: recipe missing in effect data")
@@ -493,15 +494,34 @@ def execute_accept_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 	host = host_entity.get_component("TaskHostComponent")
 	if not isinstance(host, TaskHostComponent):
 		return executor_error("AcceptTask: target is not a TaskHost")
-	
-	tasks = host.get_available_tasks()
-	if not tasks:
-		return executor_error("AcceptTask: no available tasks on host")
 
 	worker = agent.get_component("WorkerComponent")
 	if not isinstance(worker, WorkerComponent):
 		return executor_error("AcceptTask: agent has no WorkerComponent")
-	
+
+	current_task_id = str(getattr(worker, "current_task_id", "") or "")
+	if current_task_id:
+		current_task = ws.get_task_by_id(current_task_id) if hasattr(ws, "get_task_by_id") else None
+		if (
+			current_task is not None
+			and str(getattr(current_task, "target_entity_id", "") or "") == str(host_entity.entity_id)
+			and str(getattr(current_task, "task_status", "") or "") == "InProgress"
+		):
+			return [
+				{
+					"type": "TaskAcceptSkipped",
+					"task_id": current_task_id,
+					"worker_id": self_id,
+					"host_id": host_entity.entity_id,
+					"reason": "already_in_progress",
+				}
+			]
+		return executor_error(f"AcceptTask: worker already has current task: {current_task_id}")
+
+	tasks = host.get_available_tasks()
+	if not tasks:
+		return executor_error("AcceptTask: no available tasks on host")
+
 	def _agent_has_item_with_tag(tag: str) -> bool:
 		cc = agent.get_component("ContainerComponent")
 		if cc is None:
@@ -607,15 +627,14 @@ def execute_finish_task(executor: Any, ws: Any, _data: dict[str, Any], context: 
 	bundle = getattr(task, "completion_bundle", None)
 	if bundle is None or bundle.is_empty():
 		return [{"type": "ExecutorError", "message": f"FinishTask: task has empty completion_bundle: {task_id}"}]
-	execute = (getattr(ws, "services", {}) or {}).get("execute")
-	if not callable(execute):
-		return [{"type": "ExecutorError", "message": "FinishTask: execute service missing"}]
-	events = execute(bundle.to_dict(), context)
-	has_finish_error = any(is_execution_error_event(ev) for ev in list(events or []))
-	if has_finish_error:
+	result = run_child_bundle(ws, bundle.to_dict(), context, "FinishTask")
+	if result.failed:
 		task.task_status = "Failed"
-		events.append({"type": "TaskFinishFailed", "task_id": task.task_id})
-		return events
+		message = str(result.error_message or "")
+		return [
+			{"type": "TaskFinishFailed", "task_id": task.task_id, "reason": message},
+			*executor_error(f"FinishTask: completion bundle failed ({message})"),
+		]
 	task.task_status = "Completed"
 	self_id = str((context or {}).get("self_id", "") or "")
 	if (
@@ -650,8 +669,7 @@ def execute_finish_task(executor: Any, ws: Any, _data: dict[str, Any], context: 
 			},
 		)
 	_remove_task_from_host_and_world(ws, task, context)
-	events.append({"type": "TaskFinished", "task_id": task.task_id})
-	return events
+	return [{"type": "TaskFinished", "task_id": task.task_id}]
 
 
 def execute_interrupt_task(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:

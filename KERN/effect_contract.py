@@ -6,6 +6,7 @@ import re
 
 EFFECT_SPECS: dict[str, dict[str, str]] = {
 	"InvokeBundle": {"module": "KERN.executor._effect_bundle"},
+	"RandomBundle": {"module": "KERN.executor._effect_random_bundle"},
 	"ApplyToQuery": {"module": "KERN.executor._effect_query"},
 	"AgentControlTick": {"module": "KERN.executor._effect_agent"},
 	"WorkerTick": {"module": "KERN.executor._effect_agent"},

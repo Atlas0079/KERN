@@ -9,7 +9,7 @@ class Location:
 	location_name: str = "Unnamed Location"
 	description: str = ""
 
-	# Only store entity IDs (Consistent with Godot pure ID mode)
+	# Top-level entity IDs only. Nested entities are resolved through container ownership.
 	entities_in_location: list[str] = field(default_factory=list)
 
 	def add_entity_id(self, entity_id: str) -> bool:

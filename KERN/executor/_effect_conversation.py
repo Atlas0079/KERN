@@ -18,21 +18,15 @@ def _bind_start_conversation(_ws: Any, effect_data: dict[str, Any], context: dic
 def execute_start_conversation(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	logger = get_logger()
 	services = getattr(ws, "services", {}) or {}
-	runtime_state = getattr(ws, "runtime_state", {}) or {}
-	if not isinstance(runtime_state, dict):
-		runtime_state = {}
-		setattr(ws, "runtime_state", runtime_state)
-	log_full = bool(runtime_state.get("dialogue_log_full", False))
+	state = ws.runtime_state
+	log_full = state.dialogue_log_full
 	self_id = str((context or {}).get("self_id", "") or "")
 	location = ws.get_location_of_entity(self_id) if self_id else None
 	if location is None:
 		return [{"type": "ConversationSkipped", "reason": "location_missing", "self_id": self_id}]
 	location_id = str(location.location_id)
-	limit_default = int(runtime_state.get("dialogue_budget_limit_per_location", 4) or 4)
-	used_map = runtime_state.get("dialogue_budget_used_per_location")
-	if not isinstance(used_map, dict):
-		used_map = {}
-		runtime_state["dialogue_budget_used_per_location"] = used_map
+	limit_default = state.dialogue_budget_limit_per_location
+	used_map = state.dialogue_budget_used_per_location
 	used = int(used_map.get(location_id, 0) or 0)
 	if used >= limit_default:
 		return [{"type": "ConversationSkipped", "reason": "budget_exhausted", "location_id": location_id, "used": used, "limit": limit_default}]

@@ -13,7 +13,7 @@ class EffectBundle:
 		return not bool(self.effects)
 
 	def to_dict(self) -> dict[str, Any]:
-		out = {"effects": [dict(x) for x in list(self.effects or []) if isinstance(x, dict)]}
+		out: dict[str, Any] = {"effects": [dict(x) for x in list(self.effects or []) if isinstance(x, dict)]}
 		if bool(self.react_per_effect):
 			out["react_per_effect"] = True
 		return out
@@ -31,4 +31,3 @@ def effect_bundle_from_raw(raw: Any) -> EffectBundle:
 	if not isinstance(react_per_effect, bool):
 		raise ValueError("effect bundle.react_per_effect must be bool")
 	return EffectBundle(effects=[dict(x) for x in effects if isinstance(x, dict)], react_per_effect=bool(react_per_effect))
-

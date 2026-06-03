@@ -3,9 +3,10 @@ from __future__ import annotations
 from typing import Any
 
 from ..effect_bundle import effect_bundle_from_raw
-from ..execution_errors import executor_error, is_execution_error_event
+from ..execution_errors import executor_error
 from ..query import QueryEngine
 from ._effect_binder import BindError, _base_bind, _require_param
+from ._effect_child_bundle import child_bundle_error_message, run_child_bundle
 
 
 def _bind_apply_to_query(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -59,9 +60,6 @@ def execute_apply_to_query(executor: Any, ws: Any, data: dict[str, Any], context
 				query["limit"] = min(max(0, int(query_limit)), limit_value)
 			except Exception:
 				return executor_error("ApplyToQuery: invalid query.limit")
-	execute = (getattr(ws, "services", {}) or {}).get("execute")
-	if not callable(execute):
-		return executor_error("ApplyToQuery: execute service missing")
 	rows = QueryEngine().execute(ws, query, context)
 	events: list[dict[str, Any]] = []
 	applied = 0
@@ -82,11 +80,20 @@ def execute_apply_to_query(executor: Any, ws: Any, data: dict[str, Any], context
 		child_context["query_target_id"] = entity_id
 		child_context["query_index"] = index
 		child_context["query_row"] = dict(row)
-		result_events = execute(bundle, child_context)
-		events.extend(list(result_events or []))
+		result = run_child_bundle(ws, bundle, child_context, "ApplyToQuery")
 		applied += 1
-		for ev in list(result_events or []):
-			if is_execution_error_event(ev):
-				return events
+		if result.failed:
+			events.append(
+				{
+					"type": "QueryApplied",
+					"matched": matched,
+					"applied": applied,
+					"failed": True,
+					"failed_index": index,
+					"failed_entity_id": entity_id,
+				}
+			)
+			events.extend(executor_error(child_bundle_error_message(result, "ApplyToQuery")))
+			return events
 	events.append({"type": "QueryApplied", "matched": matched, "applied": applied})
 	return events

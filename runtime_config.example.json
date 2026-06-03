@@ -23,6 +23,7 @@
     "WORLD_JSON": "Farm/World.json",
     "RECIPES_JSONS": "Recipes.json,Farm/Recipes.json",
     "REACTIONS_JSONS": "Reactions.json,Farm/Reactions.json",
+    "BUNDLES_JSONS": "Bundles.json",
     "ENTITIES_DIRS": "Entities,Farm/Entities",
     "MAX_TICKS": "50"
   }

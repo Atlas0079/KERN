@@ -310,7 +310,11 @@ def _load_history_log_rows(checkpoint_path: Path, checkpoint_meta: dict[str, Any
 	return out
 
 
-def restore_world_state_from_checkpoint(checkpoint_path: Path, entity_templates: dict[str, Any]) -> WorldState:
+def restore_world_state_from_checkpoint(
+	checkpoint_path: Path,
+	entity_templates: dict[str, Any],
+	named_bundles: dict[str, Any] | None = None,
+) -> WorldState:
 	with checkpoint_path.open("r", encoding="utf-8") as f:
 		payload = json.load(f)
 	meta = (payload or {}).get("meta", {}) or {}
@@ -319,7 +323,7 @@ def restore_world_state_from_checkpoint(checkpoint_path: Path, entity_templates:
 		raise ValueError("checkpoint world missing")
 	if not isinstance(entity_templates, dict) or not entity_templates:
 		raise ValueError("checkpoint restore requires non-empty entity_templates")
-	ws = build_world_state(world, entity_templates, {}, check_container_snapshot_consistency=True).world_state
+	ws = build_world_state(world, entity_templates, {}, check_container_snapshot_consistency=True, named_bundles=named_bundles or {}).world_state
 	log_rows = _load_history_log_rows(checkpoint_path, meta)
 	if not log_rows:
 		log_rows = (payload or {}).get("log", []) or []

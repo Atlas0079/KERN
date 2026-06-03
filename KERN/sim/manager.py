@@ -254,17 +254,18 @@ class WorldManager:
 			"action_providers": dict(self.action_providers or {}),
 			"request_stop": self.request_stop,
 		}
-		self.world_state.runtime_state = {
-			"dialogue_budget_limit_per_location": int(self.dialogue_budget_limit_per_location),
-			"dialogue_budget_used_per_location": {},
-			"dialogue_log_full": bool(self.dialogue_log_full),
-			"workflow_contract_on_error": str(self.workflow_contract_on_error or "fail_fast"),
-			"abort_requested": False,
-			"abort_reason": "",
-			"abort_detail": "",
-			"abort_severity": "",
-			"abort_actor_id": "",
-		}
+		from ..models.runtime_state import RuntimeState
+		self.world_state.runtime_state = RuntimeState(
+			dialogue_budget_limit_per_location=int(self.dialogue_budget_limit_per_location),
+			dialogue_budget_used_per_location={},
+			dialogue_log_full=bool(self.dialogue_log_full),
+			workflow_contract_on_error=str(self.workflow_contract_on_error or "fail_fast"),
+			abort_requested=False,
+			abort_reason="",
+			abort_detail="",
+			abort_severity="",
+			abort_actor_id="",
+		)
 
 		# 2) Advance time
 		self.world_state.game_time.advance_ticks(self.ticks_per_step)
@@ -326,32 +327,33 @@ class WorldManager:
 				for ev in list(result_events or []):
 					if not isinstance(ev, dict):
 						continue
-					collected_events.append(dict(ev))
-					ws.record_event(ev, ctx)
-					events.append(ev)
-					logger.trace("event", "record", context={"event": dict(ev), "context": dict(ctx or {}), "depth": int(depth)})
-					if bool((ws.runtime_state or {}).get("abort_requested", False)):
+					clean_ev = dict(ev)
+					collected_events.append(dict(clean_ev))
+					ws.record_event(clean_ev, ctx)
+					events.append(clean_ev)
+					logger.trace("event", "record", context={"event": dict(clean_ev), "context": dict(ctx or {}), "depth": int(depth)})
+					if ws.runtime_state.abort_requested:
 						return
 					if depth >= int(self.max_trigger_depth):
 						limit_event = {
 							"type": "ReactionDepthExceeded",
 							"depth": int(depth),
 							"max_trigger_depth": int(self.max_trigger_depth),
-							"source_event_type": str(ev.get("type", "") or ""),
-							"source_event_entity_id": str(ev.get("entity_id", "") or ""),
+							"source_event_type": str(clean_ev.get("type", "") or ""),
+							"source_event_entity_id": str(clean_ev.get("entity_id", "") or ""),
 						}
 						ws.record_event(limit_event, ctx)
 						events.append(limit_event)
 						continue
 					if self.trigger_system is None:
 						continue
-					reqs = self.trigger_system.build_reaction_effects(ws, ev, ctx)
+					reqs = self.trigger_system.build_reaction_effects(ws, clean_ev, ctx)
 					for req in list(reqs or []):
 						rbundle = req.get("bundle", {}) or {}
 						rctx = req.get("context", {}) or {}
 						if isinstance(rctx, dict):
 							execute_bundle_with_reactions(rbundle, rctx, depth + 1)
-							if bool((ws.runtime_state or {}).get("abort_requested", False)):
+							if ws.runtime_state.abort_requested:
 								return
 
 			def execute_effect_with_reactions(eff: dict[str, Any], ctx: dict[str, Any], depth: int) -> None:
@@ -375,7 +377,7 @@ class WorldManager:
 						if not isinstance(inner_eff, dict):
 							continue
 						execute_effect_with_reactions(dict(inner_eff), dict(ctx or {}), depth)
-						if bool((ws.runtime_state or {}).get("abort_requested", False)) or not bool(self.is_running):
+						if ws.runtime_state.abort_requested or not bool(self.is_running):
 							return
 					return
 				logger.debug("bundle", "execute", context={"bundle": bundle.to_dict(), "context": dict(ctx or {}), "depth": int(depth)})
@@ -383,13 +385,13 @@ class WorldManager:
 				_process_result_events(result_events, ctx, depth, "Bundle")
 
 			execute_bundle_with_reactions(bundle_data, context, 0)
-			if bool((ws.runtime_state or {}).get("abort_requested", False)):
+			if ws.runtime_state.abort_requested:
 				self.request_stop(
 					{
-						"reason": str((ws.runtime_state or {}).get("abort_reason", "") or ""),
-						"detail": str((ws.runtime_state or {}).get("abort_detail", "") or ""),
-						"severity": str((ws.runtime_state or {}).get("abort_severity", "") or ""),
-						"actor_id": str((ws.runtime_state or {}).get("abort_actor_id", "") or ""),
+						"reason": ws.runtime_state.abort_reason,
+						"detail": ws.runtime_state.abort_detail,
+						"severity": ws.runtime_state.abort_severity,
+						"actor_id": ws.runtime_state.abort_actor_id,
 					}
 				)
 			return collected_events

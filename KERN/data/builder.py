@@ -97,8 +97,10 @@ def build_world_state(
 	entity_templates: dict[str, Any],
 	_recipe_db: dict[str, Any],
 	check_container_snapshot_consistency: bool = False,
+	named_bundles: dict[str, Any] | None = None,
 ) -> BuildResult:
 	ws = WorldState()
+	ws.named_bundles = named_bundles or {}
 	world_state_data = bundle_world.get("world_state", {})
 	ws.game_time.total_ticks = int(world_state_data.get("current_tick", 0))
 

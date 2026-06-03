@@ -194,14 +194,8 @@ def _execute_move_entity_core(executor: Any, ws: Any, context: dict[str, Any]) -
 	dest_node = executor._resolve_container_or_location_from_ctx(ws, ctx, "destination_id")
 	if entity_to_move is None or source_node is None or dest_node is None:
 		return [{"type": "ExecutorError", "message": "MoveEntity: missing entity/source/destination"}]
-	source_loc = source_node if hasattr(source_node, "location_id") else ws.get_location_of_entity(getattr(source_node, "entity_id", ""))
-	dest_loc = dest_node if hasattr(dest_node, "location_id") else ws.get_location_of_entity(getattr(dest_node, "entity_id", ""))
-	cross_location = False
-	if source_loc is not None and dest_loc is not None:
-		cross_location = str(source_loc.location_id) != str(dest_loc.location_id)
 	if hasattr(source_node, "location_id"):
-		if cross_location:
-			source_node.remove_entity_id(entity_to_move.entity_id)
+		source_node.remove_entity_id(entity_to_move.entity_id)
 	else:
 		cc = source_node.get_component("ContainerComponent")
 		if isinstance(cc, ContainerComponent):
@@ -209,11 +203,14 @@ def _execute_move_entity_core(executor: Any, ws: Any, context: dict[str, Any]) -
 				return [{"type": "ExecutorError", "message": "MoveEntity: failed to remove from source container"}]
 	add_ok = False
 	if hasattr(dest_node, "location_id"):
-		add_ok = bool(dest_node.add_entity_id(entity_to_move.entity_id))
+		dest_node.add_entity_id(entity_to_move.entity_id)
+		add_ok = entity_to_move.entity_id in dest_node.entities_in_location
 	else:
 		cc = dest_node.get_component("ContainerComponent")
 		if isinstance(cc, ContainerComponent):
 			add_ok = bool(cc.add_entity(entity_to_move))
+			if add_ok and hasattr(ws, "remove_entity_from_all_locations"):
+				ws.remove_entity_from_all_locations(entity_to_move.entity_id)
 	if not add_ok:
 		return [{"type": "ExecutorError", "message": "MoveEntity: failed to add to destination"}]
 

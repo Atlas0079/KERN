@@ -9,6 +9,7 @@ from .location import Location
 from .components import ContainerComponent
 from .task import Task
 from .path import Path
+from .runtime_state import RuntimeState
 
 
 @dataclass
@@ -26,14 +27,19 @@ class WorldState:
 
 	paths: dict[str, Path] = field(default_factory=dict)
 
+	# Named bundle registry: loaded from Bundles.json, referenced by InvokeBundle via ref
+	named_bundles: dict[str, Any] = field(default_factory=dict)
+
 	# Runtime service registry (Injected by WorldManager, used by executor/effects and systems)
 	# Convention keys (Extensible):
 	# - "interaction_engine"
 	# - "default_action_provider"
 	# - "action_providers"
+	# - "request_stop"
+	# - "execute"
 	services: dict[str, Any] = field(default_factory=dict)
 
-	runtime_state: dict[str, Any] = field(default_factory=dict)
+	runtime_state: RuntimeState = field(default_factory=RuntimeState)
 
 
 
@@ -185,6 +191,8 @@ class WorldState:
 		self.tasks.pop(task_id, None)
 
 	# --- Location Resolution (Align with Godot WorldManager.get_location_of_entity) ---
+	# locations store only direct/top-level entity IDs. Nested entities derive their
+	# physical location through the container chain.
 	def get_location_of_entity(self, entity_id: str) -> Location | None:
 		visited: set[str] = set()
 		return self._resolve_location_for_entity(entity_id, visited)
@@ -216,7 +224,37 @@ class WorldState:
 					return ent
 		return None
 
-	# --- Location Index Maintenance (Align with Godot WorldManager.ensure_entity_in_location / removed) ---
+	def get_top_level_entity_ids_in_location(self, location_id: str) -> list[str]:
+		loc = self.get_location_by_id(location_id)
+		if loc is None:
+			return []
+		return [str(x) for x in list(loc.entities_in_location or []) if str(x)]
+
+	def get_all_entity_ids_in_location(self, location_id: str, include_nested: bool = True) -> list[str]:
+		out: list[str] = []
+		seen: set[str] = set()
+		for entity_id in self.get_top_level_entity_ids_in_location(location_id):
+			if entity_id in seen:
+				continue
+			seen.add(entity_id)
+			out.append(entity_id)
+			if include_nested:
+				for child_id in self.collect_descendant_item_ids(entity_id):
+					if child_id in seen:
+						continue
+					seen.add(child_id)
+					out.append(child_id)
+		return out
+
+	def remove_entity_from_all_locations(self, entity_id: str) -> None:
+		eid = str(entity_id or "")
+		if not eid:
+			return
+		for loc in self.locations.values():
+			while eid in loc.entities_in_location:
+				loc.entities_in_location.remove(eid)
+
+	# --- Location Index Maintenance (top-level placement only) ---
 	def ensure_entity_in_location(self, entity_id: str, location_id: str) -> None:
 		loc = self.get_location_by_id(location_id)
 		if loc is None:

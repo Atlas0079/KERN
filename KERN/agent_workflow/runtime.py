@@ -9,8 +9,7 @@ from .workflow_contract import validate_workflow_decision
 
 
 def workflow_contract_error_policy(ws: Any) -> str:
-	runtime_state = getattr(ws, "runtime_state", {}) or {}
-	raw = str(runtime_state.get("workflow_contract_on_error", "fail_fast") or "fail_fast").strip().lower()
+	raw = str(ws.runtime_state.workflow_contract_on_error or "fail_fast").strip().lower()
 	if raw not in {"fail_fast", "degrade_to_noop"}:
 		return "fail_fast"
 	return raw
@@ -48,6 +47,13 @@ def _current_worker_task_id(ws: Any, actor_id: str) -> str:
 		return ""
 	worker = agent.get_component("WorkerComponent") if hasattr(agent, "get_component") else None
 	return str(getattr(worker, "current_task_id", "") or "") if worker is not None else ""
+
+
+def _current_worker_task(ws: Any, actor_id: str) -> Any | None:
+	task_id = _current_worker_task_id(ws, actor_id)
+	if not task_id or not hasattr(ws, "get_task_by_id"):
+		return None
+	return ws.get_task_by_id(task_id)
 
 
 def _commands_to_operations(ws: Any, actor_id: str, reason: str, commands: list[dict[str, Any]]) -> tuple[list[dict[str, Any]] | None, dict[str, Any] | None]:
@@ -91,6 +97,18 @@ def _commands_to_operations(ws: Any, actor_id: str, reason: str, commands: list[
 				}
 			)
 			continue
+		if verb == "AcceptTask":
+			current_task = _current_worker_task(ws, actor_id)
+			current_target_id = str(getattr(current_task, "target_entity_id", "") or "") if current_task is not None else ""
+			command_target_id = str(cmd.get("target_id", "") or "")
+			if current_target_id and command_target_id == current_target_id:
+				continue
+			if current_task is not None:
+				return None, {
+					"kind": "business",
+					"code": "CURRENT_TASK_ACTIVE",
+					"message": "AcceptTask requested while another task is already in progress; use ContinueCurrentTask or YieldCurrentTask first",
+				}
 		if verb in meta_verbs:
 			cmd["target_id"] = str(actor_id)
 		result = interaction_engine.process_command(ws, actor_id, cmd)
@@ -109,7 +127,6 @@ def _commands_to_operations(ws: Any, actor_id: str, reason: str, commands: list[
 
 
 def _apply_memory_patch(ws: Any, actor_id: str, mem_patch: dict[str, Any]) -> bool:
-	runtime_state = getattr(ws, "runtime_state", {}) or {}
 	services = getattr(ws, "services", {}) or {}
 	execute = (services or {}).get("execute")
 	if not callable(execute):

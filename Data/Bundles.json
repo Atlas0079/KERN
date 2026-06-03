@@ -1,0 +1,24 @@
+{
+    "generic.wait.energy_recover": {
+        "effects": [
+            {
+                "effect": "ModifyProperty",
+                "target": "target",
+                "component": "CreatureComponent",
+                "property": "current_energy",
+                "change": 10
+            }
+        ]
+    },
+    "generic.rest.energy_recover": {
+        "effects": [
+            {
+                "effect": "ModifyProperty",
+                "target": "target",
+                "component": "CreatureComponent",
+                "property": "current_energy",
+                "change": 5
+            }
+        ]
+    }
+}
