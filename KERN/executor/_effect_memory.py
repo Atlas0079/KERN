@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ..dynamic_text import DynamicTextError, render_dynamic_text
 from ..execution_errors import executor_error
 from ..models.components import MemoryComponent
 from ._effect_binder import BindError, _base_bind, _require_param, _require_str, _resolve_param_token
@@ -26,7 +27,10 @@ def execute_add_memory_note(executor: Any, ws: Any, data: dict[str, Any], contex
 	target, err = executor.require_entity(ws, context, target_key, "AddMemoryNote", "target")
 	if err is not None:
 		return err
-	text = str(data.get("text", "") or "").strip()
+	try:
+		text = render_dynamic_text(ws, context, data.get("text", "")).strip()
+	except DynamicTextError as exc:
+		return executor_error(f"AddMemoryNote.text: {exc}")
 	if not text:
 		return executor_error("AddMemoryNote: text missing")
 	imp_raw = data.get("importance", 0.5)

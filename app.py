@@ -107,10 +107,9 @@ def main(argv: list[str] | None = None) -> None:
 			raise ValueError(f"Invalid checkpoint format or empty world state: {restore_path}")
 		logger.info("checkpoint", "restored", context={"path": str(restore_path), "tick": int(ws.game_time.total_ticks)})
 	else:
-		validation_mode = _cfg_get(cfg, "VALIDATION_MODE", "fast").lower() or "fast"
-		skip_validation = bool(args.skip_validation) or _cfg_bool(cfg, "SKIP_VALIDATION", False) or validation_mode == "off"
+		skip_validation = bool(args.skip_validation)
 		if skip_validation:
-			logger.warn("system", "data_validation_skipped", context={"mode": validation_mode, "cli_skip": bool(args.skip_validation)})
+			logger.warn("system", "data_validation_skipped", context={"cli_skip": bool(args.skip_validation)})
 		else:
 			lint = lint_bundle(
 				project_root=project_root,

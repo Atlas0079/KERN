@@ -68,6 +68,8 @@ KNOWN_CONDITION_TYPES = {
 
 RESERVED_ENTITY_REFS = {"self", "target", "event_entity"}
 
+TASK_INTERRUPT_MODES = {"forbidden", "pause_keep_progress", "pause_reset_progress", "cancel", "fail"}
+
 EVENT_FIELDS: dict[str, set[str]] = {
 	"TickAdvanced": {"type", "total_ticks", "time"},
 	"AdvanceTick": {"type", "entity_id", "ticks"},
@@ -757,6 +759,10 @@ def _validate_recipe(ctx: LintContext, rid: str, recipe: Any) -> None:
 	if process and not isinstance(process, dict):
 		ctx.error(where, "process must be object")
 		process = {}
+	if "task_policy" in recipe:
+		ctx.error(where, "recipe.task_policy is removed; use recipe.process.task_policy")
+	if isinstance(process, dict):
+		_validate_task_policy(ctx, process.get("task_policy", None), f"{where}.process.task_policy")
 	_validate_process_duration(ctx, process, where)
 	duration = process.get("duration", None) if isinstance(process, dict) else None
 	is_duration = isinstance(duration, dict) and bool(duration)
@@ -776,6 +782,20 @@ def _validate_recipe(ctx: LintContext, rid: str, recipe: Any) -> None:
 			for name in sorted(_iter_template_fields(recipe.get(field, "")) - _allowed):
 				if name not in _iter_param_refs(recipe) and name not in {"actor_name", "target_name"}:
 					ctx.warn(f"{where}.{field}", f"template field may have no source: {name}")
+
+
+def _validate_task_policy(ctx: LintContext, task_policy: Any, where: str) -> None:
+	if task_policy is None:
+		return
+	if not isinstance(task_policy, dict):
+		ctx.error(where, "task_policy must be object")
+		return
+	mode = str(task_policy.get("interrupt_mode", "pause_keep_progress") or "").strip().lower()
+	if mode not in TASK_INTERRUPT_MODES:
+		ctx.error(where, f"task_policy.interrupt_mode must be one of {sorted(TASK_INTERRUPT_MODES)}")
+	for key in ["allow_voluntary_interrupt", "allow_voluntary_cancel"]:
+		if key in task_policy and not isinstance(task_policy.get(key), bool):
+			ctx.error(f"{where}.{key}", f"{key} must be bool")
 
 
 def _validate_progression(ctx: LintContext, progression: dict[str, Any], where: str) -> None:

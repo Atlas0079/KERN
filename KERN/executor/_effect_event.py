@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ..dynamic_text import DynamicTextError, render_dynamic_payload_text_fields
 from ._effect_binder import BindError, _base_bind, _require_param, _resolve_param_token
 
 
@@ -25,7 +26,10 @@ def execute_emit_event(executor: Any, ws: Any, data: dict[str, Any], context: di
 	payload = data.get("payload", {}) or {}
 	if not isinstance(payload, dict):
 		return [{"type": "ExecutorError", "message": "EmitEvent: payload must be object"}]
-	payload_obj = dict(payload)
+	try:
+		payload_obj = render_dynamic_payload_text_fields(ws, context, payload)
+	except DynamicTextError as exc:
+		return [{"type": "ExecutorError", "message": f"EmitEvent.payload: {exc}"}]
 	if event_type == "MessageBroadcasted":
 		source_ref = str(payload_obj.get("source_ref", "self") or "self")
 		source_ent = executor._resolve_entity_from_ctx(ws, context, source_ref)

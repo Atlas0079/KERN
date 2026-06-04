@@ -3,7 +3,8 @@ from __future__ import annotations
 from typing import Any
 from uuid import uuid4
 
-from ..execution_errors import is_execution_error_event
+from ..dynamic_text import DynamicTextError, render_dynamic_text
+from ..execution_errors import executor_error, is_execution_error_event
 from ..models.components import ContainerComponent, WorkerComponent
 from ._effect_binder import BindError, _base_bind, _require_dict, _require_param, _require_str, _resolve_ref_id
 
@@ -75,33 +76,11 @@ def execute_create_entity(executor: Any, ws: Any, data: dict[str, Any], context:
 	new_entity = create_entity_from_template(str(template_id), new_id, executor.entity_templates)
 	overrides = data.get("spawn_patch")
 	if isinstance(overrides, dict):
-		fmt_ctx = {"template_id": template_id}
-		self_ent = executor._resolve_entity_from_ctx(ws, context, "self")
-		target = executor._resolve_entity_from_ctx(ws, context, "target")
-		if self_ent:
-			fmt_ctx["self"] = self_ent
-		if target:
-			fmt_ctx["target"] = target
-		def _fmt(val):
-			if isinstance(val, str) and "{" in val and "}" in val:
-				try:
-					return val.format(**fmt_ctx)
-				except Exception:
-					return val
-			return val
 		if "name" in overrides:
-			new_entity.entity_name = _fmt(overrides["name"])
-		comp_ov = overrides.get("components", {})
-		if isinstance(comp_ov, dict):
-			for cname, cdata in comp_ov.items():
-				comp = new_entity.get_component(cname)
-				if comp and hasattr(comp, "data") and isinstance(comp.data, dict):
-					for k, v in cdata.items():
-						comp.data[k] = _fmt(v)
-				elif comp:
-					for k, v in cdata.items():
-						if hasattr(comp, k):
-							setattr(comp, k, _fmt(v))
+			try:
+				new_entity.entity_name = render_dynamic_text(ws, context, overrides["name"])
+			except DynamicTextError as exc:
+				return executor_error(f"CreateEntity.spawn_patch.name: {exc}")
 	ws.register_entity(new_entity)
 	dest_type = str(destination_data.get("type", ""))
 	dest_target_key = destination_data.get("target")

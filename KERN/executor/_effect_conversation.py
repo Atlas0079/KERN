@@ -4,6 +4,7 @@ import random
 import uuid
 from typing import Any
 
+from ..dynamic_text import DynamicTextError, render_dynamic_text
 from ..log_manager import get_logger
 from ._effect_binder import _base_bind, _require_int, _require_param, _resolve_param_token
 
@@ -48,7 +49,10 @@ def execute_start_conversation(_executor: Any, ws: Any, data: dict[str, Any], co
 		participants.append(str(ent.entity_id))
 	if len(participants) < 2:
 		return [{"type": "ConversationSkipped", "reason": "no_participants", "location_id": location_id}]
-	opening_text = str(data.get("opening_text", "") or "").strip()
+	try:
+		opening_text = render_dynamic_text(ws, context, data.get("opening_text", "")).strip()
+	except DynamicTextError as exc:
+		return [{"type": "ExecutorError", "message": f"StartConversation.opening_text: {exc}"}]
 	others = [p for p in participants if p != self_id]
 	random.shuffle(others)
 	if self_id and self_id in participants:
