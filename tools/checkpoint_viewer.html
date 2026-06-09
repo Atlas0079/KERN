@@ -10,11 +10,17 @@
 <div class="app">
 	<div class="toolbar">
 		<h1>Checkpoint Viewer</h1>
+		<button id="archiveConnectBtn" class="toolbar-btn" type="button">连接 Archive</button>
 		<input id="fileInput" type="file" webkitdirectory directory multiple>
-		<span class="hint">选择 checkpoint 文件夹，自动扫描其中可用的 tick 数据</span>
+		<span id="sourceHint" class="hint">通过 checkpoint_viewer_server.py 读取 run archive；仍支持旧 JSON 目录导入</span>
+	</div>
+	<div class="panel world">
+		<h2 id="worldTitle">World</h2>
+		<div id="worldGrid" class="world-graph"></div>
 	</div>
 	<div class="panel logs-panel">
 		<div class="logs-head">
+			<button class="panel-toggle" type="button" data-collapse-target="logs" title="收起日志" aria-label="收起日志">‹</button>
 			<h2>Playback Log</h2>
 			<div class="log-filter-wrap">
 				<button id="logFilterBtn" class="log-filter-btn" type="button">筛选</button>
@@ -34,16 +40,14 @@
 		</div>
 		<div id="logList" class="log-list"></div>
 	</div>
-	<div class="panel world">
-		<h2 id="worldTitle">World</h2>
-		<div id="worldGrid" class="world-graph"></div>
-	</div>
 	<div class="panel details">
-		<h2>Details</h2>
+		<div class="details-head">
+			<h2>Details</h2>
+			<button class="panel-toggle" type="button" data-collapse-target="details" title="收起详情" aria-label="收起详情">›</button>
+		</div>
 		<div id="detailsPane" class="empty">选择一个 tick、地点或实体</div>
 	</div>
 	<div class="panel timeline-bar">
-		<h2>Timeline</h2>
 		<div class="timeline-controls">
 			<button id="prevTickBtn" class="timeline-btn">上一帧</button>
 			<button id="playPauseBtn" class="timeline-btn primary">播放</button>

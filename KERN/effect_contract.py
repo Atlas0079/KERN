@@ -27,6 +27,7 @@ EFFECT_SPECS: dict[str, dict[str, str]] = {
 	"ProgressTask": {"module": "KERN.executor._effect_task"},
 	"UpdateTaskStatus": {"module": "KERN.executor._effect_task"},
 	"FinishTask": {"module": "KERN.executor._effect_task"},
+	"InterruptCurrentTask": {"module": "KERN.executor._effect_task"},
 	"InterruptTask": {"module": "KERN.executor._effect_task"},
 	"ResumeTask": {"module": "KERN.executor._effect_task"},
 	"CancelTask": {"module": "KERN.executor._effect_task"},

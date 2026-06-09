@@ -11,6 +11,7 @@ from ..models.components import (
 	ContainerComponent,
 	ContainerSlot,
 	CreatureComponent,
+	CustomComponent,
 	DecisionArbiterComponent,
 	DescriptionComponent,
 	EdibleComponent,
@@ -22,9 +23,9 @@ from ..models.components import (
 	StatusComponent,
 	TagComponent,
 	TaskHostComponent,
-	UnknownComponent,
 	ValuableComponent,
 	WorkerComponent,
+	WorldStateEntityComponent,
 )
 from ..models.entity import Entity
 from ..models.location import Location
@@ -58,7 +59,9 @@ def _task_from_dict(raw: dict[str, Any]) -> Task:
 		if "progress_contributors" in pp:
 			raise ValueError("task progressor_params.progress_contributors is removed; use add_terms/mul_terms")
 		task.progressor_params = dict(pp)
+	task.start_bundle = effect_bundle_from_raw(raw.get("start_bundle", {}) or {"effects": []})
 	task.tick_bundle = effect_bundle_from_raw(raw.get("tick_bundle", {}) or {"effects": []})
+	task.cleanup_bundle = effect_bundle_from_raw(raw.get("cleanup_bundle", {}) or {"effects": []})
 	task.completion_bundle = effect_bundle_from_raw(raw.get("completion_bundle", {}) or {"effects": []})
 	return task
 
@@ -287,6 +290,7 @@ def build_world_state(
 		if isinstance(params, dict):
 			task_kwargs["parameters"] = dict(params)
 
+		task_kwargs["start_bundle"] = effect_bundle_from_raw(tdata.get("start_bundle", {}) or {"effects": []})
 		task_kwargs["completion_bundle"] = effect_bundle_from_raw(tdata.get("completion_bundle", {}) or {})
 		if task_kwargs["completion_bundle"].is_empty():
 			raise ValueError(f"task[{task_id}] missing completion_bundle")
@@ -302,6 +306,7 @@ def build_world_state(
 		else:
 			raise ValueError(f"task[{task_id}] progressor_params must be object")
 		task_kwargs["tick_bundle"] = effect_bundle_from_raw(tdata.get("tick_bundle", {}) or {"effects": []})
+		task_kwargs["cleanup_bundle"] = effect_bundle_from_raw(tdata.get("cleanup_bundle", {}) or {"effects": []})
 
 		task = Task(**task_kwargs)
 		host.add_task(task)
@@ -343,7 +348,7 @@ def create_entity_from_template(template_id: str, instance_id: str, entity_templ
 
 def _build_component(component_name: str, comp_data: Any):
 	"""
-	Convert migrated components to dataclass; others remain UnknownComponent(dict).
+	Convert modeled components to dataclass; others remain CustomComponent(dict).
 	"""
 
 	if component_name == "TagComponent":
@@ -357,13 +362,17 @@ def _build_component(component_name: str, comp_data: Any):
 		current_energy = d.get("current_energy", None)
 		max_nutrition = d.get("max_nutrition", 100.0)
 		current_nutrition = d.get("current_nutrition", None)
+		max_stress = d.get("max_stress", 100.0)
+		current_stress = d.get("current_stress", None)
 		return CreatureComponent(
 			max_hp=float(d.get("max_hp", 100.0)),
 			max_energy=float(max_energy),
 			max_nutrition=float(max_nutrition),
+			max_stress=float(max_stress),
 			current_hp=float(current_hp) if current_hp is not None else None,
 			current_energy=float(current_energy) if current_energy is not None else None,
 			current_nutrition=float(current_nutrition) if current_nutrition is not None else None,
+			current_stress=float(current_stress) if current_stress is not None else None,
 		)
 
 	if component_name == "AgentSetting":
@@ -444,8 +453,12 @@ def _build_component(component_name: str, comp_data: Any):
 		d = comp_data or {}
 		if not isinstance(d, dict):
 			d = {}
+		description = str(d.get("description", "") or "")
 		return DescriptionComponent(
-			description=str(d.get("description", "") or ""),
+			description=description,
+			base_description=str(d.get("base_description", description) or ""),
+			observed_description=str(d.get("observed_description", description) or ""),
+			recipe_description=str(d.get("recipe_description", "") or ""),
 		)
 
 	if component_name == "EdibleComponent":
@@ -513,15 +526,25 @@ def _build_component(component_name: str, comp_data: Any):
 			current_task_id=str(d.get("current_task_id", "") or ""),
 		)
 
-	# Unmigrated components
+	if component_name == "WorldStateEntityComponent":
+		d = comp_data or {}
+		if not isinstance(d, dict):
+			d = {}
+		return WorldStateEntityComponent(
+			debug_visible=bool(d.get("debug_visible", True)),
+			visible_to_agents=bool(d.get("visible_to_agents", False)),
+			note=str(d.get("note", "") or ""),
+		)
+
+	# Scenario-defined components
 	raw = comp_data if isinstance(comp_data, dict) else {"value": comp_data}
-	return UnknownComponent(data=raw)
+	return CustomComponent(data=raw)
 
 
 def apply_component_overrides(entity: Entity, overrides: dict[str, Any], restore_container_items: bool = True) -> None:
 	"""
-	MVP Override Strategy: If component is UnknownComponent, shallow merge dict directly;
-	Migrated components (Tag/Creature/Agent/Container) do not do complex override first, avoid semantic inconsistency.
+	MVP Override Strategy: If component is CustomComponent, shallow merge dict directly;
+	modeled components (Tag/Creature/Agent/Container) do not do complex override first, avoid semantic inconsistency.
 
 	Assume existence: Component level apply_snapshot()
 	Intent: Consistent with Godot WorldBuilder convention, let component handle override itself;
@@ -536,8 +559,8 @@ def apply_component_overrides(entity: Entity, overrides: dict[str, Any], restore
 		if comp is None:
 			continue
 
-		# 1) UnknownComponent: Shallow merge data
-		if isinstance(comp, UnknownComponent):
+		# 1) CustomComponent: Shallow merge data
+		if isinstance(comp, CustomComponent):
 			comp.data.update(comp_patch)
 			continue
 
@@ -597,8 +620,8 @@ def apply_component_overrides(entity: Entity, overrides: dict[str, Any], restore
 						base_data["rules"].append({"type": "PerceptionChange", "priority": priority, "trigger_on_agent_sighted": bool(getattr(r, "trigger_on_agent_sighted", True))})
 					elif rule_type == "CorpseSightedRule":
 						base_data["rules"].append({"type": "CorpseSighted", "priority": priority, "trigger_on_new_corpse": bool(getattr(r, "trigger_on_new_corpse", True))})
-					elif rule_type == "IdleRule":
-						base_data["rules"].append({"type": "Idle", "priority": priority})
+					elif rule_type == "NoActiveTaskRule":
+						base_data["rules"].append({"type": "NoActiveTask", "priority": priority})
 			rules_patch = comp_patch.get("rules", comp_patch.get("ruleset", None))
 			if isinstance(rules_patch, list):
 				base_data["rules"] = [dict(x) for x in rules_patch if isinstance(x, dict)]

@@ -1,0 +1,135 @@
+{
+  "rules": [
+    {
+      "id": "faint_when_stress_reaches_max",
+      "on_event": "PropertyModified",
+      "selector": {
+        "type": "all",
+        "conditions": [
+          {
+            "type": "event_field_eq",
+            "field": "component",
+            "value": "CreatureComponent"
+          },
+          {
+            "type": "event_field_eq",
+            "field": "property",
+            "value": "current_stress"
+          }
+        ]
+      },
+      "condition": {
+        "type": "all",
+        "conditions": [
+          {
+            "type": "compare_fields",
+            "left": "event_entity.CreatureComponent.current_stress",
+            "op": ">=",
+            "right": "event_entity.CreatureComponent.max_stress"
+          },
+          {
+            "type": "not",
+            "condition": {
+              "type": "has_status",
+              "target": "event_entity",
+              "status_id": "fainted"
+            }
+          }
+        ]
+      },
+      "bundle": {
+        "effects": [
+          {
+            "effect": "InterruptCurrentTask",
+            "target": "event_entity",
+            "status": "Failed",
+            "reason": "fainted_by_stress"
+          },
+          {
+            "effect": "ModifyProperty",
+            "target": "event_entity",
+            "component": "AgentControlComponent",
+            "property": "enabled",
+            "value": false
+          },
+          {
+            "effect": "AddStatus",
+            "target": "event_entity",
+            "status_id": "fainted",
+            "duration_ticks": 120
+          },
+          {
+            "effect": "ModifyProperty",
+            "target": "event_entity",
+            "component": "CreatureComponent",
+            "property": "current_stress",
+            "value": 80
+          },
+          {
+            "effect": "AddMemoryNote",
+            "target": "event_entity",
+            "text": "精神压力达到极限后昏厥了一段时间。",
+            "importance": 0.9,
+            "tags": [
+              "stress",
+              "fainted"
+            ]
+          },
+          {
+            "effect": "EmitEvent",
+            "event_type": "AgentFainted",
+            "payload": {
+              "source_ref": "event_entity",
+              "message": "{event.entity_id}因为精神压力过高而昏厥。"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "recover_when_fainted_expires",
+      "on_event": "StatusExpired",
+      "selector": {
+        "type": "event_field_eq",
+        "field": "status_id",
+        "value": "fainted"
+      },
+      "bundle": {
+        "effects": [
+          {
+            "effect": "ModifyProperty",
+            "target": "event_entity",
+            "component": "AgentControlComponent",
+            "property": "enabled",
+            "value": true
+          },
+          {
+            "effect": "ModifyProperty",
+            "target": "event_entity",
+            "component": "CreatureComponent",
+            "property": "current_stress",
+            "value": 60
+          },
+          {
+            "effect": "AddMemoryNote",
+            "target": "event_entity",
+            "text": "你从昏厥中醒来，仍然感到精神压力残留。",
+            "importance": 0.7,
+            "tags": [
+              "stress",
+              "recovered"
+            ]
+          },
+          {
+            "effect": "EmitEvent",
+            "event_type": "AgentRecoveredFromFaint",
+            "payload": {
+              "source_ref": "event_entity",
+              "message": "{event.entity_id}从昏厥中醒来。"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

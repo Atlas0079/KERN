@@ -7,16 +7,15 @@ from .base import InterruptResult
 
 
 @dataclass
-class IdleRule:
+class NoActiveTaskRule:
 	priority: int = 999
-	idle_ticks_threshold: int = 5
 
 	def should_interrupt(self, ws: Any, agent_id: str) -> InterruptResult:
 		_ = ws
 		_ = agent_id
 		return InterruptResult(
 			interrupt=True,
-			reason="idle",
-			rule_type="Idle",
+			reason="no_active_task",
+			rule_type="NoActiveTask",
 			priority=self.priority,
 		)

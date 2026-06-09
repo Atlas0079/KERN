@@ -1,407 +1,516 @@
 {
-    "generic_consume": {
-        "verb": "Consume",
-        "condition": {
-            "type": "has_tags",
-            "target": "target",
-            "tags": [
-                "edible"
-            ],
-            "match": "all"
-        },
-        "narrative_success": "{actor}吃了{target}",
-        "narrative_fail": "{actor}想吃{target}，但失败了：{reason}",
-        "process": {
-            "required_progress": 0
-        },
-        "bundle": {
-            "effects": [
-                {
-                    "effect": "InvokeBundle",
-                    "target": "target",
-                    "component": "EdibleComponent",
-                    "property": "on_consume_bundle"
-                },
-                {
-                    "effect": "DestroyEntity",
-                    "target": "target"
-                }
-            ]
-        }
+  "generic_consume": {
+    "verb": "Consume",
+    "condition": {
+      "type": "has_tags",
+      "target": "target",
+      "tags": [
+        "edible"
+      ],
+      "match": "all"
     },
-    "generic_sleep": {
-        "verb": "Wait",
-        "planner_hint": "原地等待一段时间，可用于观察局势或占位。",
-        "grounder_hint": "target_id 必须是自己。parameters.wait_ticks 可选，表示等待tick数（>=1）。",
-        "condition": {
-            "type": "has_tags",
-            "target": "target",
-            "tags": [
-                "agent"
-            ],
-            "match": "all"
-        },
-        "narrative_success": "{actor}开始等待",
-        "narrative_fail": "{actor}想等待，但失败了：{reason}",
-        "process": {
-            "duration": {
-                "mode": "param",
-                "from_param": "param:wait_ticks",
-                "default": 5,
-                "min": 1
-            },
-            "assign_to": "self"
-        },
-        "progression": {
-            "progressor": "Linear",
-            "params": {
-                "base_progress_per_tick": 1.0,
-                "add_terms": [],
-                "mul_terms": []
-            },
-            "tick_bundle": {
-                "effects": []
-            }
-        },
-        "bundle": {
-            "effects": [
-                {
-                    "effect": "InvokeBundle",
-                    "ref": "generic.wait.energy_recover"
-                }
-            ]
-        }
+    "narrative_success": "{actor}吃了{target}",
+    "narrative_fail": "{actor}想吃{target}，但失败了：{reason}",
+    "process": {
+      "required_progress": 0
     },
-    "generic_rest": {
-        "verb": "Rest",
-        "condition": {
-            "type": "has_tags",
-            "target": "target",
-            "tags": [
-                "agent"
-            ],
-            "match": "all"
+    "bundle": {
+      "effects": [
+        {
+          "effect": "InvokeBundle",
+          "target": "target",
+          "component": "EdibleComponent",
+          "property": "on_consume_bundle"
         },
-        "narrative_success": "{actor}开始休息",
-        "narrative_fail": "{actor}想休息，但失败了：{reason}",
-        "process": {
-            "duration": {
-                "mode": "fixed",
-                "value": 3
-            },
-            "assign_to": "self"
-        },
-        "progression": {
-            "progressor": "Linear",
-            "params": {
-                "base_progress_per_tick": 1.0,
-                "add_terms": [],
-                "mul_terms": []
-            },
-            "tick_bundle": {
-                "effects": []
-            }
-        },
-        "bundle": {
-            "effects": [
-                {
-                    "effect": "InvokeBundle",
-                    "ref": "generic.rest.energy_recover"
-                }
-            ]
+        {
+          "effect": "DestroyEntity",
+          "target": "target"
         }
-    },
-    "generic_travel": {
-        "verb": "Travel",
-        "condition": {
-            "type": "has_tags",
-            "target": "target",
-            "tags": [
-                "agent"
-            ],
-            "match": "all"
-        },
-        "narrative_success": "{actor}开始前往{to_location_id}",
-        "narrative_fail": "{actor}想前往{to_location_id}，但失败了：{reason}",
-        "process": {
-            "duration": {
-                "mode": "path_distance",
-                "to_param": "param:to_location_id",
-                "min": 1
-            },
-            "assign_to": "self"
-        },
-        "progression": {
-            "progressor": "Linear",
-            "params": {
-                "base_progress_per_tick": 1.0,
-                "add_terms": [],
-                "mul_terms": []
-            },
-            "tick_bundle": {
-                "effects": []
-            }
-        },
-        "bundle": {
-            "effects": [
-                {
-                    "effect": "MoveEntity",
-                    "entity_ref": "self",
-                    "from_ref": "param:source_location_id",
-                    "to_ref": "param:to_location_id"
-                }
-            ]
-        }
-    },
-    "generic_talk": {
-        "verb": "Talk",
-        "planner_hint": "发起一次同地点群体对话，并给出一句开场白。对话会按轮次在当前地点的所有可对话角色之间展开。",
-        "grounder_hint": "不得提供 target_id；parameters 必须包含 text（开场白，非空字符串）。执行时该 text 会作为第一轮发言，然后同地点其他角色按轮次继续。",
-        "condition": {
-            "type": "has_tags",
-            "target": "target",
-            "tags": [
-                "agent"
-            ],
-            "match": "all"
-        },
-        "narrative_success": "{actor}开始了一段对话",
-        "narrative_fail": "{actor}想发起对话，但失败了：{reason}",
-        "process": {
-            "required_progress": 0
-        },
-        "bundle": {
-            "effects": [
-                {
-                    "effect": "StartConversation",
-                    "max_utterances_per_tick": 4,
-                    "opening_text": "param:text"
-                }
-            ]
-        }
-    },
-    "generic_give": {
-        "verb": "Give",
-        "planner_hint": "把背包中的物品交给同地点可见角色，用于协作分工。",
-        "grounder_hint": "target_id 必须是同地点可见 agent；parameters 必须包含 item_id，且 item_id 必须在自己的 Inventory 中。",
-        "narrative_success": "{actor}把物品交给了{target}",
-        "narrative_fail": "{actor}想把物品交给{target}，但失败了：{reason}",
-        "condition": {
-            "type": "all",
-            "conditions": [
-                {
-                    "type": "has_tags",
-                    "target": "target",
-                    "tags": [
-                        "agent"
-                    ],
-                    "match": "all"
-                },
-                {
-                    "type": "inventory_contains",
-                    "owner": "self",
-                    "item_ref": "param:item_id"
-                }
-            ]
-        },
-        "process": {
-            "required_progress": 0
-        },
-        "bundle": {
-            "effects": [
-                {
-                    "effect": "MoveEntity",
-                    "entity_ref": "param:item_id",
-                    "from_ref": "self",
-                    "to_ref": "target"
-                }
-            ]
-        }
-    },
-    "generic_take_item": {
-        "verb": "TakeItem",
-        "planner_hint": "拾取同地点可见物品（包括透明容器中可见物品）到自己的背包。",
-        "grounder_hint": "target_id 必须是可见 item；parameters 必须包含 source_id。若目标在容器中，source_id 填 visible_entities 里的 contained_in；若目标在地面，source_id 填当前 location_id。",
-        "condition": {
-            "type": "all",
-            "conditions": [
-                {
-                    "type": "has_tags",
-                    "target": "target",
-                    "tags": [
-                        "item"
-                    ],
-                    "match": "all"
-                },
-                {
-                    "type": "not",
-                    "condition": {
-                        "type": "inventory_contains",
-                        "owner": "self",
-                        "item_ref": "target"
-                    }
-                }
-            ]
-        },
-        "narrative_success": "{actor}拿起了{target}",
-        "narrative_fail": "{actor}想拿起{target}，但失败了：{reason}",
-        "process": {
-            "required_progress": 0
-        },
-        "bundle": {
-            "effects": [
-                {
-                    "effect": "MoveEntity",
-                    "entity_ref": "target",
-                    "from_ref": "param:source_id",
-                    "to_ref": "self"
-                }
-            ]
-        }
-    },
-    "interaction_accept_task": {
-        "verb": "AcceptTask",
-        "planner_hint": "从任务宿主（如箱子、任务站）接取它提供的任务并开始执行。用于共享的翻找任务：同一箱子只有一个任务，进度共享。TODO：后续支持在 parameters 里指定 task_id 或 task_type 以精确选择任务。",
-        "grounder_hint": "target_id 必须是可见的任务宿主（通常是 container）。parameters 为空。",
-        "condition": {
-            "type": "all",
-            "conditions": [
-                {
-                    "type": "has_tags",
-                    "target": "target",
-                    "tags": [
-                        "container",
-                        "task_station"
-                    ],
-                    "match": "any"
-                },
-                {
-                    "type": "has_component",
-                    "target": "target",
-                    "component": "TaskHostComponent"
-                }
-            ]
-        },
-        "narrative_success": "{actor}接取了{target}的任务",
-        "narrative_fail": "{actor}想接取{target}的任务，但失败了：{reason}",
-        "process": {
-            "required_progress": 0
-        },
-        "bundle": {
-            "effects": [
-                {
-                    "effect": "AcceptTask",
-                    "target": "target"
-                }
-            ]
-        }
-    },
-    "interaction_close_container": {
-        "verb": "CloseContainer",
-        "condition": {
-            "type": "has_tags",
-            "target": "target",
-            "tags": [
-                "container"
-            ],
-            "match": "all"
-        },
-        "narrative_success": "{actor}关闭了{target}",
-        "narrative_fail": "{actor}想关闭{target}，但失败了：{reason}",
-        "process": {
-            "required_progress": 0
-        },
-        "bundle": {
-            "effects": [
-                {
-                    "effect": "ModifyProperty",
-                    "target": "target",
-                    "component": "ContainerComponent",
-                    "property": "slots.main.config.transparent",
-                    "value": false
-                }
-            ]
-        }
-    },
-    "meta_abort_simulation": {
-        "verb": "AbortSimulation",
-        "planner_hint": "当发现规则冲突、状态异常或不可恢复错误时，立即中断仿真并上报原因给开发者。",
-        "grounder_hint": "meta 动作，可不提供 target_id。parameters 建议包含 reason，可选 detail、severity(info/warning/error/fatal)。",
-        "is_meta": true,
-        "condition": {
-            "type": "has_tags",
-            "target": "target",
-            "tags": [
-                "agent"
-            ],
-            "match": "all"
-        },
-        "narrative_success": "{actor}上报了异常并请求中断仿真",
-        "narrative_fail": "{actor}想上报异常，但失败了：{reason}",
-        "process": {
-            "required_progress": 0
-        },
-        "bundle": {
-            "effects": [
-                {
-                    "effect": "AbortSimulation",
-                    "reason": "param:reason",
-                    "detail": "param:detail",
-                    "severity": "param:severity",
-                    "stop": true
-                }
-            ]
-        }
-    },
-    "generic_inspect_entity": {
-        "verb": "InspectEntity",
-        "planner_hint": "仔细观察一个可见实体，获取它的详细信息（组件、状态、标签）。",
-        "grounder_hint": "target_id 必须是可见实体 id。用于排查异常或确认状态，不会改变世界状态。",
-        "condition": {
-            "type": "any",
-            "conditions": [
-                {
-                    "type": "has_tags",
-                    "target": "target",
-                    "tags": [
-                        "agent",
-                        "item",
-                        "container",
-                        "farmland",
-                        "merchant",
-                        "crop",
-                        "seed",
-                        "tool",
-                        "task_station",
-                        "task_host"
-                    ],
-                    "match": "any"
-                },
-                {
-                    "type": "has_component",
-                    "target": "target",
-                    "component": "StatusComponent"
-                },
-                {
-                    "type": "has_component",
-                    "target": "target",
-                    "component": "ContainerComponent"
-                }
-            ]
-        },
-        "narrative_success": "{actor}仔细观察了{target}",
-        "narrative_fail": "{actor}想观察{target}，但失败了：{reason}",
-        "process": {
-            "required_progress": 0
-        },
-        "bundle": {
-            "effects": [
-                {
-                    "effect": "AttachDetails",
-                    "detail_type": "entity",
-                    "target": "target"
-                }
-            ]
-        }
+      ]
     }
+  },
+  "generic_sleep": {
+    "verb": "Wait",
+    "planner_hint": "原地等待一段时间，可用于观察局势或占位。",
+    "grounder_hint": "target_id 必须是自己。parameters.wait_ticks 可选，表示等待tick数（>=1）。",
+    "condition": {
+      "type": "has_tags",
+      "target": "target",
+      "tags": [
+        "agent"
+      ],
+      "match": "all"
+    },
+    "narrative_success": "{actor}开始等待",
+    "narrative_fail": "{actor}想等待，但失败了：{reason}",
+    "process": {
+      "duration": {
+        "mode": "param",
+        "from_param": "param:wait_ticks",
+        "default": 5,
+        "min": 1
+      },
+      "assign_to": "self"
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": []
+      },
+      "tick_bundle": {
+        "effects": []
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "InvokeBundle",
+          "ref": "generic.wait.energy_recover"
+        }
+      ]
+    }
+  },
+  "generic_rest": {
+    "verb": "Rest",
+    "condition": {
+      "type": "has_tags",
+      "target": "target",
+      "tags": [
+        "agent"
+      ],
+      "match": "all"
+    },
+    "narrative_success": "{actor}开始休息",
+    "narrative_fail": "{actor}想休息，但失败了：{reason}",
+    "process": {
+      "duration": {
+        "mode": "fixed",
+        "value": 3
+      },
+      "assign_to": "self"
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": []
+      },
+      "tick_bundle": {
+        "effects": []
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "InvokeBundle",
+          "ref": "generic.rest.energy_recover"
+        }
+      ]
+    }
+  },
+  "generic_travel": {
+    "verb": "Travel",
+    "condition": {
+      "type": "has_tags",
+      "target": "target",
+      "tags": [
+        "agent"
+      ],
+      "match": "all"
+    },
+    "narrative_success": "{actor}开始前往{to_location_id}",
+    "narrative_fail": "{actor}想前往{to_location_id}，但失败了：{reason}",
+    "process": {
+      "duration": {
+        "mode": "path_distance",
+        "to_param": "param:to_location_id",
+        "min": 1
+      },
+      "assign_to": "self"
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": []
+      },
+      "tick_bundle": {
+        "effects": []
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "MoveEntity",
+          "entity_ref": "self",
+          "from_ref": "param:source_location_id",
+          "to_ref": "param:to_location_id"
+        }
+      ]
+    }
+  },
+  "generic_talk": {
+    "verb": "Talk",
+    "planner_hint": "发起一次同地点群体对话，并给出一句开场白。对话会按轮次在当前地点的所有可对话角色之间展开。",
+    "grounder_hint": "不得提供 target_id；parameters 必须包含 text（开场白，非空字符串）。执行时该 text 会作为第一轮发言，然后同地点其他角色按轮次继续。",
+    "condition": {
+      "type": "has_tags",
+      "target": "target",
+      "tags": [
+        "agent"
+      ],
+      "match": "all"
+    },
+    "narrative_success": "{actor}开始了一段对话",
+    "narrative_fail": "{actor}想发起对话，但失败了：{reason}",
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "StartConversation",
+          "max_utterances_per_tick": 4,
+          "opening_text": "param:text"
+        }
+      ]
+    }
+  },
+  "generic_give": {
+    "verb": "Give",
+    "planner_hint": "把背包中的物品交给同地点可见角色，用于协作分工。",
+    "grounder_hint": "target_id 必须是同地点可见 agent；parameters 必须包含 item_id，且 item_id 必须在自己的 Inventory 中。",
+    "narrative_success": "{actor}把物品交给了{target}",
+    "narrative_fail": "{actor}想把物品交给{target}，但失败了：{reason}",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tags",
+          "target": "target",
+          "tags": [
+            "agent"
+          ],
+          "match": "all"
+        },
+        {
+          "type": "inventory_contains",
+          "owner": "self",
+          "item_ref": "param:item_id"
+        }
+      ]
+    },
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "MoveEntity",
+          "entity_ref": "param:item_id",
+          "from_ref": "self",
+          "to_ref": "target"
+        }
+      ]
+    }
+  },
+  "generic_take_item": {
+    "verb": "TakeItem",
+    "planner_hint": "拾取同地点可见物品（包括透明容器中可见物品）到自己的背包。",
+    "grounder_hint": "target_id 必须是可见 item；parameters 必须包含 source_id。若目标在容器中，source_id 填 visible_entities 里的 contained_in；若目标在地面，source_id 填当前 location_id。",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tags",
+          "target": "target",
+          "tags": [
+            "item"
+          ],
+          "match": "all"
+        },
+        {
+          "type": "not",
+          "condition": {
+            "type": "inventory_contains",
+            "owner": "self",
+            "item_ref": "target"
+          }
+        }
+      ]
+    },
+    "narrative_success": "{actor}拿起了{target}",
+    "narrative_fail": "{actor}想拿起{target}，但失败了：{reason}",
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "MoveEntity",
+          "entity_ref": "target",
+          "from_ref": "param:source_id",
+          "to_ref": "self"
+        }
+      ]
+    }
+  },
+  "interaction_accept_task": {
+    "verb": "AcceptTask",
+    "planner_hint": "从任务宿主（如箱子、任务站）接取它提供的任务并开始执行。用于共享的翻找任务：同一箱子只有一个任务，进度共享。TODO：后续支持在 parameters 里指定 task_id 或 task_type 以精确选择任务。",
+    "grounder_hint": "target_id 必须是可见的任务宿主（通常是 container）。parameters 为空。",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tags",
+          "target": "target",
+          "tags": [
+            "container",
+            "task_station"
+          ],
+          "match": "any"
+        },
+        {
+          "type": "has_component",
+          "target": "target",
+          "component": "TaskHostComponent"
+        }
+      ]
+    },
+    "narrative_success": "{actor}接取了{target}的任务",
+    "narrative_fail": "{actor}想接取{target}的任务，但失败了：{reason}",
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "AcceptTask",
+          "target": "target"
+        }
+      ]
+    }
+  },
+  "interaction_close_container": {
+    "verb": "CloseContainer",
+    "condition": {
+      "type": "has_tags",
+      "target": "target",
+      "tags": [
+        "container"
+      ],
+      "match": "all"
+    },
+    "narrative_success": "{actor}关闭了{target}",
+    "narrative_fail": "{actor}想关闭{target}，但失败了：{reason}",
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "ModifyProperty",
+          "target": "target",
+          "component": "ContainerComponent",
+          "property": "slots.main.config.transparent",
+          "value": false
+        }
+      ]
+    }
+  },
+  "meta_abort_simulation": {
+    "verb": "AbortSimulation",
+    "planner_hint": "当发现规则冲突、状态异常或不可恢复错误时，立即中断仿真并上报原因给开发者。",
+    "grounder_hint": "meta 动作，不要提供 target_id；parameters 建议包含 reason，可选 detail、severity(info/warning/error/fatal)。",
+    "is_meta": true,
+    "condition": {
+      "type": "has_tags",
+      "target": "target",
+      "tags": [
+        "agent"
+      ],
+      "match": "all"
+    },
+    "narrative_success": "{actor}上报了异常并请求中断仿真",
+    "narrative_fail": "{actor}想上报异常，但失败了：{reason}",
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "AbortSimulation",
+          "reason": "param:reason",
+          "detail": "param:detail",
+          "severity": "param:severity",
+          "stop": true
+        }
+      ]
+    }
+  },
+  "meta_switch_interrupt_preset": {
+    "verb": "SwitchInterruptPreset",
+    "planner_hint": "切换当前中断姿态。用于表达接下来更谨慎、更专注或进入应急模式；只能选择 available_interrupt_presets 中列出的 preset_id。",
+    "grounder_hint": "meta 动作，不要提供 target_id；parameters 必须包含 {\"preset_id\":\"<available_interrupt_presets中的一个>\"}。",
+    "is_meta": true,
+    "condition": {
+      "type": "has_tags",
+      "target": "target",
+      "tags": [
+        "agent"
+      ],
+      "match": "all"
+    },
+    "narrative_success": "{actor}切换了中断姿态",
+    "narrative_fail": "{actor}想切换中断姿态，但失败了：{reason}",
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "ApplyMetaAction",
+          "target": "self",
+          "action_type": "SwitchInterruptPreset",
+          "params": {
+            "preset_id": "param:preset_id"
+          }
+        }
+      ]
+    }
+  },
+  "meta_inspect_interrupt_presets": {
+    "verb": "InspectInterruptPresets",
+    "planner_hint": "查看当前可用中断姿态的配置细节。通常只在你不确定某个姿态含义时使用。",
+    "grounder_hint": "meta 动作，不要提供 target_id；parameters 可选 preset_id。",
+    "is_meta": true,
+    "condition": {
+      "type": "has_tags",
+      "target": "target",
+      "tags": [
+        "agent"
+      ],
+      "match": "all"
+    },
+    "narrative_success": "{actor}查看了中断姿态配置",
+    "narrative_fail": "{actor}想查看中断姿态配置，但失败了：{reason}",
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "AttachDetails",
+          "detail_type": "interrupt_preset"
+        }
+      ]
+    }
+  },
+  "generic_observe_entity": {
+    "verb": "Observe",
+    "planner_hint": "主动观察一个可见实体，获取它的观察后描述和关键细节。用于确认物品、设施、角色或状态载体的用途；后续可扩展为披露相关配方。这个动作不改变世界状态。",
+    "grounder_hint": "target_id 必须是可见实体 id。不要观察不可见实体；如果目标在关闭容器内，需要先让容器内容可见。",
+    "condition": {
+      "type": "any",
+      "conditions": [
+        {
+          "type": "has_tags",
+          "target": "target",
+          "tags": [
+            "agent",
+            "item",
+            "container",
+            "farmland",
+            "merchant",
+            "crop",
+            "seed",
+            "tool",
+            "task_station",
+            "task_host"
+          ],
+          "match": "any"
+        },
+        {
+          "type": "has_component",
+          "target": "target",
+          "component": "StatusComponent"
+        },
+        {
+          "type": "has_component",
+          "target": "target",
+          "component": "ContainerComponent"
+        }
+      ]
+    },
+    "narrative_success": "{actor}仔细观察了{target}",
+    "narrative_fail": "{actor}想观察{target}，但失败了：{reason}",
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "AttachDetails",
+          "detail_type": "entity",
+          "target": "target"
+        }
+      ]
+    }
+  },
+  "generic_query_entity_recipes": {
+    "verb": "QueryEntityRecipes",
+    "planner_hint": "查询一个可见实体的配方说明，了解它在当前规则中可参与哪些制作、建造、使用或加工动作。这个动作只披露该实体 DescriptionComponent.recipe_description 中写明的信息，不改变世界状态。",
+    "grounder_hint": "target_id 必须是可见实体 id。通常用于你不确定某个物品或设施能参与什么配方时。",
+    "condition": {
+      "type": "any",
+      "conditions": [
+        {
+          "type": "has_tags",
+          "target": "target",
+          "tags": [
+            "agent",
+            "item",
+            "container",
+            "farmland",
+            "merchant",
+            "crop",
+            "seed",
+            "tool",
+            "task_station",
+            "task_host"
+          ],
+          "match": "any"
+        },
+        {
+          "type": "has_component",
+          "target": "target",
+          "component": "StatusComponent"
+        },
+        {
+          "type": "has_component",
+          "target": "target",
+          "component": "ContainerComponent"
+        }
+      ]
+    },
+    "narrative_success": "{actor}查询了{target}的配方信息",
+    "narrative_fail": "{actor}想查询{target}的配方信息，但失败了：{reason}",
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "AttachDetails",
+          "detail_type": "entity_recipe",
+          "target": "target"
+        }
+      ]
+    }
+  }
 }

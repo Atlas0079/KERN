@@ -1,0 +1,785 @@
+{
+  "camp_open_container": {
+    "verb": "OpenContainer",
+    "planner_hint": "行动规则：打开同地点可见的容器。效果是让该容器的内容变为可见；如果要从公共箱确认或选择物品，通常需要先执行这个动作。这个动作本身不消耗时间。",
+    "grounder_hint": "target_id 必须选择同地点、可见、带 container tag 的实体，例如公共储物箱。不要选择箱内物品作为 target。",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tag",
+          "target": "target",
+          "tag": "container"
+        },
+        {
+          "type": "same_location",
+          "left": "self",
+          "right": "target"
+        }
+      ]
+    },
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "ModifyProperty",
+          "target": "target",
+          "component": "ContainerComponent",
+          "property": "slots.main.config.transparent",
+          "value": true
+        },
+        {
+          "effect": "EmitEvent",
+          "event_type": "ContainerOpened",
+          "payload": {
+            "source_ref": "self",
+            "message": "{self.entity_name}打开了{target.entity_name}。"
+          }
+        }
+      ]
+    }
+  },
+  "camp_store_item": {
+    "verb": "StoreItem",
+    "planner_hint": "行动规则：把自己背包中的一个物品放入同地点可见容器。用于集中公共资源或交还物资；不会自动选择物品，必须指定要存放的 item。这个动作本身不消耗时间。",
+    "grounder_hint": "target_id 必须是同地点容器；parameters.item_id 必须是自己背包中的具体物品 id。",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tag",
+          "target": "target",
+          "tag": "container"
+        },
+        {
+          "type": "inventory_contains",
+          "owner": "self",
+          "item_ref": "param:item_id"
+        },
+        {
+          "type": "same_location",
+          "left": "self",
+          "right": "target"
+        }
+      ]
+    },
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "MoveEntity",
+          "entity_ref": "param:item_id",
+          "from_ref": "self",
+          "to_ref": "target"
+        }
+      ]
+    }
+  },
+  "camp_gather_wood": {
+    "verb": "GatherWood",
+    "planner_hint": "行动规则：只有位于林地 forest 时可以采集木材。耗时 20 tick；完成后获得 2 个 Wood 到自己背包，消耗 8 体力，增加 2 压力。当前规则中 Wood 可作为点燃火堆的燃料。",
+    "grounder_hint": "target_id 选择自己；执行地点必须是 forest。不需要指定树木或工具。",
+    "condition": {
+      "type": "compare_value",
+      "left": "self.location_id",
+      "op": "==",
+      "value": "forest"
+    },
+    "process": {
+      "duration": {
+        "mode": "fixed",
+        "value": 20
+      },
+      "assign_to": "self",
+      "task_policy": {
+        "interrupt_mode": "pause_keep_progress",
+        "allow_voluntary_interrupt": true,
+        "allow_voluntary_cancel": true
+      }
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": [
+          {
+            "when": {
+              "type": "compare_property",
+              "target": "self",
+              "component": "CreatureComponent",
+              "property": "current_stress",
+              "op": ">=",
+              "value": 70
+            },
+            "value": 0.65
+          }
+        ]
+      },
+      "tick_bundle": {
+        "effects": []
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "CreateEntity",
+          "template": "Wood",
+          "destination": {
+            "type": "container",
+            "target": "self"
+          }
+        },
+        {
+          "effect": "CreateEntity",
+          "template": "Wood",
+          "destination": {
+            "type": "container",
+            "target": "self"
+          }
+        },
+        {
+          "effect": "ModifyProperty",
+          "target": "self",
+          "component": "CreatureComponent",
+          "property": "current_energy",
+          "change": -8
+        },
+        {
+          "effect": "ModifyProperty",
+          "target": "self",
+          "component": "CreatureComponent",
+          "property": "current_stress",
+          "change": 2
+        },
+        {
+          "effect": "EmitEvent",
+          "event_type": "ResourceGathered",
+          "payload": {
+            "source_ref": "self",
+            "message": "{self.entity_name}采集了一些木材。"
+          }
+        }
+      ]
+    }
+  },
+  "camp_fetch_water": {
+    "verb": "FetchWater",
+    "planner_hint": "行动规则：只有位于溪流 stream 时可以取清水。耗时 10 tick；完成后获得 2 个 CleanWater 到自己背包，消耗 3 体力。当前规则没有饮水动作，清水主要作为可管理的补给资源存在。",
+    "grounder_hint": "target_id 选择自己；执行地点必须是 stream。不需要指定水源实体。",
+    "condition": {
+      "type": "compare_value",
+      "left": "self.location_id",
+      "op": "==",
+      "value": "stream"
+    },
+    "process": {
+      "duration": {
+        "mode": "fixed",
+        "value": 10
+      },
+      "assign_to": "self"
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": []
+      },
+      "tick_bundle": {
+        "effects": []
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "CreateEntity",
+          "template": "CleanWater",
+          "destination": {
+            "type": "container",
+            "target": "self"
+          }
+        },
+        {
+          "effect": "CreateEntity",
+          "template": "CleanWater",
+          "destination": {
+            "type": "container",
+            "target": "self"
+          }
+        },
+        {
+          "effect": "ModifyProperty",
+          "target": "self",
+          "component": "CreatureComponent",
+          "property": "current_energy",
+          "change": -3
+        },
+        {
+          "effect": "EmitEvent",
+          "event_type": "ResourceGathered",
+          "payload": {
+            "source_ref": "self",
+            "message": "{self.entity_name}取回了清水。"
+          }
+        }
+      ]
+    }
+  },
+  "camp_gather_plants_forest": {
+    "verb": "GatherPlants",
+    "planner_hint": "行动规则：只有位于林地 forest 时可以采集植物。耗时 18 tick；随机获得浆果或野菜到自己背包，消耗 6 体力。浆果和野菜可直接食用；野菜也可作为未来烹饪材料，但当前规则没有野菜烹饪 recipe。",
+    "grounder_hint": "target_id 选择自己；执行地点必须是 forest。不需要指定具体植物。",
+    "selector": {
+      "type": "compare_value",
+      "left": "self.location_id",
+      "op": "==",
+      "value": "forest"
+    },
+    "condition": {},
+    "process": {
+      "duration": {
+        "mode": "fixed",
+        "value": 18
+      },
+      "assign_to": "self"
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": []
+      },
+      "tick_bundle": {
+        "effects": []
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "RandomBundle",
+          "table_id": "forest_plants",
+          "entries": [
+            {
+              "id": "berries",
+              "label": "浆果",
+              "weight": 3,
+              "bundle": {
+                "effects": [
+                  {
+                    "effect": "CreateEntity",
+                    "template": "Berry",
+                    "destination": {
+                      "type": "container",
+                      "target": "self"
+                    }
+                  },
+                  {
+                    "effect": "CreateEntity",
+                    "template": "Berry",
+                    "destination": {
+                      "type": "container",
+                      "target": "self"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "greens",
+              "label": "野菜",
+              "weight": 2,
+              "bundle": {
+                "effects": [
+                  {
+                    "effect": "CreateEntity",
+                    "template": "WildGreens",
+                    "destination": {
+                      "type": "container",
+                      "target": "self"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "effect": "ModifyProperty",
+          "target": "self",
+          "component": "CreatureComponent",
+          "property": "current_energy",
+          "change": -6
+        }
+      ]
+    }
+  },
+  "camp_gather_plants_wetland": {
+    "verb": "GatherPlants",
+    "planner_hint": "行动规则：只有位于潮湿低地 wetland 时可以采集植物。耗时 22 tick；随机获得蘑菇或草药到自己背包，消耗 8 体力并增加 6 压力。这里收益偏特殊，但精神代价更高。",
+    "grounder_hint": "target_id 选择自己；执行地点必须是 wetland。不需要指定具体植物。",
+    "selector": {
+      "type": "compare_value",
+      "left": "self.location_id",
+      "op": "==",
+      "value": "wetland"
+    },
+    "condition": {},
+    "process": {
+      "duration": {
+        "mode": "fixed",
+        "value": 22
+      },
+      "assign_to": "self"
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": []
+      },
+      "tick_bundle": {
+        "effects": []
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "RandomBundle",
+          "table_id": "wetland_plants",
+          "entries": [
+            {
+              "id": "mushroom",
+              "label": "蘑菇",
+              "weight": 2,
+              "bundle": {
+                "effects": [
+                  {
+                    "effect": "CreateEntity",
+                    "template": "Mushroom",
+                    "destination": {
+                      "type": "container",
+                      "target": "self"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "herb",
+              "label": "草药",
+              "weight": 1,
+              "bundle": {
+                "effects": [
+                  {
+                    "effect": "CreateEntity",
+                    "template": "Herb",
+                    "destination": {
+                      "type": "container",
+                      "target": "self"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "effect": "ModifyProperty",
+          "target": "self",
+          "component": "CreatureComponent",
+          "property": "current_energy",
+          "change": -8
+        },
+        {
+          "effect": "ModifyProperty",
+          "target": "self",
+          "component": "CreatureComponent",
+          "property": "current_stress",
+          "change": 6
+        }
+      ]
+    }
+  },
+  "camp_fish": {
+    "verb": "Fish",
+    "planner_hint": "行动规则：只有位于溪流 stream 时可以钓鱼。耗时 25 tick；有概率获得 RawFish 到自己背包，也可能无收获；消耗 7 体力。RawFish 可直接食用，但更适合在点燃的火堆旁烹饪成熟鱼。",
+    "grounder_hint": "target_id 选择自己；执行地点必须是 stream。不需要指定鱼竿或鱼群实体。",
+    "condition": {
+      "type": "compare_value",
+      "left": "self.location_id",
+      "op": "==",
+      "value": "stream"
+    },
+    "process": {
+      "duration": {
+        "mode": "fixed",
+        "value": 25
+      },
+      "assign_to": "self"
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": []
+      },
+      "tick_bundle": {
+        "effects": []
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "RandomBundle",
+          "table_id": "stream_fishing",
+          "entries": [
+            {
+              "id": "fish",
+              "label": "钓到鱼",
+              "weight": 2,
+              "bundle": {
+                "effects": [
+                  {
+                    "effect": "CreateEntity",
+                    "template": "RawFish",
+                    "destination": {
+                      "type": "container",
+                      "target": "self"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "empty",
+              "label": "无收获",
+              "weight": 1,
+              "bundle": {
+                "effects": []
+              }
+            }
+          ]
+        },
+        {
+          "effect": "ModifyProperty",
+          "target": "self",
+          "component": "CreatureComponent",
+          "property": "current_energy",
+          "change": -7
+        }
+      ]
+    }
+  },
+  "camp_light_campfire": {
+    "verb": "LightCampfire",
+    "planner_hint": "行动规则：在同地点的火堆旁，消耗自己背包中的 1 个 Wood，把火堆从 extinguished 改为 lit。耗时 5 tick。只有背包里有具体 wood 物品 id 时才能执行。",
+    "grounder_hint": "target_id 必须是同地点带 campfire tag 的火堆；parameters.wood_id 必须是自己背包中带 wood tag 的具体物品 id。",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tag",
+          "target": "target",
+          "tag": "campfire"
+        },
+        {
+          "type": "has_tag",
+          "target": "param:wood_id",
+          "tag": "wood"
+        },
+        {
+          "type": "inventory_contains",
+          "owner": "self",
+          "item_ref": "param:wood_id"
+        },
+        {
+          "type": "same_location",
+          "left": "self",
+          "right": "target"
+        }
+      ]
+    },
+    "process": {
+      "duration": {
+        "mode": "fixed",
+        "value": 5
+      },
+      "assign_to": "self"
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": []
+      },
+      "tick_bundle": {
+        "effects": []
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "DestroyEntity",
+          "target": "param:wood_id"
+        },
+        {
+          "effect": "RemoveStatus",
+          "target": "target",
+          "status_id": "extinguished"
+        },
+        {
+          "effect": "AddStatus",
+          "target": "target",
+          "status_id": "lit"
+        },
+        {
+          "effect": "EmitEvent",
+          "event_type": "CampfireLit",
+          "payload": {
+            "source_ref": "self",
+            "message": "{self.entity_name}点燃了火堆。"
+          }
+        }
+      ]
+    }
+  },
+  "camp_cook_fish": {
+    "verb": "CookFood",
+    "planner_hint": "行动规则：在同地点且已经 lit 的火堆旁，消耗自己背包中的 1 个 RawFish，获得 1 个 CookedFish。耗时 18 tick，消耗 4 体力。当前规则只支持烹饪 raw_fish，不支持烹饪其他食材。",
+    "grounder_hint": "target_id 必须是同地点、带 campfire tag 且状态为 lit 的火堆；parameters.ingredient_id 必须是自己背包中带 raw_fish tag 的具体物品 id。",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tag",
+          "target": "target",
+          "tag": "campfire"
+        },
+        {
+          "type": "has_status",
+          "target": "target",
+          "status_id": "lit"
+        },
+        {
+          "type": "has_tag",
+          "target": "param:ingredient_id",
+          "tag": "raw_fish"
+        },
+        {
+          "type": "inventory_contains",
+          "owner": "self",
+          "item_ref": "param:ingredient_id"
+        },
+        {
+          "type": "same_location",
+          "left": "self",
+          "right": "target"
+        }
+      ]
+    },
+    "process": {
+      "duration": {
+        "mode": "fixed",
+        "value": 18
+      },
+      "assign_to": "self"
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": []
+      },
+      "tick_bundle": {
+        "effects": []
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "DestroyEntity",
+          "target": "param:ingredient_id"
+        },
+        {
+          "effect": "CreateEntity",
+          "template": "CookedFish",
+          "destination": {
+            "type": "container",
+            "target": "self"
+          }
+        },
+        {
+          "effect": "ModifyProperty",
+          "target": "self",
+          "component": "CreatureComponent",
+          "property": "current_energy",
+          "change": -4
+        }
+      ]
+    }
+  },
+  "camp_rest": {
+    "verb": "CampRest",
+    "planner_hint": "行动规则：只有位于主营地 camp_main 时可以休息。默认耗时 60 tick，也可用 rest_ticks 指定至少 10 tick；完成后恢复 20 体力并降低 10 压力。休息不会产出物品。",
+    "grounder_hint": "target_id 选择自己；parameters.rest_ticks 可选，必须不小于 10。执行地点必须是 camp_main。",
+    "condition": {
+      "type": "compare_value",
+      "left": "self.location_id",
+      "op": "==",
+      "value": "camp_main"
+    },
+    "process": {
+      "duration": {
+        "mode": "param",
+        "from_param": "param:rest_ticks",
+        "default": 60,
+        "min": 10
+      },
+      "assign_to": "self"
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": []
+      },
+      "tick_bundle": {
+        "effects": []
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "ModifyProperty",
+          "target": "self",
+          "component": "CreatureComponent",
+          "property": "current_energy",
+          "change": 20
+        },
+        {
+          "effect": "ModifyProperty",
+          "target": "self",
+          "component": "CreatureComponent",
+          "property": "current_stress",
+          "change": -10
+        },
+        {
+          "effect": "EmitEvent",
+          "event_type": "CampRested",
+          "payload": {
+            "source_ref": "self",
+            "message": "{self.entity_name}在主营地休息了一段时间。"
+          }
+        }
+      ]
+    }
+  },
+  "camp_explore_cabin": {
+    "verb": "Explore",
+    "planner_hint": "行动规则：只有位于旧猎人小屋 hunter_cabin 时可以探索。耗时 45 tick；随机获得罐头、绳索或无收获；消耗 12 体力并增加 4 压力。这是高成本、偏稀有补给的探索动作。",
+    "grounder_hint": "target_id 选择自己；执行地点必须是 hunter_cabin。不需要指定柜子、工具或笔记实体。",
+    "selector": {
+      "type": "compare_value",
+      "left": "self.location_id",
+      "op": "==",
+      "value": "hunter_cabin"
+    },
+    "condition": {},
+    "process": {
+      "duration": {
+        "mode": "fixed",
+        "value": 45
+      },
+      "assign_to": "self"
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": []
+      },
+      "tick_bundle": {
+        "effects": []
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "RandomBundle",
+          "table_id": "hunter_cabin_find",
+          "entries": [
+            {
+              "id": "canned_food",
+              "label": "罐头",
+              "weight": 1,
+              "bundle": {
+                "effects": [
+                  {
+                    "effect": "CreateEntity",
+                    "template": "CannedFood",
+                    "destination": {
+                      "type": "container",
+                      "target": "self"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "rope",
+              "label": "绳索",
+              "weight": 1,
+              "bundle": {
+                "effects": [
+                  {
+                    "effect": "CreateEntity",
+                    "template": "Rope",
+                    "destination": {
+                      "type": "container",
+                      "target": "self"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "nothing",
+              "label": "没有收获",
+              "weight": 1,
+              "bundle": {
+                "effects": []
+              }
+            }
+          ]
+        },
+        {
+          "effect": "ModifyProperty",
+          "target": "self",
+          "component": "CreatureComponent",
+          "property": "current_energy",
+          "change": -12
+        },
+        {
+          "effect": "ModifyProperty",
+          "target": "self",
+          "component": "CreatureComponent",
+          "property": "current_stress",
+          "change": 4
+        }
+      ]
+    }
+  }
+}

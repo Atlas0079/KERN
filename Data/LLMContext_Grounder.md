@@ -8,8 +8,8 @@
 - 当前 tick：{{tick}}
 - 当前实体id（你自己）：{{self_id}}
 - 当前位置：{{location_id}} / {{location_name}}
-- 当前中断预设（active_interrupt_preset_id）：{{active_interrupt_preset_id}}
-- 可用中断预设概览（id: 描述）：
+- 当前中断姿态（active_interrupt_preset_id）：{{active_interrupt_preset_id}}
+- 可用中断姿态概览（id: 描述）：
 {{interrupt_preset_summaries}}
 - 当前可达地点：
 {{reachable_locations_table}}

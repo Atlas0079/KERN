@@ -1,0 +1,138 @@
+{
+  "camper": {
+    "name": "Camper",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "character",
+          "agent",
+          "camper"
+        ]
+      },
+      "CreatureComponent": {
+        "max_hp": 100,
+        "max_energy": 100,
+        "max_nutrition": 100,
+        "max_stress": 100,
+        "current_hp": 100,
+        "current_energy": 70,
+        "current_nutrition": 70,
+        "current_stress": 0
+      },
+      "AgentSetting": {
+        "agent_name": "Camper",
+        "personality_summary": "你和同伴原本是旅游队伍的一员，现在与队伍失联，被迫在当前地点原地等待救援。",
+        "common_knowledge_summary": "你的首要要求是维持自己的生命体征和行动能力：关注生命值、体力、营养和精神压力，避免让任何指标恶化到危险程度。"
+      },
+      "PerceptionComponent": {},
+      "EquipmentComponent": {},
+      "ContainerComponent": {
+        "slots": {
+          "inventory": {
+            "capacity_volume": 30,
+            "capacity_count": 30,
+            "accepted_tags": []
+          }
+        }
+      },
+      "AgentControlComponent": {},
+      "MemoryComponent": {
+        "short_term_queue": [],
+        "short_term_max_entries": 30,
+        "mid_term_prep_queue": [],
+        "mid_term_prep_max_entries": 50,
+        "mid_term_queue": [],
+        "mid_term_max_entries": 20,
+        "last_mid_term_summary_tick": -1,
+        "mid_term_summary_cooldown_ticks": 15
+      },
+      "WorkerComponent": {},
+      "TaskHostComponent": {},
+      "StatusComponent": {
+        "statuses": []
+      },
+      "DecisionArbiterComponent": {
+        "active_interrupt_preset_id": "balanced",
+        "interrupt_preset_descriptions": {
+          "balanced": "平衡姿态：正常响应饥饿、环境变化和危险线索。",
+          "cautious": "谨慎姿态：更早响应低营养和环境风险。",
+          "focused": "专注姿态：降低软中断敏感度，倾向完成当前任务。",
+          "emergency": "应急姿态：优先生存风险。"
+        },
+        "interrupt_presets": {
+          "balanced": {
+            "LowNutrition": {
+              "enabled": true,
+              "threshold_on": 35,
+              "threshold_off": 50,
+              "cooldown_ticks": 10
+            },
+            "PerceptionChange": {
+              "enabled": true,
+              "trigger_on_agent_sighted": true,
+              "trigger_on_agent_left": true,
+              "cooldown_ticks": 2
+            }
+          },
+          "cautious": {
+            "LowNutrition": {
+              "enabled": true,
+              "threshold_on": 50,
+              "threshold_off": 65,
+              "cooldown_ticks": 10
+            },
+            "PerceptionChange": {
+              "enabled": true,
+              "trigger_on_agent_sighted": true,
+              "trigger_on_agent_left": true,
+              "cooldown_ticks": 1
+            }
+          },
+          "focused": {
+            "LowNutrition": {
+              "enabled": true,
+              "threshold_on": 20,
+              "threshold_off": 35,
+              "cooldown_ticks": 30
+            },
+            "PerceptionChange": {
+              "enabled": false,
+              "trigger_on_agent_sighted": false,
+              "trigger_on_agent_left": false,
+              "cooldown_ticks": 10
+            }
+          },
+          "emergency": {
+            "LowNutrition": {
+              "enabled": true,
+              "threshold_on": 65,
+              "threshold_off": 75,
+              "cooldown_ticks": 5
+            },
+            "PerceptionChange": {
+              "enabled": true,
+              "trigger_on_agent_sighted": true,
+              "trigger_on_agent_left": true,
+              "cooldown_ticks": 1
+            }
+          }
+        },
+        "rules": [
+          {
+            "type": "NoActiveTask",
+            "priority": 999
+          },
+          {
+            "type": "LowNutrition",
+            "priority": 10,
+            "threshold": 35
+          },
+          {
+            "type": "PerceptionChange",
+            "priority": 50
+          }
+        ]
+      }
+    }
+  }
+}

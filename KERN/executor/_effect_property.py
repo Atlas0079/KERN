@@ -181,7 +181,7 @@ def execute_modify_property(executor: Any, ws: Any, data: dict[str, Any], contex
 				}
 			]
 		except Exception:
-			return executor_error("ModifyProperty: failed to write UnknownComponent")
+			return executor_error("ModifyProperty: failed to write CustomComponent")
 	return executor_error("ModifyProperty: unsupported component type")
 
 

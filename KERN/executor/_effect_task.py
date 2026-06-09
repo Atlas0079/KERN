@@ -264,6 +264,14 @@ def _bind_interrupt_task(_ws: Any, effect_data: dict[str, Any], context: dict[st
 	}, ctx
 
 
+def _bind_interrupt_current_task(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	target = _require_str(params, effect_type, "target")
+	status = _require_str(params, effect_type, "status")
+	reason = str(_resolve_param_token(params.get("reason", ""), ctx) or "").strip()
+	return {"effect": effect_type, "target": target, "status": status, "reason": reason}, ctx
+
+
 def _bind_resume_task(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
 	effect_type, params, ctx = _base_bind(effect_data, context)
 	task_id = _require_str(params, effect_type, "task_id")
@@ -304,6 +312,87 @@ def _remove_task_from_host_and_world(ws: Any, task: Task, context: dict[str, Any
 			host.remove_task(task.task_id)
 	if hasattr(ws, "unregister_task"):
 		ws.unregister_task(task.task_id)
+
+
+def _task_lifecycle_context(task: Task, context: dict[str, Any], worker_id: str = "") -> dict[str, Any]:
+	ctx = dict(context or {})
+	if worker_id:
+		ctx["self_id"] = str(worker_id)
+	ctx["task_id"] = str(task.task_id)
+	ctx.setdefault("target_id", str(task.target_entity_id or ""))
+	params = getattr(task, "parameters", {}) or {}
+	if isinstance(params, dict) and params:
+		base_params = ctx.get("parameters", {}) or {}
+		if not isinstance(base_params, dict):
+			base_params = {}
+		merged = dict(base_params)
+		for k, v in params.items():
+			if str(k) not in merged:
+				merged[str(k)] = v
+		ctx["parameters"] = merged
+	return ctx
+
+
+def _task_worker_id(task: Task, context: dict[str, Any]) -> str:
+	worker_id = str((context or {}).get("worker_id") or (context or {}).get("self_id", "") or "")
+	if worker_id:
+		return worker_id
+	assigned = list(getattr(task, "assigned_agent_ids", []) or [])
+	return str(assigned[0] or "") if assigned else ""
+
+
+def _run_task_lifecycle_bundle(ws: Any, task: Task, context: dict[str, Any], attr_name: str, owner: str) -> list[dict[str, Any]]:
+	bundle = getattr(task, attr_name, None)
+	if bundle is None or bundle.is_empty():
+		return []
+	result = run_child_bundle(ws, bundle.to_dict(), context, owner)
+	if not result.failed:
+		return []
+	message = str(result.error_message or "")
+	return [
+		{"type": f"{owner}Failed", "task_id": str(task.task_id), "reason": message},
+		*executor_error(f"{owner}: lifecycle bundle failed ({message})"),
+	]
+
+
+def _activate_task(ws: Any, task: Task, worker: WorkerComponent, worker_id: str, context: dict[str, Any], event_type: str) -> tuple[bool, list[dict[str, Any]]]:
+	old_status = str(getattr(task, "task_status", "") or "")
+	worker.assign_task(task.task_id)
+	if worker_id not in task.assigned_agent_ids:
+		task.assigned_agent_ids.append(worker_id)
+	task.task_status = "InProgress"
+	lifecycle_ctx = _task_lifecycle_context(task, context, worker_id)
+	start_errors = _run_task_lifecycle_bundle(ws, task, lifecycle_ctx, "start_bundle", "TaskStart")
+	if start_errors:
+		cleanup_errors = _deactivate_task(ws, task, worker_id, context, old_status)
+		return False, [
+			{"type": "TaskStartFailed", "task_id": str(task.task_id), "old_status": old_status, "worker_id": str(worker_id)},
+			*start_errors,
+			*cleanup_errors,
+		]
+	return True, [
+		{
+			"type": event_type,
+			"task_id": str(task.task_id),
+			"old_status": old_status,
+			"new_status": "InProgress",
+			"worker_id": str(worker_id),
+		}
+	]
+
+
+def _deactivate_task(ws: Any, task: Task, worker_id: str, context: dict[str, Any], new_status: str) -> list[dict[str, Any]]:
+	old_status = str(getattr(task, "task_status", "") or "")
+	lifecycle_ctx = _task_lifecycle_context(task, context, worker_id)
+	events: list[dict[str, Any]] = []
+	if old_status == "InProgress":
+		events.extend(_run_task_lifecycle_bundle(ws, task, lifecycle_ctx, "cleanup_bundle", "TaskCleanup"))
+	task.task_status = str(new_status or "")
+	if worker_id:
+		_try_stop_worker_task(ws, worker_id, task.task_id)
+	if isinstance(getattr(task, "assigned_agent_ids", None), list):
+		task.assigned_agent_ids = []
+	return events
 
 
 def execute_add_status(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
@@ -431,6 +520,14 @@ def execute_create_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 	if task_policy:
 		task.parameters["task_policy"] = dict(task_policy)
 	try:
+		task.start_bundle = effect_bundle_from_raw(process.get("start_bundle", {}) or {"effects": []})
+	except Exception as exc:
+		return [{"type": "ExecutorError", "message": f"CreateTask: invalid process.start_bundle ({exc})"}]
+	try:
+		task.cleanup_bundle = effect_bundle_from_raw(process.get("cleanup_bundle", {}) or {"effects": []})
+	except Exception as exc:
+		return [{"type": "ExecutorError", "message": f"CreateTask: invalid process.cleanup_bundle ({exc})"}]
+	try:
 		task.completion_bundle = effect_bundle_from_raw(recipe.get("bundle", {}) or {})
 	except Exception as exc:
 		return [{"type": "ExecutorError", "message": f"CreateTask: invalid recipe bundle ({exc})"}]
@@ -471,11 +568,10 @@ def execute_create_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 		if worker_ent:
 			worker = worker_ent.get_component("WorkerComponent")
 			if isinstance(worker, WorkerComponent):
-				worker.assign_task(task.task_id)
-				task.task_status = "InProgress"
-				if worker_id not in task.assigned_agent_ids:
-					task.assigned_agent_ids.append(worker_id)
-				events.append({"type": "TaskAssigned", "task_id": task.task_id, "worker_id": worker_id})
+				ok, activation_events = _activate_task(ws, task, worker, worker_id, context, "TaskAssigned")
+				events.extend(activation_events)
+				if not ok:
+					_remove_task_from_host_and_world(ws, task, context)
 
 	return events
 
@@ -560,13 +656,13 @@ def execute_accept_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 	if selected is None:
 		return [{"type": "ExecutorError", "message": f"AcceptTask: no suitable task on host ({last_reason or 'no match'})"}]
 
-	# Assign
-	worker.assign_task(selected.task_id)
-	selected.task_status = "InProgress"
-	if self_id not in selected.assigned_agent_ids:
-		selected.assigned_agent_ids.append(self_id)
-	
-	return [{"type": "TaskAccepted", "task_id": selected.task_id, "worker_id": self_id, "host_id": host_entity.entity_id}]
+	ok, activation_events = _activate_task(ws, selected, worker, self_id, context, "TaskAccepted")
+	if not ok:
+		return activation_events
+	for ev in activation_events:
+		if isinstance(ev, dict) and ev.get("type") == "TaskAccepted":
+			ev["host_id"] = host_entity.entity_id
+	return activation_events
 
 
 def execute_progress_task(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
@@ -596,14 +692,19 @@ def execute_update_task_status(_executor: Any, ws: Any, data: dict[str, Any], co
 	if task is None:
 		return [{"type": "ExecutorError", "message": f"UpdateTaskStatus: task not found {task_id}"}]
 	old_status = getattr(task, "task_status", "Unknown")
-	task.task_status = new_status
+	cleanup_events: list[dict[str, Any]] = []
+	if str(old_status) == "InProgress" and new_status != "InProgress":
+		cleanup_events = _deactivate_task(ws, task, _task_worker_id(task, context), context, new_status)
+	else:
+		task.task_status = new_status
 	return [
 		{
 			"type": "TaskStatusChanged",
 			"task_id": task.task_id,
 			"old_status": old_status,
 			"new_status": new_status,
-		}
+		},
+		*cleanup_events,
 	]
 
 
@@ -629,13 +730,14 @@ def execute_finish_task(executor: Any, ws: Any, _data: dict[str, Any], context: 
 		return [{"type": "ExecutorError", "message": f"FinishTask: task has empty completion_bundle: {task_id}"}]
 	result = run_child_bundle(ws, bundle.to_dict(), context, "FinishTask")
 	if result.failed:
-		task.task_status = "Failed"
 		message = str(result.error_message or "")
+		worker_id = _task_worker_id(task, context)
+		cleanup_events = _deactivate_task(ws, task, worker_id, context, "Failed")
 		return [
 			{"type": "TaskFinishFailed", "task_id": task.task_id, "reason": message},
 			*executor_error(f"FinishTask: completion bundle failed ({message})"),
+			*cleanup_events,
 		]
-	task.task_status = "Completed"
 	self_id = str((context or {}).get("self_id", "") or "")
 	if (
 		str(getattr(task, "task_type", "") or "") == "Travel"
@@ -668,8 +770,9 @@ def execute_finish_task(executor: Any, ws: Any, _data: dict[str, Any], context: 
 				"source_location_id": source_location_id,
 			},
 		)
+	cleanup_events = _deactivate_task(ws, task, _task_worker_id(task, context), context, "Completed")
 	_remove_task_from_host_and_world(ws, task, context)
-	return [{"type": "TaskFinished", "task_id": task.task_id}]
+	return [{"type": "TaskFinished", "task_id": task.task_id}, *cleanup_events]
 
 
 def execute_interrupt_task(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
@@ -694,10 +797,7 @@ def execute_interrupt_task(_executor: Any, ws: Any, data: dict[str, Any], contex
 	if mode == INTERRUPT_MODE_PAUSE_RESET:
 		task.progress = 0.0
 	if mode in {INTERRUPT_MODE_PAUSE_KEEP, INTERRUPT_MODE_PAUSE_RESET, INTERRUPT_MODE_FORBIDDEN}:
-		task.task_status = "Paused"
-		_try_stop_worker_task(ws, worker_id, task.task_id)
-		if isinstance(getattr(task, "assigned_agent_ids", None), list):
-			task.assigned_agent_ids = []
+		cleanup_events = _deactivate_task(ws, task, worker_id, context, "Paused")
 		return [
 			{
 				"type": "TaskInterrupted",
@@ -708,11 +808,11 @@ def execute_interrupt_task(_executor: Any, ws: Any, data: dict[str, Any], contex
 				"interrupt_source": interrupt_source,
 				"interrupt_mode": mode,
 				"worker_id": worker_id,
-			}
+			},
+			*cleanup_events,
 		]
 	if mode == INTERRUPT_MODE_CANCEL:
-		task.task_status = "Cancelled"
-		_try_stop_worker_task(ws, worker_id, task.task_id)
+		cleanup_events = _deactivate_task(ws, task, worker_id, context, "Cancelled")
 		_remove_task_from_host_and_world(ws, task, context)
 		return [
 			{
@@ -722,10 +822,10 @@ def execute_interrupt_task(_executor: Any, ws: Any, data: dict[str, Any], contex
 				"reason": reason,
 				"interrupt_source": interrupt_source,
 				"worker_id": worker_id,
-			}
+			},
+			*cleanup_events,
 		]
-	task.task_status = "Failed"
-	_try_stop_worker_task(ws, worker_id, task.task_id)
+	cleanup_events = _deactivate_task(ws, task, worker_id, context, "Failed")
 	_remove_task_from_host_and_world(ws, task, context)
 	return [
 		{
@@ -735,7 +835,45 @@ def execute_interrupt_task(_executor: Any, ws: Any, data: dict[str, Any], contex
 			"reason": reason or "interrupted",
 			"interrupt_source": interrupt_source,
 			"worker_id": worker_id,
-		}
+		},
+		*cleanup_events,
+	]
+
+
+def execute_interrupt_current_task(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+	target_key = str(data.get("target", "target") or "target")
+	target, err = executor.require_entity(ws, context, target_key, "InterruptCurrentTask", "target")
+	if err is not None:
+		return err
+	worker = target.get_component("WorkerComponent")
+	if not isinstance(worker, WorkerComponent):
+		return executor_error("InterruptCurrentTask: target has no WorkerComponent")
+	task_id = str(getattr(worker, "current_task_id", "") or "")
+	if not task_id:
+		return [{"type": "CurrentTaskInterruptSkipped", "entity_id": str(target.entity_id), "reason": "no_current_task"}]
+	task = ws.get_task_by_id(task_id) if hasattr(ws, "get_task_by_id") else None
+	if task is None:
+		worker.stop_task()
+		return [{"type": "CurrentTaskInterruptSkipped", "entity_id": str(target.entity_id), "task_id": task_id, "reason": "task_not_found"}]
+	old_status = str(getattr(task, "task_status", "") or "")
+	new_status = str(data.get("status", "") or "").strip()
+	if not new_status:
+		return executor_error("InterruptCurrentTask: status missing")
+	if old_status in {"Completed", "Cancelled", "Failed"}:
+		return [{"type": "CurrentTaskInterruptSkipped", "entity_id": str(target.entity_id), "task_id": task_id, "reason": f"terminal_status:{old_status}"}]
+	cleanup_events = _deactivate_task(ws, task, str(target.entity_id), context, new_status)
+	if new_status in {"Completed", "Cancelled", "Failed"}:
+		_remove_task_from_host_and_world(ws, task, context)
+	return [
+		{
+			"type": "CurrentTaskInterrupted",
+			"entity_id": str(target.entity_id),
+			"task_id": str(task.task_id),
+			"old_status": old_status,
+			"new_status": new_status,
+			"reason": str(data.get("reason", "") or ""),
+		},
+		*cleanup_events,
 	]
 
 
@@ -763,19 +901,10 @@ def execute_resume_task(_executor: Any, ws: Any, data: dict[str, Any], context: 
 	current = str(getattr(worker, "current_task_id", "") or "")
 	if current and current != task.task_id:
 		return [{"type": "TaskResumeRejected", "task_id": task.task_id, "reason": f"worker_busy:{current}"}]
-	worker.assign_task(task.task_id)
-	if worker_id not in task.assigned_agent_ids:
-		task.assigned_agent_ids.append(worker_id)
-	task.task_status = "InProgress"
-	return [
-		{
-			"type": "TaskResumed",
-			"task_id": task.task_id,
-			"old_status": old_status,
-			"new_status": "InProgress",
-			"worker_id": worker_id,
-		}
-	]
+	ok, activation_events = _activate_task(ws, task, worker, worker_id, context, "TaskResumed")
+	if not ok:
+		return activation_events
+	return activation_events
 
 
 def execute_cancel_task(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
@@ -792,8 +921,7 @@ def execute_cancel_task(_executor: Any, ws: Any, data: dict[str, Any], context: 
 	if not bool(policy.get("allow_voluntary_cancel", True)) and not force:
 		return [{"type": "TaskCancelRejected", "task_id": task.task_id, "reason": "voluntary_cancel_forbidden"}]
 	worker_id = str(data.get("worker_id") or (context or {}).get("self_id", "") or "")
-	_try_stop_worker_task(ws, worker_id, task.task_id)
-	task.task_status = "Cancelled"
+	cleanup_events = _deactivate_task(ws, task, worker_id, context, "Cancelled")
 	_remove_task_from_host_and_world(ws, task, context)
 	return [
 		{
@@ -802,5 +930,6 @@ def execute_cancel_task(_executor: Any, ws: Any, data: dict[str, Any], context: 
 			"old_status": old_status,
 			"reason": reason,
 			"worker_id": worker_id,
-		}
+		},
+		*cleanup_events,
 	]

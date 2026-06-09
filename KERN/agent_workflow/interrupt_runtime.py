@@ -4,9 +4,9 @@ from typing import Any
 
 from .interrupt_rules import (
 	CorpseSightedRule,
-	IdleRule,
 	InterruptResult,
 	LowNutritionRule,
+	NoActiveTaskRule,
 	PerceptionChangeRule,
 )
 from ..models.components.controller_resolver import resolve_enabled_controller_component
@@ -74,6 +74,7 @@ def _check_low_nutrition_with_latch(ws: Any, agent_id: str, arb: Any, rule: LowN
 	default_threshold = getattr(rule, "nutrition_threshold", 30)
 	threshold_on_raw = params.get("threshold_on", params.get("threshold", default_threshold)) if isinstance(params, dict) else default_threshold
 	threshold_off_raw = params.get("threshold_off", threshold_on_raw) if isinstance(params, dict) else threshold_on_raw
+	threshold_on_val = _normalize_threshold_value(threshold_on_raw, max_nut)
 	threshold_off_val = _normalize_threshold_value(threshold_off_raw, max_nut)
 
 	if bool(rt.get("latched", False)):
@@ -97,7 +98,10 @@ def _check_low_nutrition_with_latch(ws: Any, agent_id: str, arb: Any, rule: LowN
 	if cooldown_ticks > 0 and (int(now_tick) - int(last_fire_i)) < int(cooldown_ticks):
 		return InterruptResult(interrupt=False, reason="", rule_type="LowNutrition", priority=int(getattr(rule, "priority", 10)))
 
-	result = rule.should_interrupt(ws, agent_id)
+	active_rule = rule
+	if threshold_on_val is not None:
+		active_rule = LowNutritionRule(priority=int(getattr(rule, "priority", 10)), nutrition_threshold=float(threshold_on_val))
+	result = active_rule.should_interrupt(ws, agent_id)
 	if bool(getattr(result, "interrupt", False)):
 		rt["latched"] = True
 		rt["last_fire_tick"] = int(now_tick)
@@ -111,8 +115,8 @@ def _rule_from_data(rule_data: dict[str, Any]) -> Any | None:
 		priority = int(priority_raw)
 	except Exception:
 		priority = 999999
-	if rule_type == "Idle":
-		return IdleRule(priority=priority)
+	if rule_type == "NoActiveTask":
+		return NoActiveTaskRule(priority=priority)
 	if rule_type == "LowNutrition":
 		threshold_raw = (rule_data or {}).get("nutrition_threshold", (rule_data or {}).get("threshold", 30))
 		try:
@@ -161,7 +165,7 @@ def check_if_interrupt_is_needed(ws: Any, agent_id: str, arb: Any) -> InterruptR
 			rule = _rule_from_data(item)
 		if rule is None:
 			continue
-		if has_task and isinstance(rule, IdleRule):
+		if has_task and isinstance(rule, NoActiveTaskRule):
 			continue
 		if isinstance(rule, LowNutritionRule):
 			result = _check_low_nutrition_with_latch(ws, agent_id, arb, rule)

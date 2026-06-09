@@ -5,14 +5,14 @@ from typing import Any
 
 
 @dataclass
-class UnknownComponent:
+class CustomComponent:
 	"""
-	Used to hold raw dictionaries for unmigrated components (e.g., Equipment/Condition/Perception/LLMControl).
+	Holds scenario-defined component data that has no dedicated Python model yet.
 	"""
 
 	data: dict[str, Any] = field(default_factory=dict)
 
 	def per_tick(self, _ws: Any, _entity_id: str, _ticks_per_minute: int) -> None:
-		# Unmigrated components do not progress any state by default
+		# Custom components do not progress any state by default.
 		return
 

@@ -6,7 +6,8 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-from ..data.checkpoint import build_checkpoint_payload_from_world_state, build_simulation_log_payload_from_world_state, resolve_global_log_file
+from ..data.archive import ArchiveRecorder
+from ..data.checkpoint import build_simulation_log_payload_from_world_state, resolve_global_log_file
 from ..effect_bundle import effect_bundle_from_raw
 from ..execution_errors import executor_error, is_execution_error_event
 from ..log_manager import get_logger
@@ -50,11 +51,13 @@ class WorldManager:
 	checkpoint_dir: str = ""
 	checkpoint_include_logs: bool = True
 	checkpoint_write_global_log: bool = True
+	checkpoint_snapshot_interval_ticks: int = 60
 	dialogue_log_full: bool = False
 	dialogue_budget_limit_per_location: int = 4
 	workflow_contract_on_error: str = "fail_fast"
 	last_stop_info: dict[str, Any] = field(default_factory=dict)
 	run_id: str = ""
+	archive_recorder: ArchiveRecorder | None = None
 
 	def __post_init__(self) -> None:
 		if self.trigger_system is None:
@@ -71,6 +74,13 @@ class WorldManager:
 		if not run_id:
 			run_id = uuid4().hex
 		self.run_id = run_id
+		if self.checkpoint_enabled:
+			self.archive_recorder = ArchiveRecorder(
+				archive_dir=str(self.checkpoint_dir),
+				run_id=str(self.run_id or ""),
+				snapshot_interval_ticks=int(self.checkpoint_snapshot_interval_ticks or 60),
+				include_logs=bool(self.checkpoint_include_logs),
+			)
 
 	def run(self, max_ticks: int = 100) -> list[dict[str, Any]]:
 		self.is_running = True
@@ -179,34 +189,23 @@ class WorldManager:
 		
 		self.snapshots.append(snapshot)
 
-	def _build_checkpoint_payload(self) -> dict[str, Any]:
-		return build_checkpoint_payload_from_world_state(
-			self.world_state,
-			include_logs=bool(self.checkpoint_include_logs),
-			run_id=str(self.run_id or "").strip(),
-		)
-
 	def _build_simulation_log_payload(self) -> dict[str, Any]:
 		return build_simulation_log_payload_from_world_state(self.world_state, run_id=str(self.run_id or "").strip())
 
 	def _save_checkpoint(self) -> None:
 		if not self.checkpoint_enabled:
 			return
-		logger = get_logger()
-		ws = self.world_state
-		tick = int(getattr(ws.game_time, "total_ticks", 0) or 0)
-		dir_path = Path(str(self.checkpoint_dir))
-		dir_path.mkdir(parents=True, exist_ok=True)
-		target_path = dir_path / f"tick_{tick:06d}.json"
-		tmp_path = dir_path / f"tick_{tick:06d}.tmp"
-		payload = self._build_checkpoint_payload()
+		if self.archive_recorder is None:
+			return
 		try:
-			with tmp_path.open("w", encoding="utf-8") as f:
-				json.dump(payload, f, ensure_ascii=False, indent=2)
-			tmp_path.replace(target_path)
-			logger.debug("checkpoint", "saved", context={"tick": tick, "path": str(target_path)})
+			self.archive_recorder.record_tick(self.world_state)
+			logger = get_logger()
+			tick = int(getattr(self.world_state.game_time, "total_ticks", 0) or 0)
+			logger.debug("checkpoint", "archive_recorded", context={"tick": tick, "path": str(self.checkpoint_dir)})
 		except Exception as e:
-			logger.warn("checkpoint", "save_failed", context={"tick": tick, "path": str(target_path), "error": str(e)})
+			logger = get_logger()
+			tick = int(getattr(self.world_state.game_time, "total_ticks", 0) or 0)
+			logger.warn("checkpoint", "archive_record_failed", context={"tick": tick, "path": str(self.checkpoint_dir), "error": str(e)})
 
 	def _save_simulation_log(self) -> None:
 		if not self.checkpoint_enabled or not self.checkpoint_write_global_log:

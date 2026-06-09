@@ -7,6 +7,7 @@ from .agent_control import AgentControlComponent
 from .controller_resolver import resolve_enabled_controller_component
 from .container import ContainerComponent, ContainerSlot
 from .creature import CreatureComponent
+from .custom import CustomComponent
 from .decision_arbiter import DecisionArbiterComponent
 from .description import DescriptionComponent
 from .edible import EdibleComponent
@@ -18,9 +19,9 @@ from .player_control import PlayerControlComponent
 from .status import StatusComponent
 from .tag import TagComponent
 from .task_host import TaskHostComponent
-from .unknown import UnknownComponent
 from .valuable import ValuableComponent
 from .worker import WorkerComponent
+from .world_state_entity import WorldStateEntityComponent
 
 __all__ = [
 	"AgentSetting",
@@ -31,6 +32,7 @@ __all__ = [
 	"ContainerComponent",
 	"ContainerSlot",
 	"CreatureComponent",
+	"CustomComponent",
 	"DecisionArbiterComponent",
 	"DescriptionComponent",
 	"EdibleComponent",
@@ -39,8 +41,8 @@ __all__ = [
 	"StatusComponent",
 	"TagComponent",
 	"TaskHostComponent",
-	"UnknownComponent",
 	"ValuableComponent",
 	"WorkerComponent",
+	"WorldStateEntityComponent",
 	"resolve_enabled_controller_component",
 ]

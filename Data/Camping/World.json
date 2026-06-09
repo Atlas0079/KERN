@@ -1,0 +1,294 @@
+{
+  "world_state": {
+    "current_tick": 0
+  },
+  "locations": [
+    {
+      "location_id": "camp_main",
+      "location_name": "主营地",
+      "description": "驻留计划的中心营地，有公共储物箱、火堆和简易庇护所。",
+      "entities": [
+        {
+          "instance_id": "camper_organizer",
+          "template_id": "camper",
+          "component_overrides": {
+            "AgentSetting": {
+              "agent_name": "林澈",
+              "personality_summary": "你是林澈，旅游前习惯负责行程表和集合确认。队伍失联后，你不断回想最后一次集合点，倾向用清单和轮值让自己保持镇定。",
+              "common_knowledge_summary": "你记得自己和另外三名同伴已经脱离旅游队伍，当前决定留在原地等待救援。你的目标是维持生命值、体力、营养和精神压力，不要让自己进入危险状态。"
+            },
+            "MemoryComponent": {
+              "mid_term_queue": [
+                {
+                  "tick_start": 0,
+                  "tick_end": 0,
+                  "summary": "背景：你是林澈，旅游前习惯负责行程和集合确认。你和三名同伴已经脱离旅游队伍，当前决定留在原地等待救援。你需要维持生命值、体力、营养和精神压力。",
+                  "tags": [
+                    "setup",
+                    "camping",
+                    "role"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "instance_id": "camper_explorer",
+          "template_id": "camper",
+          "component_overrides": {
+            "AgentSetting": {
+              "agent_name": "许野",
+              "personality_summary": "你是许野，本来把这次旅行当成一次临时冒险。失联后你仍想弄清附近情况，但你知道现在不能离队太远，必须把等待救援作为前提。",
+              "common_knowledge_summary": "你记得自己和另外三名同伴已经脱离旅游队伍，当前决定留在原地等待救援。你的目标是维持生命值、体力、营养和精神压力，不要让自己进入危险状态。"
+            },
+            "MemoryComponent": {
+              "mid_term_queue": [
+                {
+                  "tick_start": 0,
+                  "tick_end": 0,
+                  "summary": "背景：你是许野，本来把旅行当成一次冒险。你和三名同伴已经脱离旅游队伍，当前决定留在原地等待救援。你需要维持生命值、体力、营养和精神压力。",
+                  "tags": [
+                    "setup",
+                    "camping",
+                    "role"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "instance_id": "camper_repairer",
+          "template_id": "camper",
+          "component_overrides": {
+            "AgentSetting": {
+              "agent_name": "周砚",
+              "personality_summary": "你是周砚，旅行前总会检查装备是否能用。失联后你倾向先确认身边物件、环境和身体状态，用可执行的小事压住焦虑。",
+              "common_knowledge_summary": "你记得自己和另外三名同伴已经脱离旅游队伍，当前决定留在原地等待救援。你的目标是维持生命值、体力、营养和精神压力，不要让自己进入危险状态。"
+            },
+            "MemoryComponent": {
+              "mid_term_queue": [
+                {
+                  "tick_start": 0,
+                  "tick_end": 0,
+                  "summary": "背景：你是周砚，旅行前总会检查装备是否能用。你和三名同伴已经脱离旅游队伍，当前决定留在原地等待救援。你需要维持生命值、体力、营养和精神压力。",
+                  "tags": [
+                    "setup",
+                    "camping",
+                    "role"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "instance_id": "camper_caregiver",
+          "template_id": "camper",
+          "component_overrides": {
+            "AgentSetting": {
+              "agent_name": "沈禾",
+              "personality_summary": "你是沈禾，旅行中常负责留意同伴情绪和身体反应。失联后你容易担心别人，也会提醒自己先稳定自身状态再帮助同伴。",
+              "common_knowledge_summary": "你记得自己和另外三名同伴已经脱离旅游队伍，当前决定留在原地等待救援。你的目标是维持生命值、体力、营养和精神压力，不要让自己进入危险状态。"
+            },
+            "MemoryComponent": {
+              "mid_term_queue": [
+                {
+                  "tick_start": 0,
+                  "tick_end": 0,
+                  "summary": "背景：你是沈禾，旅行中常负责留意同伴情绪和身体反应。你和三名同伴已经脱离旅游队伍，当前决定留在原地等待救援。你需要维持生命值、体力、营养和精神压力。",
+                  "tags": [
+                    "setup",
+                    "camping",
+                    "role"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "instance_id": "camp_storage",
+          "template_id": "CampStorageBox"
+        },
+        {
+          "instance_id": "campfire_01",
+          "template_id": "Campfire"
+        },
+        {
+          "instance_id": "shelter_01",
+          "template_id": "Shelter"
+        },
+        {
+          "instance_id": "weather_01",
+          "template_id": "WeatherController"
+        }
+      ]
+    },
+    {
+      "location_id": "stream",
+      "location_name": "溪流",
+      "description": "清澈溪流，可取水、钓鱼和清洗物品。",
+      "entities": []
+    },
+    {
+      "location_id": "forest",
+      "location_name": "林地",
+      "description": "主营地附近的树林，可采集木材、浆果和野菜。",
+      "entities": []
+    },
+    {
+      "location_id": "hillside",
+      "location_name": "山坡",
+      "description": "视野较高的山坡，可探索石材、草药和天气迹象。",
+      "entities": []
+    },
+    {
+      "location_id": "hunter_cabin",
+      "location_name": "旧猎人小屋",
+      "description": "废弃的小屋，可能藏有旧补给、工具和笔记。",
+      "entities": []
+    },
+    {
+      "location_id": "wetland",
+      "location_name": "潮湿低地",
+      "description": "潮湿低洼区域，可采集蘑菇和草药，但容易让人不适。",
+      "entities": []
+    },
+    {
+      "location_id": "lookout",
+      "location_name": "观察点",
+      "description": "可以观察远处天气和资源线索的高处。",
+      "entities": []
+    }
+  ],
+  "paths": [
+    {
+      "path_id": "camp_to_stream",
+      "from_location_id": "camp_main",
+      "to_location_id": "stream",
+      "distance": 10,
+      "is_blocked": false
+    },
+    {
+      "path_id": "stream_to_camp",
+      "from_location_id": "stream",
+      "to_location_id": "camp_main",
+      "distance": 10,
+      "is_blocked": false
+    },
+    {
+      "path_id": "camp_to_forest",
+      "from_location_id": "camp_main",
+      "to_location_id": "forest",
+      "distance": 12,
+      "is_blocked": false
+    },
+    {
+      "path_id": "forest_to_camp",
+      "from_location_id": "forest",
+      "to_location_id": "camp_main",
+      "distance": 12,
+      "is_blocked": false
+    },
+    {
+      "path_id": "camp_to_hillside",
+      "from_location_id": "camp_main",
+      "to_location_id": "hillside",
+      "distance": 18,
+      "is_blocked": false
+    },
+    {
+      "path_id": "hillside_to_camp",
+      "from_location_id": "hillside",
+      "to_location_id": "camp_main",
+      "distance": 18,
+      "is_blocked": false
+    },
+    {
+      "path_id": "forest_to_cabin",
+      "from_location_id": "forest",
+      "to_location_id": "hunter_cabin",
+      "distance": 20,
+      "is_blocked": false
+    },
+    {
+      "path_id": "cabin_to_forest",
+      "from_location_id": "hunter_cabin",
+      "to_location_id": "forest",
+      "distance": 20,
+      "is_blocked": false
+    },
+    {
+      "path_id": "stream_to_wetland",
+      "from_location_id": "stream",
+      "to_location_id": "wetland",
+      "distance": 16,
+      "is_blocked": false
+    },
+    {
+      "path_id": "wetland_to_stream",
+      "from_location_id": "wetland",
+      "to_location_id": "stream",
+      "distance": 16,
+      "is_blocked": false
+    },
+    {
+      "path_id": "hillside_to_lookout",
+      "from_location_id": "hillside",
+      "to_location_id": "lookout",
+      "distance": 15,
+      "is_blocked": false
+    },
+    {
+      "path_id": "lookout_to_hillside",
+      "from_location_id": "lookout",
+      "to_location_id": "hillside",
+      "distance": 15,
+      "is_blocked": false
+    }
+  ],
+  "entities": [
+    {
+      "instance_id": "initial_wood_01",
+      "template_id": "Wood",
+      "parent_container": "camp_storage"
+    },
+    {
+      "instance_id": "initial_wood_02",
+      "template_id": "Wood",
+      "parent_container": "camp_storage"
+    },
+    {
+      "instance_id": "initial_water_01",
+      "template_id": "CleanWater",
+      "parent_container": "camp_storage"
+    },
+    {
+      "instance_id": "initial_water_02",
+      "template_id": "CleanWater",
+      "parent_container": "camp_storage"
+    },
+    {
+      "instance_id": "initial_berry_01",
+      "template_id": "Berry",
+      "parent_container": "camp_storage"
+    },
+    {
+      "instance_id": "initial_berry_02",
+      "template_id": "Berry",
+      "parent_container": "camp_storage"
+    },
+    {
+      "instance_id": "initial_canned_food_01",
+      "template_id": "CannedFood",
+      "parent_container": "camp_storage"
+    },
+    {
+      "instance_id": "initial_rope_01",
+      "template_id": "Rope",
+      "parent_container": "camp_storage"
+    }
+  ]
+}

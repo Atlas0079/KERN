@@ -128,12 +128,24 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 			return False
 		return _safe_str(task.get("task_type")) == "Travel" and _safe_str(task.get("task_status")) == "InProgress"
 
+	def _is_hidden_from_agent(eid: str) -> bool:
+		ent = entities.get(eid, {})
+		tags = {str(x) for x in list(ent.get("tags", []) or [])}
+		if "hidden_from_agents" in tags or "debug_only" in tags:
+			return True
+		world_state_entity = ent.get("world_state_entity", {}) or {}
+		if isinstance(world_state_entity, dict) and world_state_entity:
+			return not bool(world_state_entity.get("visible_to_agents", False))
+		return False
+
 	location_entity_ids = [_safe_str(x) for x in list(self_loc.get("entities", []) or []) if _safe_str(x)]
 	top_level_ids: list[str] = []
 	for eid in location_entity_ids:
 		if eid in containment:
 			continue
 		if _is_transit(eid):
+			continue
+		if _is_hidden_from_agent(eid):
 			continue
 		top_level_ids.append(eid)
 
@@ -146,6 +158,8 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 			continue
 		seen.add(current)
 		if _is_transit(current):
+			continue
+		if _is_hidden_from_agent(current):
 			continue
 		visible_ids.append(current)
 		ent = entities.get(current, {})
@@ -174,6 +188,7 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 				"name": _safe_str(ent.get("agent_name")) or _safe_str(ent.get("name")),
 				"tags": [str(x) for x in list(ent.get("tags", []) or [])],
 				"statuses": [str(x) for x in list(ent.get("statuses", []) or [])],
+				"description": _safe_str(ent.get("base_description")),
 				"contained_in": _safe_str(contain_info.get("container_id")),
 				"contained_in_slot": _safe_str(contain_info.get("slot_id")),
 				"is_top_level": bool(eid in location_entity_ids) and not bool(contain_info),

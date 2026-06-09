@@ -38,10 +38,10 @@ def _bind_apply_meta_action(_ws: Any, effect_data: dict[str, Any], context: dict
 def _bind_attach_details(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
 	effect_type, params, ctx = _base_bind(effect_data, context)
 	detail_type = _require_str(params, effect_type, "detail_type").lower()
-	if detail_type not in {"entity", "interrupt_preset"}:
+	if detail_type not in {"entity", "entity_recipe", "interrupt_preset"}:
 		raise BindError(effect_type, ["detail_type"])
 	out: dict[str, Any] = {"effect": effect_type, "detail_type": detail_type}
-	if detail_type == "entity":
+	if detail_type in {"entity", "entity_recipe"}:
 		out["target"] = _require_str(params, effect_type, "target")
 		return out, ctx
 	preset_id = str(_resolve_param_token(params.get("preset_id", ""), ctx) or "").strip()
@@ -186,39 +186,6 @@ def execute_apply_meta_action(executor: Any, ws: Any, data: dict[str, Any], cont
 				"changed": {"active_interrupt_preset_id": {"from": old, "to": preset_id}},
 			}
 		]
-	if action_type == "UpdateInterruptRuleParam":
-		arb = target.get_component("DecisionArbiterComponent")
-		if not isinstance(arb, DecisionArbiterComponent):
-			return [{"type": "ExecutorError", "message": "ApplyMetaAction: DecisionArbiterComponent missing"}]
-		# TODO: this is effectively a low-level key/value patch endpoint for interrupt rules.
-		# It is powerful, but not a very natural agent-facing abstraction.
-		# Future refactor should consider replacing it with explicit preference/intent updates,
-		# while keeping rule-level mutation as an internal or tooling-only capability.
-		preset_id = str(params.get("preset_id", "") or "").strip()
-		rule_type = str(params.get("rule_type", "") or "").strip()
-		key = str(params.get("key", "") or "").strip()
-		value = params.get("value", None)
-		if not preset_id or not rule_type or not key:
-			return [{"type": "ExecutorError", "message": "ApplyMetaAction: UpdateInterruptRuleParam requires preset_id/rule_type/key/value"}]
-		preset = (arb.interrupt_presets or {}).get(preset_id, None)
-		if not isinstance(preset, dict):
-			return [{"type": "ExecutorError", "message": f"ApplyMetaAction: unknown preset_id: {preset_id}"}]
-		rule_params = preset.get(rule_type, None)
-		if not isinstance(rule_params, dict):
-			return [{"type": "ExecutorError", "message": f"ApplyMetaAction: rule not found in preset: {rule_type}"}]
-		old_val = rule_params.get(key, None)
-		rule_params[key] = value
-		preset[rule_type] = rule_params
-		arb.interrupt_presets[preset_id] = preset
-		return [
-			{
-				"type": "MetaActionApplied",
-				"entity_id": target.entity_id,
-				"action_type": action_type,
-				"params": {"preset_id": preset_id, "rule_type": rule_type, "key": key, "value": value},
-				"changed": {"interrupt_presets": {"preset_id": preset_id, "rule_type": rule_type, "key": key, "from": old_val, "to": value}},
-			}
-		]
 	return [{"type": "ExecutorError", "message": f"ApplyMetaAction: unknown action_type: {action_type}"}]
 
 
@@ -265,7 +232,7 @@ def execute_attach_details(_executor: Any, ws: Any, data: dict[str, Any], contex
 			last["details_text"] = details_text
 			last["private_to_actor"] = True
 		return []
-	if detail_type != "entity":
+	if detail_type not in {"entity", "entity_recipe"}:
 		return [{"type": "ExecutorError", "message": f"AttachDetails: unknown detail_type: {detail_type}"}]
 	target_ref = str((data or {}).get("target", (context or {}).get("target_id", "target")) or "target")
 	target = resolve_entity(ws, target_ref, context or {}, allow_literal=True)
@@ -276,16 +243,31 @@ def execute_attach_details(_executor: Any, ws: Any, data: dict[str, Any], contex
 		"template_id": str(getattr(target, "template_id", "") or ""),
 		"name": str(getattr(target, "entity_name", "") or ""),
 		"tags": list(target.get_all_tags()) if hasattr(target, "get_all_tags") else [],
+		"observed_description": "",
+		"recipe_description": "",
 		"components": {},
 	}
 	comps = getattr(target, "components", {}) or {}
 	if isinstance(comps, dict):
 		for cname, comp in comps.items():
-			payload["components"][str(cname)] = _safe(comp)
+			if str(cname) == "DescriptionComponent":
+				if hasattr(comp, "observed_text"):
+					payload["observed_description"] = str(comp.observed_text() or "")
+				else:
+					payload["observed_description"] = str(getattr(comp, "observed_description", "") or getattr(comp, "description", "") or "")
+				if hasattr(comp, "recipe_text"):
+					payload["recipe_description"] = str(comp.recipe_text() or "")
+				else:
+					payload["recipe_description"] = str(getattr(comp, "recipe_description", "") or "")
+			if detail_type == "entity":
+				payload["components"][str(cname)] = _safe(comp)
+	if detail_type == "entity_recipe":
+		payload.pop("components", None)
+		payload.pop("observed_description", None)
 	log = getattr(ws, "interaction_log", None)
 	if isinstance(log, list) and log:
 		last = log[-1]
 		if isinstance(last, dict):
 			last["details_text"] = json.dumps(payload, ensure_ascii=False, indent=2)
 			last["private_to_actor"] = True
-	return [{"type": "DetailsAttached", "detail_type": "entity", "entity_id": payload["entity_id"]}]
+	return [{"type": "DetailsAttached", "detail_type": detail_type, "entity_id": payload["entity_id"]}]

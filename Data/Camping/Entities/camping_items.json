@@ -1,0 +1,404 @@
+{
+  "Wood": {
+    "name": "木材",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "wood",
+          "fuel"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "可作为燃料的木材。当前规则中，它可以作为 LightCampfire 的材料，用来点燃火堆。",
+        "base_description": "可作为燃料的木材。",
+        "observed_description": "可作为燃料的木材。当前规则中，它可以作为 LightCampfire 的材料，用来点燃火堆。",
+        "recipe_description": "当前规则中，木材可作为 LightCampfire 的材料：在同地点火堆旁，背包中有具体 wood 物品 id 时，消耗 1 个 Wood 点燃火堆。"
+      }
+    }
+  },
+  "CleanWater": {
+    "name": "清水",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "clean_water",
+          "drinkable"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "可以饮用的清水，是重要补给。当前规则尚未提供单独的饮水动作。",
+        "base_description": "可以饮用的清水，是重要补给。",
+        "observed_description": "可以饮用的清水，是重要补给。当前规则尚未提供单独的饮水动作。",
+        "recipe_description": "当前规则中，清水暂不参与制作或使用 recipe。它是补给资源和未来配方材料。"
+      }
+    }
+  },
+  "Berry": {
+    "name": "浆果",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "berry",
+          "food",
+          "edible"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "可直接食用的浆果，能提供少量营养，并略微缓解精神压力。",
+        "base_description": "可直接食用的浆果，能提供少量营养，并略微缓解精神压力。",
+        "observed_description": "可直接食用的浆果，能提供少量营养，并略微缓解精神压力。",
+        "recipe_description": "当前规则中，浆果可直接食用；暂不参与制作 recipe。"
+      },
+      "EdibleComponent": {
+        "on_consume_bundle": {
+          "effects": [
+            {
+              "effect": "ModifyProperty",
+              "target": "self",
+              "component": "CreatureComponent",
+              "property": "current_nutrition",
+              "change": 12
+            },
+            {
+              "effect": "ModifyProperty",
+              "target": "self",
+              "component": "CreatureComponent",
+              "property": "current_stress",
+              "change": -1
+            }
+          ]
+        }
+      }
+    }
+  },
+  "WildGreens": {
+    "name": "野菜",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "wild_greens",
+          "food",
+          "edible",
+          "cookable"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "可食用的野菜，能提供少量营养。当前规则尚未提供野菜烹饪动作。",
+        "base_description": "可食用的野菜，能提供少量营养。",
+        "observed_description": "可食用的野菜，能提供少量营养。当前规则尚未提供野菜烹饪动作。",
+        "recipe_description": "当前规则中，野菜可直接食用；暂不参与制作 recipe。"
+      },
+      "EdibleComponent": {
+        "on_consume_bundle": {
+          "effects": [
+            {
+              "effect": "ModifyProperty",
+              "target": "self",
+              "component": "CreatureComponent",
+              "property": "current_nutrition",
+              "change": 8
+            }
+          ]
+        }
+      }
+    }
+  },
+  "RawFish": {
+    "name": "生鱼",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "raw_fish",
+          "food",
+          "edible",
+          "cookable"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "未经烹饪的鱼，可以提供营养，但直接食用不太舒服；更适合作为烹饪材料。",
+        "base_description": "未经烹饪的鱼，可以提供营养，但直接食用不太舒服；更适合作为烹饪材料。",
+        "observed_description": "未经烹饪的鱼，可以提供营养，但直接食用不太舒服；更适合作为烹饪材料。",
+        "recipe_description": "当前规则中，生鱼可用于 CookFood：在同地点 lit 火堆旁，消耗 1 个 RawFish 制作 1 个 CookedFish。"
+      },
+      "EdibleComponent": {
+        "on_consume_bundle": {
+          "effects": [
+            {
+              "effect": "ModifyProperty",
+              "target": "self",
+              "component": "CreatureComponent",
+              "property": "current_nutrition",
+              "change": 18
+            },
+            {
+              "effect": "ModifyProperty",
+              "target": "self",
+              "component": "CreatureComponent",
+              "property": "current_energy",
+              "change": -2
+            }
+          ]
+        }
+      }
+    }
+  },
+  "Mushroom": {
+    "name": "蘑菇",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "mushroom",
+          "food",
+          "edible",
+          "cookable"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "可食用蘑菇，能提供少量营养，也可作为烹饪材料。",
+        "base_description": "可食用蘑菇，能提供少量营养，也可作为烹饪材料。",
+        "observed_description": "可食用蘑菇，能提供少量营养，也可作为烹饪材料。",
+        "recipe_description": "当前规则中，蘑菇可直接食用；暂不参与制作 recipe。"
+      },
+      "EdibleComponent": {
+        "on_consume_bundle": {
+          "effects": [
+            {
+              "effect": "ModifyProperty",
+              "target": "self",
+              "component": "CreatureComponent",
+              "property": "current_nutrition",
+              "change": 10
+            }
+          ]
+        }
+      }
+    }
+  },
+  "Herb": {
+    "name": "草药",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "herb",
+          "medical"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "草药，属于医疗类补给。当前规则尚未提供使用草药的医疗动作。",
+        "base_description": "草药，属于医疗类补给。",
+        "observed_description": "草药，属于医疗类补给。当前规则尚未提供使用草药的医疗动作。",
+        "recipe_description": "当前规则中，草药暂不参与制作或医疗 recipe。"
+      }
+    }
+  },
+  "Stone": {
+    "name": "石材",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "stone",
+          "repair_material"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "坚硬石材，属于修补材料类物品。当前规则尚未提供使用石材的修补动作。",
+        "base_description": "坚硬石材，属于修补材料类物品。",
+        "observed_description": "坚硬石材，属于修补材料类物品。当前规则尚未提供使用石材的修补动作。",
+        "recipe_description": "当前规则中，石材暂不参与修补或建造 recipe。"
+      }
+    }
+  },
+  "CannedFood": {
+    "name": "罐头",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "canned_food",
+          "food",
+          "edible"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "可直接食用的罐头，能提供较多营养和少量体力。",
+        "base_description": "可直接食用的罐头，能提供较多营养和少量体力。",
+        "observed_description": "可直接食用的罐头，能提供较多营养和少量体力。",
+        "recipe_description": "当前规则中，罐头可直接食用；暂不参与制作 recipe。"
+      },
+      "EdibleComponent": {
+        "on_consume_bundle": {
+          "effects": [
+            {
+              "effect": "ModifyProperty",
+              "target": "self",
+              "component": "CreatureComponent",
+              "property": "current_nutrition",
+              "change": 35
+            },
+            {
+              "effect": "ModifyProperty",
+              "target": "self",
+              "component": "CreatureComponent",
+              "property": "current_energy",
+              "change": 2
+            }
+          ]
+        }
+      }
+    }
+  },
+  "Rope": {
+    "name": "绳索",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "rope",
+          "repair_material"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "结实的绳索，属于修补材料类物品。当前规则尚未提供使用绳索的修补动作。",
+        "base_description": "结实的绳索，属于修补材料类物品。",
+        "observed_description": "结实的绳索，属于修补材料类物品。当前规则尚未提供使用绳索的修补动作。",
+        "recipe_description": "当前规则中，绳索暂不参与修补或建造 recipe。"
+      }
+    }
+  },
+  "CookedFish": {
+    "name": "熟鱼",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "cooked_fish",
+          "food",
+          "edible"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "已经烹熟的鱼，能提供较好营养、少量体力，并略微缓解精神压力。",
+        "base_description": "已经烹熟的鱼，能提供较好营养、少量体力，并略微缓解精神压力。",
+        "observed_description": "已经烹熟的鱼，能提供较好营养、少量体力，并略微缓解精神压力。",
+        "recipe_description": "当前规则中，熟鱼可直接食用；暂不参与制作 recipe。"
+      },
+      "EdibleComponent": {
+        "on_consume_bundle": {
+          "effects": [
+            {
+              "effect": "ModifyProperty",
+              "target": "self",
+              "component": "CreatureComponent",
+              "property": "current_nutrition",
+              "change": 28
+            },
+            {
+              "effect": "ModifyProperty",
+              "target": "self",
+              "component": "CreatureComponent",
+              "property": "current_energy",
+              "change": 3
+            },
+            {
+              "effect": "ModifyProperty",
+              "target": "self",
+              "component": "CreatureComponent",
+              "property": "current_stress",
+              "change": -2
+            }
+          ]
+        }
+      }
+    }
+  },
+  "HotSoup": {
+    "name": "热汤",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "hot_soup",
+          "food",
+          "edible"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "热汤，能提供营养、恢复体力，并明显缓解精神压力。",
+        "base_description": "热汤，能提供营养、恢复体力，并明显缓解精神压力。",
+        "observed_description": "热汤，能提供营养、恢复体力，并明显缓解精神压力。",
+        "recipe_description": "当前规则中，热汤可直接食用；暂不参与制作 recipe。"
+      },
+      "EdibleComponent": {
+        "on_consume_bundle": {
+          "effects": [
+            {
+              "effect": "ModifyProperty",
+              "target": "self",
+              "component": "CreatureComponent",
+              "property": "current_nutrition",
+              "change": 25
+            },
+            {
+              "effect": "ModifyProperty",
+              "target": "self",
+              "component": "CreatureComponent",
+              "property": "current_energy",
+              "change": 8
+            },
+            {
+              "effect": "ModifyProperty",
+              "target": "self",
+              "component": "CreatureComponent",
+              "property": "current_stress",
+              "change": -4
+            }
+          ]
+        }
+      }
+    }
+  },
+  "SimpleBandage": {
+    "name": "简易绷带",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "bandage",
+          "medical"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "简易绷带，属于医疗类物品。当前规则尚未提供使用绷带的治疗动作。",
+        "base_description": "简易绷带，属于医疗类物品。",
+        "observed_description": "简易绷带，属于医疗类物品。当前规则尚未提供使用绷带的治疗动作。",
+        "recipe_description": "当前规则中，简易绷带暂不参与治疗 recipe。"
+      }
+    }
+  },
+  "RepairKit": {
+    "name": "修补材料",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "repair_kit",
+          "repair_material"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "修补材料包，属于修补材料类物品。当前规则尚未提供使用修补材料包的修补动作。",
+        "base_description": "修补材料包，属于修补材料类物品。",
+        "observed_description": "修补材料包，属于修补材料类物品。当前规则尚未提供使用修补材料包的修补动作。",
+        "recipe_description": "当前规则中，修补材料包暂不参与修补 recipe。"
+      }
+    }
+  }
+}

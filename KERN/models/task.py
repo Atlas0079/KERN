@@ -30,7 +30,9 @@ class Task:
 	# --- Progressor configuration: Solidified into task by recipe ---
 	progressor_id: str = ""
 	progressor_params: dict[str, Any] = field(default_factory=dict)
+	start_bundle: EffectBundle = field(default_factory=EffectBundle)
 	tick_bundle: EffectBundle = field(default_factory=EffectBundle)
+	cleanup_bundle: EffectBundle = field(default_factory=EffectBundle)
 
 	# Bundle to execute upon task completion (Written at creation, read at completion)
 	completion_bundle: EffectBundle = field(default_factory=EffectBundle)

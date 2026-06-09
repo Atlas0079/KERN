@@ -41,7 +41,7 @@ Important top-level paths:
 - `KERN/`: core engine package.
 - `Data/`: scenario data, entity templates, recipes, reactions, named bundles.
 - `docs/`: human-facing design and usage documentation.
-- `tools/`: validation, migration, diagnostics, and checkpoint viewer assets.
+- `tools/`: validation, migration, diagnostics, and legacy checkpoint viewer assets.
 - `checkpoints/`: generated runtime outputs.
 
 There is a small `unittest` suite under `tests/` for focused contracts such as
@@ -93,7 +93,7 @@ Current startup/runtime flow:
 6. `TriggerSystem` turns events into reaction effect bundles.
 7. `InteractionEngine` compiles agent/user commands through recipes into effect bundles.
 8. `WorldExecutor` executes effects and is the write boundary for world mutation.
-9. Checkpoints and `simulation_log.json` are written when checkpointing is enabled.
+9. A run archive and `simulation_log.json` are written when checkpointing is enabled.
 
 Architectural boundary: decision logic should not directly mutate `WorldState`.
 World writes should go through effects handled by `WorldExecutor`.
@@ -168,6 +168,16 @@ It matches recipes by `verb`, `selector`, and `condition`.
 Duration/progress recipes produce a `CreateTask` effect. Immediate recipes return
 their normalized bundle.
 
+Task lifecycle contract:
+
+- `recipe.process.start_bundle` is optional and is solidified into `Task.start_bundle`.
+  It runs whenever a task enters `InProgress`.
+- `recipe.process.cleanup_bundle` is optional and is solidified into
+  `Task.cleanup_bundle`. It runs whenever a task leaves `InProgress`, including
+  successful completion, interrupt/pause, cancel, fail, and resume failure cleanup.
+- `recipe.bundle` remains the success-only completion bundle.
+- `recipe.progression.tick_bundle` remains the per-worker-tick bundle.
+
 Agent workflow contract is documented in `docs/开发者快速上手.md` and
 `docs/配置详解.md`; verify against `KERN/agent_workflow/` before changing it.
 Current high-level contract:
@@ -183,7 +193,7 @@ contract.
 
 ## Simulation Loop
 
-`WorldManager.run(max_ticks=...)` captures tick 0, writes initial checkpoint/logs,
+`WorldManager.run(max_ticks=...)` records tick 0 into the run archive, writes logs,
 then repeatedly calls `step()` until stopped or max ticks is reached.
 
 `WorldManager.step()` currently:
@@ -245,3 +255,12 @@ readable across shells.
   module responsibility, command changes, contract changes, or validation changes.
 - Generated checkpoints are runtime outputs; do not treat them as source changes
   unless the task explicitly concerns checkpoint format or viewer behavior.
+- Current checkpoint output is a run archive: `manifest.json`,
+  `snapshots/snapshot_*.json.gz`, and `deltas/deltas_*.jsonl.gz`. Deltas are
+  state-level changes with before/after hashes, not semantic event replay.
+- Creating an `ArchiveRecorder` resets the target archive outputs in
+  `CHECKPOINT_DIR`. The restore path currently selects an explicit file or the
+  latest `snapshots/snapshot_*.json.gz`; it does not auto-materialize arbitrary
+  ticks through deltas.
+- `tools/checkpoint_viewer.html` is a legacy uncompressed JSON checkpoint viewer
+  and does not directly support current `.json.gz` archive snapshots.

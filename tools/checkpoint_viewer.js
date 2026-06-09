@@ -1,8 +1,16 @@
 const state = {
 	frames: [],
 	stableIndex: -1,
+	archive: {
+		enabled: false,
+		loading: false,
+		manifest: null,
+	},
 	selectedEntityId: "",
 	selectedLocationId: "",
+	selectedPathKey: "",
+	locationEntityFilter: "",
+	locationEntitiesOpen: false,
 	locationNodeHalfById: {},
 	layoutCacheByKey: {},
 	activeLayoutKey: "",
@@ -10,6 +18,16 @@ const state = {
 	dragging: null,
 	dragEdgeRedrawRaf: 0,
 	activeScale: 1,
+	viewport: {
+		x: 0,
+		y: 0,
+		scale: 1,
+		panning: null,
+	},
+	collapsedPanels: {
+		logs: false,
+		details: false,
+	},
 	playback: {
 		mode: "idle",
 		playingIndex: -1,
@@ -31,8 +49,8 @@ const state = {
 	imagePickerTarget: null,
 };
 
-const GRAPH_WIDTH = 1200;
-const GRAPH_HEIGHT = 675;
+const GRAPH_WIDTH = 6000;
+const GRAPH_HEIGHT = 6000;
 const NODE_HALF = 95;
 const NODE_MIN_SIZE = 170;
 const NODE_BASE_SIZE = 190;
@@ -48,6 +66,9 @@ const PLAYBACK_TRAVEL_MS = 980;
 const PLAYBACK_LOG_APPEND_MS = 120;
 
 const fileInput = document.getElementById("fileInput");
+const archiveConnectBtn = document.getElementById("archiveConnectBtn");
+const sourceHint = document.getElementById("sourceHint");
+const panelToggles = Array.from(document.querySelectorAll("[data-collapse-target]"));
 const tickList = document.getElementById("tickList");
 const tickSlider = document.getElementById("tickSlider");
 const tickLabel = document.getElementById("tickLabel");
@@ -72,6 +93,21 @@ window.addEventListener("resize", () => {
 	if (state.frames.length) {
 		renderWorld();
 	}
+});
+
+for (const toggle of panelToggles) {
+	toggle.addEventListener("click", () => {
+		const target = String(toggle.dataset.collapseTarget || "");
+		if (!target || !(target in state.collapsedPanels)) {
+			return;
+		}
+		state.collapsedPanels[target] = !state.collapsedPanels[target];
+		syncPanelChrome();
+	});
+}
+
+archiveConnectBtn?.addEventListener("click", () => {
+	loadArchiveFromServer({ explicit: true });
 });
 
 fileInput.addEventListener("change", async (event) => {
@@ -104,6 +140,9 @@ fileInput.addEventListener("change", async (event) => {
 	}
 	frames.sort((a, b) => a.tick - b.tick);
 	stopPlayback({ syncLogs: false });
+	state.archive.enabled = false;
+	state.archive.loading = false;
+	state.archive.manifest = null;
 	state.frames = frames;
 	state.stableIndex = frames.length ? 0 : -1;
 	state.selectedEntityId = "";
@@ -111,10 +150,15 @@ fileInput.addEventListener("change", async (event) => {
 	rebuildLogFilterMetadata(frames);
 	syncVisibleLogRowsToStable();
 	render();
+	setSourceHint(`已加载 JSON checkpoint 目录：${frames.length} ticks`);
 });
 
 detailsPane.addEventListener("click", (event) => {
-	const target = event.target;
+	const rawTarget = event.target;
+	if (!(rawTarget instanceof Element)) {
+		return;
+	}
+	const target = rawTarget.closest("[data-action]");
 	if (!(target instanceof HTMLElement)) {
 		return;
 	}
@@ -124,6 +168,21 @@ detailsPane.addEventListener("click", (event) => {
 	}
 	const kind = String(target.dataset.kind || "");
 	const id = String(target.dataset.id || "");
+	if (action === "select-entity") {
+		if (!id) {
+			return;
+		}
+		state.selectedEntityId = id;
+		state.selectedLocationId = findLocationIdForEntity(getDisplayedFrame(), id) || state.selectedLocationId;
+		renderDetails();
+		renderWorld();
+		return;
+	}
+	if (action === "toggle-location-entities") {
+		state.locationEntitiesOpen = !state.locationEntitiesOpen;
+		renderDetails();
+		return;
+	}
 	if (!kind || !id) {
 		return;
 	}
@@ -137,6 +196,24 @@ detailsPane.addEventListener("click", (event) => {
 		clearNodeImage(kind, id);
 		renderWorld();
 		renderDetails();
+	}
+});
+
+detailsPane.addEventListener("input", (event) => {
+	const target = event.target;
+	if (!(target instanceof HTMLInputElement)) {
+		return;
+	}
+	if (target.id === "locationEntityFilter") {
+		const selectionStart = Number(target.selectionStart ?? target.value.length);
+		state.locationEntityFilter = String(target.value || "");
+		renderDetails();
+		const nextInput = document.getElementById("locationEntityFilter");
+		if (nextInput instanceof HTMLInputElement) {
+			nextInput.focus();
+			const cursor = Math.min(selectionStart, nextInput.value.length);
+			nextInput.setSelectionRange(cursor, cursor);
+		}
 	}
 });
 
@@ -230,6 +307,11 @@ document.addEventListener("pointerdown", (event) => {
 	syncLogFilterUi();
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+	syncPanelChrome();
+	loadArchiveFromServer({ explicit: false });
+});
+
 function createEmptyOverlay() {
 	return {
 		activeActorId: "",
@@ -241,6 +323,133 @@ function createEmptyOverlay() {
 function isCheckpointFileCandidate(file) {
 	const name = String(file?.name || "").toLowerCase();
 	return name.endsWith(".json");
+}
+
+async function loadArchiveFromServer(options = {}) {
+	const explicit = options.explicit === true;
+	if (state.archive.loading) {
+		return;
+	}
+	state.archive.loading = true;
+	setSourceHint("正在连接本地 archive 服务...");
+	try {
+		const response = await fetch("./api/manifest", { cache: "no-store" });
+		if (!response.ok) {
+			throw new Error(`HTTP ${response.status}`);
+		}
+		const manifest = await response.json();
+		const ticks = Array.isArray(manifest?.ticks) ? manifest.ticks.map((x) => Number(x)).filter((x) => Number.isFinite(x) && x >= 0) : [];
+		if (!ticks.length) {
+			throw new Error("manifest has no ticks");
+		}
+		stopPlayback({ syncLogs: false });
+		state.archive.enabled = true;
+		state.archive.manifest = manifest;
+		state.frames = ticks.map((tick) => createLazyArchiveFrame(tick, manifest));
+		state.stableIndex = 0;
+		state.selectedEntityId = "";
+		state.selectedLocationId = "";
+		state.selectedPathKey = "";
+		rebuildLogFilterMetadata([]);
+		await ensureFrameLoaded(0);
+		syncVisibleLogRowsToStable();
+		rebuildLogFilterMetadata(state.frames.filter((frame) => !frame.lazy));
+		render();
+		setSourceHint(`Archive 已连接：${manifest.archive_dir || manifest.run_id || "local"} · ${ticks.length} ticks`);
+	} catch (error) {
+		state.archive.enabled = false;
+		if (explicit) {
+			setSourceHint(`连接 Archive 失败：${error?.message || error}`);
+		} else {
+			setSourceHint("通过 checkpoint_viewer_server.py 读取 run archive；仍支持旧 JSON 目录导入");
+		}
+	} finally {
+		state.archive.loading = false;
+	}
+}
+
+function createLazyArchiveFrame(tick, manifest) {
+	return {
+		fileName: `archive:${tick}`,
+		tick,
+		timeStr: "",
+		runId: String(manifest?.run_id || ""),
+		logScope: "tick",
+		world: {},
+		log: [],
+		lazy: true,
+		loading: false,
+		error: "",
+	};
+}
+
+async function ensureFrameLoaded(index) {
+	const frame = getFrameByIndex(index);
+	if (!frame || !frame.lazy || frame.loading) {
+		return frame;
+	}
+	frame.loading = true;
+	frame.error = "";
+	try {
+		const response = await fetch(`./api/tick/${encodeURIComponent(String(frame.tick))}`, { cache: "no-store" });
+		if (!response.ok) {
+			throw new Error(`HTTP ${response.status}`);
+		}
+		const payload = await response.json();
+		Object.assign(frame, {
+			fileName: String(payload?.fileName || frame.fileName || `archive:${frame.tick}`),
+			tick: Number(payload?.tick ?? frame.tick),
+			timeStr: String(payload?.timeStr || ""),
+			runId: String(payload?.runId || frame.runId || ""),
+			logScope: String(payload?.logScope || "tick"),
+			world: payload?.world || {},
+			log: Array.isArray(payload?.log) ? payload.log : [],
+			lazy: false,
+			loading: false,
+			error: "",
+		});
+		rebuildLogFilterMetadata(state.frames.filter((item) => !item.lazy));
+		return frame;
+	} catch (error) {
+		frame.loading = false;
+		frame.error = String(error?.message || error || "load failed");
+		throw error;
+	}
+}
+
+async function ensurePlaybackFramesLoaded(targetIndex) {
+	await ensureFrameLoaded(Math.max(0, targetIndex - 1));
+	await ensureFrameLoaded(targetIndex);
+}
+
+function setSourceHint(text) {
+	if (sourceHint) {
+		sourceHint.textContent = String(text || "");
+	}
+}
+
+function syncPanelChrome() {
+	document.body.classList.toggle("logs-collapsed", state.collapsedPanels.logs);
+	document.body.classList.toggle("details-collapsed", state.collapsedPanels.details);
+	const labels = {
+		logs: state.collapsedPanels.logs ? "›" : "‹",
+		details: state.collapsedPanels.details ? "‹" : "›",
+	};
+	for (const toggle of panelToggles) {
+		const target = String(toggle.dataset.collapseTarget || "");
+		if (labels[target]) {
+			toggle.textContent = labels[target];
+		}
+	}
+}
+
+function graphTransformStyle() {
+	const x = Number(state.viewport.x) || 0;
+	const y = Number(state.viewport.y) || 0;
+	const scale = Math.max(0.35, Math.min(2.4, Number(state.viewport.scale) || 1));
+	state.viewport.scale = scale;
+	state.activeScale = scale;
+	return `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(${scale})`;
 }
 
 function loadNodeImageStore() {
@@ -408,12 +617,19 @@ function togglePlayback() {
 	startPlaybackFromStable();
 }
 
-function startPlaybackFromStable() {
+async function startPlaybackFromStable() {
 	if (!state.frames.length) {
 		return;
 	}
 	const nextIndex = state.stableIndex + 1;
 	if (nextIndex < 0 || nextIndex >= state.frames.length) {
+		return;
+	}
+	try {
+		await ensurePlaybackFramesLoaded(nextIndex);
+	} catch (error) {
+		setSourceHint(`加载播放帧失败：${error?.message || error}`);
+		render();
 		return;
 	}
 	const segment = buildPlaybackSegment(nextIndex);
@@ -465,7 +681,7 @@ function finishSegmentPlayback() {
 	render();
 }
 
-function setStableFrameIndex(index) {
+async function setStableFrameIndex(index) {
 	if (!state.frames.length) {
 		return;
 	}
@@ -474,6 +690,13 @@ function setStableFrameIndex(index) {
 	state.stableIndex = clamped;
 	state.selectedEntityId = "";
 	state.selectedLocationId = "";
+	state.selectedPathKey = "";
+	render();
+	try {
+		await ensureFrameLoaded(clamped);
+	} catch (error) {
+		setSourceHint(`加载 tick ${state.frames[clamped]?.tick ?? clamped} 失败：${error?.message || error}`);
+	}
 	syncVisibleLogRowsToStable();
 	render();
 }
@@ -794,7 +1017,8 @@ function renderTickList() {
 		}
 		item.className = classes.join(" ");
 		item.textContent = `#${frame.tick}`;
-		item.title = `${frame.timeStr || frame.fileName} | log=${frame.log.length}`;
+		const logCount = Array.isArray(frame.log) ? frame.log.length : 0;
+		item.title = frame.lazy ? `${frame.fileName} | 未加载` : `${frame.timeStr || frame.fileName} | log=${logCount}`;
 		item.addEventListener("click", () => setStableFrameIndex(index));
 		tickList.appendChild(item);
 	}
@@ -803,6 +1027,7 @@ function renderTickList() {
 function renderWorld() {
 	worldGrid.innerHTML = "";
 	state.locationNodeHalfById = {};
+	attachCanvasViewportHandlers();
 	const frame = getDisplayedFrame();
 	const playbackTarget = getPlaybackTargetFrame();
 	if (!frame) {
@@ -815,6 +1040,14 @@ function renderWorld() {
 	} else {
 		worldTitle.textContent = `World · Tick ${frame.tick} · ${frame.timeStr || frame.fileName}`;
 	}
+	if (frame.lazy || frame.loading) {
+		worldGrid.innerHTML = '<div class="empty">正在加载当前 tick...</div>';
+		return;
+	}
+	if (frame.error) {
+		worldGrid.innerHTML = `<div class="empty">加载失败：${escapeHtml(frame.error)}</div>`;
+		return;
+	}
 	const locations = Array.isArray(frame.world?.locations) ? frame.world.locations : [];
 	const paths = Array.isArray(frame.world?.paths) ? frame.world.paths : [];
 	const worldEntities = buildEntityMap(frame);
@@ -824,8 +1057,6 @@ function renderWorld() {
 	}
 	const layout = getOrCreateLayout(frame, locations, paths);
 	const edgeHtml = buildGraphEdges(paths, layout, state.playback.overlay.travel);
-	const scale = computeGraphScale();
-	state.activeScale = scale;
 	const nodeHtml = locations.map((loc) => {
 		const locationId = String(loc.location_id || "");
 		const point = layout.get(locationId) || { x: 600, y: 380 };
@@ -859,8 +1090,6 @@ function renderWorld() {
 			].filter(Boolean).join(" ");
 			return `<button class="${classes}" data-entity-id="${escapeHtml(entityId)}" title="${escapeHtml(label)}">${agentImage ? `<img class="agent-token-bg" src="${escapeHtml(agentImage)}" alt="${escapeHtml(label)}">` : escapeHtml(getEntityAvatarLabel(label))}</button>`;
 		}).join("") + (hiddenAgentCount > 0 ? `<span class="agent-token overflow" title="还有 ${hiddenAgentCount} 个 agent">+${hiddenAgentCount}</span>` : "");
-		const visibleOthers = otherEntities.slice(0, 3);
-		const hiddenOtherCount = Math.max(0, otherEntities.length - visibleOthers.length);
 		const locationName = String(loc.location_name || locationId || "Unnamed");
 		const locationImage = getNodeImage("location", locationId);
 		const nodeSize = computeLocationNodeSize({
@@ -870,12 +1099,9 @@ function renderWorld() {
 			totalCount: entities.length,
 		});
 		state.locationNodeHalfById[locationId] = nodeSize / 2;
-		const summaryChips = visibleOthers.map((entity) => {
-			const entityId = String(entity.instance_id || "");
-			const fullEntity = worldEntities.get(entityId);
-			const label = escapeHtml(entityDisplayName(entity, fullEntity));
-			return `<button class="entity-chip${state.selectedEntityId === entityId ? " selected" : ""}" data-entity-id="${escapeHtml(entityId)}" title="${label}">${label}</button>`;
-		}).join("") + (hiddenOtherCount > 0 ? `<span class="entity-chip overflow" title="还有 ${hiddenOtherCount} 个实体未展开">+${hiddenOtherCount}</span>` : "");
+		const entitySummary = entities.length
+			? `<span class="entity-count-pill">${entities.length} entities</span>`
+			: '<span class="empty">无实体</span>';
 		return `
 			<div
 				class="location-node${locationImage ? " has-image" : ""}${state.selectedLocationId === locationId ? " selected" : ""}"
@@ -889,14 +1115,14 @@ function renderWorld() {
 				</div>
 				<div class="location-node-body">
 					<div class="agent-slots">${agentTokens || '<span class="empty">无 agent</span>'}</div>
-					<div class="entity-summary">${summaryChips || '<span class="empty">无其他实体</span>'}</div>
+					<div class="entity-summary">${entitySummary}</div>
 				</div>
 			</div>
 		`;
 	}).join("");
 	worldGrid.innerHTML = `
 		<div class="graph-viewport">
-			<div class="graph-stage" style="transform: translate(-50%, -50%) scale(${scale});">
+			<div class="graph-stage" style="transform: ${graphTransformStyle()};">
 				<svg class="graph-svg" viewBox="0 0 ${GRAPH_WIDTH} ${GRAPH_HEIGHT}" preserveAspectRatio="xMidYMid meet">
 					${edgeHtml}
 				</svg>
@@ -923,10 +1149,26 @@ function renderWorld() {
 			if (entityId) {
 				state.selectedEntityId = entityId;
 				state.selectedLocationId = locationId;
+				state.selectedPathKey = "";
 			} else {
 				state.selectedLocationId = locationId;
 				state.selectedEntityId = "";
+				state.selectedPathKey = "";
 			}
+			renderDetails();
+			renderWorld();
+		});
+	}
+	for (const pathElement of worldGrid.querySelectorAll("[data-path-key]")) {
+		pathElement.addEventListener("pointerdown", (event) => {
+			event.stopPropagation();
+		});
+		pathElement.addEventListener("click", (event) => {
+			event.preventDefault();
+			event.stopPropagation();
+			state.selectedPathKey = String(pathElement.dataset.pathKey || "");
+			state.selectedEntityId = "";
+			state.selectedLocationId = "";
 			renderDetails();
 			renderWorld();
 		});
@@ -1025,12 +1267,6 @@ function buildGraphLayout(locations) {
 	return layout;
 }
 
-function computeGraphScale() {
-	const width = Math.max(1, worldGrid.clientWidth - 24);
-	const height = Math.max(1, worldGrid.clientHeight - 24);
-	return Math.max(0.1, Math.min(width / GRAPH_WIDTH, height / GRAPH_HEIGHT));
-}
-
 function getOrCreateLayout(frame, locations, paths) {
 	const key = buildLayoutKey(frame, locations, paths);
 	state.activeLayoutKey = key;
@@ -1038,9 +1274,10 @@ function getOrCreateLayout(frame, locations, paths) {
 		const base = buildGraphLayout(locations);
 		const persisted = loadLayoutFromStorageByKey(key);
 		if (persisted && typeof persisted === "object") {
+			const normalized = normalizePersistedLayoutForCanvas(persisted);
 			for (const loc of locations) {
 				const id = String(loc.location_id || "");
-				const p = persisted[id];
+				const p = normalized[id];
 				if (!p || typeof p !== "object") {
 					continue;
 				}
@@ -1055,6 +1292,102 @@ function getOrCreateLayout(frame, locations, paths) {
 	}
 	state.activeLayout = state.layoutCacheByKey[key];
 	return state.activeLayout;
+}
+
+function normalizePersistedLayoutForCanvas(persisted) {
+	const entries = Object.entries(persisted || {}).filter(([, value]) => value && typeof value === "object");
+	const points = entries.map(([, value]) => ({ x: Number(value.x), y: Number(value.y) })).filter((point) => Number.isFinite(point.x) && Number.isFinite(point.y));
+	if (!points.length) {
+		return persisted;
+	}
+	const maxX = Math.max(...points.map((point) => point.x));
+	const maxY = Math.max(...points.map((point) => point.y));
+	const minX = Math.min(...points.map((point) => point.x));
+	const minY = Math.min(...points.map((point) => point.y));
+	const looksLikeLegacyViewport = minX >= 0 && minY >= 0 && maxX <= 1300 && maxY <= 800;
+	if (!looksLikeLegacyViewport) {
+		return persisted;
+	}
+	const dx = GRAPH_WIDTH / 2 - 600;
+	const dy = GRAPH_HEIGHT / 2 - 337.5;
+	return Object.fromEntries(entries.map(([id, value]) => [id, { x: Number(value.x) + dx, y: Number(value.y) + dy }]));
+}
+
+function attachCanvasViewportHandlers() {
+	worldGrid.onpointerdown = onCanvasPointerDown;
+	worldGrid.onwheel = onCanvasWheel;
+}
+
+function onCanvasPointerDown(event) {
+	if (!(event instanceof PointerEvent)) {
+		return;
+	}
+	const target = event.target;
+	if (target instanceof Element && target.closest(".location-node, button, input, [data-path-key]")) {
+		return;
+	}
+	event.preventDefault();
+	state.viewport.panning = {
+		pointerId: event.pointerId,
+		startClientX: event.clientX,
+		startClientY: event.clientY,
+		originX: Number(state.viewport.x) || 0,
+		originY: Number(state.viewport.y) || 0,
+	};
+	worldGrid.classList.add("panning");
+	worldGrid.setPointerCapture(event.pointerId);
+	worldGrid.onpointermove = onCanvasPointerMove;
+	worldGrid.onpointerup = onCanvasPointerUp;
+	worldGrid.onpointercancel = onCanvasPointerUp;
+}
+
+function onCanvasPointerMove(event) {
+	const pan = state.viewport.panning;
+	if (!(event instanceof PointerEvent) || !pan || event.pointerId !== pan.pointerId) {
+		return;
+	}
+	state.viewport.x = pan.originX + event.clientX - pan.startClientX;
+	state.viewport.y = pan.originY + event.clientY - pan.startClientY;
+	updateGraphStageTransform();
+}
+
+function onCanvasPointerUp(event) {
+	const pan = state.viewport.panning;
+	if (event instanceof PointerEvent && pan && event.pointerId !== pan.pointerId) {
+		return;
+	}
+	state.viewport.panning = null;
+	worldGrid.classList.remove("panning");
+	worldGrid.onpointermove = null;
+	worldGrid.onpointerup = null;
+	worldGrid.onpointercancel = null;
+}
+
+function onCanvasWheel(event) {
+	if (!(event instanceof WheelEvent)) {
+		return;
+	}
+	event.preventDefault();
+	const oldScale = Math.max(0.35, Math.min(2.4, Number(state.viewport.scale) || 1));
+	const factor = event.deltaY < 0 ? 1.08 : 0.92;
+	const nextScale = Math.max(0.35, Math.min(2.4, oldScale * factor));
+	if (Math.abs(nextScale - oldScale) < 0.001) {
+		return;
+	}
+	const rect = worldGrid.getBoundingClientRect();
+	const cx = event.clientX - rect.left - rect.width / 2;
+	const cy = event.clientY - rect.top - rect.height / 2;
+	state.viewport.x = cx - (cx - state.viewport.x) * (nextScale / oldScale);
+	state.viewport.y = cy - (cy - state.viewport.y) * (nextScale / oldScale);
+	state.viewport.scale = nextScale;
+	updateGraphStageTransform();
+}
+
+function updateGraphStageTransform() {
+	const stage = worldGrid.querySelector(".graph-stage");
+	if (stage instanceof HTMLElement) {
+		stage.style.transform = graphTransformStyle();
+	}
 }
 
 function buildLayoutKey(frame, locations, paths) {
@@ -1081,18 +1414,54 @@ function buildGraphEdges(paths, layout, activeTravel) {
 		if (!from || !to) {
 			continue;
 		}
+		const pathKey = buildPathKey(path);
 		const midX = (from.x + to.x) / 2;
 		const midY = (from.y + to.y) / 2;
 		const isActive = !!activeTravel && (
 			(String(activeTravel.fromLocationId || "") === fromId && String(activeTravel.toLocationId || "") === toId) ||
 			(String(activeTravel.fromLocationId || "") === toId && String(activeTravel.toLocationId || "") === fromId)
 		);
+		const isSelected = state.selectedPathKey === pathKey;
+		const label = pathLabel(path);
 		fragments.push(`
-			<line class="graph-edge${isActive ? " active" : ""}" x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}"></line>
-			<text class="graph-edge-label" x="${midX}" y="${midY - 8}">${escapeHtml(path.travel_type || path.distance || "")}</text>
+			<line class="graph-edge${isActive ? " active" : ""}${isSelected ? " selected" : ""}" data-path-key="${escapeHtml(pathKey)}" x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}"></line>
+			<text class="graph-edge-label${isSelected ? " selected" : ""}" data-path-key="${escapeHtml(pathKey)}" x="${midX}" y="${midY - 8}">${escapeHtml(label)}</text>
 		`);
 	}
 	return fragments.join("");
+}
+
+function buildPathKey(path) {
+	const fromId = String(path?.from_location_id || "");
+	const toId = String(path?.to_location_id || "");
+	const pair = [fromId, toId].sort().join("::");
+	return `${pair}::${String(path?.travel_type || "")}::${String(path?.distance ?? "")}`;
+}
+
+function pathLabel(path) {
+	const parts = [];
+	if (path?.travel_type) {
+		parts.push(String(path.travel_type));
+	}
+	const cost = pathMoveCost(path);
+	if (cost) {
+		parts.push(cost);
+	}
+	return parts.join(" · ") || "path";
+}
+
+function pathMoveCost(path) {
+	const value = path?.move_cost ?? path?.movement_cost ?? path?.cost ?? path?.distance ?? "";
+	return value === "" || value === null || value === undefined ? "" : String(value);
+}
+
+function findPathByKey(frame, key) {
+	for (const path of Array.isArray(frame?.world?.paths) ? frame.world.paths : []) {
+		if (buildPathKey(path) === key) {
+			return path;
+		}
+	}
+	return null;
 }
 
 function startNodeDrag(event, node) {
@@ -1100,7 +1469,7 @@ function startNodeDrag(event, node) {
 		return;
 	}
 	const target = event.target;
-	if (target instanceof HTMLElement && target.closest(".entity-chip, .agent-token")) {
+	if (target instanceof HTMLElement && target.closest("button")) {
 		return;
 	}
 	const locationId = String(node.dataset.locationId || "");
@@ -1207,10 +1576,12 @@ function redrawGraphEdges() {
 }
 
 function clampPoint(point) {
-	const nodeHalf = getActiveMaxNodeHalf();
+	const fallback = GRAPH_WIDTH / 2;
+	const x = Number(point.x);
+	const y = Number(point.y);
 	return {
-		x: Math.max(nodeHalf, Math.min(GRAPH_WIDTH - nodeHalf, Number(point.x) || nodeHalf)),
-		y: Math.max(nodeHalf, Math.min(GRAPH_HEIGHT - nodeHalf, Number(point.y) || nodeHalf)),
+		x: Number.isFinite(x) ? x : fallback,
+		y: Number.isFinite(y) ? y : fallback,
 	};
 }
 
@@ -1225,14 +1596,6 @@ function computeLocationNodeSize(options) {
 	const otherBoost = Math.min(24, otherCount * 2.8);
 	const size = NODE_BASE_SIZE + titleBoost + densityBoost + agentBoost + otherBoost;
 	return Math.max(NODE_MIN_SIZE, Math.min(NODE_MAX_SIZE, Math.round(size)));
-}
-
-function getActiveMaxNodeHalf() {
-	const values = Object.values(state.locationNodeHalfById || {}).map((value) => Number(value) || 0).filter((value) => value > 0);
-	if (!values.length) {
-		return NODE_HALF;
-	}
-	return Math.max(NODE_HALF, ...values);
 }
 
 function persistActiveLayout() {
@@ -1331,7 +1694,39 @@ function renderDetails() {
 		detailsPane.innerHTML = '<div class="empty">没有当前帧</div>';
 		return;
 	}
+	if (frame.lazy || frame.loading) {
+		detailsPane.innerHTML = '<div class="empty">正在加载当前 tick...</div>';
+		return;
+	}
+	if (frame.error) {
+		detailsPane.innerHTML = `<div class="empty">加载失败：${escapeHtml(frame.error)}</div>`;
+		return;
+	}
 	const entityMap = buildEntityMap(frame);
+	if (state.selectedPathKey) {
+		const path = findPathByKey(frame, state.selectedPathKey);
+		if (!path) {
+			detailsPane.innerHTML = '<div class="empty">未找到路径</div>';
+			return;
+		}
+		detailsPane.innerHTML = `
+			<div class="details-block">
+				<div class="details-title">Path</div>
+				<div class="kv">
+					<div class="key">from</div><div>${escapeHtml(String(path.from_location_id || ""))}</div>
+					<div class="key">to</div><div>${escapeHtml(String(path.to_location_id || ""))}</div>
+					<div class="key">travel_type</div><div>${escapeHtml(String(path.travel_type || "-"))}</div>
+					<div class="key">move_cost</div><div>${escapeHtml(pathMoveCost(path) || "-")}</div>
+					<div class="key">key</div><div>${escapeHtml(state.selectedPathKey)}</div>
+				</div>
+			</div>
+			<div class="details-block">
+				<div class="details-title">Snapshot</div>
+				<div class="pre">${escapeHtml(JSON.stringify(path, null, 2))}</div>
+			</div>
+		`;
+		return;
+	}
 	if (state.selectedEntityId) {
 		const entity = entityMap.get(state.selectedEntityId);
 		if (!entity) {
@@ -1379,14 +1774,19 @@ function renderDetails() {
 		}
 		const locationId = String(location.location_id || "");
 		const locationImage = getNodeImage("location", locationId);
+		const locationEntities = Array.isArray(location.entities) ? location.entities : [];
 		detailsPane.innerHTML = `
 			<div class="details-block">
 				<div class="details-title">Location</div>
 				<div class="kv">
 					<div class="key">id</div><div>${escapeHtml(String(location.location_id || ""))}</div>
 					<div class="key">name</div><div>${escapeHtml(String(location.location_name || ""))}</div>
-					<div class="key">entities</div><div>${Array.isArray(location.entities) ? location.entities.length : 0}</div>
+					<div class="key">entities</div><div>${locationEntities.length}</div>
 				</div>
+			</div>
+			<div class="details-block">
+				<div class="details-title">Entities</div>
+				${renderLocationEntityList(locationEntities, entityMap)}
 			</div>
 			<div class="details-block">
 				<div class="details-title">Image</div>
@@ -1423,6 +1823,46 @@ function renderDetails() {
 				<div class="key">visible logs</div><div>${state.playback.visibleLogRows.length}</div>
 			</div>
 		</div>
+	`;
+}
+
+function renderLocationEntityList(entities, entityMap) {
+	if (!Array.isArray(entities) || !entities.length) {
+		return '<div class="empty">这个地点没有实体</div>';
+	}
+	if (!state.locationEntitiesOpen) {
+		return `<button class="location-entity-summary-btn" data-action="toggle-location-entities" type="button">展开实体列表 · ${entities.length}</button>`;
+	}
+	const filterText = String(state.locationEntityFilter || "");
+	const keyword = filterText.trim().toLowerCase();
+	const rows = entities.map((entity) => {
+		const entityId = String(entity.instance_id || "");
+		const fullEntity = entityMap.get(entityId) || entity;
+		const label = entityDisplayName(entity, fullEntity);
+		const tags = getEntityTags(fullEntity);
+		const templateId = String(fullEntity?.template_id || entity?.template_id || "");
+		const parent = String(fullEntity?.parent_container || entity?.parent_container || "");
+		const searchText = [label, entityId, templateId, parent, tags.join(" ")].join(" ").toLowerCase();
+		return { entityId, fullEntity, label, tags, templateId, parent, searchText };
+	}).filter((row) => !keyword || row.searchText.includes(keyword));
+	const listHtml = rows.length ? rows.map((row) => {
+		const meta = [row.entityId, row.tags.join(", ")].filter(Boolean).join(" · ");
+		return `
+			<button class="location-entity-row" data-action="select-entity" data-kind="entity" data-id="${escapeHtml(row.entityId)}">
+				<span class="location-entity-name">${escapeHtml(row.label)}</span>
+				<span class="location-entity-meta">${escapeHtml(meta)}</span>
+				<span class="location-entity-extra">template: ${escapeHtml(row.templateId || "-")}</span>
+				<span class="location-entity-extra">parent: ${escapeHtml(row.parent || "-")}</span>
+			</button>
+		`;
+	}).join("") : '<div class="empty">没有匹配的实体</div>';
+	return `
+		<div class="location-entity-tools">
+			<input id="locationEntityFilter" class="location-entity-filter" type="text" value="${escapeHtml(filterText)}" placeholder="筛选实体">
+			<button class="details-action-btn" data-action="toggle-location-entities" type="button">收起</button>
+		</div>
+		<div class="location-entity-count">${rows.length} / ${entities.length}</div>
+		<div class="location-entity-list">${listHtml}</div>
 	`;
 }
 

@@ -220,6 +220,7 @@ def main(argv: list[str] | None = None) -> None:
 	dialogue_budget_limit_per_location = _cfg_int(cfg, "DIALOGUE_BUDGET_LIMIT_PER_LOCATION", 4)
 	checkpoint_enabled = _cfg_bool(cfg, "CHECKPOINT_EVERY_TICK", True)
 	checkpoint_include_logs = _cfg_bool(cfg, "CHECKPOINT_INCLUDE_LOGS", True)
+	checkpoint_snapshot_interval_ticks = _cfg_int(cfg, "CHECKPOINT_SNAPSHOT_INTERVAL_TICKS", 60)
 	dialogue_log_full = _cfg_bool(cfg, "DIALOGUE_LOG_FULL", False)
 	workflow_contract_on_error = _cfg_get(cfg, "WORKFLOW_CONTRACT_ON_ERROR", "fail_fast").lower() or "fail_fast"
 	default_checkpoint_dir = project_root / "checkpoints" / (world_json_name or "default")
@@ -237,6 +238,7 @@ def main(argv: list[str] | None = None) -> None:
 		checkpoint_enabled=checkpoint_enabled,
 		checkpoint_dir=checkpoint_dir,
 		checkpoint_include_logs=checkpoint_include_logs,
+		checkpoint_snapshot_interval_ticks=checkpoint_snapshot_interval_ticks,
 		dialogue_log_full=dialogue_log_full,
 	)
 	events = manager.run(max_ticks=max_ticks)

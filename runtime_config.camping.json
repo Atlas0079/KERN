@@ -1,0 +1,18 @@
+{
+  "env": {
+    "USE_LLM": "1",
+    "WORLD_JSON": "Camping/World.json",
+    "RECIPES_JSONS": "Recipes.json,Camping/Recipes.json",
+    "REACTIONS_JSONS": "Reactions.json,Camping/Reactions.json",
+    "BUNDLES_JSONS": "Bundles.json",
+    "ENTITIES_DIRS": "Entities,Camping/Entities",
+    "LOG_LEVEL": "info",
+    "LOG_CATEGORIES": "system,executor,task,interaction,checkpoint,llm",
+    "DIALOGUE_LOG_FULL": "0",
+    "MAX_TICKS": "43200",
+    "CHECKPOINT_DIR": "checkpoints/camping_30d",
+    "CHECKPOINT_EVERY_TICK": "1",
+    "CHECKPOINT_INCLUDE_LOGS": "1",
+    "CHECKPOINT_SNAPSHOT_INTERVAL_TICKS": "60"
+  }
+}

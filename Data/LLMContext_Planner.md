@@ -3,7 +3,7 @@
 
 #### 1.1 世界规则摘要
 - 时间：世界按 tick 推进。某些动作是瞬时完成，某些动作会创建 Task 并跨 tick 推进。
-- 交互：你需要使用中文提出意图，然后会由 Grounder根据你的意图 生成 action 序列（`verb + target`），系统会匹配 recipe 并执行 effects。
+- 交互：你需要使用中文提出意图，然后会由 Grounder 根据你的意图生成 action 序列（`verb + parameters + 可选 target_id`），系统会匹配 recipe 并执行 effects。
 - 可见性：你只能看到同地点的可见实体；容器内物品默认不可见（除非容器透明）。
 - 事件：你能看到同地点发生的“交互叙事”（包括失败），这些通常代表别人做了什么或试图做什么。
 
@@ -29,8 +29,8 @@
 - 当前计划（若有）：{{current_plan}}
 - 当前任务占用（若有 current_task_id）：{{current_task_id}}
 - 当前任务详情：{{current_task_summary}}
-- 当前中断预设（active_interrupt_preset_id）：{{active_interrupt_preset_id}}
-- 可用中断预设概览（id: 描述）：
+- 当前中断姿态（active_interrupt_preset_id）：{{active_interrupt_preset_id}}
+- 可用中断姿态概览（id: 描述）：
 {{interrupt_preset_summaries}}
 
 ---

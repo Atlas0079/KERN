@@ -1,16 +1,16 @@
 {
   "env": {
     "USE_LLM": "0",
-    "WORLD_JSON": "World_SpaceWerewolf.json",
-    "RECIPES_JSONS": "Recipes.json,SpaceWerewolf/Recipes.json",
-    "REACTIONS_JSONS": "Reactions.json,SpaceWerewolf/Reactions.json",
+    "WORLD_JSON": "Camping/World.json",
+    "RECIPES_JSONS": "Recipes.json,Camping/Recipes.json",
+    "REACTIONS_JSONS": "Reactions.json,Camping/Reactions.json",
     "BUNDLES_JSONS": "Bundles.json",
-    "ENTITIES_DIRS": "Entities,SpaceWerewolf/Entities",
+    "ENTITIES_DIRS": "Entities,Camping/Entities",
     "LOG_LEVEL": "warn",
     "LOG_CATEGORIES": "system,executor,task,interaction,checkpoint",
     "DIALOGUE_LOG_FULL": "0",
-    "MAX_TICKS": "2",
-    "CHECKPOINT_DIR": "checkpoints/smoke_werewolf",
+    "MAX_TICKS": "60",
+    "CHECKPOINT_DIR": "checkpoints/camping_smoke",
     "CHECKPOINT_EVERY_TICK": "1",
     "CHECKPOINT_INCLUDE_LOGS": "1",
     "CHECKPOINT_SNAPSHOT_INTERVAL_TICKS": "60"

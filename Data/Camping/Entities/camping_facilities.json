@@ -1,0 +1,108 @@
+{
+  "CampStorageBox": {
+    "name": "公共储物箱",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "container",
+          "public_storage",
+          "camp_facility"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "一个公共储物箱。打开后可以看见箱内物品；适合集中存放水、食物、燃料和临时补给，方便同伴按需取用。",
+        "base_description": "一个公共储物箱。",
+        "observed_description": "一个公共储物箱。打开后可以看见箱内物品；适合集中存放水、食物、燃料和临时补给，方便同伴按需取用。",
+        "recipe_description": "当前规则中，公共储物箱可参与 OpenContainer 和 StoreItem：打开后可见箱内物品；角色可把自己背包中的物品存入箱子。"
+      },
+      "StatusComponent": {
+        "statuses": []
+      },
+      "ContainerComponent": {
+        "slots": {
+          "main": {
+            "capacity_volume": 999,
+            "capacity_count": 200,
+            "accepted_tags": [],
+            "transparent": false
+          }
+        }
+      }
+    }
+  },
+  "Campfire": {
+    "name": "火堆",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "campfire",
+          "camp_facility"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "营地火堆。点燃后可用于取暖和烹饪；熄灭时不能发挥这些作用，需要燃料重新点火。",
+        "base_description": "营地火堆。",
+        "observed_description": "营地火堆。点燃后可用于取暖和烹饪；熄灭时不能发挥这些作用，需要燃料重新点火。",
+        "recipe_description": "当前规则中，火堆参与 LightCampfire 和 CookFood：消耗 Wood 可点燃火堆；火堆 lit 时可把 RawFish 烹饪为 CookedFish。"
+      },
+      "StatusComponent": {
+        "statuses": [
+          "extinguished"
+        ]
+      },
+      "TaskHostComponent": {}
+    }
+  },
+  "Shelter": {
+    "name": "简易庇护所",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "shelter",
+          "camp_facility"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "简易庇护所。它提供一个可以停留和休息的营地设施；当前规则里，休息动作要求角色位于主营地。",
+        "base_description": "简易庇护所。",
+        "observed_description": "简易庇护所。它提供一个可以停留和休息的营地设施；当前规则里，休息动作要求角色位于主营地。",
+        "recipe_description": "当前规则中，庇护所暂不作为 recipe target；休息动作 CampRest 只要求角色位于主营地。"
+      },
+      "StatusComponent": {
+        "statuses": [
+          "intact"
+        ]
+      },
+      "TaskHostComponent": {}
+    }
+  },
+  "WeatherController": {
+    "name": "天气",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "environment",
+          "weather_controller",
+          "world_state_entity",
+          "hidden_from_agents"
+        ]
+      },
+      "WorldStateEntityComponent": {
+        "debug_visible": true,
+        "visible_to_agents": false,
+        "note": "Holds global weather state for rules and debugging."
+      },
+      "DescriptionComponent": {
+        "description": "当前区域的天气状态记录。它用于表达环境状态；具体天气效果只以场景规则和事件为准。",
+        "base_description": "当前区域的天气状态记录。",
+        "observed_description": "当前区域的天气状态记录。它用于表达环境状态；具体天气效果只以场景规则和事件为准。",
+        "recipe_description": "这是世界状态实体，当前不提供 agent 可执行配方。"
+      },
+      "StatusComponent": {
+        "statuses": [
+          "weather_clear"
+        ]
+      }
+    }
+  }
+}

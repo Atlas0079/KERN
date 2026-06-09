@@ -51,11 +51,33 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 		agent_name = str(getattr(agent_setting, "agent_name", "") or "")
 		personality_summary = str(getattr(agent_setting, "personality_summary", "") or "")
 		common_knowledge_summary = str(getattr(agent_setting, "common_knowledge_summary", "") or "")
+		description_comp = ent.get_component("DescriptionComponent") if hasattr(ent, "get_component") else None
+		description = ""
+		base_description = ""
+		observed_description = ""
+		if description_comp is not None:
+			description = str(getattr(description_comp, "description", "") or "")
+			if hasattr(description_comp, "passive_text"):
+				base_description = str(description_comp.passive_text() or "")
+			else:
+				base_description = str(getattr(description_comp, "base_description", "") or description)
+			if hasattr(description_comp, "observed_text"):
+				observed_description = str(description_comp.observed_text() or "")
+			else:
+				observed_description = str(getattr(description_comp, "observed_description", "") or description)
 		memory_dict = _read_memory_component_dict(ent)
 		arb = ent.get_component("DecisionArbiterComponent") if hasattr(ent, "get_component") else None
 		active_interrupt_preset_id = str(getattr(arb, "active_interrupt_preset_id", "") or "") if arb is not None else ""
 		interrupt_presets = dict(getattr(arb, "interrupt_presets", {}) or {}) if arb is not None else {}
 		interrupt_preset_descriptions = dict(getattr(arb, "interrupt_preset_descriptions", {}) or {}) if arb is not None else {}
+		world_state_entity = ent.get_component("WorldStateEntityComponent") if hasattr(ent, "get_component") else None
+		world_state_entity_data: dict[str, Any] = {}
+		if world_state_entity is not None:
+			world_state_entity_data = {
+				"debug_visible": bool(getattr(world_state_entity, "debug_visible", True)),
+				"visible_to_agents": bool(getattr(world_state_entity, "visible_to_agents", False)),
+				"note": str(getattr(world_state_entity, "note", "") or ""),
+			}
 
 		task_host = ent.get_component("TaskHostComponent") if hasattr(ent, "get_component") else None
 		task_list: list[Any] = []
@@ -135,6 +157,9 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 				"agent_name": agent_name,
 				"personality_summary": personality_summary,
 				"common_knowledge_summary": common_knowledge_summary,
+				"description": description,
+				"base_description": base_description,
+				"observed_description": observed_description,
 				"memory": memory_dict,
 				"active_interrupt_preset_id": active_interrupt_preset_id,
 				"interrupt_presets": interrupt_presets,
@@ -143,6 +168,7 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 				"container_slots": container_slots,
 				"inventory": inventory,
 				"worker_current_task": worker_current_task,
+				"world_state_entity": world_state_entity_data,
 			}
 		)
 

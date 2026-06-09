@@ -63,6 +63,7 @@ KNOWN_CONDITION_TYPES = {
 	"inventory_has_tag",
 	"same_location",
 	"param_eq",
+	"compare_value",
 	"compare_fields",
 }
 
@@ -319,7 +320,7 @@ def _validate_world_entity_snapshot(ctx: LintContext, ent: Any, where: str, enti
 		return
 	for comp_name in dict(overrides).keys():
 		if str(comp_name) not in _known_component_names():
-			ctx.warn(f"{where}.component_overrides", f"unknown component override name: {comp_name}")
+			ctx.warn(f"{where}.component_overrides", f"custom component override name: {comp_name}")
 
 
 def _validate_parent_containers(ctx: LintContext, world: dict[str, Any], entity_ids: set[str]) -> None:
@@ -363,8 +364,10 @@ def _validate_world_task(ctx: LintContext, task: Any, where: str, entity_ids: se
 	pid = str(task.get("progressor_id", "") or "").strip()
 	if pid and pid not in _progressor_ids():
 		ctx.error(where, f"unknown progressor_id: {pid}")
+	_validate_bundle(ctx, task.get("start_bundle", {}), f"{where}.start_bundle")
 	_validate_bundle(ctx, task.get("completion_bundle", {}), f"{where}.completion_bundle")
 	_validate_bundle(ctx, task.get("tick_bundle", {}), f"{where}.tick_bundle")
+	_validate_bundle(ctx, task.get("cleanup_bundle", {}), f"{where}.cleanup_bundle")
 
 
 def _validate_component_templates(ctx: LintContext) -> None:
@@ -380,7 +383,7 @@ def _validate_component_templates(ctx: LintContext) -> None:
 		for comp_name, comp_data in components.items():
 			cname = str(comp_name)
 			if cname not in _known_component_names():
-				ctx.warn(where, f"unknown component name will be loaded as UnknownComponent: {cname}")
+				ctx.warn(where, f"custom component name will be loaded as CustomComponent: {cname}")
 				continue
 			if comp_data is not None and not isinstance(comp_data, dict):
 				ctx.error(f"{where}.components.{cname}", "component data must be object")
@@ -476,14 +479,14 @@ def _validate_condition(ctx: LintContext, condition: Any, where: str, known_even
 		if not comp:
 			ctx.error(where, "has_component missing component")
 		elif comp not in _known_component_names():
-			ctx.warn(where, f"has_component references unknown component: {comp}")
+			ctx.warn(where, f"has_component references custom component: {comp}")
 	if c_type == "compare_property":
 		comp = str(condition.get("component", "") or "").strip()
 		prop = str(condition.get("property", "") or "").strip()
 		if not comp:
 			ctx.error(where, "compare_property missing component")
 		elif comp not in _known_component_names():
-			ctx.warn(where, f"compare_property references unknown component: {comp}")
+			ctx.warn(where, f"compare_property references custom component: {comp}")
 		if not prop:
 			ctx.error(where, "compare_property missing property")
 	if c_type == "inventory_contains":
@@ -498,6 +501,12 @@ def _validate_condition(ctx: LintContext, condition: Any, where: str, known_even
 		_validate_entity_ref(ctx, condition.get("right", "target"), where, "right")
 	if c_type == "param_eq" and not str(condition.get("key", "") or "").strip():
 		ctx.error(where, "param_eq missing key")
+	if c_type == "compare_value":
+		ref = str(condition.get("left", "") or "").strip()
+		if not ref:
+			ctx.error(where, "compare_value missing left")
+		elif ref.startswith("event."):
+			_validate_event_field(ctx, known_event_type, ref[len("event.") :], where)
 	if c_type == "compare_fields":
 		for key in ["left", "right"]:
 			ref = str(condition.get(key, "") or "").strip()
@@ -651,10 +660,10 @@ def _validate_effect_required_fields(ctx: LintContext, eff: str, effect: dict[st
 			ctx.error(where, "ApplyMetaAction params must be object")
 	if eff == "AttachDetails":
 		detail_type = str(effect.get("detail_type", "") or "").strip()
-		if detail_type not in {"entity", "interrupt_preset"}:
-			ctx.error(where, "AttachDetails detail_type must be entity/interrupt_preset")
-		if detail_type == "entity" and not _has_nonempty_value(effect, "target"):
-			ctx.error(where, "AttachDetails(entity) missing target")
+		if detail_type not in {"entity", "entity_recipe", "interrupt_preset"}:
+			ctx.error(where, "AttachDetails detail_type must be entity/entity_recipe/interrupt_preset")
+		if detail_type in {"entity", "entity_recipe"} and not _has_nonempty_value(effect, "target"):
+			ctx.error(where, f"AttachDetails({detail_type}) missing target")
 	if eff == "EmitEvent":
 		if not _has_nonempty_value(effect, "event_type"):
 			ctx.error(where, "EmitEvent missing event_type")
@@ -712,7 +721,7 @@ def _validate_effect_specific_refs(ctx: LintContext, eff: str, effect: dict[str,
 	if eff == "ModifyProperty":
 		comp = str(effect.get("component", "") or "").strip()
 		if comp and comp not in _known_component_names():
-			ctx.warn(where, f"ModifyProperty references unknown component: {comp}")
+			ctx.warn(where, f"ModifyProperty references custom component: {comp}")
 	if eff == "CreateEntity":
 		template = str(effect.get("template", "") or "").strip()
 		if template and template not in (ctx.bundle.entity_templates or {}):
@@ -763,6 +772,8 @@ def _validate_recipe(ctx: LintContext, rid: str, recipe: Any) -> None:
 		ctx.error(where, "recipe.task_policy is removed; use recipe.process.task_policy")
 	if isinstance(process, dict):
 		_validate_task_policy(ctx, process.get("task_policy", None), f"{where}.process.task_policy")
+		_validate_bundle(ctx, process.get("start_bundle", {}), f"{where}.process.start_bundle")
+		_validate_bundle(ctx, process.get("cleanup_bundle", {}), f"{where}.process.cleanup_bundle")
 	_validate_process_duration(ctx, process, where)
 	duration = process.get("duration", None) if isinstance(process, dict) else None
 	is_duration = isinstance(duration, dict) and bool(duration)
@@ -894,7 +905,7 @@ def _validate_linear_progression_params(ctx: LintContext, params: Any, where: st
 					if not component:
 						ctx.error(twhere, "read.component is required")
 					elif component not in _known_component_names():
-						ctx.warn(twhere, f"read.component references unknown component: {component}")
+						ctx.warn(twhere, f"read.component references custom component: {component}")
 					if not prop:
 						ctx.error(twhere, "read.property is required")
 	clamp = params.get("clamp", None)

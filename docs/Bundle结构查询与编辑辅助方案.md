@@ -12,7 +12,7 @@
 - `RandomBundle` 的随机分支
 - `InvokeBundle` 引用组件或内联 bundle
 - `ApplyToQuery` 对查询结果批量执行 bundle
-- Task 的 `tick_bundle` / `completion_bundle`
+- Task 的 `start_bundle` / `tick_bundle` / `completion_bundle` / `cleanup_bundle`
 - Reaction 中继续触发新的 bundle
 
 这些结构仍然符合当前 DSL 边界：扁平、可序列化、可审计，不引入局部变量、循环或脚本执行栈。
@@ -62,7 +62,7 @@ LLM 不应该依赖一次性读取所有场景数据来理解结构。
 
 ### 服务职责
 
-- 加载 Data 下的 world / recipes / reactions / entities / tasks。
+- 加载 Data 下的 world / recipes / reactions / entities，以及 world/entity 中的 task 快照。
 - 识别所有 bundle 来源。
 - 给每个 bundle 建立稳定引用路径。
 - 支持展开嵌套 bundle。
@@ -87,11 +87,15 @@ LLM 不应该依赖一次性读取所有场景数据来理解结构。
 
 ```text
 recipe:FishAtPond.bundle
-recipe:MineOre.progression.completion_bundle
+recipe:MineOre.progression.tick_bundle
 reaction:market_wood_abundant.bundle
 entity:processing_station.TaskHostComponent.tasks.process_ore.completion_bundle
 random_bundle:arena_fishing_basic.entry.good_fish.bundle
 ```
+
+其中 recipe 的成功完成效果来自 `recipe:<id>.bundle`；`completion_bundle`
+是 Task 固化后的字段，主要出现在 world/entity 快照中的
+`TaskHostComponent.tasks.<task_id>.completion_bundle`。
 
 对于内联嵌套结构，可以继续追加路径：
 
@@ -270,12 +274,12 @@ random_bundle:arena_fishing_basic.entry.good_fish.bundle
 
 ### 第一阶段：CLI 工具
 
-先实现一个只读 CLI，例如：
+当前仓库尚未包含 `tools/bundle_inspect.py`。后续可先实现一个只读 CLI，例如：
 
-```bash
-python tools/bundle_inspect.py --config runtime_config.arena.json summary recipe:FishAtPond.bundle
-python tools/bundle_inspect.py --config runtime_config.arena.json random arena_fishing_basic
-python tools/bundle_inspect.py --config runtime_config.arena.json expand random_bundle:arena_fishing_basic.entry.good_fish.bundle --max-depth 4
+```powershell
+py tools\bundle_inspect.py --config runtime_config.arena.json summary recipe:FishAtPond.bundle
+py tools\bundle_inspect.py --config runtime_config.arena.json random arena_fishing_basic
+py tools\bundle_inspect.py --config runtime_config.arena.json expand random_bundle:arena_fishing_basic.entry.good_fish.bundle --max-depth 4
 ```
 
 优点：实现简单，容易接入测试，也可以被 LLM 通过命令调用。

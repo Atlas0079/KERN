@@ -1,126 +1,304 @@
 {
-    "killer": {
-        "name": "Killer",
-        "components": {
-            "TagComponent": {
-                "tags": ["character", "agent"]
-            },
-            "CreatureComponent": {
-                "max_hp": 100,
-                "max_energy": 100,
-                "max_nutrition": 100
-            },
-            "AgentSetting": {
-                "agent_name": "Killer",
-                "personality_summary": "你冷静、直接、目标导向，只关心完成击杀。",
-                "common_knowledge_summary": "你的唯一目标是立刻杀死同地点的受害者。"
-            },
-            "PerceptionComponent": {},
-            "EquipmentComponent": {},
-            "ContainerComponent": {
-                "slots": {
-                    "inventory": {
-                        "capacity_volume": 20,
-                        "capacity_count": 20,
-                        "accepted_tags": []
-                    }
-                }
-            },
-            "AgentControlComponent": {},
-            "MemoryComponent": {
-                "short_term_queue": [],
-                "short_term_max_entries": 25,
-                "mid_term_prep_queue": [],
-                "mid_term_prep_max_entries": 50,
-                "mid_term_queue": [],
-                "mid_term_max_entries": 20,
-                "last_mid_term_summary_tick": -1,
-                "mid_term_summary_cooldown_ticks": 15
-            },
-            "WorkerComponent": {},
-            "TaskHostComponent": {},
-            "DecisionArbiterComponent": {
-                "active_interrupt_preset_id": "default",
-                "interrupt_preset_descriptions": {
-                    "default": "默认预设：启用 Idle、LowNutrition、PerceptionChange 与 CorpseSighted 中断。"
-                },
-                "interrupt_presets": {
-                    "default": {
-                        "Idle": { "enabled": true },
-                        "LowNutrition": { "enabled": true, "threshold_on": 50, "threshold_off": 65, "cooldown_ticks": 10 },
-                        "PerceptionChange": { "enabled": true, "trigger_on_agent_sighted": true, "trigger_on_agent_left": true },
-                        "CorpseSighted": { "enabled": true, "trigger_on_new_corpse": true, "cooldown_ticks": 3 }
-                    }
-                },
-                "rules": [
-                    { "type": "Idle", "priority": 999 },
-                    { "type": "LowNutrition", "priority": 10, "threshold": 50 },
-                    { "type": "CorpseSighted", "priority": 30, "trigger_on_new_corpse": true },
-                    { "type": "PerceptionChange", "priority": 50 }
-                ]
-            }
+  "killer": {
+    "name": "Killer",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "character",
+          "agent"
+        ]
+      },
+      "CreatureComponent": {
+        "max_hp": 100,
+        "max_energy": 100,
+        "max_nutrition": 100
+      },
+      "AgentSetting": {
+        "agent_name": "Killer",
+        "personality_summary": "你冷静、直接、目标导向，只关心完成击杀。",
+        "common_knowledge_summary": "你的唯一目标是立刻杀死同地点的受害者。"
+      },
+      "PerceptionComponent": {},
+      "EquipmentComponent": {},
+      "ContainerComponent": {
+        "slots": {
+          "inventory": {
+            "capacity_volume": 20,
+            "capacity_count": 20,
+            "accepted_tags": []
+          }
         }
-    },
-    "human": {
-        "name": "Human",
-        "components": {
-            "TagComponent": {
-                "tags": ["character", "agent"]
+      },
+      "AgentControlComponent": {},
+      "MemoryComponent": {
+        "short_term_queue": [],
+        "short_term_max_entries": 25,
+        "mid_term_prep_queue": [],
+        "mid_term_prep_max_entries": 50,
+        "mid_term_queue": [],
+        "mid_term_max_entries": 20,
+        "last_mid_term_summary_tick": -1,
+        "mid_term_summary_cooldown_ticks": 15
+      },
+      "WorkerComponent": {},
+      "TaskHostComponent": {},
+      "DecisionArbiterComponent": {
+        "active_interrupt_preset_id": "balanced",
+        "interrupt_preset_descriptions": {
+          "balanced": "平衡姿态：正常响应饥饿、感知变化和危险线索。",
+          "cautious": "谨慎姿态：更早响应饥饿，更频繁关注环境变化。",
+          "focused": "专注姿态：降低软中断敏感度，倾向把当前任务做完。",
+          "emergency": "应急姿态：优先生存风险和危险线索。"
+        },
+        "interrupt_presets": {
+          "balanced": {
+            "LowNutrition": {
+              "enabled": true,
+              "threshold_on": 50,
+              "threshold_off": 65,
+              "cooldown_ticks": 10
             },
-            "CreatureComponent": {
-                "max_hp": 100,
-                "max_energy": 100,
-                "max_nutrition": 100
+            "PerceptionChange": {
+              "enabled": true,
+              "trigger_on_agent_sighted": true,
+              "trigger_on_agent_left": true
             },
-            "AgentSetting": {
-                "agent_name": "Human",
-                "personality_summary": "你是一个普通人，会优先进行自然互动与探索。",
-                "common_knowledge_summary": "你会根据所见所闻做出合理行动，优先保持安全并与他人交流。"
-            },
-            "PerceptionComponent": {},
-            "EquipmentComponent": {},
-            "ContainerComponent": {
-                "slots": {
-                    "inventory": {
-                        "capacity_volume": 20,
-                        "capacity_count": 20,
-                        "accepted_tags": []
-                    }
-                }
-            },
-            "AgentControlComponent": {},
-            "MemoryComponent": {
-                "short_term_queue": [],
-                "short_term_max_entries": 25,
-                "mid_term_prep_queue": [],
-                "mid_term_prep_max_entries": 50,
-                "mid_term_queue": [],
-                "mid_term_max_entries": 20,
-                "last_mid_term_summary_tick": -1,
-                "mid_term_summary_cooldown_ticks": 15
-            },
-            "WorkerComponent": {},
-            "TaskHostComponent": {},
-            "DecisionArbiterComponent": {
-                "active_interrupt_preset_id": "default",
-                "interrupt_preset_descriptions": {
-                    "default": "默认预设：启用 Idle、LowNutrition、PerceptionChange 与 CorpseSighted 中断。"
-                },
-                "interrupt_presets": {
-                    "default": {
-                        "Idle": { "enabled": true },
-                        "LowNutrition": { "enabled": true, "threshold_on": 50, "threshold_off": 65, "cooldown_ticks": 10 },
-                        "PerceptionChange": { "enabled": true, "trigger_on_agent_sighted": true, "trigger_on_agent_left": true },
-                        "CorpseSighted": { "enabled": true, "trigger_on_new_corpse": true, "cooldown_ticks": 3 }
-                    }
-                },
-                "rules": [
-                    { "type": "Idle", "priority": 999 },
-                    { "type": "LowNutrition", "priority": 10, "threshold": 50 },
-                    { "type": "CorpseSighted", "priority": 30, "trigger_on_new_corpse": true },
-                    { "type": "PerceptionChange", "priority": 50 }
-                ]
+            "CorpseSighted": {
+              "enabled": true,
+              "trigger_on_new_corpse": true,
+              "cooldown_ticks": 3
             }
-        }
+          },
+          "cautious": {
+            "LowNutrition": {
+              "enabled": true,
+              "threshold_on": 65,
+              "threshold_off": 75,
+              "cooldown_ticks": 20
+            },
+            "PerceptionChange": {
+              "enabled": true,
+              "trigger_on_agent_sighted": true,
+              "trigger_on_agent_left": true,
+              "cooldown_ticks": 1
+            },
+            "CorpseSighted": {
+              "enabled": true,
+              "trigger_on_new_corpse": true,
+              "cooldown_ticks": 3
+            }
+          },
+          "focused": {
+            "LowNutrition": {
+              "enabled": true,
+              "threshold_on": 20,
+              "threshold_off": 35,
+              "cooldown_ticks": 30
+            },
+            "PerceptionChange": {
+              "enabled": false,
+              "trigger_on_agent_sighted": false,
+              "trigger_on_agent_left": false,
+              "cooldown_ticks": 10
+            },
+            "CorpseSighted": {
+              "enabled": true,
+              "trigger_on_new_corpse": true,
+              "cooldown_ticks": 3
+            }
+          },
+          "emergency": {
+            "LowNutrition": {
+              "enabled": true,
+              "threshold_on": 80,
+              "threshold_off": 90,
+              "cooldown_ticks": 5
+            },
+            "PerceptionChange": {
+              "enabled": true,
+              "trigger_on_agent_sighted": true,
+              "trigger_on_agent_left": true,
+              "cooldown_ticks": 1
+            },
+            "CorpseSighted": {
+              "enabled": true,
+              "trigger_on_new_corpse": true,
+              "cooldown_ticks": 1
+            }
+          }
+        },
+        "rules": [
+          {
+            "type": "NoActiveTask",
+            "priority": 999
+          },
+          {
+            "type": "LowNutrition",
+            "priority": 10,
+            "threshold": 50
+          },
+          {
+            "type": "CorpseSighted",
+            "priority": 30,
+            "trigger_on_new_corpse": true
+          },
+          {
+            "type": "PerceptionChange",
+            "priority": 50
+          }
+        ]
+      }
     }
-} 
+  },
+  "human": {
+    "name": "Human",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "character",
+          "agent"
+        ]
+      },
+      "CreatureComponent": {
+        "max_hp": 100,
+        "max_energy": 100,
+        "max_nutrition": 100
+      },
+      "AgentSetting": {
+        "agent_name": "Human",
+        "personality_summary": "你是一个普通人，会优先进行自然互动与探索。",
+        "common_knowledge_summary": "你会根据所见所闻做出合理行动，优先保持安全并与他人交流。"
+      },
+      "PerceptionComponent": {},
+      "EquipmentComponent": {},
+      "ContainerComponent": {
+        "slots": {
+          "inventory": {
+            "capacity_volume": 20,
+            "capacity_count": 20,
+            "accepted_tags": []
+          }
+        }
+      },
+      "AgentControlComponent": {},
+      "MemoryComponent": {
+        "short_term_queue": [],
+        "short_term_max_entries": 25,
+        "mid_term_prep_queue": [],
+        "mid_term_prep_max_entries": 50,
+        "mid_term_queue": [],
+        "mid_term_max_entries": 20,
+        "last_mid_term_summary_tick": -1,
+        "mid_term_summary_cooldown_ticks": 15
+      },
+      "WorkerComponent": {},
+      "TaskHostComponent": {},
+      "DecisionArbiterComponent": {
+        "active_interrupt_preset_id": "balanced",
+        "interrupt_preset_descriptions": {
+          "balanced": "平衡姿态：正常响应饥饿、感知变化和危险线索。",
+          "cautious": "谨慎姿态：更早响应饥饿，更频繁关注环境变化。",
+          "focused": "专注姿态：降低软中断敏感度，倾向把当前任务做完。",
+          "emergency": "应急姿态：优先生存风险和危险线索。"
+        },
+        "interrupt_presets": {
+          "balanced": {
+            "LowNutrition": {
+              "enabled": true,
+              "threshold_on": 50,
+              "threshold_off": 65,
+              "cooldown_ticks": 10
+            },
+            "PerceptionChange": {
+              "enabled": true,
+              "trigger_on_agent_sighted": true,
+              "trigger_on_agent_left": true
+            },
+            "CorpseSighted": {
+              "enabled": true,
+              "trigger_on_new_corpse": true,
+              "cooldown_ticks": 3
+            }
+          },
+          "cautious": {
+            "LowNutrition": {
+              "enabled": true,
+              "threshold_on": 65,
+              "threshold_off": 75,
+              "cooldown_ticks": 20
+            },
+            "PerceptionChange": {
+              "enabled": true,
+              "trigger_on_agent_sighted": true,
+              "trigger_on_agent_left": true,
+              "cooldown_ticks": 1
+            },
+            "CorpseSighted": {
+              "enabled": true,
+              "trigger_on_new_corpse": true,
+              "cooldown_ticks": 3
+            }
+          },
+          "focused": {
+            "LowNutrition": {
+              "enabled": true,
+              "threshold_on": 20,
+              "threshold_off": 35,
+              "cooldown_ticks": 30
+            },
+            "PerceptionChange": {
+              "enabled": false,
+              "trigger_on_agent_sighted": false,
+              "trigger_on_agent_left": false,
+              "cooldown_ticks": 10
+            },
+            "CorpseSighted": {
+              "enabled": true,
+              "trigger_on_new_corpse": true,
+              "cooldown_ticks": 3
+            }
+          },
+          "emergency": {
+            "LowNutrition": {
+              "enabled": true,
+              "threshold_on": 80,
+              "threshold_off": 90,
+              "cooldown_ticks": 5
+            },
+            "PerceptionChange": {
+              "enabled": true,
+              "trigger_on_agent_sighted": true,
+              "trigger_on_agent_left": true,
+              "cooldown_ticks": 1
+            },
+            "CorpseSighted": {
+              "enabled": true,
+              "trigger_on_new_corpse": true,
+              "cooldown_ticks": 1
+            }
+          }
+        },
+        "rules": [
+          {
+            "type": "NoActiveTask",
+            "priority": 999
+          },
+          {
+            "type": "LowNutrition",
+            "priority": 10,
+            "threshold": 50
+          },
+          {
+            "type": "CorpseSighted",
+            "priority": 30,
+            "trigger_on_new_corpse": true
+          },
+          {
+            "type": "PerceptionChange",
+            "priority": 50
+          }
+        ]
+      }
+    }
+  }
+}

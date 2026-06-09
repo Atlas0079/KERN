@@ -43,6 +43,7 @@ def _entities_table(entities: list[dict[str, Any]]) -> str:
 		name = str(e.get("name", "") or "")
 		tags = e.get("tags", []) or []
 		statuses = [str(x) for x in list(e.get("statuses", []) or [])]
+		desc = str(e.get("description", "") or "").strip()
 		contained_in = str(e.get("contained_in", "") or "")
 		contained_in_slot = str(e.get("contained_in_slot", "") or "")
 		is_top_level = bool(e.get("is_top_level", False))
@@ -74,7 +75,8 @@ def _entities_table(entities: list[dict[str, Any]]) -> str:
 				)
 			if summaries:
 				task_text = f", tasks: [{'; '.join(summaries)}]"
-		lines.append(f"- id: {eid}, name: {name}, tags: {list(tags)}, statuses: {list(statuses)}, where: {where}{task_text}")
+		desc_text = f", description: {desc}" if desc else ""
+		lines.append(f"- id: {eid}, name: {name}, tags: {list(tags)}, statuses: {list(statuses)}, where: {where}{desc_text}{task_text}")
 	return "\n".join(lines) if lines else "(No visible entities)"
 
 
@@ -86,6 +88,7 @@ def _entities_table_planner(entities: list[dict[str, Any]]) -> str:
 		name = str(e.get("name", "") or "")
 		tags = [str(x) for x in list(e.get("tags", []) or [])]
 		statuses = [str(x) for x in list(e.get("statuses", []) or [])]
+		desc = str(e.get("description", "") or "").strip()
 		contained_in = str(e.get("contained_in", "") or "")
 		is_top_level = bool(e.get("is_top_level", False))
 		where = "地面可见" if is_top_level else ("容器内可见" if contained_in else "位置未知")
@@ -108,7 +111,8 @@ def _entities_table_planner(entities: list[dict[str, Any]]) -> str:
 				summaries.append(f"{ttype}({prog:g}/{req:g},{status or 'Unknown'},{'可接取' if avail else f'已分配:{assigned_cnt}'}{extra})")
 			if summaries:
 				task_text = f"，任务: {'; '.join(summaries)}"
-		lines.append(f"- {name}（tags:{tags}，状态:{statuses if statuses else '无'}，{where}{task_text}）")
+		desc_text = f"，描述:{desc}" if desc else ""
+		lines.append(f"- {name}（tags:{tags}，状态:{statuses if statuses else '无'}，{where}{desc_text}{task_text}）")
 	return "\n".join(lines) if lines else "(No visible entities)"
 
 
@@ -468,7 +472,6 @@ INTENT: <1-3句，给Grounder使用的实际意图，必须可执行>
 
 **动词特定参数规则（重要）：**
 - SwitchInterruptPreset（meta）：parameters 必须包含 `{"preset_id": "<available_interrupt_presets 中的一个>"}`，且不得提供 target_id。
-- UpdateInterruptRuleParam（meta）：parameters 必须包含 `{"preset_id": "...", "rule_type": "...", "key": "...", "value": <任意值>}`，且不得提供 target_id。
 - InspectInterruptPresets（meta）：可选参数 `{"preset_id": "<可选>"}`，且不得提供 target_id。
 - Travel（non-meta）：target_id 必须是 self id，parameters 必须包含 `{"to_location_id": "<reachable_locations.to_location_id 之一>"}`。
 - Talk（non-meta）：不得提供 target_id；parameters 必须包含 `{"text": "<非空开场白>"}`。执行后会触发“当前地点群体对话”，该 text 作为第一轮发言，然后同地点其他角色按轮次继续。

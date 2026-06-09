@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import gzip
 from dataclasses import asdict, is_dataclass
 from pathlib import Path
 from typing import Any
@@ -25,10 +26,12 @@ def resolve_checkpoint_file(checkpoint_file: str, checkpoint_dir: str) -> Path |
 	dir_path = Path(dir_raw)
 	if not dir_path.exists() or not dir_path.is_dir():
 		return None
-	candidates = sorted(list(dir_path.glob("tick_*.json")))
-	if not candidates:
-		return None
-	return candidates[-1]
+	archive_snapshot_dir = dir_path / "snapshots"
+	if archive_snapshot_dir.exists() and archive_snapshot_dir.is_dir():
+		archive_candidates = sorted(list(archive_snapshot_dir.glob("snapshot_*.json.gz")))
+		if archive_candidates:
+			return archive_candidates[-1]
+	return None
 
 
 def resolve_global_log_file(checkpoint_dir: str | Path) -> Path:
@@ -68,7 +71,9 @@ def _serialize_task(task: Task) -> dict[str, Any]:
 		"parameters": _serialize_any(dict(getattr(task, "parameters", {}) or {})),
 		"progressor_id": str(getattr(task, "progressor_id", "") or ""),
 		"progressor_params": _serialize_any(dict(getattr(task, "progressor_params", {}) or {})),
+		"start_bundle": _serialize_any(getattr(task, "start_bundle", None)),
 		"tick_bundle": _serialize_any(getattr(task, "tick_bundle", None)),
+		"cleanup_bundle": _serialize_any(getattr(task, "cleanup_bundle", None)),
 		"completion_bundle": _serialize_any(getattr(task, "completion_bundle", None)),
 	}
 
@@ -99,8 +104,8 @@ def _serialize_arbiter_component(arb: Any) -> dict[str, Any]:
 		if rule_class == "CorpseSightedRule":
 			rules_out.append({"type": "CorpseSighted", "priority": priority, "trigger_on_new_corpse": bool(getattr(r, "trigger_on_new_corpse", True))})
 			continue
-		if rule_class == "IdleRule":
-			rules_out.append({"type": "Idle", "priority": priority})
+		if rule_class == "NoActiveTaskRule":
+			rules_out.append({"type": "NoActiveTask", "priority": priority})
 	return {
 		"rules": rules_out,
 		"active_interrupt_preset_id": str(getattr(arb, "active_interrupt_preset_id", "") or ""),
@@ -250,20 +255,6 @@ def _build_combined_log_rows(
 	return rows
 
 
-def build_checkpoint_payload_from_world_state(ws: WorldState, include_logs: bool = True, run_id: str = "") -> dict[str, Any]:
-	tick = int(getattr(ws.game_time, "total_ticks", 0) or 0)
-	payload: dict[str, Any] = {
-		"meta": {"schema_version": "checkpoint.v4", "tick": tick, "time_str": ws.game_time.time_to_string()},
-		"world": _world_dict_from_world_state(ws),
-	}
-	if str(run_id or "").strip():
-		payload["meta"]["run_id"] = str(run_id).strip()
-	if include_logs:
-		payload["meta"]["log_scope"] = "tick"
-		payload["log"] = _build_combined_log_rows(ws, tick=tick)
-	return payload
-
-
 def build_simulation_log_payload_from_world_state(ws: WorldState, run_id: str = "") -> dict[str, Any]:
 	tick = int(getattr(ws.game_time, "total_ticks", 0) or 0)
 	meta: dict[str, Any] = {
@@ -283,7 +274,8 @@ def _load_history_log_rows(checkpoint_path: Path, checkpoint_meta: dict[str, Any
 	run_id = str((checkpoint_meta or {}).get("run_id", "") or "").strip()
 	if not run_id:
 		return []
-	log_path = resolve_global_log_file(checkpoint_path.parent)
+	log_dir = checkpoint_path.parent.parent if checkpoint_path.parent.name == "snapshots" else checkpoint_path.parent
+	log_path = resolve_global_log_file(log_dir)
 	if not log_path.exists():
 		return []
 	try:
@@ -315,8 +307,12 @@ def restore_world_state_from_checkpoint(
 	entity_templates: dict[str, Any],
 	named_bundles: dict[str, Any] | None = None,
 ) -> WorldState:
-	with checkpoint_path.open("r", encoding="utf-8") as f:
-		payload = json.load(f)
+	if checkpoint_path.suffix == ".gz":
+		with gzip.open(checkpoint_path, "rt", encoding="utf-8") as f:
+			payload = json.load(f)
+	else:
+		with checkpoint_path.open("r", encoding="utf-8") as f:
+			payload = json.load(f)
 	meta = (payload or {}).get("meta", {}) or {}
 	world = (payload or {}).get("world", {}) or {}
 	if not isinstance(world, dict) or not world:
@@ -343,7 +339,13 @@ def restore_world_state_from_checkpoint(
 			interaction_log.append(rec)
 	ws.event_log = event_log
 	ws.interaction_log = interaction_log
-	ws._event_seq = max([int((x or {}).get("seq", 0) or 0) for x in ws.event_log], default=0)
-	ws._interaction_seq = max([int((x or {}).get("seq", 0) or 0) for x in ws.interaction_log], default=0)
+	ws._event_seq = max(
+		[int((x or {}).get("seq", 0) or 0) for x in ws.event_log] + [int(meta.get("event_seq", 0) or 0)],
+		default=0,
+	)
+	ws._interaction_seq = max(
+		[int((x or {}).get("seq", 0) or 0) for x in ws.interaction_log] + [int(meta.get("interaction_seq", 0) or 0)],
+		default=0,
+	)
 	setattr(ws, "_checkpoint_run_id", str(meta.get("run_id", "") or "").strip())
 	return ws

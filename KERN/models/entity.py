@@ -8,13 +8,14 @@ from .components import (
 	AgentControlComponent,
 	ContainerComponent,
 	CreatureComponent,
+	CustomComponent,
 	DecisionArbiterComponent,
 	LogicControlComponent,
 	MemoryComponent,
 	PlayerControlComponent,
 	TagComponent,
 	TaskHostComponent,
-	UnknownComponent,
+	WorldStateEntityComponent,
 	WorkerComponent,
 )
 
@@ -30,7 +31,8 @@ ComponentValue = (
 	| MemoryComponent
 	| DecisionArbiterComponent
 	| TaskHostComponent
-	| UnknownComponent
+	| CustomComponent
+	| WorldStateEntityComponent
 	| WorkerComponent
 )
 

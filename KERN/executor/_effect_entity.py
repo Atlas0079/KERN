@@ -144,13 +144,28 @@ def execute_destroy_entity(executor: Any, ws: Any, data: dict[str, Any], context
 			task = ws.tasks.get(tid)
 			if task:
 				if str(getattr(task, "target_entity_id", "") or "") != str(ent.entity_id):
-					if hasattr(task, "assigned_agent_ids") and isinstance(getattr(task, "assigned_agent_ids"), list):
-						task.assigned_agent_ids = []
-					task.task_status = "Inactive"
-					events.append({"type": "TaskReleased", "task_id": tid, "reason": "agent_destroyed"})
+					events.extend(
+						executor.execute(
+							ws,
+							{
+								"effect": "InterruptTask",
+								"task_id": str(tid),
+								"reason": "agent_destroyed",
+								"interrupt_source": "system",
+								"is_voluntary": False,
+								"force": True,
+							},
+							{"self_id": str(ent.entity_id), "task_id": str(tid)},
+						)
+					)
 				else:
-					task.task_status = "Cancelled"
-					events.append({"type": "TaskCancelled", "task_id": tid, "reason": "agent_destroyed"})
+					events.extend(
+						executor.execute(
+							ws,
+							{"effect": "CancelTask", "task_id": str(tid), "reason": "agent_destroyed", "force": True},
+							{"self_id": str(ent.entity_id), "task_id": str(tid)},
+						)
+					)
 			wc.current_task_id = ""
 	for loc in ws.locations.values():
 		if ent.entity_id in loc.entities_in_location:
