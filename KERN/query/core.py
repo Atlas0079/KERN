@@ -27,6 +27,198 @@ def compare_values(actual: Any, expected: Any, op: str) -> bool:
 	return False
 
 
+WEEKDAY_ALIASES = {
+	"mon": 0,
+	"monday": 0,
+	"tue": 1,
+	"tues": 1,
+	"tuesday": 1,
+	"wed": 2,
+	"wednesday": 2,
+	"thu": 3,
+	"thur": 3,
+	"thurs": 3,
+	"thursday": 3,
+	"fri": 4,
+	"friday": 4,
+	"sat": 5,
+	"saturday": 5,
+	"sun": 6,
+	"sunday": 6,
+}
+
+
+def _time_api(ws: Any) -> Any:
+	return getattr(ws, "game_time", None)
+
+
+def _time_day_tick_from_hm(hour: Any, minute: Any = 0) -> int | None:
+	try:
+		h = int(hour)
+		m = int(minute)
+	except Exception:
+		return None
+	if h < 0 or h > 23 or m < 0 or m > 59:
+		return None
+	return h * 60 + m
+
+
+def _parse_time_of_day(value: Any, fallback_minute: Any = 0) -> int | None:
+	if isinstance(value, str):
+		text = str(value or "").strip()
+		if not text:
+			return None
+		parts = text.split(":")
+		if len(parts) not in {2, 3}:
+			return None
+		return _time_day_tick_from_hm(parts[0], parts[1])
+	if isinstance(value, dict):
+		return _time_day_tick_from_hm(value.get("hour"), value.get("minute", 0))
+	return _time_day_tick_from_hm(value, fallback_minute)
+
+
+def _parse_weekday(value: Any) -> int | None:
+	if isinstance(value, str):
+		text = str(value or "").strip().lower()
+		if not text:
+			return None
+		if text in WEEKDAY_ALIASES:
+			return WEEKDAY_ALIASES[text]
+		try:
+			num = int(text)
+		except Exception:
+			return None
+		return num if 0 <= num <= 6 else None
+	try:
+		num = int(value)
+	except Exception:
+		return None
+	return num if 0 <= num <= 6 else None
+
+
+def _weekday_matches(current_weekday: int, raw_weekday: Any) -> bool:
+	if raw_weekday is None:
+		return True
+	if isinstance(raw_weekday, list):
+		if not raw_weekday:
+			return True
+		values = [_parse_weekday(item) for item in raw_weekday]
+		return current_weekday in {int(x) for x in values if x is not None}
+	parsed = _parse_weekday(raw_weekday)
+	return parsed is not None and current_weekday == parsed
+
+
+def _current_day_tick(ws: Any) -> int | None:
+	gt = _time_api(ws)
+	if gt is None:
+		return None
+	if hasattr(gt, "get_day_tick"):
+		try:
+			return int(gt.get_day_tick())
+		except Exception:
+			return None
+	if hasattr(gt, "get_hour") and hasattr(gt, "get_minute"):
+		try:
+			return int(gt.get_hour()) * 60 + int(gt.get_minute())
+		except Exception:
+			return None
+	return None
+
+
+def _current_weekday(ws: Any) -> int | None:
+	gt = _time_api(ws)
+	if gt is None or not hasattr(gt, "get_weekday"):
+		return None
+	try:
+		return int(gt.get_weekday())
+	except Exception:
+		return None
+
+
+def _time_field_value(ws: Any, field: str) -> Any:
+	gt = _time_api(ws)
+	if gt is None:
+		return None
+	name = str(field or "").strip()
+	if name in {"total_ticks", "tick"}:
+		return int(getattr(gt, "total_ticks", 0) or 0)
+	if name == "day_tick":
+		return _current_day_tick(ws)
+	if name == "weekday":
+		return _current_weekday(ws)
+	if name == "hour" and hasattr(gt, "get_hour"):
+		return int(gt.get_hour())
+	if name == "minute" and hasattr(gt, "get_minute"):
+		return int(gt.get_minute())
+	if name == "year" and hasattr(gt, "get_year"):
+		return int(gt.get_year())
+	if name == "month" and hasattr(gt, "get_month"):
+		return int(gt.get_month())
+	if name in {"day", "day_of_month"} and hasattr(gt, "get_day_of_month"):
+		return int(gt.get_day_of_month())
+	if name in {"datetime", "iso"} and hasattr(gt, "current_datetime"):
+		return gt.current_datetime().isoformat(timespec="minutes")
+	if name == "date" and hasattr(gt, "current_datetime"):
+		return gt.current_datetime().date().isoformat()
+	if hasattr(gt, name):
+		return getattr(gt, name)
+	return None
+
+
+def _time_match(ws: Any, predicate: dict[str, Any]) -> bool:
+	current = _current_day_tick(ws)
+	weekday = _current_weekday(ws)
+	if current is None or weekday is None:
+		return False
+	if not _weekday_matches(weekday, predicate.get("weekday")):
+		return False
+	target = _parse_time_of_day(predicate.get("time", predicate.get("hour")), predicate.get("minute", 0))
+	if target is None:
+		return False
+	return compare_values(current, target, str(predicate.get("op", "==") or "=="))
+
+
+def _time_between(ws: Any, predicate: dict[str, Any]) -> bool:
+	current = _current_day_tick(ws)
+	weekday = _current_weekday(ws)
+	if current is None or weekday is None:
+		return False
+	if not _weekday_matches(weekday, predicate.get("weekday")):
+		return False
+	start = _parse_time_of_day(predicate.get("start"))
+	end = _parse_time_of_day(predicate.get("end"))
+	if start is None or end is None:
+		return False
+	include_start = bool(predicate.get("include_start", True))
+	include_end = bool(predicate.get("include_end", False))
+	if start <= end:
+		left_ok = current >= start if include_start else current > start
+		right_ok = current <= end if include_end else current < end
+		return bool(left_ok and right_ok)
+	left_ok = current >= start if include_start else current > start
+	right_ok = current <= end if include_end else current < end
+	return bool(left_ok or right_ok)
+
+
+def _time_every(ws: Any, predicate: dict[str, Any]) -> bool:
+	current = _current_day_tick(ws)
+	weekday = _current_weekday(ws)
+	if current is None or weekday is None:
+		return False
+	if not _weekday_matches(weekday, predicate.get("weekday")):
+		return False
+	try:
+		minutes = int(predicate.get("minutes", predicate.get("mod", 0)) or 0)
+	except Exception:
+		return False
+	if minutes <= 0:
+		return False
+	offset = _parse_time_of_day(predicate.get("offset", "00:00"))
+	if offset is None:
+		offset = 0
+	return (current - offset) % minutes == 0
+
+
 def resolve_value(ws: Any, ref: Any, context: dict[str, Any] | None) -> Any:
 	if not isinstance(ref, str):
 		return ref
@@ -40,6 +232,8 @@ def resolve_value(ws: Any, ref: Any, context: dict[str, Any] | None) -> Any:
 	if root == "param" and dot:
 		params = ctx.get("parameters", {}) or {}
 		return resolve_path_value(params if isinstance(params, dict) else {}, remainder.split("."))
+	if root == "time" and dot:
+		return _time_field_value(ws, remainder)
 	if root in {"self", "target", "event_entity"} and dot:
 		entity = resolve_entity(ws, root, ctx, allow_literal=True)
 		return resolve_entity_path(ws, entity, remainder.split("."))
@@ -184,6 +378,12 @@ def evaluate_predicate(ws: Any, predicate: dict[str, Any] | None, context: dict[
 		right = resolve_value(ws, predicate.get("right", ""), ctx)
 		op = str(predicate.get("op", "==") or "==")
 		return compare_values(left, right, op)
+	if p_type == "time_match":
+		return _time_match(ws, predicate)
+	if p_type == "time_between":
+		return _time_between(ws, predicate)
+	if p_type == "time_every":
+		return _time_every(ws, predicate)
 	if p_type == "inventory_contains":
 		owner = resolve_entity(ws, predicate.get("owner", "self"), ctx, allow_literal=True)
 		item = resolve_entity(ws, predicate.get("item_ref", "target"), ctx, allow_literal=True)

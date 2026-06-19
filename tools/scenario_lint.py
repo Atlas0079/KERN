@@ -65,6 +65,9 @@ KNOWN_CONDITION_TYPES = {
 	"param_eq",
 	"compare_value",
 	"compare_fields",
+	"time_match",
+	"time_between",
+	"time_every",
 }
 
 RESERVED_ENTITY_REFS = {"self", "target", "event_entity"}
@@ -514,6 +517,69 @@ def _validate_condition(ctx: LintContext, condition: Any, where: str, known_even
 				ctx.error(where, f"compare_fields missing {key}")
 			elif ref.startswith("event."):
 				_validate_event_field(ctx, known_event_type, ref[len("event.") :], where)
+	if c_type == "time_match":
+		op = str(condition.get("op", "==") or "==").strip()
+		if op not in {"==", "!=", "<", "<=", ">", ">="}:
+			ctx.error(where, "time_match op must be one of ==, !=, <, <=, >, >=")
+		if "time" not in condition and "hour" not in condition:
+			ctx.error(where, "time_match requires time or hour")
+		_validate_weekday_field(ctx, condition.get("weekday", None), where)
+	if c_type == "time_between":
+		if "start" not in condition:
+			ctx.error(where, "time_between missing start")
+		if "end" not in condition:
+			ctx.error(where, "time_between missing end")
+		_validate_weekday_field(ctx, condition.get("weekday", None), where)
+	if c_type == "time_every":
+		raw_minutes = condition.get("minutes", condition.get("mod", None))
+		try:
+			if int(raw_minutes) <= 0:
+				ctx.error(where, "time_every minutes must be positive")
+		except Exception:
+			ctx.error(where, "time_every requires positive integer minutes")
+		_validate_weekday_field(ctx, condition.get("weekday", None), where)
+
+
+def _validate_weekday_field(ctx: LintContext, value: Any, where: str) -> None:
+	if value is None:
+		return
+	valid_names = {
+		"mon",
+		"monday",
+		"tue",
+		"tues",
+		"tuesday",
+		"wed",
+		"wednesday",
+		"thu",
+		"thur",
+		"thurs",
+		"thursday",
+		"fri",
+		"friday",
+		"sat",
+		"saturday",
+		"sun",
+		"sunday",
+	}
+
+	def _ok(item: Any) -> bool:
+		text = str(item or "").strip().lower()
+		if text in valid_names:
+			return True
+		try:
+			num = int(text)
+		except Exception:
+			return False
+		return 0 <= num <= 6
+
+	if isinstance(value, list):
+		for item in value:
+			if not _ok(item):
+				ctx.error(where, f"invalid weekday value: {item}")
+		return
+	if not _ok(value):
+		ctx.error(where, f"invalid weekday value: {value}")
 
 
 def _validate_event_field(ctx: LintContext, event_type: str, field: str, where: str) -> None:

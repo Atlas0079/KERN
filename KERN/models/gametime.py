@@ -63,6 +63,11 @@ class GameTime:
 		self.tick0_datetime = parsed.isoformat(timespec="minutes")
 
 	def advance_ticks(self, ticks_to_add: int) -> bool:
+		# Time-point conditions for schedule reactions currently assume the
+		# simulation advances one tick at a time. If ticks_per_step ever becomes
+		# greater than 1, WorldTickAdvanced should carry the previous tick, or
+		# time conditions should explicitly detect whether a target time was
+		# crossed during the step.
 		old_day = self.current_datetime().date()
 		self.total_ticks += int(ticks_to_add)
 		new_day = self.current_datetime().date()
