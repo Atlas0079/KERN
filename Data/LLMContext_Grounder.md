@@ -8,6 +8,8 @@
 - 当前 tick：{{tick}}
 - 当前实体id（你自己）：{{self_id}}
 - 当前位置：{{location_id}} / {{location_name}}
+- 地点亮度：{{location_light_text}}
+- 你的生命体征：{{vitals_text}}
 - 当前中断姿态（active_interrupt_preset_id）：{{active_interrupt_preset_id}}
 - 可用中断姿态概览（id: 描述）：
 {{interrupt_preset_summaries}}

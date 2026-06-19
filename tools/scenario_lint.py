@@ -72,7 +72,7 @@ RESERVED_ENTITY_REFS = {"self", "target", "event_entity"}
 TASK_INTERRUPT_MODES = {"forbidden", "pause_keep_progress", "pause_reset_progress", "cancel", "fail"}
 
 EVENT_FIELDS: dict[str, set[str]] = {
-	"TickAdvanced": {"type", "total_ticks", "time"},
+	"WorldTickAdvanced": {"type", "total_ticks", "time"},
 	"AdvanceTick": {"type", "entity_id", "ticks"},
 	"PropertyModified": {"type", "entity_id", "component", "property", "delta", "new_value"},
 	"EntityCreated": {"type", "entity_id", "template_id", "placed"},
@@ -1036,7 +1036,7 @@ def _print_report(ctx: LintContext) -> None:
 def main() -> None:
 	parser = argparse.ArgumentParser(description="Static scenario data linter")
 	parser.add_argument("--project-root", default=".", help="Project root path")
-	parser.add_argument("--config", default="runtime_config.werewolf.json", help="runtime_config*.json path")
+	parser.add_argument("--config", default="runtime_config.json", help="runtime_config*.json path")
 	args = parser.parse_args()
 	try:
 		code = run_lint(Path(args.project_root).resolve(), str(args.config))

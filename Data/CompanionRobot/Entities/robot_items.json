@@ -1,0 +1,120 @@
+{
+  "StickerPatch": {
+    "name": "贴纸补丁",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "scrap_part",
+          "repair_material"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "一张柔软的星星贴纸补丁，可以用来固定松动的小物件。",
+        "base_description": "一张贴纸补丁。",
+        "observed_description": "一张柔软的星星贴纸补丁，可以用来固定松动的小物件。",
+        "recipe_description": "当前规则中，贴纸补丁可作为 RepairObject 的参数 part_id。"
+      }
+    }
+  },
+  "TornPictureBook": {
+    "name": "破了一页的绘本",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "story_item",
+          "music_box",
+          "repairable"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "一本颜色很暖的绘本，其中一页被撕开了，角落还夹着小朋友画的笑脸。",
+        "base_description": "一本破了一页的绘本。",
+        "observed_description": "一本颜色很暖的绘本，其中一页被撕开了，角落还夹着小朋友画的笑脸。",
+        "recipe_description": "当前规则中，破绘本可以参与 RepairObject 或 StoreMemoryItem；修补需要贴纸补丁，收藏会进入回忆展示架。"
+      },
+      "StatusComponent": {
+        "statuses": [
+          "broken",
+          "needs_child_advice",
+          "unresolved_thread"
+        ]
+      },
+      "TaskHostComponent": {}
+    }
+  },
+  "PuzzlePiece": {
+    "name": "拼图的一角",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "story_item",
+          "map_fragment"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "一块缺了一角的大拼图，上面画着半朵太阳花，另一半还不知道在哪里。",
+        "base_description": "一块拼图的一角。",
+        "observed_description": "一块缺了一角的大拼图，上面画着半朵太阳花，另一半还不知道在哪里。",
+        "recipe_description": "当前规则中，拼图的一角可通过 StoreMemoryItem 收藏到回忆展示架。"
+      },
+      "StatusComponent": {
+        "statuses": [
+          "unresolved_thread"
+        ]
+      }
+    }
+  },
+  "DroopyBeanSprout": {
+    "name": "有点蔫的小豆苗",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "story_item",
+          "plant"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "一盆小豆苗，叶子有点耷拉，泥土摸起来偏干。",
+        "base_description": "一盆有点蔫的小豆苗。",
+        "observed_description": "一盆小豆苗，叶子有点耷拉，泥土摸起来偏干。",
+        "recipe_description": "当前规则中，小豆苗可通过 StoreMemoryItem 收藏到回忆展示架。"
+      },
+      "StatusComponent": {
+        "statuses": [
+          "needs_child_advice",
+          "unresolved_thread"
+        ]
+      }
+    }
+  },
+  "MysterySoundToy": {
+    "name": "会轻轻响的玩具",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "item",
+          "story_item",
+          "beeping_device",
+          "repairable"
+        ]
+      },
+      "DescriptionComponent": {
+        "description": "一个软软的圆形玩具，晃动时会发出很轻的叮咚声。",
+        "base_description": "一个会轻轻响的玩具。",
+        "observed_description": "一个软软的圆形玩具，晃动时会发出很轻的叮咚声。",
+        "recipe_description": "当前规则中，会轻轻响的玩具可通过 StoreMemoryItem 收藏到回忆展示架。"
+      },
+      "StatusComponent": {
+        "statuses": [
+          "needs_child_advice",
+          "unresolved_thread"
+        ]
+      },
+      "TaskHostComponent": {}
+    }
+  }
+}

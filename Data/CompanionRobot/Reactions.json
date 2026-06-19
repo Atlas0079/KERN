@@ -1,0 +1,77 @@
+{
+  "rules": [
+    {
+      "id": "robot_battery_low_memory",
+      "on_event": "PropertyModified",
+      "selector": {
+        "type": "all",
+        "conditions": [
+          {
+            "type": "event_field_eq",
+            "field": "component",
+            "value": "CreatureComponent"
+          },
+          {
+            "type": "event_field_eq",
+            "field": "property",
+            "value": "current_energy"
+          }
+        ]
+      },
+      "condition": {
+        "type": "all",
+        "conditions": [
+          {
+            "type": "has_tag",
+            "target": "event_entity",
+            "tag": "companion_robot"
+          },
+          {
+            "type": "compare_property",
+            "target": "event_entity",
+            "component": "CreatureComponent",
+            "property": "current_energy",
+            "op": "<=",
+            "value": 25
+          },
+          {
+            "type": "not",
+            "condition": {
+              "type": "has_status",
+              "target": "event_entity",
+              "status_id": "battery_low_noted"
+            }
+          }
+        ]
+      },
+      "bundle": {
+        "effects": [
+          {
+            "effect": "AddStatus",
+            "target": "event_entity",
+            "status_id": "battery_low_noted"
+          },
+          {
+            "effect": "AddMemoryNote",
+            "target": "event_entity",
+            "text": "我的电量变低了。下次计划任务时，应该先考虑回小角落充电。",
+            "importance": 0.75,
+            "tags": [
+              "battery",
+              "self_care",
+              "help_request"
+            ]
+          },
+          {
+            "effect": "EmitEvent",
+            "event_type": "RobotNeedsCharge",
+            "payload": {
+              "source_ref": "event_entity",
+              "message": "{event.entity_id}电量偏低，需要考虑充电。"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

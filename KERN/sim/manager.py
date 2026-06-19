@@ -270,7 +270,7 @@ class WorldManager:
 		self.world_state.game_time.advance_ticks(self.ticks_per_step)
 		events.append(
 			{
-				"type": "TickAdvanced",
+				"type": "WorldTickAdvanced",
 				"total_ticks": ws.game_time.total_ticks,
 				"time": ws.game_time.time_to_string(),
 			}

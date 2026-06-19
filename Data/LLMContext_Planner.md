@@ -38,6 +38,8 @@
 ### 5. 当前观测（Observation）
 - 当前 tick：{{tick}}
 - 当前位置：{{location_id}} / {{location_name}}
+- 地点亮度：{{location_light_text}}
+- 你的生命体征：{{vitals_text}}
 - 当前地点是否可发起对话：{{can_start_conversation_here}}
 
 #### 5.0 可用动词（verb）列表与耗时属性

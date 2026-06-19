@@ -1,0 +1,706 @@
+{
+  "robot_clean_sorting_pile": {
+    "verb": "CleanPile",
+    "narrative_success": "{actor}开始清理{target}",
+    "narrative_fail": "{actor}想清理{target}，但失败了：{reason}",
+    "planner_hint": "行动规则：清理同地点可见、带 trash_pile tag 且尚未 searched 的垃圾堆。耗时 6 tick；每 tick 消耗少量电量；完成后随机发现零件或故事物品，并把结果写入记忆。若发现需要选择的物品，应在下次和小朋友对话时求助。",
+    "grounder_hint": "target_id 必须选择同地点可见、带 trash_pile tag、没有 searched 状态的垃圾堆。",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tag",
+          "target": "target",
+          "tag": "trash_pile"
+        },
+        {
+          "type": "has_status",
+          "target": "target",
+          "status_id": "messy"
+        },
+        {
+          "type": "same_location",
+          "left": "self",
+          "right": "target"
+        }
+      ]
+    },
+    "process": {
+      "duration": {
+        "mode": "fixed",
+        "value": 6
+      },
+      "assign_to": "self",
+      "task_policy": {
+        "interrupt_mode": "pause_keep_progress",
+        "allow_voluntary_interrupt": true,
+        "allow_voluntary_cancel": true
+      }
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": []
+      },
+      "tick_bundle": {
+        "effects": [
+          {
+            "effect": "ModifyProperty",
+            "target": "self",
+            "component": "CreatureComponent",
+            "property": "current_energy",
+            "change": -0.8
+          }
+        ]
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "RandomBundle",
+          "table_id": "sorting_pile_find",
+          "entries": [
+            {
+              "id": "music_box",
+              "label": "坏掉的音乐盒",
+              "weight": 1,
+              "bundle": {
+                "effects": [
+                  {
+                    "effect": "CreateEntity",
+                    "template": "DamagedMusicBox",
+                    "destination": {
+                      "type": "container",
+                      "target": "self"
+                    }
+                  },
+                  {
+                    "effect": "AddMemoryNote",
+                    "target": "self",
+                    "text": "我清理分类区垃圾堆时发现了一个坏掉的音乐盒。我还不知道应该修理、拆解，还是先收藏起来，下次想问问小朋友。",
+                    "importance": 0.9,
+                    "tags": [
+                      "discovery",
+                      "help_request",
+                      "music_box"
+                    ]
+                  },
+                  {
+                    "effect": "EmitEvent",
+                    "event_type": "HelpRequestCreated",
+                    "payload": {
+                      "source_ref": "self",
+                      "message": "{self.entity_name}发现坏掉的音乐盒，需要小朋友建议。"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "half_map",
+              "label": "半张地图",
+              "weight": 1,
+              "bundle": {
+                "effects": [
+                  {
+                    "effect": "CreateEntity",
+                    "template": "HalfMap",
+                    "destination": {
+                      "type": "container",
+                      "target": "self"
+                    }
+                  },
+                  {
+                    "effect": "AddMemoryNote",
+                    "target": "self",
+                    "text": "我清理分类区垃圾堆时发现了半张地图。它可能指向回收站里还没探索过的地方，这是一个没有解决的悬念。",
+                    "importance": 0.85,
+                    "tags": [
+                      "discovery",
+                      "open_thread",
+                      "map"
+                    ]
+                  },
+                  {
+                    "effect": "EmitEvent",
+                    "event_type": "OpenThreadCreated",
+                    "payload": {
+                      "source_ref": "self",
+                      "message": "{self.entity_name}发现了半张地图。"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "parts",
+              "label": "两个零件",
+              "weight": 2,
+              "bundle": {
+                "effects": [
+                  {
+                    "effect": "CreateEntity",
+                    "template": "ScrapPart",
+                    "destination": {
+                      "type": "container",
+                      "target": "self"
+                    }
+                  },
+                  {
+                    "effect": "CreateEntity",
+                    "template": "ScrapPart",
+                    "destination": {
+                      "type": "container",
+                      "target": "self"
+                    }
+                  },
+                  {
+                    "effect": "AddMemoryNote",
+                    "target": "self",
+                    "text": "我清理分类区垃圾堆时找到了两个零件。它们之后可以用来修理灯或其他物件。",
+                    "importance": 0.7,
+                    "tags": [
+                      "discovery",
+                      "parts"
+                    ]
+                  },
+                  {
+                    "effect": "EmitEvent",
+                    "event_type": "ResourceFound",
+                    "payload": {
+                      "source_ref": "self",
+                    "message": "{self.entity_name}找到了两个零件。"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "effect": "RemoveStatus",
+          "target": "target",
+          "status_id": "messy"
+        },
+        {
+          "effect": "AddStatus",
+          "target": "target",
+          "status_id": "searched"
+        },
+        {
+          "effect": "ModifyProperty",
+          "target": "self",
+          "component": "CreatureComponent",
+          "property": "current_energy",
+          "change": -4
+        },
+        {
+          "effect": "EmitEvent",
+          "event_type": "PileCleaned",
+          "payload": {
+            "source_ref": "self",
+            "message": "{self.entity_name}清理完了分类区的一堆垃圾。"
+          }
+        }
+      ]
+    }
+  },
+  "robot_charge": {
+    "verb": "Charge",
+    "narrative_success": "{actor}开始给自己充电",
+    "narrative_fail": "{actor}想充电，但失败了：{reason}",
+    "planner_hint": "行动规则：只有位于休眠室 home_corner 时可以充电。耗时 5 tick；完成后恢复电量。",
+    "grounder_hint": "target_id 选择自己或同地点的充电座；如果选择充电座，必须同地点可见。",
+    "condition": {
+      "type": "compare_value",
+      "left": "self.location_id",
+      "op": "==",
+      "value": "home_corner"
+    },
+    "process": {
+      "duration": {
+        "mode": "fixed",
+        "value": 5
+      },
+      "assign_to": "self"
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": []
+      },
+      "tick_bundle": {
+        "effects": []
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "ModifyProperty",
+          "target": "self",
+          "component": "CreatureComponent",
+          "property": "current_energy",
+          "change": 35
+        },
+        {
+          "effect": "AddMemoryNote",
+          "target": "self",
+          "text": "我回到休眠室充了电。电量低时先照顾自己，比继续逞强更安全。",
+          "importance": 0.65,
+          "tags": [
+            "battery",
+            "self_care"
+          ]
+        },
+        {
+          "effect": "EmitEvent",
+          "event_type": "RobotCharged",
+          "payload": {
+            "source_ref": "self",
+            "message": "{self.entity_name}在休眠室充好了电。"
+          }
+        }
+      ]
+    }
+  },
+  "robot_repair_lamp": {
+    "verb": "RepairObject",
+    "narrative_success": "{actor}开始修理{target}",
+    "narrative_fail": "{actor}想修理{target}，但失败了：{reason}",
+    "planner_hint": "行动规则：修理同地点可见的灯。需要 parameters.part_id 指向自己背包中的零件。耗时 5 tick；完成后灯变为 repaired_lamp，探索储藏间更安全。",
+    "grounder_hint": "target_id 必须是同地点可见、带 lamp tag 的灯；parameters.part_id 必须是自己背包中的 scrap_part 物品 id。",
+    "selector": {
+      "type": "has_tag",
+      "target": "target",
+      "tag": "lamp"
+    },
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tag",
+          "target": "target",
+          "tag": "lamp"
+        },
+        {
+          "type": "has_status",
+          "target": "target",
+          "status_id": "broken"
+        },
+        {
+          "type": "has_tag",
+          "target": "param:part_id",
+          "tag": "scrap_part"
+        },
+        {
+          "type": "inventory_contains",
+          "owner": "self",
+          "item_ref": "param:part_id"
+        },
+        {
+          "type": "same_location",
+          "left": "self",
+          "right": "target"
+        }
+      ]
+    },
+    "process": {
+      "duration": {
+        "mode": "fixed",
+        "value": 5
+      },
+      "assign_to": "self"
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": []
+      },
+      "tick_bundle": {
+        "effects": [
+          {
+            "effect": "ModifyProperty",
+            "target": "self",
+            "component": "CreatureComponent",
+            "property": "current_energy",
+            "change": -0.5
+          }
+        ]
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "DestroyEntity",
+          "target": "param:part_id"
+        },
+        {
+          "effect": "RemoveStatus",
+          "target": "target",
+          "status_id": "broken"
+        },
+        {
+          "effect": "RemoveStatus",
+          "target": "target",
+          "status_id": "blocks_dark_storage"
+        },
+        {
+          "effect": "AddStatus",
+          "target": "target",
+          "status_id": "repaired_lamp"
+        },
+        {
+          "effect": "AddMemoryNote",
+          "target": "self",
+          "text": "我用零件修好了灯。以后探索储藏间时，可以先准备照明。",
+          "importance": 0.9,
+          "tags": [
+            "lesson",
+            "prepare_before_dark_place",
+            "repair"
+          ]
+        },
+        {
+          "effect": "EmitEvent",
+          "event_type": "LearningRecordCreated",
+          "payload": {
+            "source_ref": "self",
+            "message": "{self.entity_name}学到：进入光线不足的地方前先准备照明。"
+          }
+        }
+      ]
+    }
+  },
+  "robot_repair_music_box": {
+    "verb": "RepairObject",
+    "narrative_success": "{actor}开始修理{target}",
+    "narrative_fail": "{actor}想修理{target}，但失败了：{reason}",
+    "planner_hint": "行动规则：修理自己背包中的坏音乐盒。需要 parameters.part_id 指向自己背包中的零件。耗时 5 tick；完成后音乐盒从 broken 变为 repaired_music_box。这个动作适合回应小朋友“试着修修看”的建议。",
+    "grounder_hint": "target_id 必须是自己背包中带 music_box tag、状态为 broken 的物品；parameters.part_id 必须是自己背包中的 scrap_part 物品 id。",
+    "selector": {
+      "type": "has_tag",
+      "target": "target",
+      "tag": "music_box"
+    },
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tag",
+          "target": "target",
+          "tag": "music_box"
+        },
+        {
+          "type": "has_status",
+          "target": "target",
+          "status_id": "broken"
+        },
+        {
+          "type": "inventory_contains",
+          "owner": "self",
+          "item_ref": "target"
+        },
+        {
+          "type": "has_tag",
+          "target": "param:part_id",
+          "tag": "scrap_part"
+        },
+        {
+          "type": "inventory_contains",
+          "owner": "self",
+          "item_ref": "param:part_id"
+        }
+      ]
+    },
+    "process": {
+      "duration": {
+        "mode": "fixed",
+        "value": 5
+      },
+      "assign_to": "self"
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": []
+      },
+      "tick_bundle": {
+        "effects": [
+          {
+            "effect": "ModifyProperty",
+            "target": "self",
+            "component": "CreatureComponent",
+            "property": "current_energy",
+            "change": -0.5
+          }
+        ]
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "DestroyEntity",
+          "target": "param:part_id"
+        },
+        {
+          "effect": "RemoveStatus",
+          "target": "target",
+          "status_id": "broken"
+        },
+        {
+          "effect": "RemoveStatus",
+          "target": "target",
+          "status_id": "needs_child_advice"
+        },
+        {
+          "effect": "RemoveStatus",
+          "target": "target",
+          "status_id": "unresolved_thread"
+        },
+        {
+          "effect": "AddStatus",
+          "target": "target",
+          "status_id": "repaired_music_box"
+        },
+        {
+          "effect": "AddMemoryNote",
+          "target": "self",
+          "text": "我按照小朋友可能会给的建议，把坏音乐盒修好了。它不再只是一个问题，也变成了小回收站里的温柔发现。",
+          "importance": 0.9,
+          "tags": [
+            "child_advice_result",
+            "repair",
+            "music_box"
+          ]
+        },
+        {
+          "effect": "EmitEvent",
+          "event_type": "ChildAdviceResolved",
+          "payload": {
+            "source_ref": "self",
+            "message": "{self.entity_name}修好了坏音乐盒。"
+          }
+        }
+      ]
+    }
+  },
+  "robot_explore_dark_storage": {
+    "verb": "ExplorePlace",
+    "narrative_success": "{actor}开始探索储藏间",
+    "narrative_fail": "{actor}想探索储藏间，但失败了：{reason}",
+    "planner_hint": "行动规则：只有位于 dark_storage 时可以探索储藏间。耗时 8 tick；可能发现滴滴响的装置或零件。若感知到光线不足且还没有修好灯，豆豆应倾向先准备照明或向小朋友请教。",
+    "grounder_hint": "target_id 选择自己；执行地点必须是 dark_storage。不需要指定具体柜子。",
+    "condition": {
+      "type": "compare_value",
+      "left": "self.location_id",
+      "op": "==",
+      "value": "dark_storage"
+    },
+    "process": {
+      "duration": {
+        "mode": "fixed",
+        "value": 8
+      },
+      "assign_to": "self"
+    },
+    "progression": {
+      "progressor": "Linear",
+      "params": {
+        "base_progress_per_tick": 1.0,
+        "add_terms": [],
+        "mul_terms": []
+      },
+      "tick_bundle": {
+        "effects": [
+          {
+            "effect": "ModifyProperty",
+            "target": "self",
+            "component": "CreatureComponent",
+            "property": "current_energy",
+            "change": -0.7
+          }
+        ]
+      }
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "RandomBundle",
+          "table_id": "dark_storage_find",
+          "entries": [
+            {
+              "id": "beeping_device",
+              "label": "滴滴响的装置",
+              "weight": 1,
+              "bundle": {
+                "effects": [
+                  {
+                    "effect": "CreateEntity",
+                    "template": "BeepingDevice",
+                    "destination": {
+                      "type": "container",
+                      "target": "self"
+                    }
+                  },
+                  {
+                    "effect": "AddMemoryNote",
+                    "target": "self",
+                    "text": "我在储藏间发现了一个滴滴响的装置。我还不知道它是做什么的，下次想和小朋友一起想办法。",
+                    "importance": 0.9,
+                    "tags": [
+                      "discovery",
+                      "help_request",
+                      "beeping_device"
+                    ]
+                  },
+                  {
+                    "effect": "EmitEvent",
+                    "event_type": "HelpRequestCreated",
+                    "payload": {
+                      "source_ref": "self",
+                    "message": "{self.entity_name}发现滴滴响的装置，需要小朋友建议。"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "tiny_plant",
+              "label": "快枯萎的植物",
+              "weight": 1,
+              "bundle": {
+                "effects": [
+                  {
+                    "effect": "CreateEntity",
+                    "template": "TinyPlant",
+                    "destination": {
+                      "type": "container",
+                      "target": "self"
+                    }
+                  },
+                  {
+                    "effect": "AddMemoryNote",
+                    "target": "self",
+                    "text": "我在储藏间发现了一株快枯萎的植物。我不知道该不该留下照顾它，下次想问问小朋友。",
+                    "importance": 0.85,
+                    "tags": [
+                      "discovery",
+                      "help_request",
+                      "plant"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "parts",
+              "label": "一个零件",
+              "weight": 2,
+              "bundle": {
+                "effects": [
+                  {
+                    "effect": "CreateEntity",
+                    "template": "ScrapPart",
+                    "destination": {
+                      "type": "container",
+                      "target": "self"
+                    }
+                  },
+                  {
+                    "effect": "AddMemoryNote",
+                    "target": "self",
+                    "text": "我在储藏间找到了一个零件。准备好再探索，好像真的有帮助。",
+                    "importance": 0.75,
+                    "tags": [
+                      "discovery",
+                      "parts",
+                      "lesson"
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "effect": "ModifyProperty",
+          "target": "self",
+          "component": "CreatureComponent",
+          "property": "current_energy",
+          "change": -5
+        },
+        {
+          "effect": "EmitEvent",
+          "event_type": "DarkStorageExplored",
+          "payload": {
+            "source_ref": "self",
+            "message": "{self.entity_name}探索了储藏间。"
+          }
+        }
+      ]
+    }
+  },
+  "robot_store_memory_item": {
+    "verb": "StoreMemoryItem",
+    "narrative_success": "{actor}把发现放到{target}",
+    "narrative_fail": "{actor}想把发现放到{target}，但失败了：{reason}",
+    "planner_hint": "行动规则：把自己背包中的 story_item 放到同地点的收藏架。用于保留有意义的发现，并为之后对话提供回顾素材。",
+    "grounder_hint": "target_id 必须是同地点可见的 memory_shelf；parameters.item_id 必须是自己背包中的 story_item。",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tag",
+          "target": "target",
+          "tag": "memory_shelf"
+        },
+        {
+          "type": "has_tag",
+          "target": "param:item_id",
+          "tag": "story_item"
+        },
+        {
+          "type": "inventory_contains",
+          "owner": "self",
+          "item_ref": "param:item_id"
+        },
+        {
+          "type": "same_location",
+          "left": "self",
+          "right": "target"
+        }
+      ]
+    },
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "MoveEntity",
+          "entity_ref": "param:item_id",
+          "from_ref": "self",
+          "to_ref": "target"
+        },
+        {
+          "effect": "AddMemoryNote",
+          "target": "self",
+          "text": "我把一个有意义的发现放到了小小收藏架。以后和小朋友聊天时，可以回顾它。",
+          "importance": 0.75,
+          "tags": [
+            "memory_shelf",
+            "story_item"
+          ]
+        }
+      ]
+    }
+  }
+}

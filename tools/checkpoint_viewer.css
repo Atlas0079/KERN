@@ -68,8 +68,28 @@ body {
 	background: #f8fafc;
 }
 
-.toolbar input[type="file"] {
-	max-width: 320px;
+.toolbar-select {
+	border: 1px solid #cbd5e1;
+	background: #ffffff;
+	color: #0f172a;
+	border-radius: 8px;
+	padding: 6px 9px;
+	font-size: 13px;
+	max-width: 260px;
+}
+
+.toolbar-check {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	border: 1px solid #cbd5e1;
+	background: #ffffff;
+	color: #0f172a;
+	border-radius: 8px;
+	padding: 6px 9px;
+	font-size: 13px;
+	white-space: nowrap;
+	user-select: none;
 }
 
 .panel-toggle {

@@ -1,0 +1,1431 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>豆豆陪伴机器人调试台</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f8;
+      --panel: #ffffff;
+      --text: #1f2933;
+      --muted: #667085;
+      --line: #d9dee5;
+      --accent: #475467;
+      --accent-strong: #344054;
+      --warn: #b45309;
+      --soft: #f3f4f6;
+      --button-bg: #f8fafc;
+      --button-hover: #eef2f6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    main {
+      width: min(100vw - 32px, 1680px);
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .queue-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fffdf8;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .queue-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .queue-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 6px 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .queue-draft {
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .column {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .dialogue-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.9fr);
+      gap: 12px;
+      align-items: start;
+    }
+
+    .dialogue-main,
+    .dialogue-side {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .column-title {
+      margin: 0 0 2px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #edf0f3;
+    }
+
+    .row:last-child {
+      border-bottom: 0;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .value {
+      font-weight: 600;
+      text-align: right;
+      word-break: break-word;
+    }
+
+    .bar {
+      height: 8px;
+      width: 100%;
+      background: #e6e9ee;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .bar > span {
+      display: block;
+      height: 100%;
+      background: var(--accent);
+      width: 0;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: var(--button-bg);
+      color: var(--text);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 14px;
+      cursor: pointer;
+      min-height: 36px;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    button:hover {
+      background: var(--button-hover);
+      border-color: #c7d0db;
+    }
+
+    button.primary {
+      background: var(--button-bg);
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    button.busy {
+      opacity: 0.7;
+      cursor: wait;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chat-panel {
+      min-height: 460px;
+      display: grid;
+      grid-template-rows: auto minmax(280px, 1fr) auto;
+      gap: 12px;
+    }
+
+    .messages {
+      background: #fbfcfd;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .msg {
+      max-width: 78%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .msg.robot {
+      align-self: flex-start;
+      background: var(--soft);
+      border: 1px solid #dde3ea;
+    }
+
+    .msg.robot.proactive {
+      background: #fff7ed;
+      border-color: #fed7aa;
+    }
+
+    .msg.child {
+      align-self: flex-end;
+      background: #eef2ff;
+      border: 1px solid #d9defd;
+    }
+
+    .msg.system {
+      align-self: center;
+      max-width: 100%;
+      color: var(--muted);
+      background: transparent;
+      border: 0;
+      padding: 2px;
+      font-size: 13px;
+    }
+
+    .msg-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .msg-tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 1px 7px;
+      background: #eef2f6;
+      color: #344054;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    textarea,
+    input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 9px 10px;
+      font: inherit;
+      resize: vertical;
+      min-height: 42px;
+      background: #fff;
+      color: var(--text);
+    }
+
+    .compose {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: end;
+    }
+
+    .outbox-list {
+      display: grid;
+      gap: 8px;
+      max-height: 260px;
+      overflow: auto;
+    }
+
+    .outbox-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fbfcfd;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #e8eef2;
+      color: #344054;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .end-form {
+      display: grid;
+      gap: 8px;
+    }
+
+    .diag {
+      display: grid;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .diag-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      border-bottom: 1px solid #edf0f3;
+      padding-bottom: 5px;
+    }
+
+    .diag-line:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .diag-value {
+      color: var(--text);
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .submit-box {
+      display: grid;
+      gap: 8px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .submit-block {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fbfcfd;
+    }
+
+    .submit-title {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .submit-empty {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .submit-lines {
+      display: grid;
+      gap: 6px;
+    }
+
+    .submit-line-label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .submit-memory-preview {
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--text);
+    }
+
+    @media (max-width: 860px) {
+      main {
+        padding: 12px;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .dialogue-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .msg {
+        max-width: 92%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="layout">
+    <section class="column">
+      <div class="column-title">虚拟世界</div>
+      <div class="panel">
+        <h2>虚拟机器人状态</h2>
+        <div class="toolbar" style="margin-bottom: 10px">
+          <select id="sceneSelect" style="flex: 1">
+            <option value="">加载场景中...</option>
+          </select>
+          <button id="switchSceneBtn">切换场景</button>
+          <button id="resetSceneBtn">重置场景</button>
+        </div>
+        <div class="row">
+          <span class="label">运行状态</span>
+          <span class="value" id="statusText">-</span>
+        </div>
+        <div class="row">
+          <span class="label">Tick</span>
+          <span class="value" id="tickText">-</span>
+        </div>
+        <div class="row">
+          <span class="label">位置</span>
+          <span class="value" id="locationText">-</span>
+        </div>
+        <div class="row">
+          <div style="width: 100%">
+            <div class="label">电量 <span id="batteryText"></span></div>
+            <div class="bar"><span id="batteryBar"></span></div>
+          </div>
+        </div>
+        <div class="row">
+          <span class="label">当前任务</span>
+          <span class="value" id="taskText">-</span>
+        </div>
+        <div class="diag" id="diagnosticsBox"></div>
+      </div>
+
+      <div class="panel">
+        <h2>虚拟世界 Outbox</h2>
+        <div class="outbox-list" id="outboxList"></div>
+        <div class="toolbar" style="margin-top: 10px">
+          <button id="consumeOutboxBtn">标记已读</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="column">
+      <div class="column-title">现实对话</div>
+      <div class="dialogue-layout">
+        <div class="dialogue-main">
+          <div class="panel">
+            <h2>现实对话控制</h2>
+            <div class="end-form">
+              <div class="subtle">结束时会由 LLM 整理本轮对话，再写入 KERN 记忆。</div>
+              <div class="toolbar">
+                <button id="startDialogueBtn">开始现实对话</button>
+                <button id="endDialogueBtn" class="primary">结束对话并提交</button>
+              </div>
+              <div class="toolbar">
+                <button id="advanceBtn" class="primary">推进 1 tick</button>
+                <button id="advance5Btn">推进 5 tick</button>
+                <button id="refreshBtn">刷新</button>
+              </div>
+            </div>
+          </div>
+
+          <section class="panel chat-panel">
+            <div>
+              <h2>模拟对话</h2>
+              <div class="subtle">这里的聊天只是前端层模拟；只有点击“结束对话并提交”后，整理结果才进入 KERN 记忆。</div>
+            </div>
+            <div class="messages" id="messages"></div>
+            <div class="compose">
+              <textarea id="messageInput" rows="2" placeholder="输入小朋友说的话"></textarea>
+              <button id="sendBtn" class="primary">发送</button>
+            </div>
+          </section>
+        </div>
+
+        <div class="dialogue-side">
+          <div class="panel">
+            <h2>主动发起对话</h2>
+            <div class="subtle" style="margin-bottom: 10px">这里显示豆豆当前保存的待提话题；如果沉默一段时间，它可能会从这里主动开口。</div>
+            <div class="outbox-list" id="proactiveQueueList"></div>
+          </div>
+
+          <div class="panel">
+            <h2>最近一次提交</h2>
+            <div class="subtle" style="margin-bottom: 10px">这里显示“结束对话并提交”后前端提交给 KERN 的结构化内容，以及它将如何被整理成记忆文本。</div>
+            <div class="submit-box" id="submittedDialogueBox"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div>
+  </main>
+
+  <script>
+    const state = {
+      dialogueActive: false,
+      messages: [],
+      sending: false,
+      proactiveChecking: false,
+      proactiveQueue: [],
+      availableScenes: [],
+      sceneId: "companion_robot",
+      runtimeBase: "http://127.0.0.1:8787",
+      outboxCursor: 0,
+      outboxNextCursor: 0,
+      lastArchiveTick: -1,
+      lastArchiveStatus: "waiting_for_archive",
+      switchingScene: false,
+      resettingScene: false,
+      pendingOperation: null,
+      runtimeTick: 0,
+      runtimeTime: "",
+      lastChildMessageAt: 0,
+      lastRobotMessageAt: 0,
+      lastProactiveAttemptAt: 0,
+      kernRuntime: { phase: "unknown", message: "未连接 runtime", paused_for_dialogue: false },
+      lastSubmittedDialogue: null,
+      refreshPromise: null,
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function initClientConfig() {
+      const query = new URLSearchParams(window.location.search);
+      const scene = String(query.get("scene") || "").trim();
+      const runtimeBase = String(query.get("runtime_base") || localStorage.getItem("companion_runtime_base") || "").trim();
+      if (scene) {
+        state.sceneId = scene;
+      }
+      if (runtimeBase) {
+        state.runtimeBase = runtimeBase.replace(/\/+$/, "");
+        localStorage.setItem("companion_runtime_base", state.runtimeBase);
+      }
+      state.outboxCursor = loadOutboxCursor(state.sceneId);
+      state.outboxNextCursor = state.outboxCursor;
+      state.lastSubmittedDialogue = loadSubmittedDialogue(state.sceneId);
+    }
+
+    function setActiveScene(sceneId) {
+      const nextSceneId = String(sceneId || "").trim();
+      if (!nextSceneId || nextSceneId === String(state.sceneId || "")) {
+        return false;
+      }
+      state.sceneId = nextSceneId;
+      state.outboxCursor = loadOutboxCursor(state.sceneId);
+      state.outboxNextCursor = state.outboxCursor;
+      state.lastSubmittedDialogue = loadSubmittedDialogue(state.sceneId);
+      renderSubmittedDialogue();
+      return true;
+    }
+
+    function renderSceneOptions() {
+      const select = $("sceneSelect");
+      const scenes = Array.isArray(state.availableScenes) ? state.availableScenes : [];
+      select.innerHTML = "";
+      if (!scenes.length) {
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "暂无可用场景";
+        select.appendChild(option);
+        select.disabled = true;
+        $("switchSceneBtn").disabled = true;
+        $("resetSceneBtn").disabled = true;
+        return;
+      }
+      for (const scene of scenes) {
+        const option = document.createElement("option");
+        option.value = scene.id || "";
+        let suffix = "";
+        if (scene.active && Number.isFinite(Number(scene.runtime_tick))) {
+          suffix = ` · tick ${Number(scene.runtime_tick)}`;
+        } else if (scene.active && scene.runtime_loaded) {
+          suffix = " · 已加载";
+        }
+        option.textContent = `${scene.name || scene.id}${suffix}`;
+        option.selected = String(scene.id || "") === String(state.sceneId || "");
+        select.appendChild(option);
+      }
+      select.disabled = state.switchingScene;
+      $("switchSceneBtn").disabled = state.switchingScene;
+      $("resetSceneBtn").disabled = state.switchingScene;
+    }
+
+    async function loadScenes() {
+      const payload = await apiCommand("/api/runtime/scenes");
+      state.availableScenes = Array.isArray(payload.scenes) ? payload.scenes : [];
+      if (payload.active_scene_id) {
+        setActiveScene(String(payload.active_scene_id || state.sceneId));
+      }
+      renderSceneOptions();
+    }
+
+    function outboxCursorStorageKey(sceneId) {
+      return `companion_outbox_cursor:${sceneId || "default"}`;
+    }
+
+    function loadOutboxCursor(sceneId) {
+      try {
+        const raw = localStorage.getItem(outboxCursorStorageKey(sceneId));
+        return Math.max(0, Number(raw || 0) || 0);
+      } catch (_error) {
+        return 0;
+      }
+    }
+
+    function persistOutboxCursor() {
+      try {
+        localStorage.setItem(outboxCursorStorageKey(state.sceneId), String(Math.max(0, Number(state.outboxCursor || 0))));
+      } catch (_error) {
+      }
+    }
+
+    function submittedDialogueStorageKey(sceneId) {
+      return `companion_last_submitted_dialogue:${sceneId || "default"}`;
+    }
+
+    function loadSubmittedDialogue(sceneId) {
+      try {
+        const raw = localStorage.getItem(submittedDialogueStorageKey(sceneId));
+        if (!raw) {
+          return null;
+        }
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === "object" ? parsed : null;
+      } catch (_error) {
+        return null;
+      }
+    }
+
+    function persistSubmittedDialogue() {
+      try {
+        if (!state.lastSubmittedDialogue) {
+          localStorage.removeItem(submittedDialogueStorageKey(state.sceneId));
+          return;
+        }
+        localStorage.setItem(submittedDialogueStorageKey(state.sceneId), JSON.stringify(state.lastSubmittedDialogue));
+      } catch (_error) {
+      }
+    }
+
+    function clearSubmittedDialogue(sceneId) {
+      try {
+        localStorage.removeItem(submittedDialogueStorageKey(sceneId || state.sceneId));
+      } catch (_error) {
+      }
+    }
+
+    function archivePath(path) {
+      return path;
+    }
+
+    function commandUrl(path) {
+      const base = String(state.runtimeBase || "").replace(/\/+$/, "");
+      return `${base}${path}`;
+    }
+
+    async function apiJson(url, options = {}) {
+      const res = await fetch(url, {
+        headers: { "Content-Type": "application/json" },
+        ...options,
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || `HTTP ${res.status}`);
+      }
+      return data;
+    }
+
+    async function apiArchive(path, options = {}) {
+      return await apiJson(archivePath(path), options);
+    }
+
+    async function apiCommand(path, options = {}) {
+      return await apiJson(commandUrl(path), options);
+    }
+
+    function addMessage(kind, text, options = {}) {
+      state.messages.push({
+        kind,
+        text,
+        proactive: options.proactive === true,
+        tag: String(options.tag || "").trim(),
+      });
+      const now = Date.now();
+      if (kind === "child") {
+        state.lastChildMessageAt = now;
+      } else if (kind === "robot") {
+        state.lastRobotMessageAt = now;
+      }
+      renderMessages();
+    }
+
+    function describePendingOperation() {
+      const pending = state.pendingOperation;
+      if (!pending) {
+        return "";
+      }
+      if (pending.kind === "advance") {
+        return `等待 archive 提交到 tick ${pending.targetTick}`;
+      }
+      if (pending.kind === "scene_switch") {
+        return `等待场景 ${pending.sceneId} 的 archive 就绪`;
+      }
+      return "等待操作完成";
+    }
+
+    function runtimePhaseIsBusy(phase) {
+      return ["advancing", "switching_scene", "resetting_scene"].includes(String(phase || ""));
+    }
+
+    function reconcilePendingOperation() {
+      const pending = state.pendingOperation;
+      if (!pending) {
+        return;
+      }
+      const phase = String(state.kernRuntime?.phase || "");
+      const runtimeIdle = !runtimePhaseIsBusy(phase);
+      const archiveTick = Number(state.lastArchiveTick ?? -1);
+      if (pending.kind === "advance") {
+        if (runtimeIdle && archiveTick >= Number(pending.targetTick || 0)) {
+          state.pendingOperation = null;
+        }
+        return;
+      }
+      if (pending.kind === "scene_switch") {
+        if (
+          runtimeIdle &&
+          String(state.sceneId || "") === String(pending.sceneId || "") &&
+          String(state.lastArchiveStatus || "") !== "waiting_for_archive"
+        ) {
+          state.pendingOperation = null;
+        }
+        return;
+      }
+      if (pending.kind === "scene_reset") {
+        if (
+          runtimeIdle &&
+          String(state.sceneId || "") === String(pending.sceneId || "") &&
+          String(state.lastArchiveStatus || "") !== "waiting_for_archive" &&
+          archiveTick === 0
+        ) {
+          state.pendingOperation = null;
+        }
+      }
+    }
+
+    function renderMessages() {
+      const box = $("messages");
+      box.innerHTML = "";
+      for (const item of state.messages) {
+        const div = document.createElement("div");
+        div.className = `msg ${item.kind}${item.proactive ? " proactive" : ""}`;
+        if (item.tag) {
+          const head = document.createElement("div");
+          head.className = "msg-head";
+          const tag = document.createElement("span");
+          tag.className = "msg-tag";
+          tag.textContent = item.tag;
+          head.appendChild(tag);
+          div.appendChild(head);
+        }
+        const body = document.createElement("div");
+        body.textContent = item.text;
+        div.appendChild(body);
+        box.appendChild(div);
+      }
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function formatDelayText(seconds) {
+      const value = Math.max(0, Number(seconds || 0));
+      if (value < 60) {
+        return `${value} 秒后可提起`;
+      }
+      const minutes = Math.floor(value / 60);
+      const remain = value % 60;
+      return remain ? `${minutes} 分 ${remain} 秒后可提起` : `${minutes} 分钟后可提起`;
+    }
+
+    function formatExpireText(seconds) {
+      const value = Math.max(0, Number(seconds || 0));
+      if (value < 60) {
+        return `${value} 秒后过期`;
+      }
+      const minutes = Math.floor(value / 60);
+      return `${minutes} 分钟后过期`;
+    }
+
+    function renderProactiveQueue(items) {
+      const box = $("proactiveQueueList");
+      box.innerHTML = "";
+      const rows = Array.isArray(items) ? items : [];
+      if (!rows.length) {
+        const div = document.createElement("div");
+        div.className = "subtle";
+        div.textContent = "当前没有待主动提起的话题";
+        box.appendChild(div);
+        return;
+      }
+      for (const item of rows) {
+        const div = document.createElement("div");
+        div.className = "queue-item";
+        const title = document.createElement("div");
+        title.className = "queue-title";
+        title.textContent = item.topic || item.intent || item.id || "未命名话题";
+        const meta = document.createElement("div");
+        meta.className = "queue-meta";
+        const metaParts = [
+          `意图: ${item.intent || "-"}`,
+          `优先级: ${Number(item.priority ?? 0).toFixed(2)}`,
+          formatDelayText(item.earliest_after_seconds),
+          formatExpireText(item.expires_after_seconds),
+        ];
+        for (const part of metaParts) {
+          const pill = document.createElement("span");
+          pill.className = "pill";
+          pill.textContent = part;
+          meta.appendChild(pill);
+        }
+        const draft = document.createElement("div");
+        draft.className = "queue-draft";
+        draft.textContent = item.draft || "没有草稿";
+        div.appendChild(title);
+        div.appendChild(meta);
+        div.appendChild(draft);
+        box.appendChild(div);
+      }
+    }
+
+    function normalizeAdviceList(advice) {
+      if (Array.isArray(advice)) {
+        return advice
+          .map((item) => {
+            if (item && typeof item === "object") {
+              return String(item.content || "").trim();
+            }
+            return String(item || "").trim();
+          })
+          .filter(Boolean);
+      }
+      const text = String(advice || "").trim();
+      return text ? [text] : [];
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function buildMemoryPreview(payload) {
+      const safePayload = payload && typeof payload === "object" ? payload : {};
+      const lines = [];
+      const summary = String(safePayload.summary || safePayload.child_message_summary || "").trim();
+      const encouragement = String(safePayload.encouragement || "").trim();
+      const selectedIntent = safePayload.selected_intent && typeof safePayload.selected_intent === "object" ? safePayload.selected_intent : {};
+      const adviceList = normalizeAdviceList(safePayload.advice);
+      if (summary) {
+        lines.push(`现实对话摘要：${summary}`);
+      }
+      for (const item of adviceList) {
+        lines.push(`小朋友建议：${item}`);
+      }
+      if (encouragement) {
+        lines.push(`小朋友鼓励：${encouragement}`);
+      }
+      const goal = String(selectedIntent.goal || "").trim();
+      const action = String(selectedIntent.preferred_action || "").trim();
+      if (goal || action) {
+        lines.push(`下一步偏好：目标=${goal || "未指定"}；动作=${action || "未指定"}`);
+      }
+      return lines.join("；").trim();
+    }
+
+    function renderSubmittedDialogue() {
+      const box = $("submittedDialogueBox");
+      const submitted = state.lastSubmittedDialogue;
+      box.innerHTML = "";
+      if (!submitted || typeof submitted !== "object") {
+        const empty = document.createElement("div");
+        empty.className = "submit-empty";
+        empty.textContent = "当前还没有提交过现实对话。";
+        box.appendChild(empty);
+        return;
+      }
+      const payload = submitted.payload && typeof submitted.payload === "object" ? submitted.payload : {};
+      const memoryPreview = String(submitted.memory_preview || buildMemoryPreview(payload) || "").trim();
+      const adviceList = normalizeAdviceList(payload.advice);
+      const selectedIntent = payload.selected_intent && typeof payload.selected_intent === "object" ? payload.selected_intent : {};
+      const summaryBlock = document.createElement("div");
+      summaryBlock.className = "submit-block";
+      summaryBlock.innerHTML = `
+        <div class="submit-title">提交给 KERN 的结构化内容</div>
+        <div class="submit-lines">
+          <div><div class="submit-line-label">摘要</div><div>${escapeHtml(String(payload.summary || "")) || "-"}</div></div>
+          <div><div class="submit-line-label">建议</div><div>${escapeHtml(adviceList.join("；")) || "-"}</div></div>
+          <div><div class="submit-line-label">鼓励</div><div>${escapeHtml(String(payload.encouragement || "")) || "-"}</div></div>
+          <div><div class="submit-line-label">下一步偏好</div><div>${escapeHtml(`目标=${String(selectedIntent.goal || "").trim() || "未指定"}；动作=${String(selectedIntent.preferred_action || "").trim() || "未指定"}`)}</div></div>
+        </div>
+      `;
+      const memoryBlock = document.createElement("div");
+      memoryBlock.className = "submit-block";
+      memoryBlock.innerHTML = `
+        <div class="submit-title">写入豆豆记忆的文本预览</div>
+        <div class="submit-memory-preview">${escapeHtml(memoryPreview || "-")}</div>
+      `;
+      const metaBlock = document.createElement("div");
+      metaBlock.className = "submit-block";
+      metaBlock.innerHTML = `
+        <div class="submit-title">提交结果</div>
+        <div class="submit-lines">
+          <div><div class="submit-line-label">场景</div><div>${escapeHtml(String(submitted.scene_id || state.sceneId || "-"))}</div></div>
+          <div><div class="submit-line-label">提交时刻</div><div>${escapeHtml(String(submitted.submitted_at || "-"))}</div></div>
+          <div><div class="submit-line-label">提交 tick</div><div>${escapeHtml(String(submitted.tick ?? "-"))}</div></div>
+          <div><div class="submit-line-label">记忆写入</div><div>${submitted.memory_added === false ? "未写入" : "已写入"}</div></div>
+        </div>
+      `;
+      box.appendChild(summaryBlock);
+      box.appendChild(memoryBlock);
+      box.appendChild(metaBlock);
+    }
+
+    function renderState(payload) {
+      const waitingForArchive = String(payload.status || "") === "waiting_for_archive";
+      if (waitingForArchive) {
+        $("tickText").textContent = "等待 archive";
+        $("locationText").textContent = "-";
+        $("batteryText").textContent = "-";
+        $("batteryBar").style.width = "0%";
+        $("taskText").textContent = "-";
+        renderDiagnostics({});
+        return;
+      }
+
+      $("tickText").textContent = `${payload.tick ?? "-"} · ${payload.time || ""}`;
+      $("locationText").textContent = payload.location?.name || payload.location?.id || "-";
+
+      const battery = payload.vitals?.battery ?? 0;
+      const batteryMax = payload.vitals?.battery_max || 100;
+      $("batteryText").textContent = `${battery}/${batteryMax}`;
+      $("batteryBar").style.width = `${batteryMax > 0 ? Math.max(0, Math.min(100, battery / batteryMax * 100)) : 0}%`;
+
+      const task = payload.current_task;
+      if (!task) {
+        $("taskText").textContent = "无";
+      } else {
+        $("taskText").textContent = `${task.type} ${task.progress}/${task.required}`;
+      }
+      renderDiagnostics(payload.diagnostics || {});
+    }
+
+    function renderDiagnostics(diag) {
+      const recent = diag.recent_llm_events || [];
+      const lastEvent = recent.length ? `${recent[recent.length - 1].event || "-"} (${recent[recent.length - 1].level || "-"})` : "无";
+      const configPath = String(diag.config_path || "");
+      const configName = configPath ? configPath.split(/[/\\]/).pop() : "-";
+      $("diagnosticsBox").innerHTML = `
+        <div class="diag-line"><span>LLM</span><span class="diag-value">${diag.use_llm ? "on" : "off"}</span></div>
+        <div class="diag-line"><span>Action Provider</span><span class="diag-value">${diag.action_provider || "-"}</span></div>
+        <div class="diag-line"><span>LLM Provider</span><span class="diag-value">${diag.llm_provider || "-"}</span></div>
+        <div class="diag-line"><span>Planner</span><span class="diag-value">${diag.planner_model || "-"}</span></div>
+        <div class="diag-line"><span>Grounder</span><span class="diag-value">${diag.grounder_model || "-"}</span></div>
+        <div class="diag-line"><span>Config</span><span class="diag-value">${configName}</span></div>
+        <div class="diag-line"><span>LLM Logs</span><span class="diag-value">${diag.llm_log_count ?? 0}</span></div>
+        <div class="diag-line"><span>Last LLM Event</span><span class="diag-value">${lastEvent}</span></div>
+        <div class="diag-line"><span>Workflow Errors</span><span class="diag-value">${diag.workflow_error_count ?? 0}</span></div>
+      `;
+    }
+
+    function renderRuntime() {
+      const runtime = state.kernRuntime || {};
+      const phase = runtime.phase || "unknown";
+      const parts = [runtime.message || phase];
+      if (phase === "advancing") {
+        parts.push(`${runtime.completed_ticks ?? 0}/${runtime.requested_ticks ?? 0} tick`);
+      }
+      if (state.dialogueActive && state.proactiveQueue.length) {
+        parts.push(`待主动提起 ${state.proactiveQueue.length} 条`);
+      }
+      const pendingMessage = describePendingOperation();
+      if (pendingMessage && !runtimePhaseIsBusy(phase)) {
+        parts.push(pendingMessage);
+      }
+      $("statusText").textContent = parts.join(" · ");
+      const runtimeBusy = runtimePhaseIsBusy(phase);
+      const uiBusy = runtimeBusy || state.switchingScene || state.resettingScene || !!state.pendingOperation;
+      const archiveWaiting = String(state.lastArchiveStatus || "") === "waiting_for_archive";
+      $("sceneSelect").disabled = uiBusy || state.dialogueActive;
+      $("switchSceneBtn").disabled = uiBusy || state.dialogueActive || !state.availableScenes.length;
+      $("resetSceneBtn").disabled = uiBusy || state.dialogueActive || !state.availableScenes.length;
+      $("startDialogueBtn").disabled = uiBusy || state.dialogueActive || archiveWaiting;
+      $("endDialogueBtn").disabled = uiBusy || !state.dialogueActive;
+      $("sendBtn").disabled = uiBusy || state.sending || !state.dialogueActive;
+      $("advanceBtn").disabled = uiBusy || state.dialogueActive || archiveWaiting;
+      $("advance5Btn").disabled = uiBusy || state.dialogueActive || archiveWaiting;
+    }
+
+    function renderOutbox(items) {
+      const box = $("outboxList");
+      box.innerHTML = "";
+      if (!items.length) {
+        const div = document.createElement("div");
+        div.className = "subtle";
+        div.textContent = "暂无待反馈内容";
+        box.appendChild(div);
+        return;
+      }
+      for (const item of items) {
+        const div = document.createElement("div");
+        div.className = "outbox-item";
+        const pill = document.createElement("div");
+        pill.className = "pill";
+        pill.textContent = `${item.type} · tick ${item.tick}`;
+        const text = document.createElement("div");
+        text.textContent = item.summary || item.event_type;
+        div.appendChild(pill);
+        div.appendChild(text);
+        box.appendChild(div);
+      }
+    }
+
+    async function refreshRuntimeStatus() {
+      const payload = await apiCommand("/api/runtime/status");
+      state.kernRuntime = payload.runtime || { phase: "unknown", message: "runtime 状态缺失" };
+      state.runtimeTick = Number(payload.tick || 0);
+      state.runtimeTime = String(payload.time || "");
+      state.dialogueActive = !!state.kernRuntime.paused_for_dialogue || String(state.kernRuntime.phase || "") === "dialogue";
+      state.proactiveQueue = Array.isArray(payload?.dialogue?.proactive_queue) ? payload.dialogue.proactive_queue : [];
+      renderProactiveQueue(state.proactiveQueue);
+      let shouldRerenderScenes = false;
+      if (payload.active_scene_id && setActiveScene(payload.active_scene_id)) {
+        shouldRerenderScenes = true;
+      }
+      const activeSceneId = String(payload.active_scene_id || state.sceneId || "");
+      if (activeSceneId && Array.isArray(state.availableScenes)) {
+        let changed = false;
+        state.availableScenes = state.availableScenes.map((scene) => {
+          const isActive = String(scene.id || "") === activeSceneId;
+          const nextScene = { ...scene, active: isActive };
+          if (isActive) {
+            const runtimeTick = Number(payload?.scene?.runtime_tick ?? payload.tick ?? 0);
+            const runtimeTime = String(payload?.scene?.runtime_time || payload.time || "");
+            if (
+              nextScene.runtime_loaded !== true ||
+              Number(nextScene.runtime_tick ?? -1) !== runtimeTick ||
+              String(nextScene.runtime_time || "") !== runtimeTime ||
+              Number(nextScene.last_tick ?? -1) !== runtimeTick
+            ) {
+              changed = true;
+            }
+            nextScene.runtime_loaded = true;
+            nextScene.runtime_tick = runtimeTick;
+            nextScene.runtime_time = runtimeTime;
+            nextScene.last_tick = runtimeTick;
+          }
+          return nextScene;
+        });
+        shouldRerenderScenes = shouldRerenderScenes || changed;
+      }
+      if (shouldRerenderScenes) {
+        renderSceneOptions();
+      }
+      return payload;
+    }
+
+    async function refreshArchiveState() {
+      const payload = await apiArchive(`/api/companion/state?scene_id=${encodeURIComponent(state.sceneId)}&cursor=${encodeURIComponent(String(state.outboxCursor || 0))}`);
+      state.lastArchiveStatus = String(payload.status || "running");
+      state.lastArchiveTick = Number(payload.tick ?? -1);
+      state.outboxNextCursor = Math.max(Number(payload?.outbox?.next_cursor || 0), Number(state.outboxCursor || 0));
+      renderState(payload);
+      renderOutbox((payload.outbox || {}).items || []);
+      return payload;
+    }
+
+    async function refresh() {
+      if (state.refreshPromise) {
+        return await state.refreshPromise;
+      }
+      state.refreshPromise = (async () => {
+        await refreshRuntimeStatus();
+        const archivePayload = await refreshArchiveState();
+        reconcilePendingOperation();
+        renderRuntime();
+        return archivePayload;
+      })();
+      try {
+        return await state.refreshPromise;
+      } finally {
+        state.refreshPromise = null;
+      }
+    }
+
+    async function waitForPendingOperation(timeoutMs = 45000) {
+      const deadline = Date.now() + Math.max(5000, timeoutMs);
+      while (Date.now() < deadline) {
+        await refresh();
+        if (!state.pendingOperation) {
+          return;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 800));
+      }
+      throw new Error(`${describePendingOperation() || "等待操作完成"}超时`);
+    }
+
+    async function switchScene() {
+      const wanted = String($("sceneSelect").value || "").trim();
+      if (!wanted || wanted === state.sceneId) {
+        return;
+      }
+      state.switchingScene = true;
+      state.pendingOperation = { kind: "scene_switch", sceneId: wanted };
+      state.kernRuntime = { ...state.kernRuntime, phase: "switching_scene", message: "正在切换场景" };
+      renderRuntime();
+      try {
+        const result = await apiCommand("/api/runtime/scene/select", {
+          method: "POST",
+          body: JSON.stringify({ scene_id: wanted })
+        });
+        if (!result.ok) {
+          throw new Error(result.reason || "切换场景失败");
+        }
+        setActiveScene(result.active_scene_id || wanted);
+        if (Array.isArray(state.availableScenes)) {
+          const nextTick = Number(result.tick ?? 0);
+          state.availableScenes = state.availableScenes.map((scene) => {
+            const isActive = String(scene.id || "") === String(state.sceneId || "");
+            return {
+              ...scene,
+              active: isActive,
+              runtime_loaded: isActive ? true : scene.runtime_loaded,
+              runtime_tick: isActive ? nextTick : scene.runtime_tick,
+              last_tick: isActive ? nextTick : scene.last_tick,
+            };
+          });
+        }
+        state.messages = [];
+        state.dialogueActive = false;
+        state.proactiveQueue = [];
+        renderProactiveQueue([]);
+        state.lastSubmittedDialogue = loadSubmittedDialogue(state.sceneId);
+        renderSubmittedDialogue();
+        await loadScenes();
+        await waitForPendingOperation(20000);
+      } catch (error) {
+        state.pendingOperation = null;
+        throw error;
+      } finally {
+        state.switchingScene = false;
+        await refresh();
+        renderRuntime();
+      }
+    }
+
+    async function resetScene() {
+      const wanted = String($("sceneSelect").value || state.sceneId || "").trim();
+      if (!wanted) {
+        return;
+      }
+      if (!window.confirm(`确定要将场景“${wanted}”重置到初始状态吗？`)) {
+        return;
+      }
+      state.resettingScene = true;
+      state.pendingOperation = { kind: "scene_reset", sceneId: wanted, targetTick: 0 };
+      state.kernRuntime = { ...state.kernRuntime, phase: "resetting_scene", message: "正在重置场景" };
+      renderRuntime();
+      try {
+        const result = await apiCommand("/api/runtime/scene/reset", {
+          method: "POST",
+          body: JSON.stringify({ scene_id: wanted })
+        });
+        if (!result.ok) {
+          throw new Error(result.reason || "重置场景失败");
+        }
+        setActiveScene(result.active_scene_id || wanted);
+        state.outboxCursor = 0;
+        state.outboxNextCursor = 0;
+        persistOutboxCursor();
+        state.messages = [];
+        state.dialogueActive = false;
+        state.proactiveQueue = [];
+        renderProactiveQueue([]);
+        state.lastSubmittedDialogue = null;
+        clearSubmittedDialogue(state.sceneId);
+        renderSubmittedDialogue();
+        await loadScenes();
+        await waitForPendingOperation(20000);
+      } catch (error) {
+        state.pendingOperation = null;
+        throw error;
+      } finally {
+        state.resettingScene = false;
+        await refresh();
+        renderRuntime();
+      }
+    }
+
+    async function startDialogue() {
+      const result = await apiCommand("/api/dialogue/start", { method: "POST", body: "{}" });
+      if (!result.ok) {
+        await refresh();
+        renderRuntime();
+        alert(`无法开始现实对话：${result.reason || "KERN 忙碌"}`);
+        return;
+      }
+      state.lastChildMessageAt = Date.now();
+      state.lastRobotMessageAt = 0;
+      state.lastProactiveAttemptAt = 0;
+      addMessage("system", "现实对话已开始，豆豆会在必要时主动提起自己想说的话。");
+      await refresh();
+    }
+
+    async function endDialogue() {
+      const btn = $("endDialogueBtn");
+      const oldText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = "整理中...";
+      try {
+        const result = await apiCommand("/api/dialogue/summarize", {
+          method: "POST",
+          body: JSON.stringify({ history: state.messages })
+        });
+        const payload = result.summary || {
+          summary: "",
+          advice: [],
+          encouragement: "",
+          selected_intent: { goal: "", preferred_action: "" }
+        };
+        const endResult = await apiCommand("/api/dialogue/end", { method: "POST", body: JSON.stringify(payload) });
+        state.lastSubmittedDialogue = {
+          scene_id: state.sceneId,
+          submitted_at: new Date().toLocaleString("zh-CN", { hour12: false }),
+          tick: state.runtimeTick,
+          payload,
+          memory_preview: buildMemoryPreview(payload),
+          memory_added: endResult.memory_added !== false,
+        };
+        persistSubmittedDialogue();
+        renderSubmittedDialogue();
+        addMessage("system", `已提交到 KERN 记忆：${state.lastSubmittedDialogue.memory_preview || "本次提交没有生成记忆文本"}`);
+        state.proactiveQueue = [];
+        renderProactiveQueue([]);
+        await refresh();
+      } finally {
+        btn.textContent = oldText;
+        renderRuntime();
+      }
+    }
+
+    async function advanceOneTick() {
+      await refresh();
+      if (state.dialogueActive) {
+        throw new Error("现实对话进行中，不能推进 tick");
+      }
+      if (String(state.lastArchiveStatus || "") === "waiting_for_archive") {
+        throw new Error("当前场景的 archive 尚未就绪");
+      }
+      const optimisticTargetTick = Math.max(Number(state.runtimeTick || 0), Number(state.lastArchiveTick || 0)) + 1;
+      state.pendingOperation = {
+        kind: "advance",
+        sceneId: state.sceneId,
+        targetTick: optimisticTargetTick,
+      };
+      state.kernRuntime = {
+        ...state.kernRuntime,
+        phase: "advancing",
+        message: "正在请求 KERN 推进 tick",
+        requested_ticks: 1,
+        completed_ticks: 0,
+      };
+      renderRuntime();
+      try {
+        const result = await apiCommand("/api/simulation/advance", {
+          method: "POST",
+          body: JSON.stringify({ ticks: 1 })
+        });
+        if (!result.ok) {
+          await refresh();
+          throw new Error(`无法推进：${result.reason || "unknown"}`);
+        }
+        state.pendingOperation = {
+          kind: "advance",
+          sceneId: state.sceneId,
+          targetTick: Number(result.target_tick || optimisticTargetTick),
+        };
+        state.kernRuntime = {
+          ...state.kernRuntime,
+          phase: "advancing",
+          message: "KERN 正在推进 tick",
+          requested_ticks: 1,
+          completed_ticks: 0,
+        };
+        renderRuntime();
+        await waitForPendingOperation();
+      } catch (error) {
+        state.pendingOperation = null;
+        await refresh();
+        throw error;
+      }
+    }
+
+    async function advance(ticks) {
+      const count = Math.max(1, Math.min(5, Number(ticks || 1)));
+      for (let i = 0; i < count; i += 1) {
+        await advanceOneTick();
+      }
+    }
+
+    async function consumeOutbox() {
+      state.outboxCursor = Math.max(Number(state.outboxCursor || 0), Number(state.outboxNextCursor || 0));
+      persistOutboxCursor();
+      renderOutbox([]);
+      await refresh();
+    }
+
+    async function sendChildMessage() {
+      const text = $("messageInput").value.trim();
+      if (!text || state.sending) return;
+      state.sending = true;
+      $("sendBtn").disabled = true;
+      $("sendBtn").classList.add("busy");
+      const historyBeforeSend = [...state.messages];
+      addMessage("child", text);
+      $("messageInput").value = "";
+      try {
+        const result = await apiCommand("/api/dialogue/message", {
+          method: "POST",
+          body: JSON.stringify({
+            message: text,
+            history: historyBeforeSend,
+            pending_queue: state.proactiveQueue
+          })
+        });
+        state.proactiveQueue = result.queue || state.proactiveQueue;
+        renderProactiveQueue(state.proactiveQueue);
+        if (result.should_reply !== false && result.reply) {
+          addMessage("robot", result.reply, { tag: "豆豆回复" });
+        }
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        state.sending = false;
+        $("sendBtn").classList.remove("busy");
+        renderRuntime();
+      }
+    }
+
+    async function checkProactiveDialogue() {
+      const runtime = state.kernRuntime || {};
+      if (!state.dialogueActive || state.sending || state.proactiveChecking || runtime.phase === "advancing") {
+        return;
+      }
+      if (!state.proactiveQueue.length || !state.lastChildMessageAt) {
+        return;
+      }
+      const now = Date.now();
+      const silenceSeconds = Math.floor((now - Math.max(state.lastChildMessageAt, state.lastRobotMessageAt)) / 1000);
+      if (silenceSeconds < 20 || now - state.lastProactiveAttemptAt < 15000) {
+        return;
+      }
+      state.proactiveChecking = true;
+      state.lastProactiveAttemptAt = now;
+      try {
+        const result = await apiCommand("/api/dialogue/proactive", {
+          method: "POST",
+          body: JSON.stringify({
+            history: state.messages,
+            pending_queue: state.proactiveQueue,
+            silence_seconds: silenceSeconds
+          })
+        });
+        state.proactiveQueue = result.queue || state.proactiveQueue;
+        renderProactiveQueue(state.proactiveQueue);
+        if (result.should_speak && result.message) {
+          addMessage("robot", result.message, { proactive: true, tag: "豆豆主动提起" });
+        }
+      } catch (error) {
+        console.warn(error);
+      } finally {
+        state.proactiveChecking = false;
+      }
+    }
+
+    $("refreshBtn").addEventListener("click", () => refresh().catch(alert));
+    $("switchSceneBtn").addEventListener("click", () => switchScene().catch(alert));
+    $("resetSceneBtn").addEventListener("click", () => resetScene().catch(alert));
+    $("advanceBtn").addEventListener("click", () => advance(1).catch(alert));
+    $("advance5Btn").addEventListener("click", () => advance(5).catch(alert));
+    $("startDialogueBtn").addEventListener("click", () => startDialogue().catch(alert));
+    $("endDialogueBtn").addEventListener("click", () => endDialogue().catch(alert));
+    $("consumeOutboxBtn").addEventListener("click", () => consumeOutbox().catch(alert));
+    $("sendBtn").addEventListener("click", () => sendChildMessage());
+    $("messageInput").addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+        sendChildMessage();
+      }
+    });
+
+    initClientConfig();
+    renderSubmittedDialogue();
+    loadScenes()
+      .then(() => refresh())
+      .catch((error) => alert(error.message));
+    setInterval(() => refresh().catch(() => {}), 1500);
+    setInterval(() => checkProactiveDialogue(), 5000);
+  </script>
+</body>
+</html>

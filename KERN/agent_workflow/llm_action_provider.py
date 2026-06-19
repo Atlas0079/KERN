@@ -18,6 +18,12 @@ from .workflow_contract import (
 )
 
 
+class GroundingUngroundable(Exception):
+	def __init__(self, reason: str) -> None:
+		self.reason = str(reason or "").strip() or "Grounder reported the planner intent could not be mapped to available actions."
+		super().__init__(self.reason)
+
+
 def _repo_root() -> Path:
 	# KERN/agent_workflow/llm_action_provider.py -> repo root
 	return Path(__file__).resolve().parents[2]
@@ -230,6 +236,40 @@ def _task_summary_from_perception(perception: dict[str, Any]) -> str:
 	return f"{task_id} / {task_type or 'Unknown'} / {task_status or 'Unknown'} / {progress:g}/{required_progress:g}"
 
 
+def _fmt_vital(value: Any) -> str:
+	if value is None:
+		return "?"
+	try:
+		return f"{float(value):.1f}"
+	except Exception:
+		return "?"
+
+
+def _vitals_text(vitals: dict[str, Any]) -> str:
+	v = dict(vitals or {}) if isinstance(vitals, dict) else {}
+	if not v:
+		return "未知"
+	parts = [
+		f"hp {_fmt_vital(v.get('hp'))}/{_fmt_vital(v.get('max_hp'))}",
+		f"energy {_fmt_vital(v.get('energy'))}/{_fmt_vital(v.get('max_energy'))}",
+		f"nutrition {_fmt_vital(v.get('nutrition'))}/{_fmt_vital(v.get('max_nutrition'))}",
+	]
+	if "stress" in v or "max_stress" in v:
+		parts.append(f"stress {_fmt_vital(v.get('stress'))}/{_fmt_vital(v.get('max_stress'))}")
+	return ", ".join(parts)
+
+
+def _location_light_text(location: dict[str, Any], blocked_by_darkness: bool) -> str:
+	loc = dict(location or {}) if isinstance(location, dict) else {}
+	try:
+		light_level = int(loc.get("light_level", 2))
+	except Exception:
+		light_level = 2
+	if bool(blocked_by_darkness):
+		return f"light_level={light_level}，当前地点过暗，无法被动感知实体。"
+	return f"light_level={light_level}"
+
+
 def _with_mode_context(perception: dict[str, Any], mode: str, mode_context: dict[str, Any] | None = None) -> dict[str, Any]:
 	out = dict(perception or {})
 	out["mode"] = str(mode or "").strip()
@@ -249,9 +289,13 @@ def _build_agent_context(perception: dict[str, Any], self_id: str) -> dict[str, 
 		"short_term_memory_text": str(p.get("short_term_memory_text", "") or ""),
 		"short_term_memory_items": list(p.get("short_term_memory_items", []) or []),
 		"mid_term_summary": str(p.get("mid_term_summary", "") or ""),
+		"vitals": dict(p.get("vitals", {}) or {}) if isinstance(p.get("vitals", {}), dict) else {},
+		"vitals_text": _vitals_text(dict(p.get("vitals", {}) or {}) if isinstance(p.get("vitals", {}), dict) else {}),
 		"tick": p.get("tick", None),
 		"tick_str": str(p.get("tick", "") or ""),
-		"location": {"id": str((loc or {}).get("id", "") or ""), "name": str((loc or {}).get("name", "") or "")},
+		"location": dict(loc) if isinstance(loc, dict) else {},
+		"location_light_text": _location_light_text(loc if isinstance(loc, dict) else {}, bool(p.get("perception_blocked_by_darkness", False))),
+		"perception_blocked_by_darkness": bool(p.get("perception_blocked_by_darkness", False)),
 		"map_topology": list(p.get("map_topology", []) or []),
 		"reachable_locations": list(p.get("reachable_locations", []) or []),
 		"visible_entities": list(p.get("entities", []) or []),
@@ -463,12 +507,13 @@ INTENT: <1-3句，给Grounder使用的实际意图，必须可执行>
 - Recipe Grounder Hints：特定动词的额外参数约束（如果提供）。
 
 **输出约束（关键）：**
-1. 必须输出一个 JSON 数组，数组元素是 Action 对象。
+1. 如果 Planner 意图可以落地，必须输出一个 JSON 数组，数组元素是 Action 对象。
 2. Action 对象格式为：`{"verb": "verb", "parameters": {}}`，并且在需要时可以包含 `"target_id"`。
 3. 只能使用“可用动词列表”中的动词。
 4. 对于非 meta 动词，通常需要提供 `target_id`，且必须来自“可见实体列表”或“背包列表”；但 Talk 是例外（不得提供 target_id）。对于 meta 动词，你不得提供 `target_id`（系统会自动填充为你自己）。
 5. 对于耗时动作，它必须是序列中的最后一个动作（因为会触发 Task 并占用行动权）。
 6. 不要在 JSON 外层添加任何 Markdown 标签（如 ```json），只输出纯 JSON 字符串。
+7. 如果 Planner 意图无法用当前可用动词和可见/背包实体落地，输出 `{"type":"ungroundable","reason":"<具体原因>"}`。reason 必须说明缺少哪个动作、目标或参数约束，不要硬凑不存在的动作。
 
 **动词特定参数规则（重要）：**
 - SwitchInterruptPreset（meta）：parameters 必须包含 `{"preset_id": "<available_interrupt_presets 中的一个>"}`，且不得提供 target_id。
@@ -564,6 +609,14 @@ Output rules:
 		perception["interrupt_reason"] = str(reason or "")
 		try:
 			actions = self._decide_actions_from_perception(perception, recipe_db_view, reason, str(actor_id))
+		except GroundingUngroundable as e:
+			return build_noop_decision(
+				meta={
+					"provider": "llm_workflow",
+					"reason": "ungroundable",
+					"memory_notes": [self._build_ungroundable_memory_note(str(e.reason), full_ws_view)],
+				}
+			)
 		except ValueError as e:
 			return build_error_decision(
 				kind="contract",
@@ -580,9 +633,18 @@ Output rules:
 			)
 		if not list(actions or []):
 			return build_noop_decision(meta={"provider": "llm_workflow", "reason": "no_actions"})
+		memory_notes: list[dict[str, Any]] = []
+		for item in list(actions or []):
+			if isinstance(item, dict) and str(item.get("_workflow_note_type", "") or "") == "ungroundable":
+				memory_notes.append(self._build_ungroundable_memory_note(str(item.get("reason", "") or ""), full_ws_view))
+		commands = [
+			dict(x)
+			for x in list(actions or [])
+			if isinstance(x, dict) and str(x.get("_workflow_note_type", "") or "") != "ungroundable"
+		]
 		return build_apply_commands_decision(
-			commands=[dict(x) for x in list(actions or []) if isinstance(x, dict)],
-			meta={"provider": "llm_workflow"},
+			commands=commands,
+			meta={"provider": "llm_workflow", "memory_notes": memory_notes} if memory_notes else {"provider": "llm_workflow"},
 		)
 
 	def build_memory_patch_data(self, ws_view: Any, recipe_db: dict[str, Any] | None, actor_id: str) -> dict[str, Any] | None:
@@ -593,6 +655,18 @@ Output rules:
 		recipe_db_view = dict(recipe_db or {}) if isinstance(recipe_db, dict) else {}
 		return build_memory_patch(full_ws_view=full_ws_view, recipe_db=recipe_db_view, actor_id=str(actor_id))
 
+	def _build_ungroundable_memory_note(self, reason: str, full_ws_view: dict[str, Any]) -> dict[str, Any]:
+		tick = int((full_ws_view or {}).get("tick", 0) or 0) if isinstance(full_ws_view, dict) else 0
+		return {
+			"tick": tick,
+			"type": "note",
+			"topic": "grounding",
+			"importance": 0.85,
+			"content": f"动作落地失败：{str(reason or '').strip()}",
+			"tags": ["grounding", "ungroundable"],
+			"source": {"stage": "grounder"},
+		}
+
 	def _decide_actions_from_perception(
 		self,
 		perception: dict[str, Any],
@@ -602,6 +676,53 @@ Output rules:
 	) -> list[dict[str, Any]]:
 		logger = get_logger()
 		self_id = str(self_id or perception.get("self_id", "") or "")
+		perception = dict(perception or {})
+		ungroundable_notes: list[str] = []
+		for attempt in range(2):
+			try:
+				return self._decide_actions_once_from_perception(
+					perception=perception,
+					recipe_db=recipe_db,
+					reason=reason,
+					self_id=self_id,
+					ungroundable_notes=ungroundable_notes,
+				)
+			except GroundingUngroundable as e:
+				note = str(e.reason or "").strip()
+				if note:
+					ungroundable_notes.append(note)
+					mem_items = [dict(x) for x in list(perception.get("short_term_memory_items", []) or []) if isinstance(x, dict)]
+					tick = int(perception.get("tick", 0) or 0)
+					mem_items.append(
+						{
+							"tick": tick,
+							"type": "note",
+							"topic": "grounding",
+							"importance": 0.85,
+							"content": f"动作落地失败：{note}",
+							"tags": ["grounding", "ungroundable"],
+						}
+					)
+					perception["short_term_memory_items"] = mem_items
+					existing_text = str(perception.get("short_term_memory_text", "") or "").strip()
+					line = f"- [tick {tick}][imp 0.85] [grounding] 动作落地失败：{note}"
+					perception["short_term_memory_text"] = f"{existing_text}\n{line}".strip() if existing_text else line
+				logger.warn("llm", "grounder_ungroundable", context={"self_id": self_id, "attempt": int(attempt + 1), "reason": note})
+				if attempt == 0:
+					reason = note
+					continue
+				raise GroundingUngroundable(note)
+		return []
+
+	def _decide_actions_once_from_perception(
+		self,
+		perception: dict[str, Any],
+		recipe_db: dict[str, Any],
+		reason: str,
+		self_id: str,
+		ungroundable_notes: list[str] | None = None,
+	) -> list[dict[str, Any]]:
+		logger = get_logger()
 		decision_mode_context = {
 			"reason": str(reason or ""),
 			"interrupt_decision_mode": bool((perception or {}).get("interrupt_decision_mode", False)),
@@ -690,12 +811,14 @@ Output rules:
 			"current_plan": "",
 			"current_task_id": str(agent_context.get("current_task_id", "") or ""),
 			"current_task_summary": str(agent_context.get("current_task_summary", "") or ""),
+			"vitals_text": str(agent_context.get("vitals_text", "") or "未知"),
 			"active_interrupt_preset_id": str(agent_context.get("active_interrupt_preset_id", "") or ""),
 			"available_interrupt_presets": ", ".join([str(x) for x in list(agent_context.get("available_interrupt_presets", []) or [])]),
 			"interrupt_preset_summaries": str(agent_context.get("interrupt_preset_summaries_text", "") or ""),
 			"tick": tick_str,
 			"location_id": loc_id,
 			"location_name": loc_name,
+			"location_light_text": str(agent_context.get("location_light_text", "") or "light_level=2"),
 			"available_verbs_with_duration": available_verbs_with_duration,
 			"planner_recipe_hints": planner_recipe_hints,
 			"map_topology_text": _map_topology_text(list(agent_context.get("map_topology", []) or [])),
@@ -717,6 +840,7 @@ Output rules:
 			"current_task_id": str(agent_context.get("current_task_id", "") or ""),
 			"current_task_type": str(agent_context.get("current_task_type", "") or ""),
 			"current_task_status": str(agent_context.get("current_task_status", "") or ""),
+			"vitals": dict(agent_context.get("vitals", {}) or {}),
 			"entities": list(visible_entities),
 			"inventory": list(inventory),
 			"reachable_locations": list(reachable_locations),
@@ -786,10 +910,12 @@ Output rules:
 				"tick": tick_str,
 				"location_id": loc_id,
 				"location_name": loc_name,
+				"location_light_text": str(agent_context.get("location_light_text", "") or "light_level=2"),
 				"active_interrupt_preset_id": str((perception or {}).get("active_interrupt_preset_id", "") or ""),
 				"available_interrupt_presets": ", ".join([str(x) for x in list((perception or {}).get("available_interrupt_presets", []) or [])]),
 				"interrupt_preset_summaries": str(agent_context.get("interrupt_preset_summaries_text", "") or ""),
 				"self_id": self_id,
+				"vitals_text": str(agent_context.get("vitals_text", "") or "未知"),
 				"reachable_locations_table": _reachable_locations_text(reachable_locations),
 				"can_start_conversation_here": str(can_start_conversation_here).lower(),
 				"visible_entities_table": _entities_table(visible_entities),
@@ -851,6 +977,8 @@ Output rules:
 		# 2. Logic Failure (Validation) -> Pass through to InteractionEngine
 		# We no longer validate actions here; let the engine decide if the target is visible/valid.
 		# This ensures that "hallucinated" actions are recorded as failed attempts in the world log.
+		if ungroundable_notes:
+			return [{"_workflow_note_type": "ungroundable", "reason": str(ungroundable_notes[-1] or "")}, *list(actions or [])]
 		return actions
 
 	def _parse_planner_output(self, raw: str) -> tuple[str, str]:
@@ -891,6 +1019,9 @@ Output rules:
 				return out
 			# Tolerate wrapped shapes: {"actions":[...]} / {"commands":[...]}
 			if isinstance(value, dict):
+				dtype = str(value.get("type", "") or "").strip().lower()
+				if dtype == "ungroundable":
+					raise GroundingUngroundable(str(value.get("reason", "") or "Planner intent cannot be grounded with current actions."))
 				for key in ["actions", "commands"]:
 					v = value.get(key, None)
 					if isinstance(v, list):
@@ -1041,6 +1172,7 @@ Output rules:
 				"mode": str(agent_context.get("mode", "") or ""),
 				"location_id": loc_id,
 				"location_name": loc_name,
+				"location_light_text": str(agent_context.get("location_light_text", "") or "light_level=2"),
 				"participants_table": _participants_table(list(mode_context.get("participants", []) or [])),
 				"utterance_index": str(utterance_index),
 				"max_utterances_per_tick": str(max_utterances_per_tick),

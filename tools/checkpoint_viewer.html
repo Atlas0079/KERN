@@ -10,9 +10,9 @@
 <div class="app">
 	<div class="toolbar">
 		<h1>Checkpoint Viewer</h1>
-		<button id="archiveConnectBtn" class="toolbar-btn" type="button">连接 Archive</button>
-		<input id="fileInput" type="file" webkitdirectory directory multiple>
-		<span id="sourceHint" class="hint">通过 checkpoint_viewer_server.py 读取 run archive；仍支持旧 JSON 目录导入</span>
+		<select id="sceneSelect" class="toolbar-select" title="切换 Archive 场景"></select>
+		<label class="toolbar-check"><input id="liveFollowInput" type="checkbox" checked>实时跟随</label>
+		<span id="sourceHint" class="hint">通过 checkpoint_viewer_server.py 读取 archive 服务</span>
 	</div>
 	<div class="panel world">
 		<h2 id="worldTitle">World</h2>
@@ -28,6 +28,8 @@
 					<div class="filter-group-title">类型</div>
 					<label class="filter-check"><input id="logFilterInteraction" type="checkbox" checked>interaction</label>
 					<label class="filter-check"><input id="logFilterEvent" type="checkbox" checked>event</label>
+					<div class="filter-group-title">交互类型</div>
+					<div id="logFilterInteractionVerbs" class="event-type-empty">加载后可筛选</div>
 					<div class="filter-group-title">事件类型</div>
 					<div id="logFilterEventTypes" class="event-type-empty">加载后可筛选</div>
 					<div class="filter-group-title">关键词</div>

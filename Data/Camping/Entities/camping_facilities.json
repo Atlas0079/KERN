@@ -5,6 +5,7 @@
       "TagComponent": {
         "tags": [
           "container",
+          "facility",
           "public_storage",
           "camp_facility"
         ]
@@ -36,6 +37,7 @@
       "TagComponent": {
         "tags": [
           "campfire",
+          "facility",
           "camp_facility"
         ]
       },
@@ -58,6 +60,7 @@
     "components": {
       "TagComponent": {
         "tags": [
+          "facility",
           "shelter",
           "camp_facility"
         ]

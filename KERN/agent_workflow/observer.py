@@ -7,6 +7,13 @@ def _safe_str(v: Any) -> str:
 	return str(v or "")
 
 
+def _int_or_default(value: Any, default: int) -> int:
+	try:
+		return int(value)
+	except Exception:
+		return int(default)
+
+
 def _build_entity_index(full_ws_view: dict[str, Any]) -> dict[str, dict[str, Any]]:
 	out: dict[str, dict[str, Any]] = {}
 	for item in list(full_ws_view.get("entities", []) or []):
@@ -104,6 +111,8 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 	self_ent = entities.get(self_id_s, {})
 	self_loc_id = _safe_str(self_ent.get("location_id"))
 	self_loc = locations.get(self_loc_id, {})
+	self_loc_light_level = _int_or_default(self_loc.get("light_level", 2), 2)
+	perception_blocked_by_darkness = self_loc_light_level <= 0
 	paths = [dict(x) for x in list(view.get("paths", []) or []) if isinstance(x, dict)]
 
 	# Build container containment index in current location.
@@ -140,14 +149,15 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 
 	location_entity_ids = [_safe_str(x) for x in list(self_loc.get("entities", []) or []) if _safe_str(x)]
 	top_level_ids: list[str] = []
-	for eid in location_entity_ids:
-		if eid in containment:
-			continue
-		if _is_transit(eid):
-			continue
-		if _is_hidden_from_agent(eid):
-			continue
-		top_level_ids.append(eid)
+	if not perception_blocked_by_darkness:
+		for eid in location_entity_ids:
+			if eid in containment:
+				continue
+			if _is_transit(eid):
+				continue
+			if _is_hidden_from_agent(eid):
+				continue
+			top_level_ids.append(eid)
 
 	visible_ids: list[str] = []
 	seen: set[str] = set()
@@ -188,7 +198,8 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 				"name": _safe_str(ent.get("agent_name")) or _safe_str(ent.get("name")),
 				"tags": [str(x) for x in list(ent.get("tags", []) or [])],
 				"statuses": [str(x) for x in list(ent.get("statuses", []) or [])],
-				"description": _safe_str(ent.get("base_description")),
+				"description": _safe_str(ent.get("perception_description")) or _safe_str(ent.get("base_description")),
+				"perception_level": _safe_str(ent.get("perception_level")) or "base",
 				"contained_in": _safe_str(contain_info.get("container_id")),
 				"contained_in_slot": _safe_str(contain_info.get("slot_id")),
 				"is_top_level": bool(eid in location_entity_ids) and not bool(contain_info),
@@ -232,10 +243,17 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 		"agent_name": _safe_str(self_ent.get("agent_name")) or _safe_str(self_ent.get("name")),
 		"personality_summary": _safe_str(self_ent.get("personality_summary")),
 		"common_knowledge_summary": _safe_str(self_ent.get("common_knowledge_summary")),
+		"vitals": dict(self_ent.get("vitals", {}) or {}) if isinstance(self_ent.get("vitals", {}), dict) else {},
 		"short_term_memory_text": _short_term_text(mem_short, max_items=30),
 		"short_term_memory_items": mem_short,
 		"mid_term_summary": _mid_term_summary_text(mem_mid, max_items=4),
-		"location": {"id": self_loc_id, "name": _safe_str(self_loc.get("name"))},
+		"location": {
+			"id": self_loc_id,
+			"name": _safe_str(self_loc.get("name")),
+			"description": _safe_str(self_loc.get("description")),
+			"light_level": self_loc_light_level,
+		},
+		"perception_blocked_by_darkness": bool(perception_blocked_by_darkness),
 		"map_topology": _build_map_topology(view),
 		"reachable_locations": reachable_locations,
 		"can_start_conversation_here": bool(can_start_conversation_here),

@@ -8,6 +8,7 @@ class Location:
 	location_id: str
 	location_name: str = "Unnamed Location"
 	description: str = ""
+	light_level: int = 2
 
 	# Top-level entity IDs only. Nested entities are resolved through container ownership.
 	entities_in_location: list[str] = field(default_factory=list)

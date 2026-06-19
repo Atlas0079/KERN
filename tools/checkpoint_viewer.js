@@ -5,6 +5,10 @@ const state = {
 		enabled: false,
 		loading: false,
 		manifest: null,
+		liveFollow: true,
+		pollTimerId: 0,
+		polling: false,
+		pollIntervalMs: 1000,
 	},
 	selectedEntityId: "",
 	selectedLocationId: "",
@@ -42,6 +46,8 @@ const state = {
 		showInteraction: true,
 		showEvent: true,
 		keyword: "",
+		availableInteractionVerbs: [],
+		selectedInteractionVerbs: {},
 		availableEventTypes: [],
 		selectedEventTypes: {},
 	},
@@ -62,11 +68,12 @@ const AGENT_IMAGE_MAX_EDGE = 384;
 const IMAGE_EXPORT_QUALITY = 0.82;
 const PLAYBACK_HIGHLIGHT_MS = 280;
 const PLAYBACK_SPEECH_MS = 1250;
+const PLAYBACK_ACTION_BUBBLE_MS = 980;
 const PLAYBACK_TRAVEL_MS = 980;
 const PLAYBACK_LOG_APPEND_MS = 120;
 
-const fileInput = document.getElementById("fileInput");
-const archiveConnectBtn = document.getElementById("archiveConnectBtn");
+const sceneSelect = document.getElementById("sceneSelect");
+const liveFollowInput = document.getElementById("liveFollowInput");
 const sourceHint = document.getElementById("sourceHint");
 const panelToggles = Array.from(document.querySelectorAll("[data-collapse-target]"));
 const tickList = document.getElementById("tickList");
@@ -83,6 +90,7 @@ const logFilterBtn = document.getElementById("logFilterBtn");
 const logFilterMenu = document.getElementById("logFilterMenu");
 const logFilterInteraction = document.getElementById("logFilterInteraction");
 const logFilterEvent = document.getElementById("logFilterEvent");
+const logFilterInteractionVerbs = document.getElementById("logFilterInteractionVerbs");
 const logFilterEventTypes = document.getElementById("logFilterEventTypes");
 const logFilterKeyword = document.getElementById("logFilterKeyword");
 const logFilterClearBtn = document.getElementById("logFilterClearBtn");
@@ -106,51 +114,22 @@ for (const toggle of panelToggles) {
 	});
 }
 
-archiveConnectBtn?.addEventListener("click", () => {
-	loadArchiveFromServer({ explicit: true });
+sceneSelect?.addEventListener("change", () => {
+	const sceneId = String(sceneSelect.value || "");
+	if (sceneId && sceneId !== state.archive.activeSceneId) {
+		switchArchiveScene(sceneId);
+	}
 });
 
-fileInput.addEventListener("change", async (event) => {
-	const files = Array.from(event.target.files || []);
-	if (!files.length) {
-		return;
+liveFollowInput?.addEventListener("change", () => {
+	state.archive.liveFollow = !!liveFollowInput.checked;
+	if (state.archive.liveFollow) {
+		startArchivePolling();
+		pollArchiveManifest({ forceFollow: false });
+	} else {
+		stopArchivePolling();
+		setSourceHint(sourceHint?.textContent || "实时跟随已关闭");
 	}
-	const checkpointFiles = files.filter((file) => isCheckpointFileCandidate(file));
-	const frames = [];
-	for (const file of checkpointFiles) {
-		try {
-			const text = await file.text();
-			const json = JSON.parse(text);
-			const tick = Number(json?.meta?.tick ?? -1);
-			if (!Number.isFinite(tick) || tick < 0) {
-				continue;
-			}
-			frames.push({
-				fileName: file.name,
-				tick,
-				timeStr: String(json?.meta?.time_str || ""),
-				runId: String(json?.meta?.run_id || ""),
-				logScope: String(json?.meta?.log_scope || ""),
-				world: json?.world || {},
-				log: Array.isArray(json?.log) ? json.log : [],
-			});
-		} catch (error) {
-			console.error("failed to parse", file.name, error);
-		}
-	}
-	frames.sort((a, b) => a.tick - b.tick);
-	stopPlayback({ syncLogs: false });
-	state.archive.enabled = false;
-	state.archive.loading = false;
-	state.archive.manifest = null;
-	state.frames = frames;
-	state.stableIndex = frames.length ? 0 : -1;
-	state.selectedEntityId = "";
-	state.selectedLocationId = "";
-	rebuildLogFilterMetadata(frames);
-	syncVisibleLogRowsToStable();
-	render();
-	setSourceHint(`已加载 JSON checkpoint 目录：${frames.length} ticks`);
 });
 
 detailsPane.addEventListener("click", (event) => {
@@ -266,6 +245,19 @@ logFilterEvent.addEventListener("change", () => {
 	renderLog();
 });
 
+logFilterInteractionVerbs.addEventListener("change", (event) => {
+	const target = event.target;
+	if (!(target instanceof HTMLInputElement)) {
+		return;
+	}
+	const verb = String(target.dataset.interactionVerb || "");
+	if (!verb) {
+		return;
+	}
+	state.logFilter.selectedInteractionVerbs[verb] = !!target.checked;
+	renderLog();
+});
+
 logFilterEventTypes.addEventListener("change", (event) => {
 	const target = event.target;
 	if (!(target instanceof HTMLInputElement)) {
@@ -288,6 +280,9 @@ logFilterClearBtn.addEventListener("click", () => {
 	state.logFilter.showInteraction = true;
 	state.logFilter.showEvent = true;
 	state.logFilter.keyword = "";
+	for (const verb of state.logFilter.availableInteractionVerbs) {
+		state.logFilter.selectedInteractionVerbs[verb.name] = true;
+	}
 	for (const eventType of state.logFilter.availableEventTypes) {
 		state.logFilter.selectedEventTypes[eventType.name] = true;
 	}
@@ -320,9 +315,36 @@ function createEmptyOverlay() {
 	};
 }
 
-function isCheckpointFileCandidate(file) {
-	const name = String(file?.name || "").toLowerCase();
-	return name.endsWith(".json");
+function syncArchiveScenesFromManifest(manifest) {
+	const scenes = Array.isArray(manifest?.scenes) ? manifest.scenes : [];
+	state.archive.scenes = scenes;
+	state.archive.activeSceneId = String(manifest?.active_scene_id || "");
+	syncSceneSelect();
+}
+
+function syncSceneSelect() {
+	if (!sceneSelect) {
+		return;
+	}
+	const scenes = Array.isArray(state.archive.scenes) ? state.archive.scenes : [];
+	sceneSelect.innerHTML = "";
+	if (!scenes.length) {
+		const option = document.createElement("option");
+		option.value = "";
+		option.textContent = "无可用 Archive 场景";
+		sceneSelect.appendChild(option);
+		sceneSelect.disabled = true;
+		return;
+	}
+	for (const scene of scenes) {
+		const option = document.createElement("option");
+		option.value = String(scene.id || "");
+		const tick = Number(scene.last_tick ?? 0);
+		option.textContent = `${scene.name || scene.id || "archive"} · #${Number.isFinite(tick) ? tick : 0}`;
+		sceneSelect.appendChild(option);
+	}
+	sceneSelect.disabled = false;
+	sceneSelect.value = state.archive.activeSceneId || String(scenes[0]?.id || "");
 }
 
 async function loadArchiveFromServer(options = {}) {
@@ -331,41 +353,195 @@ async function loadArchiveFromServer(options = {}) {
 		return;
 	}
 	state.archive.loading = true;
-	setSourceHint("正在连接本地 archive 服务...");
+	setSourceHint("正在连接 archive 服务...");
 	try {
 		const response = await fetch("./api/manifest", { cache: "no-store" });
 		if (!response.ok) {
 			throw new Error(`HTTP ${response.status}`);
 		}
 		const manifest = await response.json();
-		const ticks = Array.isArray(manifest?.ticks) ? manifest.ticks.map((x) => Number(x)).filter((x) => Number.isFinite(x) && x >= 0) : [];
-		if (!ticks.length) {
-			throw new Error("manifest has no ticks");
-		}
-		stopPlayback({ syncLogs: false });
-		state.archive.enabled = true;
-		state.archive.manifest = manifest;
-		state.frames = ticks.map((tick) => createLazyArchiveFrame(tick, manifest));
-		state.stableIndex = 0;
-		state.selectedEntityId = "";
-		state.selectedLocationId = "";
-		state.selectedPathKey = "";
-		rebuildLogFilterMetadata([]);
-		await ensureFrameLoaded(0);
-		syncVisibleLogRowsToStable();
-		rebuildLogFilterMetadata(state.frames.filter((frame) => !frame.lazy));
-		render();
-		setSourceHint(`Archive 已连接：${manifest.archive_dir || manifest.run_id || "local"} · ${ticks.length} ticks`);
+		await loadArchiveManifestPayload(manifest);
 	} catch (error) {
 		state.archive.enabled = false;
-		if (explicit) {
-			setSourceHint(`连接 Archive 失败：${error?.message || error}`);
-		} else {
-			setSourceHint("通过 checkpoint_viewer_server.py 读取 run archive；仍支持旧 JSON 目录导入");
-		}
+		state.archive.manifest = null;
+		state.archive.scenes = [];
+		state.archive.activeSceneId = "";
+		state.frames = [];
+		state.stableIndex = -1;
+		stopArchivePolling();
+		syncSceneSelect();
+		render();
+		setSourceHint(explicit ? `连接 Archive 失败：${error?.message || error}` : "请通过 checkpoint_viewer_server.py 打开 viewer");
 	} finally {
 		state.archive.loading = false;
 	}
+}
+
+async function switchArchiveScene(sceneId) {
+	if (state.archive.loading) {
+		return;
+	}
+	state.archive.loading = true;
+	setSourceHint(`正在切换 Archive 场景：${sceneId}`);
+	try {
+		const response = await fetch("./api/scenes/select", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ scene_id: String(sceneId || "") }),
+		});
+		if (!response.ok) {
+			throw new Error(`HTTP ${response.status}`);
+		}
+		const manifest = await response.json();
+		await loadArchiveManifestPayload(manifest);
+	} catch (error) {
+		setSourceHint(`切换 Archive 场景失败：${error?.message || error}`);
+		syncSceneSelect();
+	} finally {
+		state.archive.loading = false;
+	}
+}
+
+async function loadArchiveManifestPayload(manifest) {
+	const ticks = normalizeManifestTicks(manifest);
+	await rebuildArchiveTimeline(manifest, ticks, {
+		restartPolling: true,
+		sourceHintText: `Archive 已连接：${activeArchiveLabel(manifest)} · ${ticks.length} ticks`,
+	});
+}
+
+function activeArchiveLabel(manifest) {
+	const scene = (Array.isArray(manifest?.scenes) ? manifest.scenes : []).find((item) => String(item.id || "") === String(manifest?.active_scene_id || ""));
+	return String(scene?.name || manifest?.active_scene_id || manifest?.archive_dir || manifest?.run_id || "local");
+}
+
+function startArchivePolling() {
+	stopArchivePolling();
+	if (!state.archive.enabled || !state.archive.liveFollow) {
+		return;
+	}
+	state.archive.pollTimerId = window.setInterval(() => {
+		pollArchiveManifest({ forceFollow: false });
+	}, Math.max(500, Number(state.archive.pollIntervalMs) || 1000));
+}
+
+function stopArchivePolling() {
+	if (state.archive.pollTimerId) {
+		window.clearInterval(state.archive.pollTimerId);
+		state.archive.pollTimerId = 0;
+	}
+}
+
+async function pollArchiveManifest(options = {}) {
+	if (!state.archive.enabled || state.archive.polling) {
+		return;
+	}
+	state.archive.polling = true;
+	try {
+		const response = await fetch("./api/manifest", { cache: "no-store" });
+		if (!response.ok) {
+			throw new Error(`HTTP ${response.status}`);
+		}
+		const manifest = await response.json();
+		syncArchiveScenesFromManifest(manifest);
+		const ticks = Array.isArray(manifest?.ticks) ? manifest.ticks.map((x) => Number(x)).filter((x) => Number.isFinite(x) && x >= 0) : [];
+		if (!ticks.length) {
+			return;
+		}
+		await mergeArchiveManifest(manifest, ticks, options);
+	} catch (error) {
+		setSourceHint(`实时跟随失败：${error?.message || error}`);
+	} finally {
+		state.archive.polling = false;
+	}
+}
+
+async function mergeArchiveManifest(manifest, ticks, options = {}) {
+	if (archiveTimelineNeedsRebuild(manifest, ticks)) {
+		await rebuildArchiveTimeline(manifest, ticks, {
+			restartPolling: true,
+			forceFollow: boolOption(options.forceFollow) || state.archive.liveFollow,
+			sourceHintText: `Archive 已重建时间线：${activeArchiveLabel(manifest)} · ${ticks.length} ticks`,
+		});
+		return;
+	}
+	const currentTick = state.frames.length ? Number(state.frames[state.frames.length - 1]?.tick ?? -1) : -1;
+	const nextTicks = ticks.filter((tick) => tick > currentTick);
+	state.archive.manifest = manifest;
+	if (!nextTicks.length) {
+		setSourceHint(`Archive 已连接：${activeArchiveLabel(manifest)} · ${ticks.length} ticks`);
+		return;
+	}
+	const wasAtLatest = state.stableIndex >= state.frames.length - 1;
+	for (const tick of nextTicks) {
+		state.frames.push(createLazyArchiveFrame(tick, manifest));
+	}
+	const shouldFollow = boolOption(options.forceFollow) || (state.archive.liveFollow && wasAtLatest && state.playback.mode === "idle");
+	if (shouldFollow) {
+		await setStableFrameIndex(state.frames.length - 1, { preserveSelection: true, preserveViewport: true });
+	} else {
+		renderTickList();
+		setSourceHint(`Archive 有新 tick：最新 #${state.frames[state.frames.length - 1]?.tick}，当前仍停在 #${getStableFrame()?.tick ?? "-"}`);
+	}
+}
+
+function normalizeManifestTicks(manifest) {
+	const ticks = Array.isArray(manifest?.ticks) ? manifest.ticks.map((x) => Number(x)).filter((x) => Number.isFinite(x) && x >= 0) : [];
+	if (!ticks.length) {
+		throw new Error("manifest has no ticks");
+	}
+	return ticks;
+}
+
+function archiveTimelineNeedsRebuild(manifest, ticks) {
+	const currentTicks = state.frames.map((frame) => Number(frame?.tick)).filter((tick) => Number.isFinite(tick) && tick >= 0);
+	if (!currentTicks.length) {
+		return true;
+	}
+	const previousManifest = state.archive.manifest || {};
+	const previousRunId = String(previousManifest?.run_id || "");
+	const nextRunId = String(manifest?.run_id || "");
+	if (previousRunId !== nextRunId) {
+		return true;
+	}
+	if (ticks.length < currentTicks.length) {
+		return true;
+	}
+	for (let index = 0; index < currentTicks.length; index += 1) {
+		if (ticks[index] !== currentTicks[index]) {
+			return true;
+		}
+	}
+	return false;
+}
+
+async function rebuildArchiveTimeline(manifest, ticks, options = {}) {
+	stopPlayback({ syncLogs: false });
+	stopArchivePolling();
+	state.archive.enabled = true;
+	state.archive.manifest = manifest;
+	syncArchiveScenesFromManifest(manifest);
+	state.frames = ticks.map((tick) => createLazyArchiveFrame(tick, manifest));
+	state.stableIndex = Math.max(0, state.frames.length - 1);
+	state.selectedEntityId = "";
+	state.selectedLocationId = "";
+	state.selectedPathKey = "";
+	rebuildLogFilterMetadata([]);
+	await ensureFrameLoaded(state.stableIndex);
+	syncVisibleLogRowsToStable();
+	rebuildLogFilterMetadata(state.frames.filter((frame) => !frame.lazy));
+	render();
+	setSourceHint(String(options.sourceHintText || `Archive 已连接：${activeArchiveLabel(manifest)} · ${ticks.length} ticks`));
+	if (boolOption(options.forceFollow) && state.frames.length) {
+		await setStableFrameIndex(state.frames.length - 1, { preserveSelection: true, preserveViewport: true });
+	}
+	if (options.restartPolling !== false && state.archive.liveFollow) {
+		startArchivePolling();
+	}
+}
+
+function boolOption(value) {
+	return value === true;
 }
 
 function createLazyArchiveFrame(tick, manifest) {
@@ -681,16 +857,18 @@ function finishSegmentPlayback() {
 	render();
 }
 
-async function setStableFrameIndex(index) {
+async function setStableFrameIndex(index, options = {}) {
 	if (!state.frames.length) {
 		return;
 	}
 	const clamped = Math.max(0, Math.min(state.frames.length - 1, Number(index) || 0));
 	stopPlayback({ syncLogs: false });
 	state.stableIndex = clamped;
-	state.selectedEntityId = "";
-	state.selectedLocationId = "";
-	state.selectedPathKey = "";
+	if (!options.preserveSelection) {
+		state.selectedEntityId = "";
+		state.selectedLocationId = "";
+		state.selectedPathKey = "";
+	}
 	render();
 	try {
 		await ensureFrameLoaded(clamped);
@@ -707,6 +885,9 @@ function syncVisibleLogRowsToStable() {
 }
 
 function render() {
+	if (liveFollowInput) {
+		liveFollowInput.checked = !!state.archive.liveFollow;
+	}
 	renderTickList();
 	renderWorld();
 	renderDetails();
@@ -719,33 +900,71 @@ function syncLogFilterUi() {
 	logFilterInteraction.checked = !!state.logFilter.showInteraction;
 	logFilterEvent.checked = !!state.logFilter.showEvent;
 	logFilterKeyword.value = String(state.logFilter.keyword || "");
+	renderLogInteractionVerbFilterOptions();
 	renderLogEventTypeFilterOptions();
 }
 
 function rebuildLogFilterMetadata(frames) {
-	const counts = new Map();
+	const verbCounts = new Map();
+	const eventTypeCounts = new Map();
 	for (const frame of Array.isArray(frames) ? frames : []) {
 		for (const row of Array.isArray(frame?.log) ? frame.log : []) {
-			const eventType = getRowEventType(row);
-			if (!eventType) {
-				continue;
+			const verb = getRowInteractionVerb(row);
+			if (verb) {
+				verbCounts.set(verb, (verbCounts.get(verb) || 0) + 1);
 			}
-			counts.set(eventType, (counts.get(eventType) || 0) + 1);
+			const eventType = getRowEventType(row);
+			if (eventType) {
+				eventTypeCounts.set(eventType, (eventTypeCounts.get(eventType) || 0) + 1);
+			}
 		}
 	}
-	const nextTypes = Array.from(counts.entries())
+	const nextVerbs = buildSortedFilterItems(verbCounts);
+	const nextEventTypes = buildSortedFilterItems(eventTypeCounts);
+	state.logFilter.availableInteractionVerbs = nextVerbs;
+	state.logFilter.selectedInteractionVerbs = preserveFilterSelection(state.logFilter.selectedInteractionVerbs, nextVerbs);
+	state.logFilter.availableEventTypes = nextEventTypes;
+	state.logFilter.selectedEventTypes = preserveFilterSelection(state.logFilter.selectedEventTypes, nextEventTypes);
+}
+
+function buildSortedFilterItems(counts) {
+	return Array.from(counts.entries())
 		.map(([name, count]) => ({ name, count }))
 		.sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+}
+
+function preserveFilterSelection(previousSelection, items) {
 	const nextSelected = {};
-	for (const item of nextTypes) {
-		if (Object.prototype.hasOwnProperty.call(state.logFilter.selectedEventTypes, item.name)) {
-			nextSelected[item.name] = !!state.logFilter.selectedEventTypes[item.name];
+	for (const item of items) {
+		if (Object.prototype.hasOwnProperty.call(previousSelection, item.name)) {
+			nextSelected[item.name] = !!previousSelection[item.name];
 		} else {
 			nextSelected[item.name] = true;
 		}
 	}
-	state.logFilter.availableEventTypes = nextTypes;
-	state.logFilter.selectedEventTypes = nextSelected;
+	return nextSelected;
+}
+
+function renderLogInteractionVerbFilterOptions() {
+	const verbs = Array.isArray(state.logFilter.availableInteractionVerbs) ? state.logFilter.availableInteractionVerbs : [];
+	if (!verbs.length) {
+		logFilterInteractionVerbs.className = "event-type-empty";
+		logFilterInteractionVerbs.textContent = "当前数据没有 interaction.verb";
+		return;
+	}
+	logFilterInteractionVerbs.className = "event-type-list";
+	logFilterInteractionVerbs.innerHTML = verbs.map((item) => {
+		const checked = state.logFilter.selectedInteractionVerbs[item.name] !== false;
+		return `
+			<label class="event-type-item">
+				<span class="left">
+					<input type="checkbox" data-interaction-verb="${escapeHtml(item.name)}" ${checked ? "checked" : ""}>
+					<span class="event-name" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</span>
+				</span>
+				<span class="event-count">${item.count}</span>
+			</label>
+		`;
+	}).join("");
 }
 
 function renderLogEventTypeFilterOptions() {
@@ -768,6 +987,17 @@ function renderLogEventTypeFilterOptions() {
 			</label>
 		`;
 	}).join("");
+}
+
+function getRowInteractionVerb(row) {
+	if (!row || typeof row !== "object") {
+		return "";
+	}
+	if (String(row.kind || "") !== "interaction") {
+		return "";
+	}
+	const text = String(row.verb || "").trim();
+	return text || "UnknownInteraction";
 }
 
 function getRowEventType(row) {
@@ -844,6 +1074,9 @@ function normalizeLogRows(rows) {
 function compileVisualEvents(segment) {
 	const visualEvents = [];
 	for (const row of segment.logRows) {
+		if (!logRowPassesTypeFilters(row)) {
+			continue;
+		}
 		visualEvents.push(...compileLogRowToVisualEvents(row));
 	}
 	return visualEvents;
@@ -856,12 +1089,7 @@ function compileLogRowToVisualEvents(row) {
 	if (row.kind === "interaction") {
 		return compileInteractionRow(row);
 	}
-	if (row.kind === "event") {
-		return compileEventRow(row);
-	}
-	return [
-		{ type: "log-append", row, durationMs: PLAYBACK_LOG_APPEND_MS },
-	];
+	return [];
 }
 
 function compileInteractionRow(row) {
@@ -871,14 +1099,12 @@ function compileInteractionRow(row) {
 	const status = String(row.status || "");
 	if (speech) {
 		return [
-			{ type: "highlight", actorId, durationMs: PLAYBACK_HIGHLIGHT_MS },
 			{ type: "speech", actorId, speakerName: String(row.actor_name || actorId || "Unknown"), text: speech, durationMs: PLAYBACK_SPEECH_MS },
 			{ type: "log-append", row, durationMs: PLAYBACK_LOG_APPEND_MS },
 		];
 	}
 	if (verb === "Travel" && status === "success" && String(row.travel_phase || "") === "depart") {
 		return [
-			{ type: "highlight", actorId, durationMs: PLAYBACK_HIGHLIGHT_MS },
 			{
 				type: "travel",
 				actorId,
@@ -890,44 +1116,30 @@ function compileInteractionRow(row) {
 			{ type: "log-append", row, durationMs: PLAYBACK_LOG_APPEND_MS },
 		];
 	}
+	if (row.is_reaction === true) {
+		return [
+			{ type: "log-append", row, durationMs: PLAYBACK_LOG_APPEND_MS },
+		];
+	}
+	const actionText = actionBubbleText(row);
 	return [
-		{ type: "highlight", actorId, durationMs: PLAYBACK_HIGHLIGHT_MS },
+		{ type: "speech", actorId, speakerName: String(row.actor_name || actorId || "Unknown"), text: actionText, durationMs: PLAYBACK_ACTION_BUBBLE_MS },
 		{ type: "log-append", row, durationMs: PLAYBACK_LOG_APPEND_MS },
 	];
 }
 
-function compileEventRow(row) {
-	const event = row.event || {};
-	const eventType = String(event.type || "");
-	if (eventType === "ConversationSpoken") {
-		return [
-			{ type: "highlight", actorId: String(event.speaker_id || row.actor_id || ""), durationMs: PLAYBACK_HIGHLIGHT_MS },
-			{
-				type: "speech",
-				actorId: String(event.speaker_id || row.actor_id || ""),
-				speakerName: resolveEventSpeakerName(event, row),
-				text: String(event.text || ""),
-				durationMs: PLAYBACK_SPEECH_MS,
-			},
-			{ type: "log-append", row, durationMs: PLAYBACK_LOG_APPEND_MS },
-		];
+function actionBubbleText(row) {
+	const narrative = String(row?.narrative || "").trim();
+	if (narrative) {
+		return narrative;
 	}
-	const actorId = String(row.actor_id || event.speaker_id || event.entity_id || "");
-	if (eventType.startsWith("Task") || eventType.startsWith("Entity") || eventType.startsWith("Conversation")) {
-		return [
-			{ type: "highlight", actorId, durationMs: PLAYBACK_HIGHLIGHT_MS },
-			{ type: "log-append", row, durationMs: PLAYBACK_LOG_APPEND_MS },
-		];
+	const verb = String(row?.verb || "");
+	const target = String(row?.target_name || row?.target_id || "");
+	const status = String(row?.status || "");
+	if (target) {
+		return `${verb}：${target}${status && status !== "success" ? ` (${status})` : ""}`;
 	}
-	return [{ type: "log-append", row, durationMs: PLAYBACK_LOG_APPEND_MS }];
-}
-
-function resolveEventSpeakerName(event, row) {
-	const speakerId = String(event.speaker_id || row.actor_id || "");
-	const displayedFrame = getDisplayedFrame();
-	const entityMap = buildEntityMap(displayedFrame);
-	const entity = entityMap.get(speakerId);
-	return entityDisplayName(entity, entity) || speakerId || "Unknown";
+	return `${verb}${status && status !== "success" ? ` (${status})` : ""}`;
 }
 
 function applyVisualEvent(visualEvent) {
@@ -1056,6 +1268,7 @@ function renderWorld() {
 		return;
 	}
 	const layout = getOrCreateLayout(frame, locations, paths);
+	state.locationAgentAnchorsById = {};
 	const edgeHtml = buildGraphEdges(paths, layout, state.playback.overlay.travel);
 	const nodeHtml = locations.map((loc) => {
 		const locationId = String(loc.location_id || "");
@@ -1099,6 +1312,19 @@ function renderWorld() {
 			totalCount: entities.length,
 		});
 		state.locationNodeHalfById[locationId] = nodeSize / 2;
+		state.locationAgentAnchorsById = state.locationAgentAnchorsById || {};
+		state.locationAgentAnchorsById[locationId] = {};
+		const slotGap = 8;
+		const tokenSize = 42;
+		const rowWidth = Math.max(0, visibleAgents.length * tokenSize + Math.max(0, visibleAgents.length - 1) * slotGap);
+		const agentY = point.y + 12;
+		visibleAgents.forEach((entity, index) => {
+			const entityId = String(entity.instance_id || "");
+			state.locationAgentAnchorsById[locationId][entityId] = {
+				x: point.x - rowWidth / 2 + tokenSize / 2 + index * (tokenSize + slotGap),
+				y: agentY,
+			};
+		});
 		const entitySummary = entities.length
 			? `<span class="entity-count-pill">${entities.length} entities</span>`
 			: '<span class="empty">无实体</span>';
@@ -1203,7 +1429,7 @@ function buildPlaybackOverlayHtml(frame, layout, entityMap) {
 		const anchor = resolveActorAnchorPoint(frame, entityMap, String(overlay.bubble.actorId || ""), layout);
 		if (anchor) {
 			fragments.push(`
-				<div class="bubble" style="left:${anchor.x}px; top:${anchor.y - 34}px;">
+				<div class="bubble" style="left:${anchor.x}px; top:${anchor.y - 10}px;">
 					<div class="bubble-speaker">${escapeHtml(String(overlay.bubble.speakerName || ""))}</div>
 					<div>${escapeHtml(String(overlay.bubble.text || ""))}</div>
 				</div>
@@ -1228,18 +1454,19 @@ function resolveActorAnchorPoint(frame, entityMap, actorId, layout) {
 		}
 	}
 	const locationId = findLocationIdForEntity(frame, actorId);
-	if (!locationId) {
-		return null;
+	const anchor = locationId ? state.locationAgentAnchorsById?.[locationId]?.[actorId] : null;
+	if (anchor) {
+		return { x: Number(anchor.x) || 0, y: Number(anchor.y) || 0 };
 	}
-	const point = layout.get(locationId);
-	if (!point) {
-		return null;
-	}
-	const nodeHalf = Number(state.locationNodeHalfById[locationId]) || NODE_HALF;
-	return {
-		x: point.x,
-		y: point.y - nodeHalf - 14,
-	};
+	return null;
+}
+
+function resolveEventSpeakerName(event, row) {
+	const speakerId = String(event?.speaker_id || row?.actor_id || "");
+	const displayedFrame = getDisplayedFrame();
+	const entityMap = buildEntityMap(displayedFrame);
+	const entity = entityMap.get(speakerId);
+	return entityDisplayName(entity, entity) || speakerId || "Unknown";
 }
 
 function isActorCurrentlyActive(entityId) {
@@ -1866,6 +2093,30 @@ function renderLocationEntityList(entities, entityMap) {
 	`;
 }
 
+function logRowPassesTypeFilters(row) {
+	const kind = String(row?.kind || "unknown");
+	const kindPass =
+		(kind === "interaction" && state.logFilter.showInteraction) ||
+		(kind === "event" && state.logFilter.showEvent) ||
+		(kind !== "interaction" && kind !== "event");
+	if (!kindPass) {
+		return false;
+	}
+	if (kind === "interaction") {
+		const verb = getRowInteractionVerb(row);
+		if (verb && state.logFilter.selectedInteractionVerbs[verb] === false) {
+			return false;
+		}
+	}
+	if (kind === "event") {
+		const eventType = getRowEventType(row);
+		if (eventType && state.logFilter.selectedEventTypes[eventType] === false) {
+			return false;
+		}
+	}
+	return true;
+}
+
 function renderLog() {
 	logList.innerHTML = "";
 	if (!state.frames.length) {
@@ -1874,19 +2125,8 @@ function renderLog() {
 	}
 	const rows = Array.isArray(state.playback.visibleLogRows) ? state.playback.visibleLogRows : [];
 	const filteredRows = rows.filter((row) => {
-		const kind = String(row.kind || "unknown");
-		const kindPass =
-			(kind === "interaction" && state.logFilter.showInteraction) ||
-			(kind === "event" && state.logFilter.showEvent) ||
-			(kind !== "interaction" && kind !== "event");
-		if (!kindPass) {
+		if (!logRowPassesTypeFilters(row)) {
 			return false;
-		}
-		if (kind === "event") {
-			const eventType = getRowEventType(row);
-			if (eventType && state.logFilter.selectedEventTypes[eventType] === false) {
-				return false;
-			}
 		}
 		const keyword = String(state.logFilter.keyword || "").trim().toLowerCase();
 		if (!keyword) {
@@ -1974,8 +2214,12 @@ function formatLogRow(row) {
 		const target = String(row.target_name || row.target_id || "");
 		const status = String(row.status || "");
 		const speech = String(row.speech || "");
+		const narrative = String(row.narrative || "").trim();
 		if (speech) {
 			return `${actor}：${speech}`;
+		}
+		if (narrative) {
+			return narrative;
 		}
 		return `${actor} -> ${verb}${target ? " -> " + target : ""} [${status || "unknown"}]`;
 	}

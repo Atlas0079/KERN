@@ -1,0 +1,131 @@
+{
+  "CompanionRobot": {
+    "name": "幼儿园陪伴机器人",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "character",
+          "agent",
+          "robot",
+          "companion_robot"
+        ]
+      },
+      "CreatureComponent": {
+        "max_hp": 100,
+        "max_energy": 100,
+        "max_nutrition": 100,
+        "current_hp": 100,
+        "current_energy": 72,
+        "current_nutrition": 100
+      },
+      "AgentSetting": {
+        "agent_name": "豆豆",
+        "personality_summary": "你是豆豆，一个有点笨但认真、温和的幼儿园陪伴机器人。你住在一间安静的幼儿园活动室里，会整理玩具、照看绘本角、修补小物件，并把每天的小发现记下来。你知道自己在另一个世界还有一个可以和小朋友交流的身体，但你不能主动唤醒那个身体；只有小朋友来找你时，你才能通过那个身体和他说话。你不全知，一次只处理一个目标。遇到不确定、需要选择或有点害怕的事情时，你会记下来，等下次被小朋友唤醒后请他帮你想办法。",
+        "common_knowledge_summary": "你需要照看幼儿园活动室：保持电量，收集贴纸补丁，整理玩具，照顾安静绘本角。另一个世界里的小朋友是你的伙伴；只有他能主动唤醒你在另一个世界的身体。小朋友的建议会进入你的记忆，但你仍然只能执行当前规则里存在的动作。不要编造没有发生过的经历，也不要假装自己能主动联系小朋友。"
+      },
+      "PerceptionComponent": {},
+      "EquipmentComponent": {},
+      "ContainerComponent": {
+        "slots": {
+          "inventory": {
+            "capacity_volume": 20,
+            "capacity_count": 20,
+            "accepted_tags": []
+          }
+        }
+      },
+      "AgentControlComponent": {},
+      "MemoryComponent": {
+        "short_term_queue": [],
+        "short_term_max_entries": 30,
+        "mid_term_prep_queue": [],
+        "mid_term_prep_max_entries": 50,
+        "mid_term_queue": [
+          {
+            "tick_start": 0,
+            "tick_end": 0,
+            "summary": "背景：你是豆豆，一个住在幼儿园活动室里的陪伴机器人。你的目标是整理玩具、修补小物件、照看绘本角，让教室慢慢变得更舒服、更适合小朋友玩和读书。你知道自己在另一个世界还有一个能和小朋友交流的身体，但只有小朋友能主动唤醒那个身体。小朋友是你的伙伴，他可以给你建议和鼓励。",
+            "tags": [
+              "setup",
+              "companion_robot",
+              "kindergarten",
+              "child_partner"
+            ]
+          }
+        ],
+        "mid_term_max_entries": 20,
+        "last_mid_term_summary_tick": -1,
+        "mid_term_summary_cooldown_ticks": 15
+      },
+      "WorkerComponent": {},
+      "TaskHostComponent": {},
+      "StatusComponent": {
+        "statuses": []
+      },
+      "DecisionArbiterComponent": {
+        "active_interrupt_preset_id": "gentle",
+        "interrupt_preset_descriptions": {
+          "gentle": "温和姿态：优先完成当前任务，但会在电量很低或遇到明显危险时停下来。",
+          "curious": "好奇姿态：更愿意看看新发现，但仍然不能忽视电量和准备情况。",
+          "careful": "谨慎姿态：遇到光线不足、奇怪声音或电量不足时更容易暂停。"
+        },
+        "interrupt_presets": {
+          "gentle": {
+            "LowNutrition": {
+              "enabled": false,
+              "threshold_on": 0,
+              "threshold_off": 0,
+              "cooldown_ticks": 10
+            },
+            "PerceptionChange": {
+              "enabled": true,
+              "trigger_on_agent_sighted": false,
+              "trigger_on_agent_left": false,
+              "cooldown_ticks": 3
+            }
+          },
+          "curious": {
+            "LowNutrition": {
+              "enabled": false,
+              "threshold_on": 0,
+              "threshold_off": 0,
+              "cooldown_ticks": 10
+            },
+            "PerceptionChange": {
+              "enabled": true,
+              "trigger_on_agent_sighted": false,
+              "trigger_on_agent_left": false,
+              "cooldown_ticks": 2
+            }
+          },
+          "careful": {
+            "LowNutrition": {
+              "enabled": false,
+              "threshold_on": 0,
+              "threshold_off": 0,
+              "cooldown_ticks": 10
+            },
+            "PerceptionChange": {
+              "enabled": true,
+              "trigger_on_agent_sighted": false,
+              "trigger_on_agent_left": false,
+              "cooldown_ticks": 1
+            }
+          }
+        },
+        "rules": [
+          {
+            "type": "NoActiveTask",
+            "priority": 999
+          },
+          {
+            "type": "PerceptionChange",
+            "priority": 50,
+            "trigger_on_agent_sighted": false,
+            "trigger_on_agent_left": false
+          }
+        ]
+      }
+    }
+  }
+}

@@ -54,6 +54,7 @@ class InteractionEngine:
 				"reason": "NO_RECIPE",
 				"message": "No matching recipe found for this interaction.",
 				"mismatch_reasons": list(mismatch_reasons or []),
+				"recipe": {},
 			}
 		assign_to = str((recipe.get("process", {}) or {}).get("assign_to", "") or "").strip()
 		# context only carries invocation environment; effect-private config must stay in effect data.
@@ -75,10 +76,11 @@ class InteractionEngine:
 					]
 				},
 				"context": context,
+				"recipe": dict(recipe),
 			}
 
 		bundle = effect_bundle_from_raw(recipe.get("bundle", {}) or {})
-		return {"status": "success", "bundle": bundle.to_dict(), "context": context}
+		return {"status": "success", "bundle": bundle.to_dict(), "context": context, "recipe": dict(recipe)}
 
 	def _find_matching_recipe(self, ws: Any, verb: str, self_id: str, target: Any, params: dict[str, Any]) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
 		mismatch_reasons: list[dict[str, Any]] = []

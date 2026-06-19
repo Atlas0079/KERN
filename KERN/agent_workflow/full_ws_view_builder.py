@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ..sim.condition_evaluator import ConditionEvaluator
 from ..task_policy import get_task_policy_from_task
 
 
@@ -36,6 +37,80 @@ def _actor_memory_cursors(ws: Any, actor_id: str) -> tuple[int, int]:
 	)
 
 
+def _round1(value: Any) -> float | None:
+	if value is None:
+		return None
+	try:
+		return round(float(value), 1)
+	except Exception:
+		return None
+
+
+def _int_or_default(value: Any, default: int) -> int:
+	try:
+		return int(value)
+	except Exception:
+		return int(default)
+
+
+def _read_vitals(ent: Any) -> dict[str, float | None]:
+	creature = ent.get_component("CreatureComponent") if hasattr(ent, "get_component") else None
+	if creature is None:
+		return {}
+	out = {
+		"hp": _round1(getattr(creature, "current_hp", None)),
+		"max_hp": _round1(getattr(creature, "max_hp", None)),
+		"energy": _round1(getattr(creature, "current_energy", None)),
+		"max_energy": _round1(getattr(creature, "max_energy", None)),
+		"nutrition": _round1(getattr(creature, "current_nutrition", None)),
+		"max_nutrition": _round1(getattr(creature, "max_nutrition", None)),
+	}
+	if getattr(creature, "max_stress", None) is not None:
+		out["stress"] = _round1(getattr(creature, "current_stress", None))
+		out["max_stress"] = _round1(getattr(creature, "max_stress", None))
+	return out
+
+
+def _custom_component_data(ent: Any, component_name: str) -> dict[str, Any]:
+	comp = ent.get_component(component_name) if hasattr(ent, "get_component") else None
+	data = getattr(comp, "data", None)
+	return dict(data) if isinstance(data, dict) else {}
+
+
+def _description_by_source(source: Any, description: str, base_description: str, observed_description: str) -> str:
+	source_id = str(source or "base").strip()
+	if source_id == "observed":
+		return observed_description or base_description or description
+	if source_id == "description":
+		return description or base_description or observed_description
+	return base_description or description or observed_description
+
+
+def _select_perception(ws: Any, ent: Any, actor_id: str, entity_id: str, description: str, base_description: str, observed_description: str) -> dict[str, str]:
+	profile = _custom_component_data(ent, "PerceptionProfileComponent")
+	levels = profile.get("levels", [])
+	if not isinstance(levels, list):
+		levels = []
+	evaluator = ConditionEvaluator()
+	context = {"self_id": str(actor_id or ""), "target_id": str(entity_id or "")}
+	for level in levels:
+		if not isinstance(level, dict):
+			continue
+		condition = level.get("condition", {}) or {}
+		if not isinstance(condition, dict):
+			continue
+		if not evaluator.evaluate(ws, condition, context):
+			continue
+		return {
+			"level": str(level.get("id", "") or "matched"),
+			"description": _description_by_source(level.get("description", "base"), description, base_description, observed_description),
+		}
+	return {
+		"level": str(profile.get("default_level", "") or "base"),
+		"description": _description_by_source(profile.get("default_description", "base"), description, base_description, observed_description),
+	}
+
+
 def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[str, Any]) -> dict[str, Any]:
 	entities_out: list[dict[str, Any]] = []
 	for ent in list(getattr(ws, "entities", {}).values()):
@@ -65,6 +140,7 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 				observed_description = str(description_comp.observed_text() or "")
 			else:
 				observed_description = str(getattr(description_comp, "observed_description", "") or description)
+		perception = _select_perception(ws, ent, actor_id, eid, description, base_description, observed_description)
 		memory_dict = _read_memory_component_dict(ent)
 		arb = ent.get_component("DecisionArbiterComponent") if hasattr(ent, "get_component") else None
 		active_interrupt_preset_id = str(getattr(arb, "active_interrupt_preset_id", "") or "") if arb is not None else ""
@@ -160,6 +236,8 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 				"description": description,
 				"base_description": base_description,
 				"observed_description": observed_description,
+				"perception_description": str(perception.get("description", "") or ""),
+				"perception_level": str(perception.get("level", "") or "base"),
 				"memory": memory_dict,
 				"active_interrupt_preset_id": active_interrupt_preset_id,
 				"interrupt_presets": interrupt_presets,
@@ -168,6 +246,7 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 				"container_slots": container_slots,
 				"inventory": inventory,
 				"worker_current_task": worker_current_task,
+				"vitals": _read_vitals(ent),
 				"world_state_entity": world_state_entity_data,
 			}
 		)
@@ -180,6 +259,8 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 			{
 				"id": str(getattr(loc, "location_id", "") or ""),
 				"name": str(getattr(loc, "location_name", "") or ""),
+				"description": str(getattr(loc, "description", "") or ""),
+				"light_level": _int_or_default(getattr(loc, "light_level", 2), 2),
 				"entities": [str(x) for x in list(getattr(loc, "entities_in_location", []) or []) if str(x)],
 			}
 		)

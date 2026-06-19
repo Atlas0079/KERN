@@ -9,6 +9,7 @@
 
 ### 2. 当前对话场景
 - 地点：{{location_id}} / {{location_name}}
+- 地点亮度：{{location_light_text}}
 - 会话ID：{{conversation_id}}
 - 当前阶段：{{dialogue_phase}}
 - 发起者：{{initiator_id}}

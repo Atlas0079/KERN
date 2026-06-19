@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from ..execution_errors import executor_error
-from ..models.components import CreatureComponent, TagComponent
+from ..models.components import TagComponent
 from ._effect_binder import BindError, _base_bind, _require_float, _require_str, _resolve_param_token
 
 
@@ -43,6 +43,45 @@ def _set_nested_value(obj: Any, path: str, value: Any, delta_mode: bool = False)
 		setattr(current, last_key, new_val)
 		return new_val
 	return None
+
+
+def _resolve_clamp_bound(component: Any, raw_bound: Any) -> float | None:
+	if raw_bound is None:
+		return None
+	if isinstance(raw_bound, str):
+		name = str(raw_bound or "").strip()
+		if not name:
+			return None
+		if hasattr(component, name):
+			raw_bound = getattr(component, name)
+		elif hasattr(component, "data") and isinstance(getattr(component, "data"), dict):
+			raw_bound = getattr(component, "data").get(name)
+		else:
+			return None
+	try:
+		return float(raw_bound)
+	except Exception:
+		return None
+
+
+def _apply_property_clamp(component: Any, property_name: str, value: Any) -> Any:
+	clamps = getattr(component, "__property_clamps__", None)
+	if not isinstance(clamps, dict):
+		return value
+	rule = clamps.get(str(property_name or ""))
+	if not isinstance(rule, dict):
+		return value
+	try:
+		new_value = float(value)
+	except Exception:
+		return value
+	min_bound = _resolve_clamp_bound(component, rule.get("min"))
+	max_bound = _resolve_clamp_bound(component, rule.get("max"))
+	if min_bound is not None and new_value < min_bound:
+		new_value = min_bound
+	if max_bound is not None and new_value > max_bound:
+		new_value = max_bound
+	return new_value
 
 
 def _bind_modify_property(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -114,38 +153,12 @@ def execute_modify_property(executor: Any, ws: Any, data: dict[str, Any], contex
 			}
 		]
 
-	if isinstance(comp, CreatureComponent):
-		comp.ensure_initialized()
-		cur = getattr(comp, prop_name, None)
-		if cur is None:
-			return executor_error(f"ModifyProperty: property missing: {prop_name}")
-		
-		# Allow 'value' for direct set, 'change' for delta
-		new_val = 0.0
-		if has_change:
-			new_val = float(cur) + float(change)
-		elif val_set is not None:
-			new_val = float(val_set)
-		else:
-			new_val = float(cur) # No op
-
-		setattr(comp, prop_name, new_val)
-		return [
-			{
-				"type": "PropertyModified",
-				"entity_id": target.entity_id,
-				"component": comp_name,
-				"property": prop_name,
-				"delta": float(change) if has_change else 0.0,
-				"new_value": new_val,
-			}
-		]
-	
 	if hasattr(comp, prop_name):
 		cur = getattr(comp, prop_name)
 		new_val = val_set if val_set is not None else change
 		if has_change and isinstance(cur, (int, float)):
 			new_val = float(cur) + float(change)
+		new_val = _apply_property_clamp(comp, prop_name, new_val)
 		setattr(comp, prop_name, new_val)
 		return [
 			{
@@ -169,6 +182,7 @@ def execute_modify_property(executor: Any, ws: Any, data: dict[str, Any], contex
 			else:
 				new_val = cur
 
+			new_val = _apply_property_clamp(comp, prop_name, new_val)
 			comp.data[prop_name] = new_val
 			return [
 				{

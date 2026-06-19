@@ -52,7 +52,7 @@ dynamic text. Broader runtime/data checks still live in `tools/`.
 Main command pattern:
 
 ```powershell
-.\venv\Scripts\python.exe app.py --config runtime_config.smoke.json
+.\venv\Scripts\python.exe companion_server.py --config runtime_config.companion_robot.json
 ```
 
 Runtime config files use this shape:
@@ -73,13 +73,17 @@ Runtime config files use this shape:
 
 Common configs:
 
-- `runtime_config.smoke.json`: local no-LLM smoke run for Space Werewolf.
-- `runtime_config.example.json`: Farm-oriented example config.
-- `runtime_config.farm.json`: Farm scenario, currently configured with `USE_LLM=1`.
-- `runtime_config.werewolf.json`: Space Werewolf scenario, currently configured with `USE_LLM=1`.
+- `runtime_config.json`: current default CompanionRobot config, `USE_LLM=1`.
+- `runtime_config.companion_robot.json`: CompanionRobot full config.
+- `runtime_config.companion_robot.smoke.json`: CompanionRobot no-LLM smoke config.
+- `runtime_config.camping.smoke.json`: Camping no-LLM smoke/test config.
+- `runtime_config.example.json`: template for local custom configs.
 
-Prefer `runtime_config.smoke.json` for local validation unless the task explicitly
-needs LLM behavior.
+Prefer `runtime_config.companion_robot.smoke.json` for local validation unless the task explicitly needs real LLM behavior.
+
+Runtime configs may contain local API keys or provider tokens. Keep real runtime
+config files in `.gitignore`; commit only sanitized examples or templates such as
+`runtime_config.example.json`.
 
 ## Core Data Flow
 
@@ -201,7 +205,7 @@ then repeatedly calls `step()` until stopped or max ticks is reached.
 1. Initializes runtime services on `world_state.services`.
 2. Creates a per-tick `RuntimeState`.
 3. Advances game time.
-4. Records `TickAdvanced`.
+4. Records `WorldTickAdvanced`.
 5. Dispatches `AdvanceTick` per entity.
 6. Uses `TriggerSystem` to build reaction effect bundles.
 7. Executes effects through `WorldExecutor`, including chained reactions up to
@@ -218,11 +222,10 @@ Fast local checks:
 ```powershell
 .\venv\Scripts\python.exe -m unittest tests.test_dynamic_text
 .\venv\Scripts\python.exe -m compileall KERN tools app.py tests
-.\venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.smoke.json
+.\venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.companion_robot.smoke.json
+.\venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.camping.smoke.json
 .\venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.example.json
-.\venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.farm.json
-.\venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.werewolf.json
-.\venv\Scripts\python.exe app.py --config runtime_config.smoke.json
+.\venv\Scripts\python.exe app.py --config runtime_config.companion_robot.smoke.json
 ```
 
 Useful diagnostic script:
@@ -237,9 +240,17 @@ normal local health check.
 
 ## Documentation Notes
 
-Some existing Chinese markdown files may display mojibake in the current PowerShell
-output. Prefer reading/writing files as UTF-8 and verify actual file content before
-making documentation-only fixes.
+Some existing Chinese markdown/source files may display mojibake in the current
+PowerShell or tool output even when the file bytes are valid UTF-8. Do not assume
+the source file is corrupted from `Get-Content` output alone. Before making
+documentation-only or encoding fixes, verify the actual file content with an
+explicit UTF-8 read, for example:
+
+```powershell
+.\venv\Scripts\python.exe -c "from pathlib import Path; print(Path('tools/companion_frontend/index.html').read_text(encoding='utf-8')[:200])"
+```
+
+When editing Chinese text, read and write files as UTF-8.
 
 This document intentionally uses mostly ASCII headings and identifiers so it remains
 readable across shells.

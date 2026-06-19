@@ -6,7 +6,7 @@ from ..models.components.memory import MemoryComponent
 
 
 DROP_EVENT_TYPES = {
-	"TickAdvanced",
+	"WorldTickAdvanced",
 	"AdvanceTick",
 	"ReactionTriggered",
 	"ReactionApplied",

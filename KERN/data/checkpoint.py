@@ -57,6 +57,13 @@ def _serialize_any(value: Any) -> Any:
 	return str(value)
 
 
+def _int_or_default(value: Any, default: int) -> int:
+	try:
+		return int(value)
+	except Exception:
+		return int(default)
+
+
 def _serialize_task(task: Task) -> dict[str, Any]:
 	return {
 		"task_id": str(getattr(task, "task_id", "") or ""),
@@ -163,7 +170,10 @@ def _build_parent_map(ws: WorldState) -> dict[str, str]:
 
 def _world_dict_from_world_state(ws: WorldState) -> dict[str, Any]:
 	world: dict[str, Any] = {
-		"world_state": {"current_tick": int(getattr(ws.game_time, "total_ticks", 0) or 0)},
+		"world_state": {
+			"current_tick": int(getattr(ws.game_time, "total_ticks", 0) or 0),
+			"tick0_datetime": str(getattr(ws.game_time, "tick0_datetime", "") or ""),
+		},
 		"locations": [],
 		"entities": [],
 		"tasks": [],
@@ -177,6 +187,7 @@ def _world_dict_from_world_state(ws: WorldState) -> dict[str, Any]:
 			"location_id": str(getattr(loc, "location_id", "") or ""),
 			"location_name": str(getattr(loc, "location_name", "") or ""),
 			"description": str(getattr(loc, "description", "") or ""),
+			"light_level": _int_or_default(getattr(loc, "light_level", 2), 2),
 			"entities": [],
 		}
 		lid = str(item["location_id"] or "")

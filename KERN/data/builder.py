@@ -32,6 +32,7 @@ from ..models.location import Location
 from ..models.task import Task
 from ..models.path import Path
 from ..models.world_state import WorldState
+from ..models.gametime import DEFAULT_TICK0_DATETIME
 
 
 @dataclass
@@ -64,6 +65,13 @@ def _task_from_dict(raw: dict[str, Any]) -> Task:
 	task.cleanup_bundle = effect_bundle_from_raw(raw.get("cleanup_bundle", {}) or {"effects": []})
 	task.completion_bundle = effect_bundle_from_raw(raw.get("completion_bundle", {}) or {"effects": []})
 	return task
+
+
+def _int_or_default(value: Any, default: int) -> int:
+	try:
+		return int(value)
+	except Exception:
+		return int(default)
 
 
 def _attach_tasks_from_snapshot(ws: WorldState, host_entity: Entity, snapshot: dict[str, Any]) -> None:
@@ -106,6 +114,7 @@ def build_world_state(
 	ws.named_bundles = named_bundles or {}
 	world_state_data = bundle_world.get("world_state", {})
 	ws.game_time.total_ticks = int(world_state_data.get("current_tick", 0))
+	ws.game_time.set_tick0_datetime(str(world_state_data.get("tick0_datetime", DEFAULT_TICK0_DATETIME) or DEFAULT_TICK0_DATETIME))
 
 	# 1) Register locations first
 	for loc_data in bundle_world.get("locations", []):
@@ -116,6 +125,7 @@ def build_world_state(
 			location_id=loc_id,
 			location_name=str(loc_data.get("location_name", "Unnamed Location")),
 			description=str(loc_data.get("description", "")),
+			light_level=_int_or_default(loc_data.get("light_level", 2), 2),
 		)
 		ws.register_location(loc)
 
@@ -362,13 +372,13 @@ def _build_component(component_name: str, comp_data: Any):
 		current_energy = d.get("current_energy", None)
 		max_nutrition = d.get("max_nutrition", 100.0)
 		current_nutrition = d.get("current_nutrition", None)
-		max_stress = d.get("max_stress", 100.0)
+		max_stress = d.get("max_stress", None)
 		current_stress = d.get("current_stress", None)
 		return CreatureComponent(
 			max_hp=float(d.get("max_hp", 100.0)),
 			max_energy=float(max_energy),
 			max_nutrition=float(max_nutrition),
-			max_stress=float(max_stress),
+			max_stress=float(max_stress) if max_stress is not None else None,
 			current_hp=float(current_hp) if current_hp is not None else None,
 			current_energy=float(current_energy) if current_energy is not None else None,
 			current_nutrition=float(current_nutrition) if current_nutrition is not None else None,

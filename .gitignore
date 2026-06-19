@@ -27,6 +27,7 @@ runtime_config.json
 runtime_config_abbao.json
 runtime_config.local.json
 runtime_config.*.local.json
+runtime_config.companion_robot*.json
 
 # Runtime artifacts
 checkpoints/

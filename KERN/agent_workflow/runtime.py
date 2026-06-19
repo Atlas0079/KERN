@@ -56,6 +56,38 @@ def _current_worker_task(ws: Any, actor_id: str) -> Any | None:
 	return ws.get_task_by_id(task_id)
 
 
+def _render_interaction_narrative(recipe: dict[str, Any], actor_name: str, target_name: str, verb: str, status: str, reason: str, values: dict[str, Any]) -> str:
+	template_key = "narrative_fail" if str(status or "") == "failed" else "narrative_success"
+	template = str((recipe or {}).get(template_key, "") or "")
+	render_values = dict(values or {})
+	render_values["actor"] = str(actor_name or "")
+	render_values["target"] = str(target_name or "")
+	render_values["reason"] = str(reason or "")
+	if template:
+		out = template
+		for key, value in render_values.items():
+			out = out.replace("{" + str(key) + "}", str(value if value is not None else ""))
+		return out
+	if str(status or "") == "failed":
+		if target_name:
+			return f"{actor_name}对{target_name}执行{verb}失败：{reason or 'unknown'}"
+		return f"{actor_name}执行{verb}失败：{reason or 'unknown'}"
+	if target_name:
+		return f"{actor_name}对{target_name}执行了{verb}"
+	return f"{actor_name}执行了{verb}"
+
+
+def _entity_display_name(entity: Any, fallback: str) -> str:
+	if entity is None:
+		return str(fallback or "")
+	name = str(getattr(entity, "entity_name", "") or fallback or "")
+	if hasattr(entity, "get_component"):
+		setting = entity.get_component("AgentSetting")
+		if setting is not None:
+			name = str(getattr(setting, "agent_name", "") or name)
+	return name
+
+
 def _commands_to_operations(ws: Any, actor_id: str, reason: str, commands: list[dict[str, Any]]) -> tuple[list[dict[str, Any]] | None, dict[str, Any] | None]:
 	services = getattr(ws, "services", {}) or {}
 	interaction_engine = services.get("interaction_engine")
@@ -114,13 +146,58 @@ def _commands_to_operations(ws: Any, actor_id: str, reason: str, commands: list[
 		result = interaction_engine.process_command(ws, actor_id, cmd)
 		status = str((result or {}).get("status", "") or "")
 		if status != "success":
+			reason_code = str((result or {}).get("reason", "") or "COMMAND_REJECTED")
+			message = str((result or {}).get("message", "") or "command rejected by interaction engine")
+			target_id = str(cmd.get("target_id", "") or "")
+			actor = ws.get_entity_by_id(str(actor_id)) if hasattr(ws, "get_entity_by_id") else None
+			target = ws.get_entity_by_id(target_id) if target_id and hasattr(ws, "get_entity_by_id") else None
+			actor_name = _entity_display_name(actor, str(actor_id))
+			target_name = _entity_display_name(target, target_id)
+			narrative = _render_interaction_narrative({}, actor_name, target_name, verb, "failed", reason_code or message, dict(cmd))
+			if hasattr(ws, "record_interaction_attempt"):
+				ws.record_interaction_attempt(
+					actor_id=str(actor_id),
+					verb=verb,
+					target_id=target_id,
+					status="failed",
+					reason=reason_code,
+					recipe_id="",
+					extra={
+						"narrative": narrative,
+						"parameters": dict(cmd.get("parameters", {}) or {}) if isinstance(cmd.get("parameters", {}), dict) else {},
+					},
+				)
 			return None, {
 				"kind": "business",
-				"code": str((result or {}).get("reason", "") or "COMMAND_REJECTED"),
-				"message": str((result or {}).get("message", "") or "command rejected by interaction engine"),
+				"code": reason_code,
+				"message": message,
 			}
 		ctx = dict((result or {}).get("context", {}) or {})
 		bundle = (result or {}).get("bundle", {}) or {}
+		recipe = dict((result or {}).get("recipe", {}) or {}) if isinstance((result or {}).get("recipe", {}), dict) else {}
+		recipe_id = str(recipe.get("id", "") or "")
+		target_id = str(ctx.get("target_id", "") or cmd.get("target_id", "") or "")
+		actor = ws.get_entity_by_id(str(actor_id)) if hasattr(ws, "get_entity_by_id") else None
+		target = ws.get_entity_by_id(target_id) if target_id and hasattr(ws, "get_entity_by_id") else None
+		actor_name = _entity_display_name(actor, str(actor_id))
+		target_name = _entity_display_name(target, target_id)
+		params = dict(ctx.get("parameters", {}) or {}) if isinstance(ctx.get("parameters", {}), dict) else {}
+		narrative_values = {**params, **dict(cmd)}
+		narrative_values["to_location_id"] = str(params.get("to_location_id", "") or cmd.get("to_location_id", "") or "")
+		narrative = _render_interaction_narrative(recipe, actor_name, target_name, verb, "success", "", narrative_values)
+		if hasattr(ws, "record_interaction_attempt"):
+			ws.record_interaction_attempt(
+				actor_id=str(actor_id),
+				verb=verb,
+				target_id=target_id,
+				status="success",
+				reason="",
+				recipe_id=recipe_id,
+				extra={
+					"narrative": narrative,
+					"parameters": params,
+				},
+			)
 		if isinstance(bundle, dict):
 			ops.append({"bundle": dict(bundle), "context": dict(ctx)})
 	return ops, None
@@ -151,8 +228,45 @@ def _apply_memory_patch(ws: Any, actor_id: str, mem_patch: dict[str, Any]) -> bo
 	return True
 
 
+def _apply_decision_memory_notes(ws: Any, actor_id: str, decision: dict[str, Any]) -> bool:
+	meta = dict((decision or {}).get("meta", {}) or {})
+	notes = [dict(x) for x in list(meta.get("memory_notes", []) or []) if isinstance(x, dict)]
+	if not notes:
+		return True
+	tick = int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
+	normalized: list[dict[str, Any]] = []
+	for note in notes:
+		content = str(note.get("content", note.get("text", "")) or "").strip()
+		if not content:
+			continue
+		out = dict(note)
+		out["content"] = content
+		out.setdefault("tick", tick)
+		out.setdefault("type", "note")
+		out.setdefault("topic", "grounding")
+		out.setdefault("importance", 0.8)
+		out.setdefault("actor_id", actor_id)
+		out.setdefault("tags", ["grounding", "ungroundable"])
+		normalized.append(out)
+	if not normalized:
+		return True
+	return _apply_memory_patch(
+		ws,
+		actor_id,
+		{
+			"notes": normalized,
+			"last_event_seq_seen": 0,
+			"last_interaction_seq_seen": 0,
+			"mid_term_summaries": [],
+			"clear_mid_term_prep": False,
+		},
+	)
+
+
 def _decision_to_outcome(ws: Any, actor_id: str, reason: str, decision: dict[str, Any]) -> dict[str, Any]:
 	dtype = str((decision or {}).get("type", "") or "")
+	if not _apply_decision_memory_notes(ws, actor_id, decision):
+		_record_workflow_error_event(ws, actor_id, "decision_memory_notes_apply_failed", {"reason": "executor_failed"})
 	if dtype == "noop":
 		return {"type": "noop"}
 	if dtype == "error":
