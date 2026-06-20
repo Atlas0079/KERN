@@ -15,7 +15,6 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
 	sys.path.insert(0, str(ROOT_DIR))
 
-from app import _cfg_bool, _cfg_get, _load_runtime_config
 from KERN.data.archive import ARCHIVE_MANIFEST_FILE_NAME, materialize_archive_state
 
 
@@ -69,7 +68,6 @@ class ArchiveViewerData:
 		self.manifest: dict = {}
 		self._log_rows_by_tick: dict[int, list[dict]] | None = None
 		self._frame_cache: OrderedDict[int, dict] = OrderedDict()
-		self._scene_config_cache: dict[str, dict] = {}
 		self.refresh_scenes()
 
 	def refresh_scenes(self) -> list[ArchiveScene]:
@@ -108,13 +106,6 @@ class ArchiveViewerData:
 			"archive_root": str(self.archive_root),
 			"active_scene_id": self.active_scene_id,
 			"scenes": [scene.to_dict(active=scene.scene_id == self.active_scene_id) for scene in scenes],
-		}
-
-	def companion_config_payload(self) -> dict:
-		self.refresh_scenes()
-		return {
-			"archive_root": str(self.archive_root),
-			"active_scene_id": self.active_scene_id,
 		}
 
 	def manifest_payload(self) -> dict:
@@ -261,37 +252,6 @@ class ArchiveViewerData:
 		self._log_rows_by_tick = None
 		self._frame_cache.clear()
 
-	def _scene_config_payload(self, scene_id: str) -> dict:
-		key = str(scene_id or "").strip()
-		if not key:
-			return {}
-		cached = self._scene_config_cache.get(key)
-		if cached is not None:
-			return dict(cached)
-		payload: dict[str, object] = {}
-		for config_path in sorted(ROOT_DIR.glob("runtime_config.*.json"), key=lambda p: p.name.lower()):
-			try:
-				cfg, resolved_path = _load_runtime_config(ROOT_DIR, str(config_path))
-			except Exception:
-				continue
-			candidate_scene_id = _scene_id_from_config_path(ROOT_DIR, resolved_path)
-			if candidate_scene_id != key:
-				continue
-			use_llm = _cfg_bool(cfg, "USE_LLM", False)
-			payload = {
-				"scene_id": key,
-				"config_path": str(resolved_path),
-				"use_llm": bool(use_llm),
-				"llm_provider": _cfg_get(cfg, "LLM_PROVIDER", "openai_compat"),
-				"planner_model": _cfg_get(cfg, "LLM_PLANNER_MODEL", ""),
-				"grounder_model": _cfg_get(cfg, "LLM_GROUNDER_MODEL", ""),
-				"action_provider": "LLMActionProvider" if use_llm else "SimplePolicyActionProvider",
-			}
-			break
-		result = dict(payload)
-		self._scene_config_cache[key] = result
-		return dict(result)
-
 	def _time_str_from_world(self, world: dict) -> str:
 		world_state = world.get("world_state", {}) if isinstance(world, dict) else {}
 		if not isinstance(world_state, dict):
@@ -324,7 +284,7 @@ class ArchiveViewerData:
 			grouped.setdefault(row_tick, []).append(row)
 		return grouped
 
-	def companion_state_payload(self, *, scene_id: str = "", cursor: int = 0, agent_id: str = "") -> dict:
+	def latest_payload(self, *, scene_id: str = "") -> dict:
 		wanted_scene_id = str(scene_id or "").strip()
 		if wanted_scene_id:
 			scene = next((x for x in self._discover_scenes() if x.scene_id == wanted_scene_id), None)
@@ -333,14 +293,8 @@ class ArchiveViewerData:
 					"status": "waiting_for_archive",
 					"tick": -1,
 					"time": "",
-					"agent_id": "",
-					"location": {"id": "", "name": ""},
-					"vitals": {},
-					"current_task": None,
-					"outbox_count": 0,
-					"diagnostics": {},
-					"outbox": {"items": [], "cursor": int(cursor or 0), "next_cursor": int(cursor or 0)},
 					"active_scene_id": wanted_scene_id,
+					"frame": {},
 				}
 			if wanted_scene_id != self.active_scene_id:
 				self.active_scene_id = wanted_scene_id
@@ -352,39 +306,20 @@ class ArchiveViewerData:
 				"status": "waiting_for_archive",
 				"tick": int(manifest.get("last_tick", -1) or -1),
 				"time": "",
-				"agent_id": "",
-				"location": {"id": "", "name": ""},
-				"vitals": {},
-				"current_task": None,
-				"outbox_count": 0,
-				"diagnostics": {},
-				"outbox": {"items": [], "cursor": int(cursor or 0), "next_cursor": int(cursor or 0)},
 				"active_scene_id": str(manifest.get("active_scene_id", "") or ""),
+				"frame": {},
 			}
 		last_tick = int(manifest.get("last_tick", 0) or 0)
 		frame = self.frame_payload(last_tick)
-		world = dict(frame.get("world", {}) or {})
-		companion = self._resolve_companion_entity(world, agent_id=agent_id)
-		location = self._resolve_companion_location(world, companion.get("instance_id", ""))
-		vitals = self._extract_vitals(companion)
-		task_payload = self._extract_current_task(world, companion)
-		outbox = self._build_outbox_payload(last_tick=last_tick, cursor=cursor)
-		diagnostics = self._build_diagnostics_payload(last_tick=last_tick)
 		return {
 			"status": "running",
 			"tick": last_tick,
 			"time": str(frame.get("timeStr", "") or ""),
-			"agent_id": str(companion.get("instance_id", "") or ""),
-			"location": location,
-			"vitals": vitals,
-			"current_task": task_payload,
-			"outbox_count": int(len(outbox.get("items", []) or [])),
-			"diagnostics": diagnostics,
-			"outbox": outbox,
 			"active_scene_id": str(manifest.get("active_scene_id", "") or ""),
+			"frame": frame,
 		}
 
-	def companion_outbox_payload(self, *, scene_id: str = "", cursor: int = 0) -> dict:
+	def events_payload(self, *, scene_id: str = "", cursor: int = 0, kind: str = "") -> dict:
 		wanted_scene_id = str(scene_id or "").strip()
 		if wanted_scene_id:
 			scene = next((x for x in self._discover_scenes() if x.scene_id == wanted_scene_id), None)
@@ -398,107 +333,9 @@ class ArchiveViewerData:
 		if not bool(manifest.get("archive_ready", False)):
 			return {"items": [], "cursor": int(cursor or 0), "next_cursor": int(cursor or 0), "active_scene_id": str(manifest.get("active_scene_id", "") or "")}
 		last_tick = int(manifest.get("last_tick", 0) or 0)
-		payload = self._build_outbox_payload(last_tick=last_tick, cursor=cursor)
+		payload = self._build_events_payload(last_tick=last_tick, cursor=cursor, kind=kind)
 		payload["active_scene_id"] = str(manifest.get("active_scene_id", "") or "")
 		return payload
-
-	def _resolve_companion_entity(self, world: dict, *, agent_id: str = "") -> dict:
-		entity_map = self._world_entity_map(world)
-		want = str(agent_id or "").strip()
-		if want and want in entity_map:
-			return dict(entity_map[want])
-		if "robot_doudou" in entity_map:
-			return dict(entity_map["robot_doudou"])
-		for item in entity_map.values():
-			tags = self._entity_tags(item)
-			if "companion_robot" in tags:
-				return dict(item)
-		for item in entity_map.values():
-			tags = self._entity_tags(item)
-			if "agent" in tags and "robot" in tags:
-				return dict(item)
-		return {}
-
-	def _resolve_companion_location(self, world: dict, entity_id: str) -> dict:
-		eid = str(entity_id or "")
-		if not eid:
-			return {"id": "", "name": ""}
-		for loc in list(world.get("locations", []) or []):
-			if not isinstance(loc, dict):
-				continue
-			for ent in list(loc.get("entities", []) or []):
-				if isinstance(ent, dict) and str(ent.get("instance_id", "") or "") == eid:
-					return {
-						"id": str(loc.get("location_id", "") or ""),
-						"name": str(loc.get("location_name", "") or ""),
-					}
-		return {"id": "", "name": ""}
-
-	def _extract_vitals(self, entity: dict) -> dict:
-		comp = dict((entity.get("component_overrides", {}) or {}).get("CreatureComponent", {}) or {})
-		battery = float(comp.get("current_energy", 0.0) or 0.0)
-		battery_max = float(comp.get("max_energy", 0.0) or 0.0)
-		worry = float(comp.get("current_stress", 0.0) or 0.0)
-		worry_max = float(comp.get("max_stress", 0.0) or 0.0)
-		return {
-			"battery": round(battery, 1),
-			"battery_max": round(battery_max, 1),
-			"worry": round(worry, 1),
-			"worry_max": round(worry_max, 1),
-		}
-
-	def _extract_current_task(self, world: dict, entity: dict) -> dict | None:
-		worker = dict((entity.get("component_overrides", {}) or {}).get("WorkerComponent", {}) or {})
-		task_id = str(worker.get("current_task_id", "") or "")
-		if not task_id:
-			return None
-		task_map = self._world_task_map(world)
-		task = dict(task_map.get(task_id, {}) or {})
-		if not task:
-			return {"id": task_id, "type": "", "target_id": "", "status": "", "progress": 0.0, "required": 0.0, "ratio": 0.0}
-		required = float(task.get("required_progress", 0.0) or 0.0)
-		progress = float(task.get("progress", 0.0) or 0.0)
-		return {
-			"id": str(task.get("task_id", "") or task_id),
-			"type": str(task.get("task_type", "") or ""),
-			"target_id": str(task.get("target_entity_id", "") or ""),
-			"status": str(task.get("task_status", "") or ""),
-			"progress": round(progress, 2),
-			"required": round(required, 2),
-			"ratio": round(progress / required, 3) if required > 0 else 1.0,
-		}
-
-	def _world_entity_map(self, world: dict) -> dict[str, dict]:
-		entity_map: dict[str, dict] = {}
-		for loc in list(world.get("locations", []) or []):
-			if not isinstance(loc, dict):
-				continue
-			for ent in list(loc.get("entities", []) or []):
-				if isinstance(ent, dict):
-					eid = str(ent.get("instance_id", "") or "")
-					if eid:
-						entity_map[eid] = dict(ent)
-		for ent in list(world.get("entities", []) or []):
-			if isinstance(ent, dict):
-				eid = str(ent.get("instance_id", "") or "")
-				if eid:
-					entity_map[eid] = dict(ent)
-		return entity_map
-
-	def _world_task_map(self, world: dict) -> dict[str, dict]:
-		task_map: dict[str, dict] = {}
-		for ent in self._world_entity_map(world).values():
-			comp = dict((ent.get("component_overrides", {}) or {}).get("TaskHostComponent", {}) or {})
-			tasks = dict(comp.get("tasks", {}) or {})
-			for tid, raw_task in tasks.items():
-				task_id = str(tid or "")
-				if task_id and isinstance(raw_task, dict):
-					task_map[task_id] = dict(raw_task)
-		return task_map
-
-	def _entity_tags(self, entity: dict) -> list[str]:
-		tag_comp = dict((entity.get("component_overrides", {}) or {}).get("TagComponent", {}) or {})
-		return [str(x) for x in list(tag_comp.get("tags", []) or []) if str(x)]
 
 	def _all_logs_until(self, *, last_tick: int) -> list[dict]:
 		if self._log_rows_by_tick is None:
@@ -510,67 +347,20 @@ class ArchiveViewerData:
 			rows.extend([dict(x) for x in list(self._log_rows_by_tick.get(tick, []) or []) if isinstance(x, dict)])
 		return rows
 
-	def _build_outbox_payload(self, *, last_tick: int, cursor: int) -> dict:
+	def _build_events_payload(self, *, last_tick: int, cursor: int, kind: str = "") -> dict:
 		items: list[dict] = []
 		cursor_int = int(cursor or 0)
+		kind_filter = str(kind or "").strip()
 		for row in self._all_logs_until(last_tick=last_tick):
-			if str(row.get("kind", "") or "") != "event":
+			row_kind = str(row.get("kind", "") or "")
+			if kind_filter and row_kind != kind_filter:
 				continue
 			seq = int(row.get("seq", 0) or 0)
 			if seq <= cursor_int:
 				continue
-			event = dict(row.get("event", {}) or {})
-			ev_type = str(event.get("type", "") or "")
-			if ev_type != "EventEmitted":
-				continue
-			payload = dict(event.get("payload", {}) or {})
-			event_type = str(payload.get("event_type", "") or event.get("event_type", "") or ev_type)
-			if event_type not in {"HelpRequestCreated", "OpenThreadCreated", "ResourceFound", "LearningRecordCreated", "ChildAdviceResolved", "RobotNeedsCharge", "RobotWorryHigh"}:
-				continue
-			message = str(payload.get("message", "") or event.get("message", "") or event_type)
-			items.append(
-				{
-					"seq": seq,
-					"tick": int(row.get("tick", 0) or 0),
-					"type": self._outbox_type(event_type),
-					"event_type": event_type,
-					"summary": message,
-					"source": {"kind": "event_log", "seq": seq},
-				}
-			)
+			items.append(dict(row))
 		next_cursor = max([cursor_int] + [int(x.get("seq", 0) or 0) for x in items])
 		return {"items": items, "cursor": cursor_int, "next_cursor": next_cursor}
-
-	def _build_diagnostics_payload(self, *, last_tick: int) -> dict:
-		workflow_errors: list[dict] = []
-		for row in self._all_logs_until(last_tick=last_tick):
-			if str(row.get("kind", "") or "") != "event":
-				continue
-			event = dict(row.get("event", {}) or {})
-			if str(event.get("type", "") or "") == "WorkflowDecisionError":
-				workflow_errors.append(row)
-		scene_cfg = self._scene_config_payload(self.active_scene_id)
-		return {
-			"use_llm": bool(scene_cfg.get("use_llm", False)),
-			"llm_provider": str(scene_cfg.get("llm_provider", "") or ""),
-			"action_provider": str(scene_cfg.get("action_provider", "") or ""),
-			"planner_model": str(scene_cfg.get("planner_model", "") or ""),
-			"grounder_model": str(scene_cfg.get("grounder_model", "") or ""),
-			"llm_log_count": 0,
-			"recent_llm_events": [],
-			"workflow_error_count": len(workflow_errors),
-			"config_path": str(scene_cfg.get("config_path", "") or ""),
-		}
-
-	@staticmethod
-	def _outbox_type(event_type: str) -> str:
-		if event_type in {"HelpRequestCreated", "RobotNeedsCharge", "RobotWorryHigh"}:
-			return "help_request"
-		if event_type == "OpenThreadCreated":
-			return "open_thread"
-		if event_type in {"LearningRecordCreated", "ChildAdviceResolved"}:
-			return "reflection"
-		return "event"
 
 
 class CheckpointViewerHandler(BaseHTTPRequestHandler):
@@ -585,21 +375,16 @@ class CheckpointViewerHandler(BaseHTTPRequestHandler):
 		if parsed.path == "/api/manifest":
 			self._write_json(self.server.viewer_data.manifest_payload())
 			return
-		if parsed.path == "/api/companion/config":
-			self._write_json(self.server.viewer_data.companion_config_payload())
-			return
-		if parsed.path == "/api/companion/state":
+		if parsed.path == "/api/latest":
 			scene_id = str((query.get("scene_id", [""])[0] or "")).strip()
-			agent_id = str((query.get("agent_id", [""])[0] or "")).strip()
-			cursor_raw = str((query.get("cursor", ["0"])[0] or "0")).strip()
-			cursor = int(cursor_raw or 0)
-			self._write_json(self.server.viewer_data.companion_state_payload(scene_id=scene_id, cursor=cursor, agent_id=agent_id))
+			self._write_json(self.server.viewer_data.latest_payload(scene_id=scene_id))
 			return
-		if parsed.path == "/api/companion/outbox":
+		if parsed.path == "/api/events":
 			scene_id = str((query.get("scene_id", [""])[0] or "")).strip()
 			cursor_raw = str((query.get("cursor", ["0"])[0] or "0")).strip()
+			kind = str((query.get("kind", [""])[0] or "")).strip()
 			cursor = int(cursor_raw or 0)
-			self._write_json(self.server.viewer_data.companion_outbox_payload(scene_id=scene_id, cursor=cursor))
+			self._write_json(self.server.viewer_data.events_payload(scene_id=scene_id, cursor=cursor, kind=kind))
 			return
 		if parsed.path.startswith("/api/tick/"):
 			tick_text = unquote(parsed.path.removeprefix("/api/tick/")).strip()

@@ -6,16 +6,16 @@
   "locations": [
     {
       "location_id": "rest_corner",
-      "location_name": "午睡角",
-      "description": "幼儿园活动室旁安静柔软的小角落，放着充电垫、抱枕和回忆展示架。",
+      "location_name": "休息角",
+      "description": "幼儿园活动室旁安静柔软的角落，放着抱枕、毯子和回忆展示架。",
       "entities": [
         {
           "instance_id": "memory_shelf_01",
           "template_id": "MemoryShelf"
         },
         {
-          "instance_id": "charging_nest_01",
-          "template_id": "ChargingNest"
+          "instance_id": "rest_mat_01",
+          "template_id": "RestMat"
         }
       ]
     },
@@ -25,8 +25,8 @@
       "description": "铺着彩色软垫的幼儿园活动室，地上散着积木、绘本和手工材料。",
       "entities": [
         {
-          "instance_id": "robot_doudou",
-          "template_id": "CompanionRobot"
+          "instance_id": "child_doudou",
+          "template_id": "KindergartenChild"
         },
         {
           "instance_id": "toy_pile_01",
@@ -37,7 +37,7 @@
     {
       "location_id": "craft_table",
       "location_name": "手工桌",
-      "description": "一张圆角手工桌，上面有贴纸、胶棒、安全剪刀和需要整理的小作品。",
+      "description": "一张圆角手工桌，上面有贴纸、胶棒、安全剪刀和需要整理的作品。",
       "entities": [
         {
           "instance_id": "craft_table_01",
@@ -52,7 +52,7 @@
     {
       "location_id": "quiet_library",
       "location_name": "安静绘本角",
-      "description": "一处光线偏暗的小绘本角，书架旁有收纳箱和一盏还没修好的故事灯。",
+      "description": "一处光线偏暗的绘本角，书架旁有收纳箱和一盏还没修好的故事灯。",
       "light_level": 0,
       "entities": [
         {

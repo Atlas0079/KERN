@@ -7,7 +7,7 @@ from KERN.agent_workflow.runtime import _decision_to_outcome
 from KERN.data.builder import build_world_state
 from KERN.data.loader import load_data_bundle
 from KERN.interaction.engine import InteractionEngine
-from app import _cfg_get, _load_runtime_config
+from default_orchestrator import _cfg_get, _load_runtime_config
 
 
 class FakeLLM:

@@ -18,16 +18,19 @@ from .trigger_system import TriggerSystem
 @dataclass
 class WorldManager:
 	"""
-	Python version of WorldManager (Automatic simulation loop scheduler).
+	KERN runtime runner for a single WorldState.
 
 	Responsibilities:
-	- Advance time (tick)
+	- Advance game time by runtime ticks
 	- Dispatch AdvanceTick per entity
 	- Build reaction effects via TriggerSystem
 	- Execute effects through executor and chain follow-up reactions
+	- Provide per-tick runtime services to effects/workflows
+	- Record runtime snapshots, checkpoints, and simulation logs
 
 	Explanation:
 	- This class does not directly write WorldState details; specific writes should be done by executor.
+	- Product orchestration such as scene switching, user dialogue, and UI outbox handling belongs to app/server layers.
 	"""
 
 	world_state: WorldState
@@ -86,21 +89,65 @@ class WorldManager:
 		self.is_running = True
 		all_events: list[dict[str, Any]] = []
 
-		# Initial snapshot (Tick 0)
-		self._capture_snapshot(events_in_tick=[])
-		self._save_checkpoint()
-		self._save_simulation_log()
+		self.record_initial_state()
 
 		while self.is_running and self.world_state.game_time.total_ticks < max_ticks:
-			tick_events = self.step()
+			tick_events = self.step_and_record()
 			all_events.extend(tick_events)
-			
-			# Capture snapshot at end of tick
-			self._capture_snapshot(events_in_tick=tick_events)
-			self._save_checkpoint()
-			self._save_simulation_log()
 
 		return all_events
+
+	def record_initial_state(self) -> None:
+		"""Record the current world state before runtime advancement."""
+		self._record_runtime_frame(events_in_tick=[])
+
+	def step_and_record(self) -> list[dict[str, Any]]:
+		"""Advance one runtime tick and record snapshot/checkpoint/log outputs."""
+		tick_events = self.step()
+		self._record_runtime_frame(events_in_tick=tick_events)
+		return tick_events
+
+	def advance_ticks(self, count: int) -> dict[str, Any]:
+		"""
+		Advance up to count runtime ticks, recording outputs after each tick.
+
+		This is the public API for app/server layers that manually drive KERN.
+		"""
+		requested = max(0, int(count or 0))
+		started_at_tick = int(getattr(self.world_state.game_time, "total_ticks", 0) or 0)
+		all_events: list[dict[str, Any]] = []
+		completed = 0
+		was_running = bool(self.is_running)
+		self.is_running = True
+		stopped_early = False
+		try:
+			for _idx in range(requested):
+				if not bool(self.is_running):
+					stopped_early = True
+					break
+				tick_events = self.step_and_record()
+				all_events.extend(tick_events)
+				completed += 1
+		finally:
+			stopped_early = stopped_early or completed < requested
+			if not was_running:
+				self.is_running = False
+		ended_at_tick = int(getattr(self.world_state.game_time, "total_ticks", 0) or 0)
+		return {
+			"events": all_events,
+			"event_count": len(all_events),
+			"ticks_requested": requested,
+			"ticks_advanced": completed,
+			"started_at_tick": started_at_tick,
+			"ended_at_tick": ended_at_tick,
+			"stopped": bool(stopped_early),
+			"stop_info": dict(self.last_stop_info or {}),
+		}
+
+	def _record_runtime_frame(self, events_in_tick: list[dict[str, Any]]) -> None:
+		self._capture_snapshot(events_in_tick=events_in_tick)
+		self._save_checkpoint()
+		self._save_simulation_log()
 
 	def _capture_snapshot(self, events_in_tick: list[dict[str, Any]]) -> None:
 		"""
@@ -278,11 +325,13 @@ class WorldManager:
 		logger.debug("tick", "tick_advanced", context=dict(events[-1]))
 		ws.record_event(events[-1], {"actor_id": ""})
 
-		# Bundle execution wrapper with recursive reaction chaining.
-		def execute_wrapper(bundle_data: Any, context: dict[str, Any]) -> list[dict[str, Any]]:
+		# Runtime execution entrypoint used by effects/workflow.
+		# It executes a bundle, records emitted events, and recursively runs reactions
+		# triggered by those events until no more reactions match or max depth is reached.
+		def execute_with_reactions(bundle_data: Any, context: dict[str, Any]) -> list[dict[str, Any]]:
 			collected_events: list[dict[str, Any]] = []
 
-			def _record_reaction_result(ctx: dict[str, Any], reaction_failed: bool, reaction_fail_reason: str, effect_type: str) -> None:
+			def _record_reaction_attempt(ctx: dict[str, Any], reaction_failed: bool, reaction_fail_reason: str, effect_type: str) -> None:
 				reaction_rule_id = str((ctx or {}).get("reaction_rule_id", "") or "")
 				if not reaction_rule_id or not hasattr(ws, "record_interaction_attempt"):
 					return
@@ -304,7 +353,7 @@ class WorldManager:
 					},
 				)
 
-			def _process_result_events(result_events: list[dict[str, Any]], ctx: dict[str, Any], depth: int, effect_type: str) -> None:
+			def _record_events_and_run_reactions(result_events: list[dict[str, Any]], ctx: dict[str, Any], depth: int, effect_type: str) -> None:
 				reaction_failed = False
 				reaction_fail_reason = ""
 				for _ev in list(result_events or []):
@@ -322,7 +371,7 @@ class WorldManager:
 							},
 						)
 						break
-				_record_reaction_result(ctx, reaction_failed, reaction_fail_reason, effect_type)
+				_record_reaction_attempt(ctx, reaction_failed, reaction_fail_reason, effect_type)
 				for ev in list(result_events or []):
 					if not isinstance(ev, dict):
 						continue
@@ -351,39 +400,39 @@ class WorldManager:
 						rbundle = req.get("bundle", {}) or {}
 						rctx = req.get("context", {}) or {}
 						if isinstance(rctx, dict):
-							execute_bundle_with_reactions(rbundle, rctx, depth + 1)
+							_execute_bundle_with_reactions(rbundle, rctx, depth + 1)
 							if ws.runtime_state.abort_requested:
 								return
 
-			def execute_effect_with_reactions(eff: dict[str, Any], ctx: dict[str, Any], depth: int) -> None:
+			def _execute_effect_with_reactions(eff: dict[str, Any], ctx: dict[str, Any], depth: int) -> None:
 				if not bool(self.is_running):
 					return
 				logger.debug("effect", "execute", context={"effect": dict(eff or {}), "context": dict(ctx or {}), "depth": int(depth)})
 				result_events = self.executor.execute(ws, eff, ctx)
-				_process_result_events(result_events, ctx, depth, str((eff or {}).get("effect", "") or ""))
+				_record_events_and_run_reactions(result_events, ctx, depth, str((eff or {}).get("effect", "") or ""))
 
-			def execute_bundle_with_reactions(raw_bundle: Any, ctx: dict[str, Any], depth: int) -> None:
+			def _execute_bundle_with_reactions(raw_bundle: Any, ctx: dict[str, Any], depth: int) -> None:
 				if not bool(self.is_running):
 					return
 				try:
 					bundle = effect_bundle_from_raw(raw_bundle)
 				except Exception as exc:
 					result_events = executor_error(f"invalid bundle ({exc})")
-					_process_result_events(result_events, ctx, depth, "Bundle")
+					_record_events_and_run_reactions(result_events, ctx, depth, "Bundle")
 					return
 				if bool(bundle.react_per_effect):
 					for inner_eff in list(bundle.effects or []):
 						if not isinstance(inner_eff, dict):
 							continue
-						execute_effect_with_reactions(dict(inner_eff), dict(ctx or {}), depth)
+						_execute_effect_with_reactions(dict(inner_eff), dict(ctx or {}), depth)
 						if ws.runtime_state.abort_requested or not bool(self.is_running):
 							return
 					return
 				logger.debug("bundle", "execute", context={"bundle": bundle.to_dict(), "context": dict(ctx or {}), "depth": int(depth)})
 				result_events = self.executor.execute_bundle(ws, bundle, ctx)
-				_process_result_events(result_events, ctx, depth, "Bundle")
+				_record_events_and_run_reactions(result_events, ctx, depth, "Bundle")
 
-			execute_bundle_with_reactions(bundle_data, context, 0)
+			_execute_bundle_with_reactions(bundle_data, context, 0)
 			if ws.runtime_state.abort_requested:
 				self.request_stop(
 					{
@@ -395,7 +444,7 @@ class WorldManager:
 				)
 			return collected_events
 
-		ws.services["execute"] = execute_wrapper
+		ws.services["execute"] = execute_with_reactions
 
 		# 3) Dispatch AdvanceTick events per entity, then let Reactions decide which effects to run.
 		for ent_id in list(ws.entities.keys()):
@@ -416,7 +465,7 @@ class WorldManager:
 				rbundle = req.get("bundle", {}) or {}
 				rctx = req.get("context", {}) or {}
 				if isinstance(rctx, dict):
-					execute_wrapper(rbundle, rctx)
+					execute_with_reactions(rbundle, rctx)
 
 		events_in_tick_records: list[dict[str, Any]] = []
 		for rec in list(getattr(ws, "event_log", []) or []):

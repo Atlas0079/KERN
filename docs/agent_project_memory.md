@@ -37,7 +37,7 @@ workflow.
 
 Important top-level paths:
 
-- `app.py`: runtime entry point.
+- `default_orchestrator.py`: default orchestration entry point; reads config, loads data, builds `WorldManager`, and runs until the configured end.
 - `KERN/`: core engine package.
 - `Data/`: scenario data, entity templates, recipes, reactions, named bundles.
 - `docs/`: human-facing design and usage documentation.
@@ -52,7 +52,7 @@ dynamic text. Broader runtime/data checks still live in `tools/`.
 Main command pattern:
 
 ```powershell
-.\venv\Scripts\python.exe companion_server.py --config runtime_config.companion_robot.json
+.\venv\Scripts\python.exe default_orchestrator.py --config runtime_config.camping.smoke.json
 ```
 
 Runtime config files use this shape:
@@ -65,7 +65,7 @@ Runtime config files use this shape:
 }
 ```
 
-`app.py` resolves config in this order:
+`default_orchestrator.py` resolves config in this order:
 
 1. `--config`
 2. `RUNTIME_CONFIG_FILE`
@@ -73,13 +73,18 @@ Runtime config files use this shape:
 
 Common configs:
 
-- `runtime_config.json`: current default CompanionRobot config, `USE_LLM=1`.
-- `runtime_config.companion_robot.json`: CompanionRobot full config.
-- `runtime_config.companion_robot.smoke.json`: CompanionRobot no-LLM smoke config.
-- `runtime_config.camping.smoke.json`: Camping no-LLM smoke/test config.
-- `runtime_config.example.json`: template for local custom configs.
+- `runtime_config.camping.smoke.json`: committed Camping no-LLM smoke/test config.
+- `runtime_config.example.json`: committed template for local custom configs.
+- `runtime_config.companion_robot.json`: local ignored config name retained for the current kindergarten/phone scenario data.
+- `runtime_config.companion_robot.smoke.json`: local ignored no-LLM smoke config name retained for that scenario.
 
-Prefer `runtime_config.companion_robot.smoke.json` for local validation unless the task explicitly needs real LLM behavior.
+`CompanionRobot` is currently a historical data/config directory name. The active
+scenario semantics are shifting to "kindergarten child DouDou who can talk to the
+user by phone", not a robot/recycling-station scenario.
+
+Prefer a committed smoke config such as `runtime_config.camping.smoke.json` for
+repo-local validation. Use ignored local kindergarten configs only when the task
+explicitly needs that scenario behavior.
 
 Runtime configs may contain local API keys or provider tokens. Keep real runtime
 config files in `.gitignore`; commit only sanitized examples or templates such as
@@ -89,11 +94,11 @@ config files in `.gitignore`; commit only sanitized examples or templates such a
 
 Current startup/runtime flow:
 
-1. `app.py` loads runtime config.
+1. `default_orchestrator.py` loads runtime config.
 2. `KERN.data.loader.load_data_bundle(...)` loads JSON data from `Data/`.
 3. Startup validation calls `tools.scenario_lint.lint_bundle(...)` unless skipped.
 4. `KERN.data.builder.build_world_state(...)` builds `WorldState`.
-5. `KERN.sim.manager.WorldManager` runs ticks.
+5. `KERN.sim.manager.WorldManager` acts as the KERN runtime runner and runs ticks.
 6. `TriggerSystem` turns events into reaction effect bundles.
 7. `InteractionEngine` compiles agent/user commands through recipes into effect bundles.
 8. `WorldExecutor` executes effects and is the write boundary for world mutation.
@@ -195,10 +200,33 @@ Workflow decisions are expected to be dictionaries such as `apply_commands`, `no
 or `error`. Runtime-internal compiled operations are not the external workflow
 contract.
 
+Runtime boundary note: `WorldManager` is the KERN runtime runner. KERN provides a
+per-tick scheduling pulse and core capabilities
+(load/build/step/condition/recipe/effect/reaction/checkpoint). App layers decide
+product orchestration such as scene selection, user dialogue pauses, how user
+input becomes memory/events, and UI outbox handling. It is acceptable for KERN to
+ask agents each tick whether they need to think; the agent's
+DecisionArbiter/interrupt rules/workflow decide whether any thinking or action
+actually happens.
+
 ## Simulation Loop
 
-`WorldManager.run(max_ticks=...)` records tick 0 into the run archive, writes logs,
-then repeatedly calls `step()` until stopped or max ticks is reached.
+`WorldManager` is the public KERN runtime runner.
+
+Public runtime APIs:
+
+- `record_initial_state()`: record the current tick without advancing.
+- `step()`: advance one tick and return event log records produced in that tick;
+  this is low-level and does not record snapshots/checkpoints.
+- `step_and_record()`: advance one tick and record snapshot/checkpoint/log output.
+- `advance_ticks(count)`: app/server-facing manual advancement API; advances up to
+  `count` ticks and returns counts, events, start/end tick, and stop info.
+- `run(max_ticks=...)`: batch loop that records initial state and repeatedly calls
+  `step_and_record()` until stopped or max ticks is reached.
+
+App layers should use `record_initial_state()`, `advance_ticks(...)`, or
+`run(...)`; they should not call private `_capture_snapshot`,
+`_save_checkpoint`, or `_save_simulation_log` methods directly.
 
 `WorldManager.step()` currently:
 
@@ -221,11 +249,10 @@ Fast local checks:
 
 ```powershell
 .\venv\Scripts\python.exe -m unittest tests.test_dynamic_text
-.\venv\Scripts\python.exe -m compileall KERN tools app.py tests
-.\venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.companion_robot.smoke.json
+.\venv\Scripts\python.exe -m compileall KERN tools default_orchestrator.py tests
 .\venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.camping.smoke.json
 .\venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.example.json
-.\venv\Scripts\python.exe app.py --config runtime_config.companion_robot.smoke.json
+.\venv\Scripts\python.exe default_orchestrator.py --config runtime_config.camping.smoke.json
 ```
 
 Useful diagnostic script:
@@ -247,8 +274,15 @@ documentation-only or encoding fixes, verify the actual file content with an
 explicit UTF-8 read, for example:
 
 ```powershell
-.\venv\Scripts\python.exe -c "from pathlib import Path; print(Path('tools/companion_frontend/index.html').read_text(encoding='utf-8')[:200])"
+.\venv\Scripts\python.exe -c "from pathlib import Path; print(Path('tools/checkpoint_viewer.html').read_text(encoding='utf-8')[:200])"
 ```
+
+If Chinese text looks broken in Codex tool output or PowerShell, first suspect
+display decoding rather than file corruption. A quick check is to read bytes with
+Python and try `utf-8`, `utf-8-sig`, `gbk`/`cp936`, and `latin-1`. In current
+repo files, Chinese docs and source strings are generally valid UTF-8; GBK/cp936
+often fails with `UnicodeDecodeError`. Do not rewrite or "repair" Chinese text
+unless an explicit UTF-8 read confirms the actual file content is corrupted.
 
 When editing Chinese text, read and write files as UTF-8.
 

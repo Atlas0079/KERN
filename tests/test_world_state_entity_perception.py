@@ -6,7 +6,7 @@ from KERN.agent_workflow.observer import build_agent_perception
 from KERN.data.builder import build_world_state
 from KERN.data.loader import load_data_bundle
 from KERN.models.components import CustomComponent
-from app import _cfg_get, _load_runtime_config
+from default_orchestrator import _cfg_get, _load_runtime_config
 
 
 def _load_camping_smoke_world_and_bundle():
@@ -26,14 +26,13 @@ def _load_camping_smoke_world_and_bundle():
 
 def _load_companion_smoke_world_and_bundle():
 	project_root = Path(__file__).resolve().parents[1]
-	cfg, _cfg_path = _load_runtime_config(project_root, "runtime_config.companion_robot.smoke.json")
 	bundle = load_data_bundle(
 		project_root,
-		recipes_jsons=[x.strip() for x in _cfg_get(cfg, "RECIPES_JSONS", "Recipes.json").split(",") if x.strip()],
-		reactions_jsons=[x.strip() for x in _cfg_get(cfg, "REACTIONS_JSONS", "Reactions.json").split(",") if x.strip()],
-		entities_dirs=[x.strip() for x in _cfg_get(cfg, "ENTITIES_DIRS", "Entities").split(",") if x.strip()],
-		world_json=_cfg_get(cfg, "WORLD_JSON", "World.json"),
-		bundles_jsons=[x.strip() for x in _cfg_get(cfg, "BUNDLES_JSONS", "Bundles.json").split(",") if x.strip()],
+		recipes_jsons=["Recipes.json", "CompanionRobot/Recipes.json"],
+		reactions_jsons=["Reactions.json", "CompanionRobot/Reactions.json"],
+		entities_dirs=["Entities", "CompanionRobot/Entities"],
+		world_json="CompanionRobot/World.json",
+		bundles_jsons=["Bundles.json"],
 	)
 	ws = build_world_state(bundle.world, bundle.entity_templates, bundle.recipes, named_bundles=bundle.named_bundles).world_state
 	return ws, bundle
@@ -145,10 +144,10 @@ class WorldStateEntityPerceptionTests(unittest.TestCase):
 			},
 		)
 
-	def test_companion_robot_vitals_do_not_include_worry_value(self):
+	def test_kindergarten_child_vitals_include_stress_value(self):
 		ws, _bundle = _load_companion_smoke_world_and_bundle()
-		view = build_full_ws_view(ws, "robot_doudou", "test", {})
-		perception = build_agent_perception(view, "robot_doudou")
+		view = build_full_ws_view(ws, "child_doudou", "test", {})
+		perception = build_agent_perception(view, "child_doudou")
 
 		self.assertEqual(
 			perception.get("vitals"),
@@ -159,6 +158,8 @@ class WorldStateEntityPerceptionTests(unittest.TestCase):
 				"max_energy": 100.0,
 				"nutrition": 100.0,
 				"max_nutrition": 100.0,
+				"stress": 18.0,
+				"max_stress": 100.0,
 			},
 		)
 

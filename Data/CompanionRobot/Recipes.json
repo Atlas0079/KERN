@@ -1,17 +1,17 @@
 {
-  "robot_clean_sorting_pile": {
-    "verb": "CleanPile",
-    "narrative_success": "{actor}开始清理{target}",
-    "narrative_fail": "{actor}想清理{target}，但失败了：{reason}",
-    "planner_hint": "行动规则：清理同地点可见、带 trash_pile tag 且尚未 searched 的垃圾堆。耗时 6 tick；每 tick 消耗少量电量；完成后随机发现零件或故事物品，并把结果写入记忆。若发现需要选择的物品，应在下次和小朋友对话时求助。",
-    "grounder_hint": "target_id 必须选择同地点可见、带 trash_pile tag、没有 searched 状态的垃圾堆。",
+  "child_tidy_toy_pile": {
+    "verb": "TidyToyPile",
+    "narrative_success": "{actor}开始整理{target}",
+    "narrative_fail": "{actor}想整理{target}，但失败了：{reason}",
+    "planner_hint": "行动规则：整理同地点可见、带 toy_pile tag 且尚未 searched 的玩具堆。耗时 6 tick；每 tick 消耗少量体力；完成后随机发现绘本、拼图或贴纸，并把事实写入记忆。",
+    "grounder_hint": "target_id 必须选择同地点可见、带 toy_pile tag、状态为 messy 的玩具堆。",
     "condition": {
       "type": "all",
       "conditions": [
         {
           "type": "has_tag",
           "target": "target",
-          "tag": "trash_pile"
+          "tag": "toy_pile"
         },
         {
           "type": "has_status",
@@ -51,7 +51,7 @@
             "target": "self",
             "component": "CreatureComponent",
             "property": "current_energy",
-            "change": -0.8
+            "change": -0.5
           }
         ]
       }
@@ -60,17 +60,17 @@
       "effects": [
         {
           "effect": "RandomBundle",
-          "table_id": "sorting_pile_find",
+          "table_id": "toy_pile_find",
           "entries": [
             {
-              "id": "music_box",
-              "label": "坏掉的音乐盒",
+              "id": "torn_picture_book",
+              "label": "破了一页的绘本",
               "weight": 1,
               "bundle": {
                 "effects": [
                   {
                     "effect": "CreateEntity",
-                    "template": "DamagedMusicBox",
+                    "template": "TornPictureBook",
                     "destination": {
                       "type": "container",
                       "target": "self"
@@ -79,78 +79,72 @@
                   {
                     "effect": "AddMemoryNote",
                     "target": "self",
-                    "text": "我清理分类区垃圾堆时发现了一个坏掉的音乐盒。我还不知道应该修理、拆解，还是先收藏起来，下次想问问小朋友。",
-                    "importance": 0.9,
-                    "tags": [
-                      "discovery",
-                      "help_request",
-                      "music_box"
-                    ]
-                  },
-                  {
-                    "effect": "EmitEvent",
-                    "event_type": "HelpRequestCreated",
-                    "payload": {
-                      "source_ref": "self",
-                      "message": "{self.entity_name}发现坏掉的音乐盒，需要小朋友建议。"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "id": "half_map",
-              "label": "半张地图",
-              "weight": 1,
-              "bundle": {
-                "effects": [
-                  {
-                    "effect": "CreateEntity",
-                    "template": "HalfMap",
-                    "destination": {
-                      "type": "container",
-                      "target": "self"
-                    }
-                  },
-                  {
-                    "effect": "AddMemoryNote",
-                    "target": "self",
-                    "text": "我清理分类区垃圾堆时发现了半张地图。它可能指向回收站里还没探索过的地方，这是一个没有解决的悬念。",
+                    "text": "我整理玩具堆时发现了一本破了一页的绘本。它还没有处理。",
                     "importance": 0.85,
                     "tags": [
                       "discovery",
-                      "open_thread",
-                      "map"
+                      "picture_book",
+                      "open_thread"
                     ]
                   },
                   {
                     "effect": "EmitEvent",
-                    "event_type": "OpenThreadCreated",
+                    "event_type": "ItemFound",
                     "payload": {
                       "source_ref": "self",
-                      "message": "{self.entity_name}发现了半张地图。"
+                      "item_template": "TornPictureBook",
+                      "message": "{self.entity_name}发现了一本破了一页的绘本。"
                     }
                   }
                 ]
               }
             },
             {
-              "id": "parts",
-              "label": "两个零件",
+              "id": "puzzle_piece",
+              "label": "拼图的一角",
+              "weight": 1,
+              "bundle": {
+                "effects": [
+                  {
+                    "effect": "CreateEntity",
+                    "template": "PuzzlePiece",
+                    "destination": {
+                      "type": "container",
+                      "target": "self"
+                    }
+                  },
+                  {
+                    "effect": "AddMemoryNote",
+                    "target": "self",
+                    "text": "我整理玩具堆时发现了一块拼图的一角。另一半还没出现。",
+                    "importance": 0.8,
+                    "tags": [
+                      "discovery",
+                      "puzzle",
+                      "open_thread"
+                    ]
+                  },
+                  {
+                    "effect": "EmitEvent",
+                    "event_type": "ItemFound",
+                    "payload": {
+                      "source_ref": "self",
+                      "item_template": "PuzzlePiece",
+                      "message": "{self.entity_name}发现了一块拼图的一角。"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "sticker_patch",
+              "label": "贴纸补丁",
               "weight": 2,
               "bundle": {
                 "effects": [
                   {
                     "effect": "CreateEntity",
-                    "template": "ScrapPart",
-                    "destination": {
-                      "type": "container",
-                      "target": "self"
-                    }
-                  },
-                  {
-                    "effect": "CreateEntity",
-                    "template": "ScrapPart",
+                    "template": "StickerPatch",
                     "destination": {
                       "type": "container",
                       "target": "self"
@@ -159,19 +153,20 @@
                   {
                     "effect": "AddMemoryNote",
                     "target": "self",
-                    "text": "我清理分类区垃圾堆时找到了两个零件。它们之后可以用来修理灯或其他物件。",
-                    "importance": 0.7,
+                    "text": "我整理玩具堆时找到了一张贴纸补丁。它可以用于修补。",
+                    "importance": 0.65,
                     "tags": [
                       "discovery",
-                      "parts"
+                      "craft_material"
                     ]
                   },
                   {
                     "effect": "EmitEvent",
-                    "event_type": "ResourceFound",
+                    "event_type": "MaterialFound",
                     "payload": {
                       "source_ref": "self",
-                    "message": "{self.entity_name}找到了两个零件。"
+                      "item_template": "StickerPatch",
+                      "message": "{self.entity_name}找到了一张贴纸补丁。"
                     }
                   }
                 ]
@@ -194,30 +189,30 @@
           "target": "self",
           "component": "CreatureComponent",
           "property": "current_energy",
-          "change": -4
+          "change": -3
         },
         {
           "effect": "EmitEvent",
-          "event_type": "PileCleaned",
+          "event_type": "ToyPileTidied",
           "payload": {
             "source_ref": "self",
-            "message": "{self.entity_name}清理完了分类区的一堆垃圾。"
+            "message": "{self.entity_name}整理完了一堆玩具。"
           }
         }
       ]
     }
   },
-  "robot_charge": {
-    "verb": "Charge",
-    "narrative_success": "{actor}开始给自己充电",
-    "narrative_fail": "{actor}想充电，但失败了：{reason}",
-    "planner_hint": "行动规则：只有位于休眠室 home_corner 时可以充电。耗时 5 tick；完成后恢复电量。",
-    "grounder_hint": "target_id 选择自己或同地点的充电座；如果选择充电座，必须同地点可见。",
+  "child_rest_quietly": {
+    "verb": "RestQuietly",
+    "narrative_success": "{actor}开始在{target}休息",
+    "narrative_fail": "{actor}想休息，但失败了：{reason}",
+    "planner_hint": "行动规则：位于 rest_corner 时可以休息。耗时 5 tick；完成后恢复体力并降低压力。",
+    "grounder_hint": "target_id 选择自己或同地点可见的 rest_spot。",
     "condition": {
       "type": "compare_value",
       "left": "self.location_id",
       "op": "==",
-      "value": "home_corner"
+      "value": "rest_corner"
     },
     "process": {
       "duration": {
@@ -244,35 +239,47 @@
           "target": "self",
           "component": "CreatureComponent",
           "property": "current_energy",
-          "change": 35
+          "change": 25
+        },
+        {
+          "effect": "ModifyProperty",
+          "target": "self",
+          "component": "CreatureComponent",
+          "property": "current_stress",
+          "change": -8
+        },
+        {
+          "effect": "RemoveStatus",
+          "target": "self",
+          "status_id": "energy_low_noted"
         },
         {
           "effect": "AddMemoryNote",
           "target": "self",
-          "text": "我回到休眠室充了电。电量低时先照顾自己，比继续逞强更安全。",
-          "importance": 0.65,
+          "text": "我在休息角安静待了一会儿，体力恢复了一些。",
+          "importance": 0.6,
           "tags": [
-            "battery",
+            "rest",
             "self_care"
           ]
         },
         {
           "effect": "EmitEvent",
-          "event_type": "RobotCharged",
+          "event_type": "ChildRested",
           "payload": {
             "source_ref": "self",
-            "message": "{self.entity_name}在休眠室充好了电。"
+            "message": "{self.entity_name}在休息角安静休息。"
           }
         }
       ]
     }
   },
-  "robot_repair_lamp": {
+  "child_repair_lamp": {
     "verb": "RepairObject",
-    "narrative_success": "{actor}开始修理{target}",
-    "narrative_fail": "{actor}想修理{target}，但失败了：{reason}",
-    "planner_hint": "行动规则：修理同地点可见的灯。需要 parameters.part_id 指向自己背包中的零件。耗时 5 tick；完成后灯变为 repaired_lamp，探索储藏间更安全。",
-    "grounder_hint": "target_id 必须是同地点可见、带 lamp tag 的灯；parameters.part_id 必须是自己背包中的 scrap_part 物品 id。",
+    "narrative_success": "{actor}开始修补{target}",
+    "narrative_fail": "{actor}想修补{target}，但失败了：{reason}",
+    "planner_hint": "行动规则：修补同地点可见的故事灯。需要 parameters.part_id 指向背包中的 repair_material。耗时 5 tick；完成后灯变为 repaired_lamp。",
+    "grounder_hint": "target_id 必须是同地点可见、带 lamp tag 的灯；parameters.part_id 必须是自己背包中的 repair_material 物品 id。",
     "selector": {
       "type": "has_tag",
       "target": "target",
@@ -294,7 +301,7 @@
         {
           "type": "has_tag",
           "target": "param:part_id",
-          "tag": "scrap_part"
+          "tag": "repair_material"
         },
         {
           "type": "inventory_contains",
@@ -348,7 +355,7 @@
         {
           "effect": "RemoveStatus",
           "target": "target",
-          "status_id": "blocks_dark_storage"
+          "status_id": "blocks_quiet_library"
         },
         {
           "effect": "AddStatus",
@@ -358,35 +365,34 @@
         {
           "effect": "AddMemoryNote",
           "target": "self",
-          "text": "我用零件修好了灯。以后探索储藏间时，可以先准备照明。",
-          "importance": 0.9,
+          "text": "我用贴纸补丁修好了故事灯。",
+          "importance": 0.8,
           "tags": [
-            "lesson",
-            "prepare_before_dark_place",
-            "repair"
+            "repair",
+            "lamp"
           ]
         },
         {
           "effect": "EmitEvent",
-          "event_type": "LearningRecordCreated",
+          "event_type": "StoryLampRepaired",
           "payload": {
             "source_ref": "self",
-            "message": "{self.entity_name}学到：进入光线不足的地方前先准备照明。"
+            "message": "{self.entity_name}修好了故事灯。"
           }
         }
       ]
     }
   },
-  "robot_repair_music_box": {
+  "child_repair_picture_book": {
     "verb": "RepairObject",
-    "narrative_success": "{actor}开始修理{target}",
-    "narrative_fail": "{actor}想修理{target}，但失败了：{reason}",
-    "planner_hint": "行动规则：修理自己背包中的坏音乐盒。需要 parameters.part_id 指向自己背包中的零件。耗时 5 tick；完成后音乐盒从 broken 变为 repaired_music_box。这个动作适合回应小朋友“试着修修看”的建议。",
-    "grounder_hint": "target_id 必须是自己背包中带 music_box tag、状态为 broken 的物品；parameters.part_id 必须是自己背包中的 scrap_part 物品 id。",
+    "narrative_success": "{actor}开始修补{target}",
+    "narrative_fail": "{actor}想修补{target}，但失败了：{reason}",
+    "planner_hint": "行动规则：修补自己背包中的破绘本。需要 parameters.part_id 指向背包中的 repair_material。耗时 5 tick；完成后绘本变为 repaired_picture_book。",
+    "grounder_hint": "target_id 必须是自己背包中带 picture_book tag、状态为 broken 的物品；parameters.part_id 必须是自己背包中的 repair_material 物品 id。",
     "selector": {
       "type": "has_tag",
       "target": "target",
-      "tag": "music_box"
+      "tag": "picture_book"
     },
     "condition": {
       "type": "all",
@@ -394,7 +400,7 @@
         {
           "type": "has_tag",
           "target": "target",
-          "tag": "music_box"
+          "tag": "picture_book"
         },
         {
           "type": "has_status",
@@ -409,7 +415,7 @@
         {
           "type": "has_tag",
           "target": "param:part_id",
-          "tag": "scrap_part"
+          "tag": "repair_material"
         },
         {
           "type": "inventory_contains",
@@ -439,7 +445,7 @@
             "target": "self",
             "component": "CreatureComponent",
             "property": "current_energy",
-            "change": -0.5
+            "change": -0.4
           }
         ]
       }
@@ -468,41 +474,40 @@
         {
           "effect": "AddStatus",
           "target": "target",
-          "status_id": "repaired_music_box"
+          "status_id": "repaired_picture_book"
         },
         {
           "effect": "AddMemoryNote",
           "target": "self",
-          "text": "我按照小朋友可能会给的建议，把坏音乐盒修好了。它不再只是一个问题，也变成了小回收站里的温柔发现。",
-          "importance": 0.9,
+          "text": "我把破了一页的绘本修好了。",
+          "importance": 0.8,
           "tags": [
-            "child_advice_result",
             "repair",
-            "music_box"
+            "picture_book"
           ]
         },
         {
           "effect": "EmitEvent",
-          "event_type": "ChildAdviceResolved",
+          "event_type": "PictureBookRepaired",
           "payload": {
             "source_ref": "self",
-            "message": "{self.entity_name}修好了坏音乐盒。"
+            "message": "{self.entity_name}修好了破了一页的绘本。"
           }
         }
       ]
     }
   },
-  "robot_explore_dark_storage": {
-    "verb": "ExplorePlace",
-    "narrative_success": "{actor}开始探索储藏间",
-    "narrative_fail": "{actor}想探索储藏间，但失败了：{reason}",
-    "planner_hint": "行动规则：只有位于 dark_storage 时可以探索储藏间。耗时 8 tick；可能发现滴滴响的装置或零件。若感知到光线不足且还没有修好灯，豆豆应倾向先准备照明或向小朋友请教。",
-    "grounder_hint": "target_id 选择自己；执行地点必须是 dark_storage。不需要指定具体柜子。",
+  "child_check_quiet_library": {
+    "verb": "CheckQuietLibrary",
+    "narrative_success": "{actor}开始查看绘本角",
+    "narrative_fail": "{actor}想查看绘本角，但失败了：{reason}",
+    "planner_hint": "行动规则：位于 quiet_library 时可以查看绘本角。耗时 8 tick；可能发现会轻响的玩具、豆苗或贴纸。",
+    "grounder_hint": "target_id 选择自己或同地点可见的 reading_place；执行地点必须是 quiet_library。",
     "condition": {
       "type": "compare_value",
       "left": "self.location_id",
       "op": "==",
-      "value": "dark_storage"
+      "value": "quiet_library"
     },
     "process": {
       "duration": {
@@ -525,7 +530,7 @@
             "target": "self",
             "component": "CreatureComponent",
             "property": "current_energy",
-            "change": -0.7
+            "change": -0.4
           }
         ]
       }
@@ -534,17 +539,17 @@
       "effects": [
         {
           "effect": "RandomBundle",
-          "table_id": "dark_storage_find",
+          "table_id": "quiet_library_find",
           "entries": [
             {
-              "id": "beeping_device",
-              "label": "滴滴响的装置",
+              "id": "sound_toy",
+              "label": "会轻响的玩具",
               "weight": 1,
               "bundle": {
                 "effects": [
                   {
                     "effect": "CreateEntity",
-                    "template": "BeepingDevice",
+                    "template": "MysterySoundToy",
                     "destination": {
                       "type": "container",
                       "target": "self"
@@ -553,34 +558,35 @@
                   {
                     "effect": "AddMemoryNote",
                     "target": "self",
-                    "text": "我在储藏间发现了一个滴滴响的装置。我还不知道它是做什么的，下次想和小朋友一起想办法。",
-                    "importance": 0.9,
+                    "text": "我在绘本角发现了一个会轻响的玩具。它还没有处理。",
+                    "importance": 0.85,
                     "tags": [
                       "discovery",
-                      "help_request",
-                      "beeping_device"
+                      "sound_toy",
+                      "open_thread"
                     ]
                   },
                   {
                     "effect": "EmitEvent",
-                    "event_type": "HelpRequestCreated",
+                    "event_type": "ItemFound",
                     "payload": {
                       "source_ref": "self",
-                    "message": "{self.entity_name}发现滴滴响的装置，需要小朋友建议。"
+                      "item_template": "MysterySoundToy",
+                      "message": "{self.entity_name}发现了一个会轻响的玩具。"
                     }
                   }
                 ]
               }
             },
             {
-              "id": "tiny_plant",
-              "label": "快枯萎的植物",
+              "id": "bean_sprout",
+              "label": "有点蔫的豆苗",
               "weight": 1,
               "bundle": {
                 "effects": [
                   {
                     "effect": "CreateEntity",
-                    "template": "TinyPlant",
+                    "template": "DroopyBeanSprout",
                     "destination": {
                       "type": "container",
                       "target": "self"
@@ -589,26 +595,35 @@
                   {
                     "effect": "AddMemoryNote",
                     "target": "self",
-                    "text": "我在储藏间发现了一株快枯萎的植物。我不知道该不该留下照顾它，下次想问问小朋友。",
+                    "text": "我在绘本角发现了一盆有点蔫的豆苗。它还没有处理。",
                     "importance": 0.85,
                     "tags": [
                       "discovery",
-                      "help_request",
-                      "plant"
+                      "plant",
+                      "open_thread"
                     ]
+                  },
+                  {
+                    "effect": "EmitEvent",
+                    "event_type": "ItemFound",
+                    "payload": {
+                      "source_ref": "self",
+                      "item_template": "DroopyBeanSprout",
+                      "message": "{self.entity_name}发现了一盆有点蔫的豆苗。"
+                    }
                   }
                 ]
               }
             },
             {
-              "id": "parts",
-              "label": "一个零件",
+              "id": "sticker_patch",
+              "label": "贴纸补丁",
               "weight": 2,
               "bundle": {
                 "effects": [
                   {
                     "effect": "CreateEntity",
-                    "template": "ScrapPart",
+                    "template": "StickerPatch",
                     "destination": {
                       "type": "container",
                       "target": "self"
@@ -617,13 +632,21 @@
                   {
                     "effect": "AddMemoryNote",
                     "target": "self",
-                    "text": "我在储藏间找到了一个零件。准备好再探索，好像真的有帮助。",
-                    "importance": 0.75,
+                    "text": "我在绘本角找到了一张贴纸补丁。",
+                    "importance": 0.65,
                     "tags": [
                       "discovery",
-                      "parts",
-                      "lesson"
+                      "craft_material"
                     ]
+                  },
+                  {
+                    "effect": "EmitEvent",
+                    "event_type": "MaterialFound",
+                    "payload": {
+                      "source_ref": "self",
+                      "item_template": "StickerPatch",
+                      "message": "{self.entity_name}找到了一张贴纸补丁。"
+                    }
                   }
                 ]
               }
@@ -635,24 +658,24 @@
           "target": "self",
           "component": "CreatureComponent",
           "property": "current_energy",
-          "change": -5
+          "change": -3
         },
         {
           "effect": "EmitEvent",
-          "event_type": "DarkStorageExplored",
+          "event_type": "QuietLibraryChecked",
           "payload": {
             "source_ref": "self",
-            "message": "{self.entity_name}探索了储藏间。"
+            "message": "{self.entity_name}查看了绘本角。"
           }
         }
       ]
     }
   },
-  "robot_store_memory_item": {
-    "verb": "StoreMemoryItem",
+  "child_display_memory_item": {
+    "verb": "DisplayMemoryItem",
     "narrative_success": "{actor}把发现放到{target}",
     "narrative_fail": "{actor}想把发现放到{target}，但失败了：{reason}",
-    "planner_hint": "行动规则：把自己背包中的 story_item 放到同地点的收藏架。用于保留有意义的发现，并为之后对话提供回顾素材。",
+    "planner_hint": "行动规则：把自己背包中的 story_item 放到同地点的回忆展示架。用于保留有意义的发现，并为之后对话提供回顾素材。",
     "grounder_hint": "target_id 必须是同地点可见的 memory_shelf；parameters.item_id 必须是自己背包中的 story_item。",
     "condition": {
       "type": "all",
@@ -693,12 +716,20 @@
         {
           "effect": "AddMemoryNote",
           "target": "self",
-          "text": "我把一个有意义的发现放到了小小收藏架。以后和小朋友聊天时，可以回顾它。",
-          "importance": 0.75,
+          "text": "我把一个有意义的发现放到了回忆展示架。",
+          "importance": 0.7,
           "tags": [
             "memory_shelf",
             "story_item"
           ]
+        },
+        {
+          "effect": "EmitEvent",
+          "event_type": "MemoryItemDisplayed",
+          "payload": {
+            "source_ref": "self",
+            "message": "{self.entity_name}把一个发现放到了回忆展示架。"
+          }
         }
       ]
     }

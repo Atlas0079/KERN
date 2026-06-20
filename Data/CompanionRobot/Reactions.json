@@ -1,7 +1,7 @@
 {
   "rules": [
     {
-      "id": "robot_battery_low_memory",
+      "id": "child_energy_low_memory",
       "on_event": "PropertyModified",
       "selector": {
         "type": "all",
@@ -24,7 +24,7 @@
           {
             "type": "has_tag",
             "target": "event_entity",
-            "tag": "companion_robot"
+            "tag": "kindergarten_child"
           },
           {
             "type": "compare_property",
@@ -39,7 +39,7 @@
             "condition": {
               "type": "has_status",
               "target": "event_entity",
-              "status_id": "battery_low_noted"
+              "status_id": "energy_low_noted"
             }
           }
         ]
@@ -49,25 +49,25 @@
           {
             "effect": "AddStatus",
             "target": "event_entity",
-            "status_id": "battery_low_noted"
+            "status_id": "energy_low_noted"
           },
           {
             "effect": "AddMemoryNote",
             "target": "event_entity",
-            "text": "我的电量变低了。下次计划任务时，应该先考虑回小角落充电。",
+            "text": "我现在有点累。接下来应该找安静的事做、休息一下，或者问老师。",
             "importance": 0.75,
             "tags": [
-              "battery",
+              "energy",
               "self_care",
-              "help_request"
+              "school_day"
             ]
           },
           {
             "effect": "EmitEvent",
-            "event_type": "RobotNeedsCharge",
+            "event_type": "ChildNeedsRest",
             "payload": {
               "source_ref": "event_entity",
-              "message": "{event.entity_id}电量偏低，需要考虑充电。"
+              "message": "{event.entity_id}的体力偏低。"
             }
           }
         ]
