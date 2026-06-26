@@ -2,8 +2,9 @@
 
 > 当前状态：暂缓实现。
 >
-> 本文档保留为后续复杂场景维护工具的设计参考。当前阶段只实现运行时所需的
-> `RandomBundle` 能力；Bundle Inspection CLI、MCP/Skill 与编辑器可视化暂不进入实现范围。
+> 本文档保留为后续复杂场景维护工具的设计参考。当前仓库已经实现运行时所需的
+> `InvokeBundle`、`RandomBundle`、`ApplyToQuery` 等执行能力；Bundle Inspection CLI、
+> MCP/Skill 与编辑器可视化仍未实现，也不属于当前实现范围。
 
 ## 背景
 

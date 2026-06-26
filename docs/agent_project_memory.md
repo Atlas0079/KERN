@@ -98,7 +98,7 @@ Current startup/runtime flow:
 2. `KERN.data.loader.load_data_bundle(...)` loads JSON data from `Data/`.
 3. Startup validation calls `tools.scenario_lint.lint_bundle(...)` unless skipped.
 4. `KERN.data.builder.build_world_state(...)` builds `WorldState`.
-5. `KERN.sim.manager.WorldManager` acts as the KERN runtime runner and runs ticks.
+5. `KERN.runtime.KernRuntime` acts as the SDK entry point and runtime runner.
 6. `TriggerSystem` turns events into reaction effect bundles.
 7. `InteractionEngine` compiles agent/user commands through recipes into effect bundles.
 8. `WorldExecutor` executes effects and is the write boundary for world mutation.
@@ -192,15 +192,20 @@ Agent workflow contract is documented in `docs/开发者快速上手.md` and
 Current high-level contract:
 
 ```python
-decision = workflow.decide(ws_view, recipe_db, actor_id, reason, mode_context)
 mem_patch = workflow.build_memory_patch_data(ws_view, recipe_db, actor_id)
+decision = workflow.decide(ws_view, recipe_db, actor_id, reason, mode_context)
 ```
+
+Runtime applies the memory patch first through `ApplyMemoryPatch`, then calls
+`decide(...)`. With the default `WORKFLOW_CONTRACT_ON_ERROR=fail_fast`, missing
+required hooks or invalid workflow decisions follow the runtime error/abort path;
+`degrade_to_noop` must be configured explicitly to turn contract errors into noops.
 
 Workflow decisions are expected to be dictionaries such as `apply_commands`, `noop`,
 or `error`. Runtime-internal compiled operations are not the external workflow
 contract.
 
-Runtime boundary note: `WorldManager` is the KERN runtime runner. KERN provides a
+Runtime boundary note: `KernRuntime` is the KERN SDK entry point and runtime runner. KERN provides a
 per-tick scheduling pulse and core capabilities
 (load/build/step/condition/recipe/effect/reaction/checkpoint). App layers decide
 product orchestration such as scene selection, user dialogue pauses, how user
@@ -211,7 +216,16 @@ actually happens.
 
 ## Simulation Loop
 
-`WorldManager` is the public KERN runtime runner.
+`KernRuntime` is the public KERN SDK entry point and runtime runner.
+
+Preferred SDK construction:
+
+```python
+from KERN import KernRuntime
+
+runtime = KernRuntime.from_config(project_root, "runtime_config.camping.smoke.json")
+runtime.advance_ticks(10)
+```
 
 Public runtime APIs:
 
@@ -241,7 +255,7 @@ App layers should use `record_initial_state()`, `advance_ticks(...)`, or
 
 Known architectural note in code: `ws.services` is deliberately retained for now;
 new service keys should not be spread casually. The comment in
-`KERN/sim/manager.py` points toward a future typed `RuntimeContext` migration.
+`KERN/runtime.py` points toward a future typed `RuntimeContext` migration.
 
 ## Validation Commands
 

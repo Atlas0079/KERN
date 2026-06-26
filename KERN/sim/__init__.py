@@ -1,4 +1,2 @@
-"""
-Simulation loop (WorldManager) and related systems.
-"""
+"""Simulation internals used by the KERN runtime SDK."""
 

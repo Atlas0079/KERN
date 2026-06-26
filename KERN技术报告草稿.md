@@ -84,6 +84,8 @@ KERN 在规则层采用四个核心抽象：
 
 当前版本还支持命名 Bundle 引用、随机分支和批量查询执行。它们虽然提高了规则表达能力，但不会绕过运行时调度：嵌套执行仍会回到统一执行路径，因此事件记录、Reaction 触发和递归深度限制仍然生效。
 
+需要注意的是，这里的“统一执行路径”指 `WorldManager` 注入运行时服务后的执行链。直接孤立调用 `WorldExecutor.execute_bundle(...)` 只会执行 bundle 内 effect 本身，不负责 `react_per_effect`、Reaction 链触发或递归深度管理；测试和工具若需要完整 runtime 语义，应通过 `WorldManager` 或注入等价的 `ws.services["execute"]` 服务。
+
 ### 4.4 Context、Binder 与 Handler
 
 Effect 执行并不是直接读取 JSON 后修改世界。当前系统将执行过程拆成输入上下文、输入绑定和实际写入三层：上下文描述“这次调用发生在谁身上、由什么事件触发、携带哪些参数”；Binder 负责把原始输入整理为稳定结构；Handler 只处理已经归一化的数据，并通过 `WorldState` API 修改世界状态、返回事件。

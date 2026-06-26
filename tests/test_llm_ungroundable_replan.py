@@ -4,10 +4,8 @@ from pathlib import Path
 from KERN.agent_workflow.full_ws_view_builder import build_full_ws_view
 from KERN.agent_workflow.llm_action_provider import LLMActionProvider
 from KERN.agent_workflow.runtime import _decision_to_outcome
-from KERN.data.builder import build_world_state
-from KERN.data.loader import load_data_bundle
 from KERN.interaction.engine import InteractionEngine
-from default_orchestrator import _cfg_get, _load_runtime_config
+from KERN.runtime import KernRuntime
 
 
 class FakeLLM:
@@ -32,17 +30,14 @@ class FakeLLM:
 
 def _load_camping_world():
 	project_root = Path(__file__).resolve().parents[1]
-	cfg, _cfg_path = _load_runtime_config(project_root, "runtime_config.camping.smoke.json")
-	bundle = load_data_bundle(
+	runtime = KernRuntime.from_config(
 		project_root,
-		recipes_jsons=[x.strip() for x in _cfg_get(cfg, "RECIPES_JSONS", "Recipes.json").split(",") if x.strip()],
-		reactions_jsons=[x.strip() for x in _cfg_get(cfg, "REACTIONS_JSONS", "Reactions.json").split(",") if x.strip()],
-		entities_dirs=[x.strip() for x in _cfg_get(cfg, "ENTITIES_DIRS", "Entities").split(",") if x.strip()],
-		world_json=_cfg_get(cfg, "WORLD_JSON", "World.json"),
-		bundles_jsons=[x.strip() for x in _cfg_get(cfg, "BUNDLES_JSONS", "Bundles.json").split(",") if x.strip()],
+		"runtime_config.camping.smoke.json",
+		validate=False,
+		configure_logging=False,
+		overrides={"CHECKPOINT_EVERY_TICK": "0"},
 	)
-	result = build_world_state(bundle.world, bundle.entity_templates, bundle.recipes, named_bundles=bundle.named_bundles)
-	return result.world_state, bundle
+	return runtime.world_state, runtime.data_bundle
 
 
 class UngroundableReplanTests(unittest.TestCase):

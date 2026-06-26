@@ -1,0 +1,334 @@
+﻿\documentclass[aspectratio=169,11pt]{beamer}
+
+\usepackage[UTF8]{ctex}
+\usepackage{tikz}
+\usepackage{fontspec}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\usetikzlibrary{arrows.meta,positioning,calc,shapes.geometric}
+
+\setCJKmainfont{Microsoft YaHei}
+\setsansfont{Arial}
+\setmainfont{Arial}
+
+\definecolor{Ink}{HTML}{17211D}
+\definecolor{Moss}{HTML}{2D5A4B}
+\definecolor{Sage}{HTML}{739A83}
+\definecolor{Warm}{HTML}{FFFFFF}
+\definecolor{Line}{HTML}{D7D0C4}
+\definecolor{Clay}{HTML}{B16E45}
+\definecolor{Mist}{HTML}{EBEFE8}
+\definecolor{FootA}{HTML}{DCE5DC}
+\definecolor{FootB}{HTML}{CAD9CC}
+\definecolor{FootText}{HTML}{F4F1E8}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip
+  \hspace*{-1.0cm}%
+  \begin{tikzpicture}
+    \useasboundingbox (0,0) rectangle (\paperwidth,0.88cm);
+    \fill[Moss] (0,0) rectangle (\paperwidth,0.88cm);
+    \fill[Sage] (0,0) rectangle (0.26cm,0.88cm);
+    \node[anchor=west,text=Warm,font=\bfseries\large] at (0.55cm,0.44cm) {\insertframetitle};
+  \end{tikzpicture}
+  \vspace{0.1cm}
+}
+\setbeamertemplate{footline}{%
+  \nointerlineskip
+  \begin{tikzpicture}
+    \useasboundingbox (0,0) rectangle (\paperwidth,0.46cm);
+    \fill[FootA] (0,0) rectangle (\paperwidth,0.46cm);
+    \fill[Moss] (0,0) rectangle (3.45cm,0.46cm);
+    \fill[Moss] ($(0,0)+(\paperwidth-1.28cm,0)$) rectangle (\paperwidth,0.46cm);
+    \node[anchor=west,text=FootText,font=\scriptsize] at (0.34cm,0.23cm) {KERN: Meta Simulator};
+    \node[anchor=center,text=FootText,font=\scriptsize] at ($(0,0)+(\paperwidth-0.64cm,0.23cm)$) {\insertframenumber/\inserttotalframenumber};
+  \end{tikzpicture}
+}
+\setbeamercolor{frametitlebar}{bg=Moss,fg=Warm}
+\setbeamercolor{footupper}{bg=FootA}
+\setbeamercolor{footlower}{bg=Moss}
+\setbeamercolor{background canvas}{bg=Warm}
+\setbeamercolor{normal text}{fg=Ink}
+\setbeamercolor{frametitle}{fg=Ink}
+\setbeamerfont{frametitle}{size=\Large,series=\bfseries}
+\setbeamerfont{title}{size=\huge,series=\bfseries}
+\setbeamerfont{subtitle}{size=\large}
+
+\newcommand{\bigclaim}[1]{{\color{Ink}\fontsize{22}{27}\selectfont\bfseries #1}}
+\newcommand{\keyclaim}[1]{{\color{Ink}\fontsize{26}{30}\selectfont\bfseries #1}}
+\newcommand{\muted}[1]{{\color{Sage}#1}}
+\newcommand{\pill}[1]{%
+  \tikz[baseline=(x.base)] \node[inner xsep=7pt,inner ysep=3pt,rounded corners=2pt,fill=Mist,draw=Line,text=Ink,font=\scriptsize] (x) {#1};%
+}
+\newcommand{\metric}[2]{%
+  \begin{minipage}{0.29\linewidth}
+  {\color{Moss}\fontsize{22}{24}\selectfont\bfseries #1}\par
+  \vspace{0.08cm}{\color{Ink}\small #2}
+  \end{minipage}
+}
+\newcommand{\capblock}[2]{%
+  \begin{minipage}{0.31\linewidth}
+    {\color{Moss}\large\bfseries #1}\par
+    \vspace{0.12cm}{\small #2}
+  \end{minipage}
+}
+
+\title{KERN}
+\subtitle{A Meta Simulator for LLM Multi-Agent Worlds}
+\date{}
+\author{}
+\institute{}
+
+\begin{document}
+
+{
+\setbeamertemplate{footline}{}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{frametitle}{}
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=south west,inner sep=0pt] at (current page.south west) {
+      \includegraphics[width=\paperwidth,height=\paperheight]{slides/title.png}
+    };
+  \end{tikzpicture}
+\end{frame}
+}
+
+\setbeamertemplate{headline}{}
+
+\begin{frame}{定位}
+    \keyclaim{Meta Simulator}
+
+  \vspace{0.55cm}
+  \begin{columns}[T,totalwidth=\linewidth]
+    \begin{column}{0.48\linewidth}
+      \small
+      KERN是一个基于 ECS（Entity-Component System）与数据驱动的离散事件仿真沙盒内核。提供世界建模、规则运行、状态结算、智能体接入和过程记录等基础能力。
+
+      \vspace{0.35cm}
+      开发者可以把不同主题的场景快速放入同一个运行框架中，例如野营、生存、狼人杀、竞技场、陪伴机器人或教学环境。
+    \end{column}
+    \begin{column}{0.46\linewidth}
+      \vspace{-1.02cm}
+      \centering
+      \includegraphics[width=\linewidth,height=5.95cm,keepaspectratio,trim=0 0 0 1.15cm,clip]{slides/定位.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{问题}
+    \begin{columns}[T,totalwidth=\linewidth]
+    \begin{column}{0.50\linewidth}
+      \keyclaim{场景工程}
+      \vspace{0.45cm}
+
+      \small
+      需要评估 LLM Agent 的研究者，通常要把同一个智能体放进不同主题的环境中观察行为，例如生存、协作、博弈、教学或社会互动。
+
+      \vspace{0.28cm}
+      但每换一个主题，往往都要重新实现世界结构、行动规则、状态更新、任务流程、日志记录和 Agent 接口。实验关注点还没进入行为分析，工程成本已经先出现。
+    \end{column}
+    \begin{column}{0.45\linewidth}
+      \vspace{-0.48cm}
+      \centering
+      \includegraphics[width=\linewidth,height=6.65cm,keepaspectratio]{slides/问题.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{能力}
+    \vspace{0.12cm}
+  \centering
+  \begin{tikzpicture}
+    \tikzstyle{ability}=[draw=Line,fill=Mist,rounded corners=3pt,minimum width=3.75cm,minimum height=1.12cm,align=left,text width=3.05cm,inner xsep=8pt,inner ysep=7pt]
+    \node[ability] at (0,2.35) {{\color{Moss}\normalsize\bfseries 定义世界}\par\vspace{0.07cm}{\footnotesize 地点、路径、角色、物品、设施}};
+    \node[ability] at (4.25,2.35) {{\color{Moss}\normalsize\bfseries 定义规则}\par\vspace{0.07cm}{\footnotesize 动作、任务、条件、事件响应}};
+    \node[ability] at (8.5,2.35) {{\color{Moss}\normalsize\bfseries 运行演化}\par\vspace{0.07cm}{\footnotesize Tick 推进、状态变化、持续任务}};
+    \node[ability] at (0,0.15) {{\color{Moss}\normalsize\bfseries 接入 Agent}\par\vspace{0.07cm}{\footnotesize 感知输入、动作输出、规则校验}};
+    \node[ability] at (4.25,0.15) {{\color{Moss}\normalsize\bfseries 记录过程}\par\vspace{0.07cm}{\footnotesize 事件日志、交互日志、checkpoint}};
+    \node[ability] at (8.5,0.15) {{\color{Moss}\normalsize\bfseries 复用场景}\par\vspace{0.07cm}{\footnotesize 同一内核承载不同主题}};
+    \node[anchor=north,text width=10.9cm,align=center,text=Ink,font=\footnotesize] at (4.25,-1.05) {KERN 具有以上能力，然而生成的模拟环境仍以离散空间与离散时间为基础，适合表达地点、事件和任务驱动的世界演化。};
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{优点}
+    \begin{columns}[T,totalwidth=\linewidth]
+    \begin{column}{0.30\linewidth}
+      {\color{Moss}\Large\bfseries 快速建模}\par
+      \vspace{0.2cm}\small
+      场景内容通过数据组合表达，主题切换更加轻量。
+    \end{column}
+    \begin{column}{0.30\linewidth}
+      {\color{Moss}\Large\bfseries 主题无关}\par
+      \vspace{0.2cm}\small
+      同一套基座可以承载生存、博弈、陪伴、教学等场景。
+    \end{column}
+    \begin{column}{0.30\linewidth}
+      {\color{Moss}\Large\bfseries 过程可审计}\par
+      \vspace{0.2cm}\small
+      状态变化、事件链和 Agent 交互都有记录入口。
+    \end{column}
+  \end{columns}
+
+  \vspace{0.75cm}
+  \begin{columns}[T,totalwidth=\linewidth]
+    \begin{column}{0.45\linewidth}
+      {\color{Moss}\Large\bfseries 适配 LLM 实验}\par
+      \vspace{0.2cm}\small
+      感知、动作、校验和反馈形成稳定边界，便于替换不同 Agent 策略。
+    \end{column}
+    \begin{column}{0.45\linewidth}
+      {\color{Moss}\Large\bfseries 支持复现实验}\par
+      \vspace{0.2cm}\small
+      Checkpoint 与日志让研究者回到关键时刻分析行为原因。
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{流程}
+    \centering
+    \vspace{-0.28cm}
+    \includegraphics[width=\paperwidth,height=6.35cm,keepaspectratio]{slides/流程.png}
+\end{frame}
+
+\begin{frame}{边界}
+    \centering
+    \vspace{-0.28cm}
+    \includegraphics[width=\paperwidth,height=6.35cm,keepaspectratio]{slides/边界.png}
+\end{frame}
+
+\begin{frame}{Smallville}
+    \begin{columns}[T,totalwidth=\linewidth]
+    \begin{column}{0.40\linewidth}
+      \small
+      接下来将 KERN 与两个相近项目进行对比：Generative Agents / Smallville 与 Concordia。
+
+      \vspace{0.28cm}
+      Generative Agents 构建了一个名为 Smallville 的交互小镇。25 个 LLM Agent 在其中观察环境、形成记忆、反思经历、规划日程，并通过自然语言与其他 Agent 互动。
+
+      \vspace{0.28cm}
+      论文重点展示可信的人类日常行为，例如信息传播、邀请聚会、协调活动和维持个人日程。
+    \end{column}
+    \begin{column}{0.54\linewidth}
+      \vspace{0.16cm}
+      \centering
+      \includegraphics[width=\linewidth,height=4.15cm,keepaspectratio]{slides/Smallville.png}
+
+      \vspace{0.22cm}
+      {\color{Sage}\scriptsize 来源：Park et al., 2023, Generative Agents.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{差异一}
+    \begin{columns}[T,totalwidth=\linewidth]
+    \begin{column}{0.40\linewidth}
+      \small
+      Generative Agents 的主要贡献是面向可信人类行为的 Agent 认知架构。论文通过 Smallville 小镇展示记忆、反思、规划与社交互动如何支持个体行为和群体行为的生成。
+
+      \vspace{0.28cm}
+      KERN 的主要贡献是面向多主题仿真场景的运行基座。项目通过 ECS、声明式规则、统一状态结算和 checkpoint 日志，把世界定义、规则执行、Agent 接入与过程记录组织为可复用的环境生成框架。
+    \end{column}
+    \begin{column}{0.54\linewidth}
+      \footnotesize
+      \renewcommand{\arraystretch}{1.42}
+      \begin{tabular}{@{}p{0.28\linewidth}p{0.64\linewidth}@{}}
+        \toprule
+        维度 & 区别 \\
+        \midrule
+        核心目标 & Smallville 验证记忆、反思、规划驱动的可信行为生成；KERN 提供数据驱动、规则结算、可审计的场景运行基座。 \\
+        场景范围 & Smallville 聚焦小镇生活；KERN 面向任意主题的离散仿真场景。 \\
+        系统重心 & Smallville 强调 Agent 认知架构；KERN 强调规则、任务、状态与日志。 \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Concordia}
+    \begin{columns}[T,totalwidth=\linewidth]
+    \begin{column}{0.34\linewidth}
+      \small
+      Concordia 是 DeepMind 提出的生成式社会模拟框架。它把社会情境、Agent 组件和环境裁判组织在一起，用于构建语言中介的多智能体实验。
+
+      \vspace{0.28cm}
+      其中 Game Master 维护世界状态、接收 Agent 的自然语言行动，并解释这些行动对环境产生的影响。
+    \end{column}
+    \begin{column}{0.60\linewidth}
+      \vspace{-0.18cm}
+      \centering
+      \includegraphics[width=\linewidth,height=5.35cm,keepaspectratio]{slides/Concordia.png}
+
+      \vspace{0.08cm}
+      {\color{Sage}\scriptsize 来源：Google DeepMind Concordia, 2023.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{差异二}
+    \begin{columns}[T,totalwidth=\linewidth]
+    \begin{column}{0.40\linewidth}
+      \small
+      Concordia 的环境变化依赖运行时 LLM/Game Master 对自然语言行动进行解释和裁定。
+
+      \vspace{0.28cm}
+      KERN 的环境变化由预设规则结算。规则可以由开发者编写，也可以由 LLM 在构建阶段一次性生成；运行阶段无需再次依赖 LLM 修改环境。
+    \end{column}
+    \begin{column}{0.54\linewidth}
+      \footnotesize
+      \renewcommand{\arraystretch}{1.42}
+      \begin{tabular}{@{}p{0.28\linewidth}p{0.64\linewidth}@{}}
+        \toprule
+        维度 & 区别 \\
+        \midrule
+        环境结算 & Concordia 依赖运行时 LLM/GM 解释；KERN 依赖预设规则执行。 \\
+        可控性 & Concordia 动作空间更开放；KERN 的状态修改路径更结构化。 \\
+        生成时机 & Concordia 在运行时解释环境变化；KERN 可在构建阶段生成规则，运行时稳定执行。 \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{场景}
+    \begin{minipage}{0.92\linewidth}
+      \small
+      为了证明系统的闭环与可行性，我们设计了一个简单的 Agent workflow 和两个场景。
+    \end{minipage}
+
+    \vspace{0.48cm}
+    \begin{columns}[T,totalwidth=\linewidth]
+    \begin{column}{0.47\linewidth}
+      \bigclaim{Camping}
+      \vspace{0.34cm}
+
+      {\color{Moss}\large\bfseries 长期生存任务}\par
+      \vspace{0.24cm}
+      \small
+      多个 Agent 在营地中采集木材、消耗食物、休息恢复，并受到天气和公共物资变化的影响。
+
+      \vspace{0.3cm}
+      该场景证明 KERN 能支持持续运行、资源状态变化和长期任务闭环。
+    \end{column}
+    \begin{column}{0.47\linewidth}
+      \bigclaim{Space Werewolf}
+      \vspace{0.34cm}
+
+      {\color{Moss}\large\bfseries 信息不对称交互}\par
+      \vspace{0.24cm}
+      \small
+      多个角色在飞船房间中移动、观察、执行任务，并在局部视野和目标冲突下触发跨空间事件。
+
+      \vspace{0.3cm}
+      该场景证明 KERN 能支持信息不对称、空间约束和复杂交互。
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\end{document}

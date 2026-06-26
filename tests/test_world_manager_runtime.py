@@ -8,7 +8,8 @@ from KERN.interaction.engine import InteractionEngine
 from KERN.models.entity import Entity
 from KERN.models.location import Location
 from KERN.models.world_state import WorldState
-from KERN.sim.manager import WorldManager
+from KERN.runtime import KernRuntime
+from pathlib import Path
 
 
 def _world() -> WorldState:
@@ -21,9 +22,24 @@ def _world() -> WorldState:
 	return ws
 
 
-class WorldManagerRuntimeTests(unittest.TestCase):
+class KernRuntimeTests(unittest.TestCase):
+	def test_from_config_builds_sdk_runtime(self) -> None:
+		project_root = Path(__file__).resolve().parents[1]
+		runtime = KernRuntime.from_config(
+			project_root,
+			"runtime_config.camping.smoke.json",
+			validate=False,
+			configure_logging=False,
+			overrides={"CHECKPOINT_EVERY_TICK": "0"},
+		)
+
+		self.assertEqual(runtime.config_path, project_root / "runtime_config.camping.smoke.json")
+		self.assertEqual(runtime.configured_max_ticks, 60)
+		self.assertIsNotNone(runtime.data_bundle)
+		self.assertIn("camp_main", runtime.world_state.locations)
+
 	def test_record_initial_state_uses_public_runtime_api(self) -> None:
-		manager = WorldManager(
+		runtime = KernRuntime(
 			world_state=_world(),
 			interaction_engine=InteractionEngine(recipe_db={}),
 			executor=WorldExecutor(),
@@ -31,14 +47,14 @@ class WorldManagerRuntimeTests(unittest.TestCase):
 			checkpoint_enabled=False,
 		)
 
-		manager.record_initial_state()
+		runtime.record_initial_state()
 
-		self.assertEqual(len(manager.snapshots), 1)
-		self.assertEqual(manager.snapshots[0]["tick"], 0)
-		self.assertEqual(manager.snapshots[0]["events"], [])
+		self.assertEqual(len(runtime.snapshots), 1)
+		self.assertEqual(runtime.snapshots[0]["tick"], 0)
+		self.assertEqual(runtime.snapshots[0]["events"], [])
 
 	def test_advance_ticks_steps_and_records_each_tick(self) -> None:
-		manager = WorldManager(
+		runtime = KernRuntime(
 			world_state=_world(),
 			interaction_engine=InteractionEngine(recipe_db={}),
 			executor=WorldExecutor(),
@@ -46,15 +62,15 @@ class WorldManagerRuntimeTests(unittest.TestCase):
 			checkpoint_enabled=False,
 		)
 
-		result = manager.advance_ticks(2)
+		result = runtime.advance_ticks(2)
 
 		self.assertEqual(result["ticks_requested"], 2)
 		self.assertEqual(result["ticks_advanced"], 2)
 		self.assertEqual(result["started_at_tick"], 0)
 		self.assertEqual(result["ended_at_tick"], 2)
 		self.assertFalse(result["stopped"])
-		self.assertEqual(manager.world_state.game_time.total_ticks, 2)
-		self.assertEqual([x["tick"] for x in manager.snapshots], [1, 2])
+		self.assertEqual(runtime.world_state.game_time.total_ticks, 2)
+		self.assertEqual([x["tick"] for x in runtime.snapshots], [1, 2])
 		self.assertGreaterEqual(result["event_count"], 2)
 
 

@@ -6,21 +6,79 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-from ..data.archive import ArchiveRecorder
-from ..data.checkpoint import build_simulation_log_payload_from_world_state, resolve_global_log_file
-from ..effect_bundle import effect_bundle_from_raw
-from ..execution_errors import executor_error, is_execution_error_event
-from ..log_manager import get_logger
-from ..models.world_state import WorldState
-from .trigger_system import TriggerSystem
+from .agent_workflow.llm_action_provider import build_default_llm_provider
+from .agent_workflow.simple_policy import SimplePolicyActionProvider
+from .data.archive import ArchiveRecorder
+from .data.builder import build_world_state
+from .data.checkpoint import (
+	build_simulation_log_payload_from_world_state,
+	resolve_checkpoint_file,
+	resolve_global_log_file,
+	restore_world_state_from_checkpoint,
+)
+from .data.loader import load_data_bundle
+from .effect_bundle import effect_bundle_from_raw
+from .execution_errors import executor_error, is_execution_error_event
+from .executor.executor import WorldExecutor
+from .interaction.engine import InteractionEngine
+from .log_manager import configure_logger, get_logger
+from .models.world_state import WorldState
+from .sim.trigger_system import TriggerSystem
+
+
+def _resolve_runtime_config_path(project_root: Path, config_path: str = "") -> Path:
+	raw = str(config_path or "").strip()
+	if not raw:
+		raw = "runtime_config.json"
+	p = Path(raw)
+	if p.is_absolute():
+		return p
+	return project_root / p
+
+
+def _load_runtime_config(project_root: Path, config_path: str = "") -> tuple[dict[str, str], Path]:
+	resolved = _resolve_runtime_config_path(project_root, config_path)
+	if not resolved.exists():
+		raise FileNotFoundError(f"runtime config not found: {resolved}")
+	raw = json.loads(resolved.read_text(encoding="utf-8"))
+	if not isinstance(raw, dict):
+		raise ValueError(f"runtime config must be object with key 'env': {resolved}")
+	env_raw = raw.get("env")
+	if not isinstance(env_raw, dict):
+		raise ValueError(f"runtime config must use {{'env': {{...}}}} format: {resolved}")
+	out: dict[str, str] = {}
+	for k, v in dict(env_raw).items():
+		key = str(k or "").strip()
+		if not key or v is None:
+			continue
+		out[key] = str(v)
+	return out, resolved
+
+
+def _cfg_get(cfg: dict[str, str], key: str, default: str = "") -> str:
+	return str(cfg.get(str(key), default) or default).strip()
+
+
+def _cfg_bool(cfg: dict[str, str], key: str, default: bool = False) -> bool:
+	v = _cfg_get(cfg, key, "1" if default else "0").lower()
+	return v in {"1", "true", "yes", "on"}
+
+
+def _cfg_int(cfg: dict[str, str], key: str, default: int) -> int:
+	raw = _cfg_get(cfg, key, str(default))
+	try:
+		return int(raw)
+	except Exception:
+		return int(default)
 
 
 @dataclass
-class WorldManager:
+class KernRuntime:
 	"""
-	KERN runtime runner for a single WorldState.
+	SDK entry point and runtime runner for a single KERN WorldState.
 
 	Responsibilities:
+	- Build a ready-to-run runtime from scenario/config data
 	- Advance game time by runtime ticks
 	- Dispatch AdvanceTick per entity
 	- Build reaction effects via TriggerSystem
@@ -62,6 +120,12 @@ class WorldManager:
 	run_id: str = ""
 	archive_recorder: ArchiveRecorder | None = None
 
+	project_root: Path | None = None
+	config_path: Path | None = None
+	runtime_config: dict[str, str] = field(default_factory=dict)
+	data_bundle: Any = None
+	configured_max_ticks: int = 100
+
 	def __post_init__(self) -> None:
 		if self.trigger_system is None:
 			self.trigger_system = TriggerSystem(rules=list(self.reaction_rules or []))
@@ -84,6 +148,112 @@ class WorldManager:
 				snapshot_interval_ticks=int(self.checkpoint_snapshot_interval_ticks or 60),
 				include_logs=bool(self.checkpoint_include_logs),
 			)
+
+	@classmethod
+	def from_config(
+		cls,
+		project_root: str | Path,
+		config_path: str | Path = "",
+		*,
+		validate: bool = True,
+		configure_logging: bool = True,
+		overrides: dict[str, Any] | None = None,
+	) -> "KernRuntime":
+		"""
+		Create a ready-to-run KERN runtime from a runtime config file.
+
+		This is the SDK entry point for apps and scripts. It owns the object
+		assembly that used to live in the CLI: config parsing, data loading,
+		optional validation, checkpoint restore, world build, provider selection,
+		and runtime construction.
+		"""
+		root = Path(project_root).resolve()
+		cfg, resolved_config_path = _load_runtime_config(root, str(config_path or ""))
+		for key, value in dict(overrides or {}).items():
+			clean_key = str(key or "").strip()
+			if clean_key and value is not None:
+				cfg[clean_key] = str(value)
+		if configure_logging:
+			configure_logger(
+				level=_cfg_get(cfg, "LOG_LEVEL", "info"),
+				categories=_cfg_get(cfg, "LOG_CATEGORIES", "*"),
+				json_mode=_cfg_bool(cfg, "LOG_JSON", False),
+				buffer_size=_cfg_int(cfg, "LOG_BUFFER_SIZE", 1000),
+			)
+
+		recipes_jsons = [x.strip() for x in _cfg_get(cfg, "RECIPES_JSONS", "Recipes.json").split(",") if x.strip()]
+		reactions_jsons = [x.strip() for x in _cfg_get(cfg, "REACTIONS_JSONS", "Reactions.json").split(",") if x.strip()]
+		entities_dirs = [x.strip() for x in _cfg_get(cfg, "ENTITIES_DIRS", "Entities").split(",") if x.strip()]
+		bundles_jsons = [x.strip() for x in _cfg_get(cfg, "BUNDLES_JSONS", "Bundles.json").split(",") if x.strip()]
+		world_json_name = _cfg_get(cfg, "WORLD_JSON", "World.json")
+
+		bundle = load_data_bundle(
+			root,
+			recipes_jsons=recipes_jsons,
+			reactions_jsons=reactions_jsons,
+			entities_dirs=entities_dirs,
+			world_json=world_json_name,
+			bundles_jsons=bundles_jsons,
+		)
+		restore_path = resolve_checkpoint_file(_cfg_get(cfg, "CHECKPOINT_RESTORE_FILE", ""), _cfg_get(cfg, "CHECKPOINT_RESTORE_DIR", ""))
+		if restore_path is not None:
+			ws = restore_world_state_from_checkpoint(restore_path, bundle.entity_templates, bundle.named_bundles)
+			if not ws.entities or not ws.locations:
+				raise ValueError(f"Invalid checkpoint format or empty world state: {restore_path}")
+		else:
+			if validate:
+				from tools.scenario_lint import lint_bundle
+
+				lint = lint_bundle(
+					project_root=root,
+					config_path=resolved_config_path,
+					env=cfg,
+					bundle=bundle,
+					world_json=world_json_name,
+					recipes_jsons=recipes_jsons,
+					reactions_jsons=reactions_jsons,
+					entities_dirs=entities_dirs,
+					bundles_jsons=bundles_jsons,
+				)
+				errors = [x for x in lint.issues if x.severity == "ERROR"]
+				if errors:
+					raise ValueError("Data validation failed:\n" + "\n".join(f"{x.where}: {x.message}" for x in errors))
+			result = build_world_state(bundle.world, bundle.entity_templates, bundle.recipes, named_bundles=bundle.named_bundles)
+			ws = result.world_state
+
+		use_llm = _cfg_bool(cfg, "USE_LLM", False)
+		action_provider = build_default_llm_provider(cfg) if use_llm else SimplePolicyActionProvider()
+		max_ticks_env = _cfg_get(cfg, "MAX_TICKS", "")
+		default_max_ticks_llm = _cfg_int(cfg, "MAX_TICKS_DEFAULT_LLM", 15)
+		default_max_ticks_no_llm = _cfg_int(cfg, "MAX_TICKS_DEFAULT_NO_LLM", 65)
+		configured_max_ticks = int(max_ticks_env) if max_ticks_env else (default_max_ticks_llm if use_llm else default_max_ticks_no_llm)
+
+		default_checkpoint_dir = root / "checkpoints" / (world_json_name or "default")
+		checkpoint_dir_env = _cfg_get(cfg, "CHECKPOINT_DIR", "")
+		return cls(
+			world_state=ws,
+			interaction_engine=InteractionEngine(recipe_db=bundle.recipes),
+			executor=WorldExecutor(entity_templates=bundle.entity_templates),
+			action_provider=action_provider,
+			reaction_rules=list((bundle.reactions or {}).get("rules", []) or []),
+			max_trigger_depth=_cfg_int(cfg, "MAX_TRIGGER_DEPTH", 4),
+			dialogue_budget_limit_per_location=_cfg_int(cfg, "DIALOGUE_BUDGET_LIMIT_PER_LOCATION", 4),
+			workflow_contract_on_error=_cfg_get(cfg, "WORKFLOW_CONTRACT_ON_ERROR", "fail_fast").lower() or "fail_fast",
+			checkpoint_enabled=_cfg_bool(cfg, "CHECKPOINT_EVERY_TICK", True),
+			checkpoint_dir=checkpoint_dir_env if checkpoint_dir_env else str(default_checkpoint_dir),
+			checkpoint_include_logs=_cfg_bool(cfg, "CHECKPOINT_INCLUDE_LOGS", True),
+			checkpoint_snapshot_interval_ticks=_cfg_int(cfg, "CHECKPOINT_SNAPSHOT_INTERVAL_TICKS", 60),
+			dialogue_log_full=_cfg_bool(cfg, "DIALOGUE_LOG_FULL", False),
+			project_root=root,
+			config_path=resolved_config_path,
+			runtime_config=dict(cfg),
+			data_bundle=bundle,
+			configured_max_ticks=int(configured_max_ticks),
+		)
+
+	def run_configured(self) -> list[dict[str, Any]]:
+		"""Run until the `MAX_TICKS` value resolved from runtime config."""
+		return self.run(max_ticks=int(self.configured_max_ticks or 100))
 
 	def run(self, max_ticks: int = 100) -> list[dict[str, Any]]:
 		self.is_running = True
@@ -300,7 +470,7 @@ class WorldManager:
 			"action_providers": dict(self.action_providers or {}),
 			"request_stop": self.request_stop,
 		}
-		from ..models.runtime_state import RuntimeState
+		from .models.runtime_state import RuntimeState
 		self.world_state.runtime_state = RuntimeState(
 			dialogue_budget_limit_per_location=int(self.dialogue_budget_limit_per_location),
 			dialogue_budget_used_per_location={},
