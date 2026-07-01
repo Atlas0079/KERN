@@ -28,6 +28,7 @@ from ..models.components import (
 	WorldStateEntityComponent,
 )
 from ..models.entity import Entity
+from ..models.environment import EnvironmentScope
 from ..models.location import Location
 from ..models.task import Task
 from ..models.path import Path
@@ -115,6 +116,41 @@ def build_world_state(
 	world_state_data = bundle_world.get("world_state", {})
 	ws.game_time.total_ticks = int(world_state_data.get("current_tick", 0))
 	ws.game_time.set_tick0_datetime(str(world_state_data.get("tick0_datetime", DEFAULT_TICK0_DATETIME) or DEFAULT_TICK0_DATETIME))
+
+	for scope_data in list(bundle_world.get("environment_scopes", []) or []):
+		if not isinstance(scope_data, dict):
+			continue
+		scope_id = str(scope_data.get("scope_id", "") or "").strip()
+		if not scope_id:
+			continue
+		location_ids = [
+			str(item).strip()
+			for item in list(scope_data.get("location_ids", []) or [])
+			if str(item).strip()
+		]
+		variables = scope_data.get("variables", {}) or {}
+		if not isinstance(variables, dict):
+			variables = {}
+		statuses = [str(item) for item in list(scope_data.get("statuses", []) or []) if str(item)]
+		expire_raw = scope_data.get("expire_at_tick", {}) or {}
+		expire_map: dict[str, int] = {}
+		if isinstance(expire_raw, dict):
+			for key, value in expire_raw.items():
+				try:
+					expire_map[str(key)] = int(value)
+				except Exception:
+					continue
+		ws.register_environment_scope(
+			EnvironmentScope(
+				scope_id=scope_id,
+				scope_type=str(scope_data.get("scope_type", "region") or "region"),
+				location_ids=location_ids,
+				priority=_int_or_default(scope_data.get("priority", 0), 0),
+				variables=dict(variables),
+				statuses=statuses,
+				expire_at_tick=expire_map,
+			)
+		)
 
 	# 1) Register locations first
 	for loc_data in bundle_world.get("locations", []):

@@ -78,34 +78,5 @@
       },
       "TaskHostComponent": {}
     }
-  },
-  "WeatherController": {
-    "name": "天气",
-    "components": {
-      "TagComponent": {
-        "tags": [
-          "environment",
-          "weather_controller",
-          "world_state_entity",
-          "hidden_from_agents"
-        ]
-      },
-      "WorldStateEntityComponent": {
-        "debug_visible": true,
-        "visible_to_agents": false,
-        "note": "Holds global weather state for rules and debugging."
-      },
-      "DescriptionComponent": {
-        "description": "当前区域的天气状态记录。它用于表达环境状态；具体天气效果只以场景规则和事件为准。",
-        "base_description": "当前区域的天气状态记录。",
-        "observed_description": "当前区域的天气状态记录。它用于表达环境状态；具体天气效果只以场景规则和事件为准。",
-        "recipe_description": "这是世界状态实体，当前不提供 agent 可执行配方。"
-      },
-      "StatusComponent": {
-        "statuses": [
-          "weather_clear"
-        ]
-      }
-    }
   }
 }

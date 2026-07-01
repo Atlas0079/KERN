@@ -37,11 +37,11 @@ workflow.
 
 Important top-level paths:
 
-- `default_orchestrator.py`: default orchestration entry point; reads config, loads data, builds `WorldManager`, and runs until the configured end.
+- `default_orchestrator.py`: thin CLI wrapper around `KernRuntime`; reads config and runs until the configured end.
 - `KERN/`: core engine package.
 - `Data/`: scenario data, entity templates, recipes, reactions, named bundles.
 - `docs/`: human-facing design and usage documentation.
-- `tools/`: validation, migration, diagnostics, and legacy checkpoint viewer assets.
+- `tools/`: validation, diagnostics, archive inspection, and checkpoint viewer assets.
 - `checkpoints/`: generated runtime outputs.
 
 There is a small `unittest` suite under `tests/` for focused contracts such as
@@ -242,7 +242,7 @@ App layers should use `record_initial_state()`, `advance_ticks(...)`, or
 `run(...)`; they should not call private `_capture_snapshot`,
 `_save_checkpoint`, or `_save_simulation_log` methods directly.
 
-`WorldManager.step()` currently:
+`KernRuntime.step()` currently:
 
 1. Initializes runtime services on `world_state.services`.
 2. Creates a per-tick `RuntimeState`.
@@ -268,16 +268,6 @@ Fast local checks:
 .\venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.example.json
 .\venv\Scripts\python.exe default_orchestrator.py --config runtime_config.camping.smoke.json
 ```
-
-Useful diagnostic script:
-
-```powershell
-.\venv\Scripts\python.exe tools\test_perception_departure_visibility.py
-```
-
-`tools\test_gemma4_prompt_styles.py` calls an OpenAI-compatible/Gemini endpoint and
-can take a long time or require network/API configuration. Do not treat it as a
-normal local health check.
 
 ## Documentation Notes
 
@@ -321,5 +311,7 @@ readable across shells.
   `CHECKPOINT_DIR`. The restore path currently selects an explicit file or the
   latest `snapshots/snapshot_*.json.gz`; it does not auto-materialize arbitrary
   ticks through deltas.
-- `tools/checkpoint_viewer.html` is a legacy uncompressed JSON checkpoint viewer
-  and does not directly support current `.json.gz` archive snapshots.
+- `tools/checkpoint_viewer_server.py` serves the current archive viewer. It
+  discovers archive scenes under `CHECKPOINT_DIR`, materializes
+  `snapshots/snapshot_*.json.gz` plus deltas through `KERN.data.archive`, and
+  exposes scene/manifest/latest/events/tick APIs for `tools/checkpoint_viewer.html`.

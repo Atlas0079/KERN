@@ -1,9 +1,20 @@
 {
     "rules": [
-        {
-            "id": "advance_tick_agent_control",
-            "on_event": "AdvanceTick",
-            "condition": {
+    {
+      "id": "world_tick_environment_status",
+      "on_event": "WorldTickAdvanced",
+      "bundle": {
+        "effects": [
+          {
+            "effect": "EnvironmentStatusTick"
+          }
+        ]
+      }
+    },
+    {
+      "id": "advance_tick_agent_control",
+      "on_event": "AdvanceTick",
+      "condition": {
                 "type": "has_component",
                 "target": "event_entity",
                 "component": "AgentControlComponent"

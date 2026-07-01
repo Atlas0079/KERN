@@ -5,6 +5,7 @@ from typing import Any
 
 from .entity import Entity
 from .gametime import GameTime
+from .environment import EnvironmentScope
 from .location import Location
 from .components import ContainerComponent
 from .task import Task
@@ -23,6 +24,7 @@ class WorldState:
 
 	entities: dict[str, Entity] = field(default_factory=dict)
 	locations: dict[str, Location] = field(default_factory=dict)
+	environment_scopes: dict[str, EnvironmentScope] = field(default_factory=dict)
 	tasks: dict[str, Task] = field(default_factory=dict)
 
 	paths: dict[str, Path] = field(default_factory=dict)
@@ -162,6 +164,11 @@ class WorldState:
 			raise ValueError(f"location id already exists: {location.location_id}")
 		self.locations[location.location_id] = location
 
+	def register_environment_scope(self, scope: EnvironmentScope) -> None:
+		if scope.scope_id in self.environment_scopes:
+			raise ValueError(f"environment scope id already exists: {scope.scope_id}")
+		self.environment_scopes[scope.scope_id] = scope
+
 	def register_task(self, task: Task) -> None:
 		if task.task_id in self.tasks:
 			raise ValueError(f"task id already exists: {task.task_id}")
@@ -172,6 +179,36 @@ class WorldState:
 
 	def get_location_by_id(self, location_id: str) -> Location | None:
 		return self.locations.get(location_id)
+
+	def get_environment_scope_by_id(self, scope_id: str) -> EnvironmentScope | None:
+		return self.environment_scopes.get(scope_id)
+
+	def get_environment_for_location(self, location_id: str) -> dict[str, Any]:
+		lid = str(location_id or "").strip()
+		if not lid:
+			return {}
+		merged: dict[str, Any] = {}
+		scopes = sorted(
+			[
+				scope
+				for scope in list(self.environment_scopes.values())
+				if scope is not None and scope.covers_location(lid)
+			],
+			key=lambda scope: (int(getattr(scope, "priority", 0) or 0), str(getattr(scope, "scope_id", "") or "")),
+		)
+		for scope in scopes:
+			variables = getattr(scope, "variables", {}) or {}
+			if isinstance(variables, dict):
+				for key, value in variables.items():
+					merged[str(key)] = value
+		return merged
+
+	def get_environment_value(self, location_id: str, key: str, default: Any = None) -> Any:
+		name = str(key or "").strip()
+		if not name:
+			return default
+		env = self.get_environment_for_location(location_id)
+		return env.get(name, default)
 
 	def get_task_by_id(self, task_id: str) -> Task | None:
 		return self.tasks.get(task_id)

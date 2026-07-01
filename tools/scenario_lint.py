@@ -65,6 +65,8 @@ KNOWN_CONDITION_TYPES = {
 	"param_eq",
 	"compare_value",
 	"compare_fields",
+	"environment_match",
+	"environment_has_status",
 	"time_match",
 	"time_between",
 	"time_every",
@@ -293,6 +295,36 @@ def _validate_world_shape(ctx: LintContext) -> None:
 			lid = str(path.get(key, "") or "").strip()
 			if lid and lid not in location_ids:
 				ctx.error(where, f"{key} references unknown location: {lid}")
+	scope_ids: set[str] = set()
+	if "environment_scopes" in world and not isinstance(world.get("environment_scopes", []), list):
+		ctx.error(f"{ctx.world_json}.environment_scopes", "environment_scopes must be list")
+	for idx, scope in enumerate(list(world.get("environment_scopes", []) or [])):
+		where = f"{ctx.world_json}.environment_scopes[{idx}]"
+		if not isinstance(scope, dict):
+			ctx.error(where, "environment scope must be object")
+			continue
+		scope_id = str(scope.get("scope_id", "") or "").strip()
+		if not scope_id:
+			ctx.error(where, "missing scope_id")
+		elif scope_id in scope_ids:
+			ctx.error(where, f"duplicate scope_id: {scope_id}")
+		else:
+			scope_ids.add(scope_id)
+		if not isinstance(scope.get("location_ids", []), list) or not scope.get("location_ids", []):
+			ctx.error(where, "location_ids must be non-empty list")
+		else:
+			for lid_raw in list(scope.get("location_ids", []) or []):
+				lid = str(lid_raw or "").strip()
+				if not lid:
+					ctx.error(where, "location_ids contains blank id")
+				elif lid not in location_ids:
+					ctx.error(where, f"location_ids references unknown location: {lid}")
+		if not isinstance(scope.get("variables", {}), dict):
+			ctx.error(where, "variables must be object")
+		if "statuses" in scope and not isinstance(scope.get("statuses", []), list):
+			ctx.error(where, "statuses must be list")
+		if "expire_at_tick" in scope and not isinstance(scope.get("expire_at_tick", {}), dict):
+			ctx.error(where, "expire_at_tick must be object")
 	for idx, task in enumerate(list(world.get("tasks", []) or [])):
 		_validate_world_task(ctx, task, f"{ctx.world_json}.tasks[{idx}]", entity_ids)
 	_validate_parent_containers(ctx, world, entity_ids)
@@ -517,6 +549,17 @@ def _validate_condition(ctx: LintContext, condition: Any, where: str, known_even
 				ctx.error(where, f"compare_fields missing {key}")
 			elif ref.startswith("event."):
 				_validate_event_field(ctx, known_event_type, ref[len("event.") :], where)
+	if c_type == "environment_match":
+		if not str(condition.get("key", "") or "").strip():
+			ctx.error(where, "environment_match missing key")
+		if "value" not in condition:
+			ctx.error(where, "environment_match missing value")
+		op = str(condition.get("op", "==") or "==").strip()
+		if op not in {"==", "!=", "<", "<=", ">", ">="}:
+			ctx.error(where, "environment_match op must be one of ==, !=, <, <=, >, >=")
+	if c_type == "environment_has_status":
+		if not str(condition.get("status_id", "") or "").strip():
+			ctx.error(where, "environment_has_status missing status_id")
 	if c_type == "time_match":
 		op = str(condition.get("op", "==") or "==").strip()
 		if op not in {"==", "!=", "<", "<=", ">", ">="}:
@@ -640,6 +683,16 @@ def _validate_effect_required_fields(ctx: LintContext, eff: str, effect: dict[st
 			ctx.error(where, "ModifyProperty requires exactly one of change/value")
 		if has_change and has_value:
 			ctx.error(where, "ModifyProperty cannot contain both change and value")
+	if eff == "SetEnvironmentVariable":
+		for key in ["scope_id", "key"]:
+			if not _has_nonempty_value(effect, key):
+				ctx.error(where, f"SetEnvironmentVariable missing {key}")
+		if "value" not in effect:
+			ctx.error(where, "SetEnvironmentVariable missing value")
+	if eff in {"AddEnvironmentStatus", "RemoveEnvironmentStatus"}:
+		for key in ["scope_id", "status_id"]:
+			if not _has_nonempty_value(effect, key):
+				ctx.error(where, f"{eff} missing {key}")
 	if eff == "CreateEntity":
 		if not _has_nonempty_value(effect, "template"):
 			ctx.error(where, "CreateEntity missing template")

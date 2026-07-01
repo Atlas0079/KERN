@@ -37,16 +37,16 @@ def _load_companion_smoke_world_and_bundle():
 
 
 class WorldStateEntityPerceptionTests(unittest.TestCase):
-	def test_world_state_entity_is_hidden_from_passive_agent_perception(self):
+	def test_environment_scope_replaces_weather_controller_entity(self):
 		ws, _bundle = _load_camping_smoke_world_and_bundle()
 
 		view = build_full_ws_view(ws, "camper_organizer", "test", {})
 		all_ids = {str(x.get("id", "")) for x in view.get("entities", []) if isinstance(x, dict)}
-		self.assertIn("weather_01", all_ids)
+		self.assertNotIn("weather_01", all_ids)
 
 		perception = build_agent_perception(view, "camper_organizer")
 		visible_ids = {str(x.get("id", "")) for x in perception.get("entities", []) if isinstance(x, dict)}
-		self.assertNotIn("weather_01", visible_ids)
+		self.assertEqual(perception.get("location", {}).get("environment", {}).get("weather"), "clear")
 		self.assertIn("campfire_01", visible_ids)
 
 	def test_passive_perception_uses_base_description(self):
@@ -111,9 +111,9 @@ class WorldStateEntityPerceptionTests(unittest.TestCase):
 
 	def test_dark_location_blocks_passive_entity_perception(self):
 		ws, _bundle = _load_camping_smoke_world_and_bundle()
-		loc = ws.get_location_by_id("camp_main")
-		self.assertIsNotNone(loc)
-		loc.light_level = 0
+		scope = ws.get_environment_scope_by_id("camping_region")
+		self.assertIsNotNone(scope)
+		scope.variables["light_level"] = 0
 
 		view = build_full_ws_view(ws, "camper_organizer", "test", {})
 		perception = build_agent_perception(view, "camper_organizer")

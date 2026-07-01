@@ -255,12 +255,20 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 	for loc in list(getattr(ws, "locations", {}).values()):
 		if loc is None:
 			continue
+		location_id = str(getattr(loc, "location_id", "") or "")
+		environment = {}
+		if hasattr(ws, "get_environment_for_location"):
+			environment = ws.get_environment_for_location(location_id)
+		if not isinstance(environment, dict):
+			environment = {}
+		light_level = _int_or_default(environment.get("light_level", getattr(loc, "light_level", 2)), 2)
 		locations_out.append(
 			{
-				"id": str(getattr(loc, "location_id", "") or ""),
+				"id": location_id,
 				"name": str(getattr(loc, "location_name", "") or ""),
 				"description": str(getattr(loc, "description", "") or ""),
-				"light_level": _int_or_default(getattr(loc, "light_level", 2), 2),
+				"light_level": light_level,
+				"environment": dict(environment),
 				"entities": [str(x) for x in list(getattr(loc, "entities_in_location", []) or []) if str(x)],
 			}
 		)

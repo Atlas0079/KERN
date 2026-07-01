@@ -119,10 +119,6 @@
         {
           "instance_id": "shelter_01",
           "template_id": "Shelter"
-        },
-        {
-          "instance_id": "weather_01",
-          "template_id": "WeatherController"
         }
       ]
     },
@@ -289,6 +285,32 @@
       "instance_id": "initial_rope_01",
       "template_id": "Rope",
       "parent_container": "camp_storage"
+    }
+  ],
+  "environment_scopes": [
+    {
+      "scope_id": "camping_region",
+      "scope_type": "region",
+      "location_ids": [
+        "camp_main",
+        "stream",
+        "forest",
+        "hillside",
+        "hunter_cabin",
+        "wetland",
+        "lookout"
+      ],
+      "priority": 0,
+      "variables": {
+        "weather": "clear",
+        "light_level": 2
+      },
+      "statuses": [
+        "weather_clear"
+      ],
+      "expire_at_tick": {
+        "weather_clear": 360
+      }
     }
   ]
 }

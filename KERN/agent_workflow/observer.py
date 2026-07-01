@@ -111,7 +111,10 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 	self_ent = entities.get(self_id_s, {})
 	self_loc_id = _safe_str(self_ent.get("location_id"))
 	self_loc = locations.get(self_loc_id, {})
-	self_loc_light_level = _int_or_default(self_loc.get("light_level", 2), 2)
+	self_loc_environment = self_loc.get("environment", {}) or {}
+	if not isinstance(self_loc_environment, dict):
+		self_loc_environment = {}
+	self_loc_light_level = _int_or_default(self_loc_environment.get("light_level", self_loc.get("light_level", 2)), 2)
 	perception_blocked_by_darkness = self_loc_light_level <= 0
 	paths = [dict(x) for x in list(view.get("paths", []) or []) if isinstance(x, dict)]
 
@@ -252,6 +255,7 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 			"name": _safe_str(self_loc.get("name")),
 			"description": _safe_str(self_loc.get("description")),
 			"light_level": self_loc_light_level,
+			"environment": dict(self_loc_environment),
 		},
 		"perception_blocked_by_darkness": bool(perception_blocked_by_darkness),
 		"map_topology": _build_map_topology(view),

@@ -174,6 +174,7 @@ def _world_dict_from_world_state(ws: WorldState) -> dict[str, Any]:
 			"current_tick": int(getattr(ws.game_time, "total_ticks", 0) or 0),
 			"tick0_datetime": str(getattr(ws.game_time, "tick0_datetime", "") or ""),
 		},
+		"environment_scopes": [],
 		"locations": [],
 		"entities": [],
 		"tasks": [],
@@ -183,11 +184,18 @@ def _world_dict_from_world_state(ws: WorldState) -> dict[str, Any]:
 	for loc in list(ws.locations.values()):
 		if loc is None:
 			continue
+		location_id = str(getattr(loc, "location_id", "") or "")
+		environment = {}
+		if hasattr(ws, "get_environment_for_location"):
+			environment = ws.get_environment_for_location(location_id)
+		if not isinstance(environment, dict):
+			environment = {}
 		item = {
-			"location_id": str(getattr(loc, "location_id", "") or ""),
+			"location_id": location_id,
 			"location_name": str(getattr(loc, "location_name", "") or ""),
 			"description": str(getattr(loc, "description", "") or ""),
-			"light_level": _int_or_default(getattr(loc, "light_level", 2), 2),
+			"light_level": _int_or_default(environment.get("light_level", getattr(loc, "light_level", 2)), 2),
+			"environment": dict(environment),
 			"entities": [],
 		}
 		lid = str(item["location_id"] or "")
@@ -195,6 +203,29 @@ def _world_dict_from_world_state(ws: WorldState) -> dict[str, Any]:
 			continue
 		world["locations"].append(item)
 		location_map[lid] = item
+
+	for scope in list(getattr(ws, "environment_scopes", {}).values()):
+		if scope is None:
+			continue
+		scope_id = str(getattr(scope, "scope_id", "") or "")
+		if not scope_id:
+			continue
+		variables = getattr(scope, "variables", {}) or {}
+		world["environment_scopes"].append(
+			{
+				"scope_id": scope_id,
+				"scope_type": str(getattr(scope, "scope_type", "region") or "region"),
+				"location_ids": [str(x) for x in list(getattr(scope, "location_ids", []) or []) if str(x)],
+				"priority": int(getattr(scope, "priority", 0) or 0),
+				"variables": dict(variables) if isinstance(variables, dict) else {},
+				"statuses": [str(x) for x in list(getattr(scope, "statuses", []) or []) if str(x)],
+				"expire_at_tick": {
+					str(k): int(v)
+					for k, v in dict(getattr(scope, "expire_at_tick", {}) or {}).items()
+					if str(k)
+				},
+			}
+		)
 
 	for p in list(ws.paths.values()):
 		world["paths"].append(

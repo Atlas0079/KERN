@@ -21,6 +21,7 @@ from KERN.data.archive import ARCHIVE_MANIFEST_FILE_NAME, materialize_archive_st
 TOOLS_DIR = Path(__file__).resolve().parent
 DEFAULT_PORT = 8765
 FRAME_CACHE_LIMIT = 64
+MISSING_TIME_PLACEHOLDER = "[missing time]"
 
 
 def _scene_id_from_config_path(project_root: Path, config_path: Path) -> str:
@@ -255,8 +256,16 @@ class ArchiveViewerData:
 	def _time_str_from_world(self, world: dict) -> str:
 		world_state = world.get("world_state", {}) if isinstance(world, dict) else {}
 		if not isinstance(world_state, dict):
-			return ""
-		return str(world_state.get("time_str", "") or world_state.get("current_time", "") or "")
+			return MISSING_TIME_PLACEHOLDER
+		direct_time = str(
+			world_state.get("time_str", "")
+			or world_state.get("current_time", "")
+			or world_state.get("datetime", "")
+			or ""
+		).strip()
+		if direct_time:
+			return direct_time
+		return MISSING_TIME_PLACEHOLDER
 
 	def _log_rows_for_tick(self, tick: int) -> list[dict]:
 		if self._log_rows_by_tick is None:

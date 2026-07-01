@@ -219,6 +219,59 @@ def _time_every(ws: Any, predicate: dict[str, Any]) -> bool:
 	return (current - offset) % minutes == 0
 
 
+def _location_id_from_ref(ws: Any, ref: Any, ctx: dict[str, Any]) -> str:
+	if ref is None:
+		ref = "self.location_id"
+	if isinstance(ref, str):
+		text = str(ref or "").strip()
+		if text in {"self", "target", "event_entity"}:
+			entity = resolve_entity(ws, text, ctx, allow_literal=True)
+			if entity is None or not hasattr(ws, "get_location_of_entity"):
+				return ""
+			loc = ws.get_location_of_entity(str(getattr(entity, "entity_id", "") or ""))
+			return str(getattr(loc, "location_id", "") or "") if loc is not None else ""
+		value = resolve_value(ws, text, ctx)
+	else:
+		value = ref
+	return str(value or "").strip()
+
+
+def _environment_match(ws: Any, predicate: dict[str, Any], ctx: dict[str, Any]) -> bool:
+	key = str(predicate.get("key", "") or "").strip()
+	if not key or not hasattr(ws, "get_environment_value"):
+		return False
+	location_id = _location_id_from_ref(ws, predicate.get("location_ref", "self.location_id"), ctx)
+	if not location_id:
+		return False
+	actual = ws.get_environment_value(location_id, key, None)
+	expected = predicate.get("value")
+	op = str(predicate.get("op", "==") or "==")
+	return compare_values(actual, expected, op)
+
+
+def _environment_has_status(ws: Any, predicate: dict[str, Any], ctx: dict[str, Any]) -> bool:
+	status_id = str(predicate.get("status_id", "") or "").strip()
+	if not status_id or not hasattr(ws, "environment_scopes"):
+		return False
+	scope_id = str(predicate.get("scope_id", "") or "").strip()
+	if scope_id:
+		scope = ws.get_environment_scope_by_id(scope_id) if hasattr(ws, "get_environment_scope_by_id") else None
+		return bool(scope is not None and hasattr(scope, "has_status") and scope.has_status(status_id))
+	location_ref = predicate.get("location_ref", None)
+	if location_ref is not None:
+		location_id = _location_id_from_ref(ws, location_ref, ctx)
+		if not location_id:
+			return False
+		for scope in list(getattr(ws, "environment_scopes", {}).values()):
+			if scope is not None and scope.covers_location(location_id) and scope.has_status(status_id):
+				return True
+		return False
+	for scope in list(getattr(ws, "environment_scopes", {}).values()):
+		if scope is not None and hasattr(scope, "has_status") and scope.has_status(status_id):
+			return True
+	return False
+
+
 def resolve_value(ws: Any, ref: Any, context: dict[str, Any] | None) -> Any:
 	if not isinstance(ref, str):
 		return ref
@@ -384,6 +437,10 @@ def evaluate_predicate(ws: Any, predicate: dict[str, Any] | None, context: dict[
 		return _time_between(ws, predicate)
 	if p_type == "time_every":
 		return _time_every(ws, predicate)
+	if p_type == "environment_match":
+		return _environment_match(ws, predicate, ctx)
+	if p_type == "environment_has_status":
+		return _environment_has_status(ws, predicate, ctx)
 	if p_type == "inventory_contains":
 		owner = resolve_entity(ws, predicate.get("owner", "self"), ctx, allow_literal=True)
 		item = resolve_entity(ws, predicate.get("item_ref", "target"), ctx, allow_literal=True)
