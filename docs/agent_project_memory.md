@@ -133,6 +133,60 @@ Current `DataBundle` fields are:
 - `world`
 - `named_bundles`
 
+## Environment Scopes
+
+`World.json.environment_scopes` defines explicit environment scopes: developers
+choose which locations share the same environment fields and conditions, such as a
+shared weather region.
+
+Current scope shape:
+
+```json
+{
+  "scope_id": "camping_region",
+  "scope_type": "region",
+  "location_ids": ["camp_main", "forest"],
+  "priority": 0,
+  "fields": {
+    "weather": "clear",
+    "light_level": 2
+  },
+  "conditions": ["foggy"],
+  "condition_expire_at_tick": {
+    "foggy": 60
+  }
+}
+```
+
+`fields` are custom keyed values such as `weather`, `light_level`,
+`temperature`, or `wind_level`. `conditions` are boolean-like environment tags and
+are deliberately separate from entity `StatusComponent.statuses`.
+
+Weather itself is a field (`fields.weather`), not a condition. Conditions should
+represent additional boolean-like facts that can coexist with weather, such as
+`foggy`, `muddy_ground`, or `low_visibility`.
+
+`WorldState.get_environment_for_location(location_id)` merges all scopes covering
+the location by `(priority, scope_id)` order; later scopes overwrite earlier
+same-name fields. This supports broad defaults plus local overrides, for example
+regional weather with a dark cave overriding only `light_level`.
+
+Environment scope write effects:
+
+- `SetEnvironmentField`
+- `AddEnvironmentCondition`
+- `RemoveEnvironmentCondition`
+- `EnvironmentConditionTick`
+
+Environment scope predicates:
+
+- `environment_field_match`
+- `environment_has_condition`
+
+Scope rotation is data-driven through reactions and effect bundles. The kernel
+does not provide a special weather scheduler; scenarios should use reactions,
+time predicates, random bundles, and the environment effects above.
+
 ## Effect System
 
 Effect bundles are normalized by `KERN.effect_bundle.effect_bundle_from_raw`.
@@ -141,12 +195,16 @@ Current bundle shape:
 
 ```json
 {
-  "effects": [],
-  "react_per_effect": false
+  "effects": []
 }
 ```
 
-`react_per_effect` is optional and only emitted when true by `EffectBundle.to_dict()`.
+Bundles are the transaction boundary. If any effect in a bundle returns an
+execution error, the executor rolls back the bundle's world-state changes and
+returns only the failure event. Successful effect events are published after the
+whole bundle commits, in effect order, so reactions observe committed world
+state rather than intermediate state. `react_per_effect` is deprecated and
+ignored.
 
 Known effect types are declared in `KERN.effect_contract.EFFECT_SPECS`. The executor
 resolves binder and handler function names from that contract. Do not add effect

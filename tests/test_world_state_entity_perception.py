@@ -113,7 +113,7 @@ class WorldStateEntityPerceptionTests(unittest.TestCase):
 		ws, _bundle = _load_camping_smoke_world_and_bundle()
 		scope = ws.get_environment_scope_by_id("camping_region")
 		self.assertIsNotNone(scope)
-		scope.variables["light_level"] = 0
+		scope.fields["light_level"] = 0
 
 		view = build_full_ws_view(ws, "camper_organizer", "test", {})
 		perception = build_agent_perception(view, "camper_organizer")

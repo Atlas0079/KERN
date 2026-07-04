@@ -7,6 +7,8 @@ from typing import Any
 @dataclass
 class EffectBundle:
 	effects: list[dict[str, Any]] = field(default_factory=list)
+	# Deprecated: bundles are now the transaction boundary, so intermediate
+	# effect events are published only after the whole bundle commits.
 	react_per_effect: bool = False
 
 	def is_empty(self) -> bool:
@@ -14,8 +16,6 @@ class EffectBundle:
 
 	def to_dict(self) -> dict[str, Any]:
 		out: dict[str, Any] = {"effects": [dict(x) for x in list(self.effects or []) if isinstance(x, dict)]}
-		if bool(self.react_per_effect):
-			out["react_per_effect"] = True
 		return out
 
 

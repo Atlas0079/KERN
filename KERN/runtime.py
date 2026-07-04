@@ -483,18 +483,6 @@ class KernRuntime:
 			abort_actor_id="",
 		)
 
-		# 2) Advance time
-		self.world_state.game_time.advance_ticks(self.ticks_per_step)
-		events.append(
-			{
-				"type": "WorldTickAdvanced",
-				"total_ticks": ws.game_time.total_ticks,
-				"time": ws.game_time.time_to_string(),
-			}
-		)
-		logger.debug("tick", "tick_advanced", context=dict(events[-1]))
-		ws.record_event(events[-1], {"actor_id": ""})
-
 		# Runtime execution entrypoint used by effects/workflow.
 		# It executes a bundle, records emitted events, and recursively runs reactions
 		# triggered by those events until no more reactions match or max depth is reached.
@@ -590,14 +578,6 @@ class KernRuntime:
 					result_events = executor_error(f"invalid bundle ({exc})")
 					_record_events_and_run_reactions(result_events, ctx, depth, "Bundle")
 					return
-				if bool(bundle.react_per_effect):
-					for inner_eff in list(bundle.effects or []):
-						if not isinstance(inner_eff, dict):
-							continue
-						_execute_effect_with_reactions(dict(inner_eff), dict(ctx or {}), depth)
-						if ws.runtime_state.abort_requested or not bool(self.is_running):
-							return
-					return
 				logger.debug("bundle", "execute", context={"bundle": bundle.to_dict(), "context": dict(ctx or {}), "depth": int(depth)})
 				result_events = self.executor.execute_bundle(ws, bundle, ctx)
 				_record_events_and_run_reactions(result_events, ctx, depth, "Bundle")
@@ -615,6 +595,27 @@ class KernRuntime:
 			return collected_events
 
 		ws.services["execute"] = execute_with_reactions
+
+		# 2) Advance time and dispatch the world-level tick through reactions.
+		self.world_state.game_time.advance_ticks(self.ticks_per_step)
+		world_tick_event = {
+			"type": "WorldTickAdvanced",
+			"total_ticks": ws.game_time.total_ticks,
+			"time": ws.game_time.time_to_string(),
+		}
+		world_tick_ctx = {"actor_id": ""}
+		logger.debug("tick", "tick_advanced", context=dict(world_tick_event))
+		ws.record_event(world_tick_event, world_tick_ctx)
+		events.append(dict(world_tick_event))
+		if self.trigger_system is not None:
+			reqs = self.trigger_system.build_reaction_effects(ws, world_tick_event, world_tick_ctx)
+			for req in list(reqs or []):
+				rbundle = req.get("bundle", {}) or {}
+				rctx = req.get("context", {}) or {}
+				if isinstance(rctx, dict):
+					execute_with_reactions(rbundle, rctx)
+					if ws.runtime_state.abort_requested or not bool(self.is_running):
+						break
 
 		# 3) Dispatch AdvanceTick events per entity, then let Reactions decide which effects to run.
 		for ent_id in list(ws.entities.keys()):

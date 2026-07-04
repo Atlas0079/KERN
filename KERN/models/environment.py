@@ -10,9 +10,9 @@ class EnvironmentScope:
 	scope_type: str = "region"
 	location_ids: list[str] = field(default_factory=list)
 	priority: int = 0
-	variables: dict[str, Any] = field(default_factory=dict)
-	statuses: list[str] = field(default_factory=list)
-	expire_at_tick: dict[str, int] = field(default_factory=dict)
+	fields: dict[str, Any] = field(default_factory=dict)
+	conditions: list[str] = field(default_factory=list)
+	condition_expire_at_tick: dict[str, int] = field(default_factory=dict)
 
 	def covers_location(self, location_id: str) -> bool:
 		lid = str(location_id or "").strip()
@@ -20,8 +20,8 @@ class EnvironmentScope:
 			return False
 		return lid in {str(x) for x in list(self.location_ids or []) if str(x)}
 
-	def has_status(self, status_id: str) -> bool:
-		sid = str(status_id or "").strip()
-		if not sid:
+	def has_condition(self, condition_id: str) -> bool:
+		cid = str(condition_id or "").strip()
+		if not cid:
 			return False
-		return sid in {str(x) for x in list(self.statuses or []) if str(x)}
+		return cid in {str(x) for x in list(self.conditions or []) if str(x)}

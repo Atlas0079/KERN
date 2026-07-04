@@ -1,12 +1,12 @@
 {
     "rules": [
     {
-      "id": "world_tick_environment_status",
+      "id": "world_tick_environment_condition",
       "on_event": "WorldTickAdvanced",
       "bundle": {
         "effects": [
           {
-            "effect": "EnvironmentStatusTick"
+            "effect": "EnvironmentConditionTick"
           }
         ]
       }

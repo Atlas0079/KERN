@@ -5,7 +5,7 @@ from typing import Any
 from ._effect_binder import BindError, _base_bind, _require_param, _resolve_param_token
 
 
-def _bind_set_environment_variable(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+def _bind_set_environment_field(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
 	effect_type, params, ctx = _base_bind(effect_data, context)
 	scope_id = str(_resolve_param_token(_require_param(params, effect_type, "scope_id"), ctx) or "").strip()
 	key = str(_resolve_param_token(_require_param(params, effect_type, "key"), ctx) or "").strip()
@@ -17,15 +17,15 @@ def _bind_set_environment_variable(_ws: Any, effect_data: dict[str, Any], contex
 	return {"effect": effect_type, "scope_id": scope_id, "key": key, "value": value}, ctx
 
 
-def _bind_add_environment_status(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+def _bind_add_environment_condition(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
 	effect_type, params, ctx = _base_bind(effect_data, context)
 	scope_id = str(_resolve_param_token(_require_param(params, effect_type, "scope_id"), ctx) or "").strip()
-	status_id = str(_resolve_param_token(_require_param(params, effect_type, "status_id"), ctx) or "").strip()
+	condition_id = str(_resolve_param_token(_require_param(params, effect_type, "condition_id"), ctx) or "").strip()
 	if not scope_id:
 		raise BindError(effect_type, ["scope_id"])
-	if not status_id:
-		raise BindError(effect_type, ["status_id"])
-	out: dict[str, Any] = {"effect": effect_type, "scope_id": scope_id, "status_id": status_id}
+	if not condition_id:
+		raise BindError(effect_type, ["condition_id"])
+	out: dict[str, Any] = {"effect": effect_type, "scope_id": scope_id, "condition_id": condition_id}
 	if "duration_ticks" in params:
 		try:
 			out["duration_ticks"] = int(_resolve_param_token(params.get("duration_ticks"), ctx))
@@ -34,18 +34,18 @@ def _bind_add_environment_status(_ws: Any, effect_data: dict[str, Any], context:
 	return out, ctx
 
 
-def _bind_remove_environment_status(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+def _bind_remove_environment_condition(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
 	effect_type, params, ctx = _base_bind(effect_data, context)
 	scope_id = str(_resolve_param_token(_require_param(params, effect_type, "scope_id"), ctx) or "").strip()
-	status_id = str(_resolve_param_token(_require_param(params, effect_type, "status_id"), ctx) or "").strip()
+	condition_id = str(_resolve_param_token(_require_param(params, effect_type, "condition_id"), ctx) or "").strip()
 	if not scope_id:
 		raise BindError(effect_type, ["scope_id"])
-	if not status_id:
-		raise BindError(effect_type, ["status_id"])
-	return {"effect": effect_type, "scope_id": scope_id, "status_id": status_id}, ctx
+	if not condition_id:
+		raise BindError(effect_type, ["condition_id"])
+	return {"effect": effect_type, "scope_id": scope_id, "condition_id": condition_id}, ctx
 
 
-def _bind_environment_status_tick(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+def _bind_environment_condition_tick(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
 	effect_type, params, ctx = _base_bind(effect_data, context)
 	scope_id = str(_resolve_param_token(params.get("scope_id", ""), ctx) or "").strip()
 	return {"effect": effect_type, "scope_id": scope_id}, ctx
@@ -60,25 +60,25 @@ def _require_scope(ws: Any, scope_id: str, effect_name: str) -> tuple[Any, list[
 	return scope, None
 
 
-def execute_set_environment_variable(_executor: Any, ws: Any, data: dict[str, Any], _context: dict[str, Any]) -> list[dict[str, Any]]:
+def execute_set_environment_field(_executor: Any, ws: Any, data: dict[str, Any], _context: dict[str, Any]) -> list[dict[str, Any]]:
 	scope_id = str(data.get("scope_id", "") or "").strip()
 	key = str(data.get("key", "") or "").strip()
 	if not scope_id:
-		return [{"type": "ExecutorError", "message": "SetEnvironmentVariable: scope_id missing"}]
+		return [{"type": "ExecutorError", "message": "SetEnvironmentField: scope_id missing"}]
 	if not key:
-		return [{"type": "ExecutorError", "message": "SetEnvironmentVariable: key missing"}]
-	scope, err = _require_scope(ws, scope_id, "SetEnvironmentVariable")
+		return [{"type": "ExecutorError", "message": "SetEnvironmentField: key missing"}]
+	scope, err = _require_scope(ws, scope_id, "SetEnvironmentField")
 	if err is not None:
 		return err
-	variables = getattr(scope, "variables", None)
-	if not isinstance(variables, dict):
-		scope.variables = {}
-	old_value = scope.variables.get(key)
+	fields = getattr(scope, "fields", None)
+	if not isinstance(fields, dict):
+		scope.fields = {}
+	old_value = scope.fields.get(key)
 	new_value = data.get("value")
-	scope.variables[key] = new_value
+	scope.fields[key] = new_value
 	return [
 		{
-			"type": "EnvironmentVariableSet",
+			"type": "EnvironmentFieldSet",
 			"scope_id": scope_id,
 			"key": key,
 			"old_value": old_value,
@@ -87,20 +87,20 @@ def execute_set_environment_variable(_executor: Any, ws: Any, data: dict[str, An
 	]
 
 
-def execute_add_environment_status(_executor: Any, ws: Any, data: dict[str, Any], _context: dict[str, Any]) -> list[dict[str, Any]]:
+def execute_add_environment_condition(_executor: Any, ws: Any, data: dict[str, Any], _context: dict[str, Any]) -> list[dict[str, Any]]:
 	scope_id = str(data.get("scope_id", "") or "").strip()
-	status_id = str(data.get("status_id", "") or "").strip()
+	condition_id = str(data.get("condition_id", "") or "").strip()
 	if not scope_id:
-		return [{"type": "ExecutorError", "message": "AddEnvironmentStatus: scope_id missing"}]
-	if not status_id:
-		return [{"type": "ExecutorError", "message": "AddEnvironmentStatus: status_id missing"}]
-	scope, err = _require_scope(ws, scope_id, "AddEnvironmentStatus")
+		return [{"type": "ExecutorError", "message": "AddEnvironmentCondition: scope_id missing"}]
+	if not condition_id:
+		return [{"type": "ExecutorError", "message": "AddEnvironmentCondition: condition_id missing"}]
+	scope, err = _require_scope(ws, scope_id, "AddEnvironmentCondition")
 	if err is not None:
 		return err
-	if not isinstance(getattr(scope, "statuses", None), list):
-		scope.statuses = []
-	if status_id not in scope.statuses:
-		scope.statuses.append(status_id)
+	if not isinstance(getattr(scope, "conditions", None), list):
+		scope.conditions = []
+	if condition_id not in scope.conditions:
+		scope.conditions.append(condition_id)
 	expire_at_tick = None
 	if "duration_ticks" in data:
 		try:
@@ -110,34 +110,34 @@ def execute_add_environment_status(_executor: Any, ws: Any, data: dict[str, Any]
 		if duration_ticks > 0:
 			now_tick = int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
 			expire_at_tick = int(now_tick + duration_ticks)
-			scope.expire_at_tick[status_id] = expire_at_tick
+			scope.condition_expire_at_tick[condition_id] = expire_at_tick
 		else:
-			scope.expire_at_tick.pop(status_id, None)
-	return [{"type": "EnvironmentStatusAdded", "scope_id": scope_id, "status_id": status_id, "expire_at_tick": expire_at_tick}]
+			scope.condition_expire_at_tick.pop(condition_id, None)
+	return [{"type": "EnvironmentConditionAdded", "scope_id": scope_id, "condition_id": condition_id, "expire_at_tick": expire_at_tick}]
 
 
-def execute_remove_environment_status(_executor: Any, ws: Any, data: dict[str, Any], _context: dict[str, Any]) -> list[dict[str, Any]]:
+def execute_remove_environment_condition(_executor: Any, ws: Any, data: dict[str, Any], _context: dict[str, Any]) -> list[dict[str, Any]]:
 	scope_id = str(data.get("scope_id", "") or "").strip()
-	status_id = str(data.get("status_id", "") or "").strip()
+	condition_id = str(data.get("condition_id", "") or "").strip()
 	if not scope_id:
-		return [{"type": "ExecutorError", "message": "RemoveEnvironmentStatus: scope_id missing"}]
-	if not status_id:
-		return [{"type": "ExecutorError", "message": "RemoveEnvironmentStatus: status_id missing"}]
-	scope, err = _require_scope(ws, scope_id, "RemoveEnvironmentStatus")
+		return [{"type": "ExecutorError", "message": "RemoveEnvironmentCondition: scope_id missing"}]
+	if not condition_id:
+		return [{"type": "ExecutorError", "message": "RemoveEnvironmentCondition: condition_id missing"}]
+	scope, err = _require_scope(ws, scope_id, "RemoveEnvironmentCondition")
 	if err is not None:
 		return err
-	if status_id in list(getattr(scope, "statuses", []) or []):
-		scope.statuses.remove(status_id)
-	scope.expire_at_tick.pop(status_id, None)
-	return [{"type": "EnvironmentStatusRemoved", "scope_id": scope_id, "status_id": status_id}]
+	if condition_id in list(getattr(scope, "conditions", []) or []):
+		scope.conditions.remove(condition_id)
+	scope.condition_expire_at_tick.pop(condition_id, None)
+	return [{"type": "EnvironmentConditionRemoved", "scope_id": scope_id, "condition_id": condition_id}]
 
 
-def execute_environment_status_tick(_executor: Any, ws: Any, data: dict[str, Any], _context: dict[str, Any]) -> list[dict[str, Any]]:
+def execute_environment_condition_tick(_executor: Any, ws: Any, data: dict[str, Any], _context: dict[str, Any]) -> list[dict[str, Any]]:
 	now_tick = int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
 	wanted_scope_id = str(data.get("scope_id", "") or "").strip()
 	scopes = []
 	if wanted_scope_id:
-		scope, err = _require_scope(ws, wanted_scope_id, "EnvironmentStatusTick")
+		scope, err = _require_scope(ws, wanted_scope_id, "EnvironmentConditionTick")
 		if err is not None:
 			return err
 		scopes = [scope]
@@ -148,10 +148,10 @@ def execute_environment_status_tick(_executor: Any, ws: Any, data: dict[str, Any
 		if scope is None:
 			continue
 		scope_id = str(getattr(scope, "scope_id", "") or "")
-		expire_map = dict(getattr(scope, "expire_at_tick", {}) or {})
-		for status_id, expire_tick in list(expire_map.items()):
-			sid = str(status_id or "")
-			if not sid:
+		expire_map = dict(getattr(scope, "condition_expire_at_tick", {}) or {})
+		for condition_id, expire_tick in list(expire_map.items()):
+			cid = str(condition_id or "")
+			if not cid:
 				continue
 			try:
 				expire_i = int(expire_tick)
@@ -159,8 +159,8 @@ def execute_environment_status_tick(_executor: Any, ws: Any, data: dict[str, Any
 				expire_i = -1
 			if expire_i <= 0 or now_tick < expire_i:
 				continue
-			if sid in list(getattr(scope, "statuses", []) or []):
-				scope.statuses.remove(sid)
-			scope.expire_at_tick.pop(sid, None)
-			events.append({"type": "EnvironmentStatusExpired", "scope_id": scope_id, "status_id": sid})
+			if cid in list(getattr(scope, "conditions", []) or []):
+				scope.conditions.remove(cid)
+			scope.condition_expire_at_tick.pop(cid, None)
+			events.append({"type": "EnvironmentConditionExpired", "scope_id": scope_id, "condition_id": cid})
 	return events

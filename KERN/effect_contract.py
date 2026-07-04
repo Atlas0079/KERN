@@ -38,10 +38,10 @@ EFFECT_SPECS: dict[str, dict[str, str]] = {
 	"EmitEvent": {"module": "KERN.executor._effect_event"},
 	"ExchangeResources": {"module": "KERN.executor._effect_resource"},
 	"AbortSimulation": {"module": "KERN.executor._effect_resource"},
-	"SetEnvironmentVariable": {"module": "KERN.executor._effect_environment"},
-	"AddEnvironmentStatus": {"module": "KERN.executor._effect_environment"},
-	"RemoveEnvironmentStatus": {"module": "KERN.executor._effect_environment"},
-	"EnvironmentStatusTick": {"module": "KERN.executor._effect_environment"},
+	"SetEnvironmentField": {"module": "KERN.executor._effect_environment"},
+	"AddEnvironmentCondition": {"module": "KERN.executor._effect_environment"},
+	"RemoveEnvironmentCondition": {"module": "KERN.executor._effect_environment"},
+	"EnvironmentConditionTick": {"module": "KERN.executor._effect_environment"},
 }
 
 EFFECT_TYPES = frozenset(EFFECT_SPECS.keys())

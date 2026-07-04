@@ -210,18 +210,18 @@ def _world_dict_from_world_state(ws: WorldState) -> dict[str, Any]:
 		scope_id = str(getattr(scope, "scope_id", "") or "")
 		if not scope_id:
 			continue
-		variables = getattr(scope, "variables", {}) or {}
+		fields = getattr(scope, "fields", {}) or {}
 		world["environment_scopes"].append(
 			{
 				"scope_id": scope_id,
 				"scope_type": str(getattr(scope, "scope_type", "region") or "region"),
 				"location_ids": [str(x) for x in list(getattr(scope, "location_ids", []) or []) if str(x)],
 				"priority": int(getattr(scope, "priority", 0) or 0),
-				"variables": dict(variables) if isinstance(variables, dict) else {},
-				"statuses": [str(x) for x in list(getattr(scope, "statuses", []) or []) if str(x)],
-				"expire_at_tick": {
+				"fields": dict(fields) if isinstance(fields, dict) else {},
+				"conditions": [str(x) for x in list(getattr(scope, "conditions", []) or []) if str(x)],
+				"condition_expire_at_tick": {
 					str(k): int(v)
-					for k, v in dict(getattr(scope, "expire_at_tick", {}) or {}).items()
+					for k, v in dict(getattr(scope, "condition_expire_at_tick", {}) or {}).items()
 					if str(k)
 				},
 			}

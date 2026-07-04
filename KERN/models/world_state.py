@@ -197,13 +197,13 @@ class WorldState:
 			key=lambda scope: (int(getattr(scope, "priority", 0) or 0), str(getattr(scope, "scope_id", "") or "")),
 		)
 		for scope in scopes:
-			variables = getattr(scope, "variables", {}) or {}
-			if isinstance(variables, dict):
-				for key, value in variables.items():
+			fields = getattr(scope, "fields", {}) or {}
+			if isinstance(fields, dict):
+				for key, value in fields.items():
 					merged[str(key)] = value
 		return merged
 
-	def get_environment_value(self, location_id: str, key: str, default: Any = None) -> Any:
+	def get_environment_field(self, location_id: str, key: str, default: Any = None) -> Any:
 		name = str(key or "").strip()
 		if not name:
 			return default

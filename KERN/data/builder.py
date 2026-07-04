@@ -128,11 +128,11 @@ def build_world_state(
 			for item in list(scope_data.get("location_ids", []) or [])
 			if str(item).strip()
 		]
-		variables = scope_data.get("variables", {}) or {}
-		if not isinstance(variables, dict):
-			variables = {}
-		statuses = [str(item) for item in list(scope_data.get("statuses", []) or []) if str(item)]
-		expire_raw = scope_data.get("expire_at_tick", {}) or {}
+		fields = scope_data.get("fields", {}) or {}
+		if not isinstance(fields, dict):
+			fields = {}
+		conditions = [str(item) for item in list(scope_data.get("conditions", []) or []) if str(item)]
+		expire_raw = scope_data.get("condition_expire_at_tick", {}) or {}
 		expire_map: dict[str, int] = {}
 		if isinstance(expire_raw, dict):
 			for key, value in expire_raw.items():
@@ -146,9 +146,9 @@ def build_world_state(
 				scope_type=str(scope_data.get("scope_type", "region") or "region"),
 				location_ids=location_ids,
 				priority=_int_or_default(scope_data.get("priority", 0), 0),
-				variables=dict(variables),
-				statuses=statuses,
-				expire_at_tick=expire_map,
+				fields=dict(fields),
+				conditions=conditions,
+				condition_expire_at_tick=expire_map,
 			)
 		)
 

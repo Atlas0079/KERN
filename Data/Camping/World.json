@@ -301,16 +301,11 @@
         "lookout"
       ],
       "priority": 0,
-      "variables": {
+      "fields": {
         "weather": "clear",
         "light_level": 2
       },
-      "statuses": [
-        "weather_clear"
-      ],
-      "expire_at_tick": {
-        "weather_clear": 360
-      }
+      "conditions": []
     }
   ]
 }
