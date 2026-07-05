@@ -20,6 +20,7 @@ from .data.loader import load_data_bundle
 from .effect_bundle import effect_bundle_from_raw
 from .execution_errors import executor_error, is_execution_error_event
 from .executor.executor import WorldExecutor
+from .external_runtime import ExternalRuntimeBridge
 from .interaction.engine import InteractionEngine
 from .log_manager import configure_logger, get_logger
 from .models.world_state import WorldState
@@ -103,6 +104,7 @@ class KernRuntime:
 	# Optional: Route different action providers by provider_id (Player/LLM/Script/Replay, etc.)
 	# If an entity's controller provider_id is not in this table, the entity will not produce actions in the decision loop (Safe default).
 	action_providers: dict[str, Any] = field(default_factory=dict)
+	external_runtimes: dict[str, Any] = field(default_factory=dict)
 	reaction_rules: list[dict[str, Any]] = field(default_factory=list)
 	trigger_system: TriggerSystem | None = None
 
@@ -468,6 +470,7 @@ class KernRuntime:
 			"interaction_engine": self.interaction_engine,
 			"default_action_provider": self.action_provider,
 			"action_providers": dict(self.action_providers or {}),
+			"external_runtime_bridge": ExternalRuntimeBridge(dict(self.external_runtimes or {})),
 			"request_stop": self.request_stop,
 		}
 		from .models.runtime_state import RuntimeState
