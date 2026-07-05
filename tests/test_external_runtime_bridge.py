@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import tempfile
 import unittest
+from pathlib import Path
 
+from KERN.data.archive import ArchiveRecorder
 from KERN.agent_workflow.simple_policy import SimplePolicyActionProvider
 from KERN.executor.executor import WorldExecutor
 from KERN.external_runtime import ExternalRuntimeBridge
@@ -31,6 +34,25 @@ class MockExternalRuntime:
 class BadEventExternalRuntime:
 	def invoke(self, operation: str, payload: dict, context: dict) -> list[object]:
 		return [{"type": "GoodEvent"}, "bad"]
+
+
+class CheckpointExternalRuntime:
+	def __init__(self, fail: bool = False) -> None:
+		self.fail = bool(fail)
+		self.saved: list[dict] = []
+		self.restored: list[dict] = []
+
+	def save_checkpoint(self, context: dict) -> list[dict]:
+		if self.fail:
+			raise RuntimeError("save failed")
+		self.saved.append(dict(context))
+		return [{"type": "ExternalCheckpointSaved", "runtime_id": str(context.get("runtime_id", "")), "tick": int(context.get("tick", 0) or 0)}]
+
+	def restore_checkpoint(self, context: dict) -> list[dict]:
+		if self.fail:
+			raise RuntimeError("restore failed")
+		self.restored.append(dict(context))
+		return [{"type": "ExternalCheckpointRestored", "runtime_id": str(context.get("runtime_id", "")), "tick": int(context.get("tick", 0) or 0)}]
 
 
 def _world() -> WorldState:
@@ -73,6 +95,19 @@ class ExternalRuntimeBridgeTests(unittest.TestCase):
 		self.assertEqual(events[0]["kind"], "contract")
 		self.assertEqual(events[0]["code"], "EXTERNAL_RUNTIME_BAD_EVENT")
 
+	def test_checkpoint_lifecycle_routes_to_named_adapters(self) -> None:
+		adapter = CheckpointExternalRuntime()
+		bridge = ExternalRuntimeBridge({"social": adapter})
+
+		save_events = bridge.save_checkpoint({"run_id": "run_01", "tick": 3})
+		restore_events = bridge.restore_checkpoint({"run_id": "run_01", "tick": 3})
+
+		self.assertEqual(save_events[0]["type"], "ExternalCheckpointSaved")
+		self.assertEqual(restore_events[0]["type"], "ExternalCheckpointRestored")
+		self.assertEqual(adapter.saved[0]["runtime_id"], "social")
+		self.assertEqual(adapter.restored[0]["runtime_id"], "social")
+		self.assertEqual(adapter.saved[0]["run_id"], "run_01")
+
 	def test_runtime_injects_external_runtime_bridge_service(self) -> None:
 		adapter = MockExternalRuntime()
 		runtime = KernRuntime(
@@ -91,6 +126,93 @@ class ExternalRuntimeBridgeTests(unittest.TestCase):
 		events = bridge.invoke("social", "send_message", {"text": "hi"}, {"self_id": "agent_01"})
 		self.assertEqual(events[0]["type"], "MockExternalOperationInvoked")
 		self.assertEqual(adapter.calls[0]["payload"], {"text": "hi"})
+
+	def test_runtime_checkpoint_save_notifies_external_runtime(self) -> None:
+		with tempfile.TemporaryDirectory() as td:
+			adapter = CheckpointExternalRuntime()
+			runtime = KernRuntime(
+				world_state=_world(),
+				interaction_engine=InteractionEngine(recipe_db={}),
+				executor=WorldExecutor(),
+				action_provider=SimplePolicyActionProvider(),
+				external_runtimes={"social": adapter},
+				checkpoint_enabled=True,
+				checkpoint_dir=td,
+				checkpoint_snapshot_interval_ticks=1,
+			)
+
+			runtime.record_initial_state()
+
+			self.assertEqual(len(adapter.saved), 1)
+			self.assertEqual(adapter.saved[0]["tick"], 0)
+			self.assertEqual(adapter.saved[0]["run_id"], runtime.run_id)
+
+	def test_runtime_checkpoint_save_failure_interrupts(self) -> None:
+		with tempfile.TemporaryDirectory() as td:
+			runtime = KernRuntime(
+				world_state=_world(),
+				interaction_engine=InteractionEngine(recipe_db={}),
+				executor=WorldExecutor(),
+				action_provider=SimplePolicyActionProvider(),
+				external_runtimes={"social": CheckpointExternalRuntime(fail=True)},
+				checkpoint_enabled=True,
+				checkpoint_dir=td,
+				checkpoint_snapshot_interval_ticks=1,
+			)
+
+			with self.assertRaises(RuntimeError):
+				runtime.record_initial_state()
+
+	def test_from_config_restore_notifies_external_runtime_before_runtime_construction(self) -> None:
+		project_root = Path(__file__).resolve().parents[1]
+		with tempfile.TemporaryDirectory() as td:
+			base_runtime = KernRuntime.from_config(
+				project_root,
+				"runtime_config.camping.smoke.json",
+				validate=False,
+				configure_logging=False,
+				overrides={"CHECKPOINT_EVERY_TICK": "0"},
+			)
+			recorder = ArchiveRecorder(archive_dir=td, run_id="restore_run", snapshot_interval_ticks=1, include_logs=True)
+			recorder.record_tick(base_runtime.world_state)
+			adapter = CheckpointExternalRuntime()
+
+			restored_runtime = KernRuntime.from_config(
+				project_root,
+				"runtime_config.camping.smoke.json",
+				validate=False,
+				configure_logging=False,
+				overrides={"CHECKPOINT_RESTORE_DIR": td, "CHECKPOINT_EVERY_TICK": "0"},
+				external_runtimes={"social": adapter},
+			)
+
+			self.assertEqual(restored_runtime.world_state.game_time.total_ticks, 0)
+			self.assertEqual(len(adapter.restored), 1)
+			self.assertEqual(adapter.restored[0]["run_id"], "restore_run")
+			self.assertEqual(adapter.restored[0]["tick"], 0)
+
+	def test_from_config_restore_failure_interrupts(self) -> None:
+		project_root = Path(__file__).resolve().parents[1]
+		with tempfile.TemporaryDirectory() as td:
+			base_runtime = KernRuntime.from_config(
+				project_root,
+				"runtime_config.camping.smoke.json",
+				validate=False,
+				configure_logging=False,
+				overrides={"CHECKPOINT_EVERY_TICK": "0"},
+			)
+			recorder = ArchiveRecorder(archive_dir=td, run_id="restore_run", snapshot_interval_ticks=1, include_logs=True)
+			recorder.record_tick(base_runtime.world_state)
+
+			with self.assertRaises(RuntimeError):
+				KernRuntime.from_config(
+					project_root,
+					"runtime_config.camping.smoke.json",
+					validate=False,
+					configure_logging=False,
+					overrides={"CHECKPOINT_RESTORE_DIR": td, "CHECKPOINT_EVERY_TICK": "0"},
+					external_runtimes={"social": CheckpointExternalRuntime(fail=True)},
+				)
 
 
 if __name__ == "__main__":
