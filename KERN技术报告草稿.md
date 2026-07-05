@@ -82,23 +82,35 @@ KERN 在规则层采用四个核心抽象：
 
 单个 `Effect` 描述一次原子写操作，而 `EffectBundle` 描述一组按顺序执行的 Effect。引入 Bundle 的原因是：一次动作往往不只产生一个结果。例如“开枪”可能同时消耗子弹、修改武器状态、写入广播事件；“完成任务”可能同时修改状态、生产物品并触发后续事件。将这些结果组织为 Bundle，可以让 Recipe、Reaction 与 Task 使用同一套状态变更结构。
 
+当前版本将 Bundle 视为事务边界。执行器在进入 Bundle 前保存世界状态快照；若其中任一 Effect 返回执行错误，执行器会撤回整个 Bundle 已产生的世界状态变化，并只返回失败事件。只有当 Bundle 中所有 Effect 均成功时，内部事件才会按 Effect 顺序发布。这样，Reaction 仍然可以响应某一个 Effect 产生的事件，但它观察到的是整个 Bundle 提交后的稳定世界，而不是执行到一半的中间态。
+
 当前版本还支持命名 Bundle 引用、随机分支和批量查询执行。它们虽然提高了规则表达能力，但不会绕过运行时调度：嵌套执行仍会回到统一执行路径，因此事件记录、Reaction 触发和递归深度限制仍然生效。
 
-需要注意的是，这里的“统一执行路径”指 `WorldManager` 注入运行时服务后的执行链。直接孤立调用 `WorldExecutor.execute_bundle(...)` 只会执行 bundle 内 effect 本身，不负责 `react_per_effect`、Reaction 链触发或递归深度管理；测试和工具若需要完整 runtime 语义，应通过 `WorldManager` 或注入等价的 `ws.services["execute"]` 服务。
+需要注意的是，这里的“统一执行路径”指 `KernRuntime` 注入运行时服务后的执行链。直接孤立调用 `WorldExecutor.execute_bundle(...)` 只会执行 bundle 内 effect 本身，不负责 Reaction 链触发或递归深度管理；测试和工具若需要完整 runtime 语义，应通过 `KernRuntime` 或注入等价的 `ws.services["execute"]` 服务。旧字段 `react_per_effect` 已废弃，新的数据不应依赖 Bundle 内部 Effect 的中间事件立即触发 Reaction。
 
-### 4.4 Context、Binder 与 Handler
+### 4.4 EnvironmentScope
+
+`EnvironmentScope` 用于描述不依附于单一实体的环境状态。它的主要用途是让场景作者手动声明哪些地点共享同一组环境字段，例如同一片露营区域共享天气，而洞穴或室内地点可以覆盖局部光照。
+
+一个环境范围由 `scope_id`、`location_ids`、`priority`、`fields`、`conditions` 和 `condition_expire_at_tick` 组成。`fields` 是开放的键值字段，例如 `weather`、`light_level`、`temperature`；`conditions` 是类似标签的环境条件，例如 `foggy`、`muddy_ground` 或 `low_visibility`。天气本身被建模为 `fields.weather`，而不是环境条件，这样可以避免将“当前天气值”和“额外环境事实”混在同一个列表中。
+
+当系统需要读取某个地点的环境时，`WorldState.get_environment_for_location(location_id)` 会收集所有覆盖该地点的 scope，并按 `(priority, scope_id)` 顺序合并字段。较高优先级或较晚合并的 scope 可以覆盖同名字段，因此可以表达“区域默认天气 + 局部地点覆盖光照”的结构。
+
+环境状态通过专门 Effect 修改：`SetEnvironmentField`、`AddEnvironmentCondition`、`RemoveEnvironmentCondition` 与 `EnvironmentConditionTick`。条件系统通过 `environment_field_match` 与 `environment_has_condition` 查询环境。环境轮换没有内置专门调度器，应通过 `Reaction`、时间条件和普通 EffectBundle 数据化表达。
+
+### 4.5 Context、Binder 与 Handler
 
 Effect 执行并不是直接读取 JSON 后修改世界。当前系统将执行过程拆成输入上下文、输入绑定和实际写入三层：上下文描述“这次调用发生在谁身上、由什么事件触发、携带哪些参数”；Binder 负责把原始输入整理为稳定结构；Handler 只处理已经归一化的数据，并通过 `WorldState` API 修改世界状态、返回事件。
 
 这种拆分的好处是：数据格式错误会在 Binder 阶段被拦截；真正修改世界的 Handler 不需要反复处理旧格式、缺字段或参数解析细节。当前项目也遵循“数据适配系统，而不是系统兼容旧数据”的原则：已移除的字段会被 lint 或 Binder 直接拒绝。
 
-### 4.5 动态文本
+### 4.6 动态文本
 
 动态文本用于在少量明确的文本输出字段中引用执行上下文。例如创建尸体时，希望实体名显示为“张三的尸体”，而不是固定写死为“尸体”。它的关键原则是“一次性渲染”：模板只在写入世界、事件或记忆前解析一次，解析结果立即变成普通字符串，不再保留模板语义。
 
 当前实现只允许在受控文本字段中使用动态文本，并禁止在标识符字段中插值。如果文本字段中出现无法解析的占位符，执行会返回错误，而不是静默保留原模板。这一设计可以避免错误模板泄漏进运行时状态。
 
-### 4.6 TaskPolicy
+### 4.7 TaskPolicy
 
 `TaskPolicy` 用于描述长期任务在中断或取消时的处理策略。它不属于运行配置，而是写在 Recipe 的 `process.task_policy` 中，并在创建任务时固化到任务参数里。
 
@@ -106,7 +118,7 @@ Effect 执行并不是直接读取 JSON 后修改世界。当前系统将执行�
 
 Task 的生命周期也支持数据化钩子：`process.start_bundle` 会在任务进入 `InProgress` 时执行，`process.cleanup_bundle` 会在任务离开 `InProgress` 时执行。这样，占用工作台、床、加工站等资源的逻辑可以随任务开始和结束自动绑定，而不是依赖场景脚本手动释放。
 
-### 4.7 规则声明的示例
+### 4.8 规则声明的示例
 
 KERN 的规则并不是硬编码回调，而是声明式配置。例如，环境推进时间后，系统可以通过如下规则推进实体状态：
 
@@ -135,11 +147,12 @@ KERN 的规则并不是硬编码回调，而是声明式配置。例如，环境
 KERN 采用离散 Tick 推进环境。每个 Tick 内部遵循固定顺序：
 
 1. 系统推进全局时间。
-2. 逐个实体派发 `AdvanceTick` 事件。
-3. `TriggerSystem` 根据 `AdvanceTick` 与后续事件匹配 `Reaction`，生成对应的 EffectBundle。
-4. `AgentControlTick`、`WorkerTick`、`StatusTick` 等也通过 Reaction 进入同一执行链，而不是由主循环硬编码为独立阶段。
-5. 当智能体 Workflow 输出 `apply_commands` 时，动作会经过 `InteractionEngine` 匹配主动规则（`Recipe`），再被翻译为即时 EffectBundle 或长期任务。
-6. 所有状态变更指令汇入统一执行器，修改 `WorldState`，写入事件日志与交互日志；当 checkpoint 开启时，同时写出快照。
+2. 记录 `WorldTickAdvanced`，并将该全局事件送入 `TriggerSystem` 匹配 Reaction。环境条件过期、天气轮换等全局时间驱动逻辑应通过这一事件进入系统。
+3. 逐个实体派发 `AdvanceTick` 事件。
+4. `TriggerSystem` 根据 `WorldTickAdvanced`、`AdvanceTick` 与后续提交事件匹配 `Reaction`，生成对应的 EffectBundle。
+5. `AgentControlTick`、`WorkerTick`、`StatusTick`、`EnvironmentConditionTick` 等也通过 Reaction 进入同一执行链，而不是由主循环硬编码为独立阶段。
+6. 当智能体 Workflow 输出 `apply_commands` 时，动作会经过 `InteractionEngine` 匹配主动规则（`Recipe`），再被翻译为即时 EffectBundle 或长期任务。
+7. 所有状态变更指令汇入统一执行器；Effect 或 Bundle 成功提交后，事件才写入日志并继续触发后续 Reaction。当 checkpoint 开启时，系统同时写出快照。
 
 这种固定顺序的好处是，所有仿真过程都有一致的时间基准。动作耗时、任务推进与状态变化都以整数 Tick 为单位推进。对于不依赖 LLM 与随机分支的流程，同一输入更容易复现；对于 `RandomBundle` 或 LLM 行为，需要结合事件日志、checkpoint 和模型调用记录来分析实际分支。
 
@@ -153,9 +166,10 @@ KERN 采用离散 Tick 推进环境。每个 Tick 内部遵循固定顺序：
 2. **归一化与校验**：归一化与校验模块（`Binder`）对指令进行参数补全、类型检查和格式标准化。非法输入在这一阶段被拦截。
 3. **实体解析与上下文合并**：指令中的抽象引用会被解析为真实实体或运行时上下文。
 4. **执行器分发**：执行器根据指令类型将请求发送到具体执行模块（`Handler`）。
-5. **状态落地与事件记录**：执行模块修改 `WorldState`，并派发对应事件写入日志系统。
+5. **事务执行与状态落地**：执行器在 Effect 或 Bundle 执行前保存必要的世界状态快照。若执行成功，状态变化提交，并返回对应事件；若执行失败，状态回滚到执行前。
+6. **提交后事件发布**：只有已经提交的事件才会写入日志系统并继续驱动后续 Reaction。失败的 Bundle 不会发布其内部已经产生过的成功事件。
 
-这一设计的主要收益在于，世界状态具备统一写入口。相比“任意逻辑中直接修改对象字段”的做法，KERN 的方式更冗长，但更容易审计，也更利于定位错误来源。
+这一设计的主要收益在于，世界状态具备统一写入口和明确的提交边界。相比“任意逻辑中直接修改对象字段”的做法，KERN 的方式更冗长，但更容易审计，也更利于定位错误来源；同时，一个失败的 Effect 或 Bundle 不应留下部分成功的世界状态。
 
 ### 5.4 边界防护
 
@@ -164,6 +178,7 @@ KERN 采用离散 Tick 推进环境。每个 Tick 内部遵循固定顺序：
 - `max_trigger_depth`：限制递归触发深度，避免规则互相触发造成死循环。
 - `BindError` / `ExecutorError`：对于不合法的输入或执行失败，不直接破坏运行时，而是形成可追踪的错误记录。
 - 统一执行入口：所有状态写入都要经过执行器，减少隐式副作用。
+- Effect 与 Bundle 事务：单个 Effect 失败时回滚该 Effect 的状态变化；Bundle 中任一 Effect 失败时回滚整个 Bundle 的状态变化。
 
 这部分并不是系统的宣传重点，但它对内核稳定性是必要的基础支撑。
 
