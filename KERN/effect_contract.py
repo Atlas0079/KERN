@@ -42,6 +42,11 @@ EFFECT_SPECS: dict[str, dict[str, str]] = {
 	"AddEnvironmentCondition": {"module": "KERN.executor._effect_environment"},
 	"RemoveEnvironmentCondition": {"module": "KERN.executor._effect_environment"},
 	"EnvironmentConditionTick": {"module": "KERN.executor._effect_environment"},
+	"ObserveSocialFeed": {"module": "KERN.executor._effect_social_platform"},
+	"ObserveSocialPost": {"module": "KERN.executor._effect_social_platform"},
+	"CreateSocialPost": {"module": "KERN.executor._effect_social_platform"},
+	"InteractSocialPost": {"module": "KERN.executor._effect_social_platform"},
+	"FollowSocialAccount": {"module": "KERN.executor._effect_social_platform"},
 }
 
 EFFECT_TYPES = frozenset(EFFECT_SPECS.keys())

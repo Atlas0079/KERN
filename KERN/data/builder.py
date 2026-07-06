@@ -20,6 +20,7 @@ from ..models.components import (
 	MemoryComponent,
 	PerceptionComponent,
 	PlayerControlComponent,
+	ScreenComponent,
 	StatusComponent,
 	TagComponent,
 	TaskHostComponent,
@@ -521,6 +522,27 @@ def _build_component(component_name: str, comp_data: Any):
 			d = {}
 		return PerceptionComponent(
 			enabled=bool(d.get("enabled", True)),
+		)
+
+	if component_name == "ScreenComponent":
+		d = comp_data or {}
+		if not isinstance(d, dict):
+			d = {}
+		current_post = d.get("current_post", None)
+		return ScreenComponent(
+			runtime_id=str(d.get("runtime_id", "weibo") or "weibo"),
+			account_id=str(d.get("account_id", "") or ""),
+			app=str(d.get("app", "") or ""),
+			view=str(d.get("view", "blank") or "blank"),
+			title=str(d.get("title", "") or ""),
+			feed_items=[dict(x) for x in list(d.get("feed_items", []) or []) if isinstance(x, dict)],
+			current_post=dict(current_post) if isinstance(current_post, dict) else None,
+			selected_post_id=str(d.get("selected_post_id", "") or ""),
+			cursor=int(d.get("cursor", 0) or 0),
+			updated_tick=int(d.get("updated_tick", 0) or 0),
+			status_text=str(d.get("status_text", "") or ""),
+			last_event_type=str(d.get("last_event_type", "") or ""),
+			last_error=str(d.get("last_error", "") or ""),
 		)
 
 	if component_name == "EquipmentComponent":

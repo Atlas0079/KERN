@@ -104,6 +104,33 @@ def _event_to_memory_entry(actor_id: str, actor_loc_id: str, item: dict[str, Any
 	ev_type = _safe_str(ev.get("type")).strip()
 	if not ev_type or ev_type in DROP_EVENT_TYPES:
 		return None
+	hint = ev.get("memory_hint", {}) or {}
+	if isinstance(hint, dict) and "importance" in hint:
+		try:
+			importance = float(hint.get("importance", 0.1) or 0.1)
+		except Exception:
+			importance = 0.1
+		if importance <= 0:
+			return None
+		content = _social_event_content(ev_type, ev)
+		if not content:
+			return None
+		return {
+			"tick": int(item.get("tick", 0) or 0),
+			"time_str": "",
+			"type": "event",
+			"topic": "external_platform_event",
+			"importance": max(0.0, min(1.0, importance)),
+			"current_weight": max(0.0, min(1.0, importance)),
+			"decay_rate": 0.08 if importance < 0.2 else 0.03,
+			"location_id": _safe_str(item.get("location_id")),
+			"actor_id": _safe_str(item.get("actor_id")),
+			"target_id": _safe_str(ev.get("post_id", ev.get("target_account_id", ""))),
+			"content": content,
+			"tags": ["social_platform", ev_type],
+			"source": {"kind": "event_log", "seq": int(item.get("seq", 0) or 0)},
+			"allow_low_importance": True,
+		}
 	owner = _safe_str(item.get("actor_id"))
 	location_id = _safe_str(item.get("location_id"))
 	event_entity_id = _safe_str(ev.get("entity_id"))
@@ -143,6 +170,38 @@ def _event_to_memory_entry(actor_id: str, actor_loc_id: str, item: dict[str, Any
 		"content": content,
 		"source": {"kind": "event_log", "seq": int(item.get("seq", 0) or 0)},
 	}
+
+
+def _social_event_content(ev_type: str, ev: dict[str, Any]) -> str:
+	if ev_type == "SocialFeedObserved":
+		items = [dict(x) for x in list(ev.get("items", []) or []) if isinstance(x, dict)]
+		if not items:
+			return "Observed an empty social feed."
+		parts: list[str] = []
+		for item in items[:3]:
+			author = _safe_str(item.get("author_display_name") or item.get("author_id")).strip()
+			summary = _safe_str(item.get("summary")).strip()
+			if author and summary:
+				parts.append(f"{author}: {summary}")
+			elif summary:
+				parts.append(summary)
+		return "Observed social feed: " + "; ".join(parts)
+	if ev_type == "SocialPostObserved":
+		post = ev.get("post", {}) or {}
+		if isinstance(post, dict):
+			author = _safe_str(post.get("author_display_name") or post.get("author_id")).strip()
+			text = _safe_str(post.get("text")).strip()
+			return f"Opened social post by {author}: {text}" if author else f"Opened social post: {text}"
+	if ev_type == "SocialPostInteracted":
+		action = _safe_str(ev.get("action")).strip()
+		return f"Interacted with a social post: {action}" if action else "Interacted with a social post."
+	if ev_type == "SocialPostCreated":
+		text = _safe_str(ev.get("text")).strip()
+		return f"Created a social post: {text}" if text else "Created a social post."
+	if ev_type == "SocialAccountFollowed":
+		name = _safe_str(ev.get("target_display_name") or ev.get("target_account_id")).strip()
+		return f"Followed social account: {name}" if name else "Followed a social account."
+	return ev_type
 
 
 def _interaction_to_memory_entry(
@@ -222,7 +281,7 @@ def build_memory_patch(
 		new_last_event = max(new_last_event, seq)
 		if entry is None:
 			continue
-		if float(entry.get("importance", 0.0) or 0.0) >= float(min_importance):
+		if bool(entry.get("allow_low_importance", False)) or float(entry.get("importance", 0.0) or 0.0) >= float(min_importance):
 			notes.append(entry)
 			mem.add_short_term(entry)
 

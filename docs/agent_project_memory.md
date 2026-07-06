@@ -458,8 +458,17 @@ and applies them through `ApplyMemoryPatch`.
 
 The current short-term memory eviction is still mostly FIFO: when
 `short_term_queue` exceeds its limit, evicted entries move into
-`mid_term_prep_queue`. A proposed future direction is a weighted attention queue,
-but it is not implemented as a separate `memory_attention.py` module yet.
+`mid_term_prep_queue`. The intended next direction is a weighted attention queue:
+memory entries should combine initial importance, current weight, age/decay, and
+recent access. Low-scoring entries should be removed quickly. Social feed
+exposures may enter short-term memory with very low importance and fast decay;
+they should usually disappear after a small number of ticks unless later
+interaction makes them salient.
+
+For natural-language-heavy events, a later lightweight LLM scorer may adjust
+importance after heuristic filtering. Keep that scorer behind the memory policy
+interface; social runtime events should only provide `memory_hint`, not decide
+final retention themselves.
 
 ## Environment Scopes
 
@@ -569,19 +578,59 @@ There is currently no config-driven external adapter construction in
 `from_config(...)`; apps/tests can attach adapters to `runtime.external_runtimes`
 after construction.
 
-For a social platform runtime, the recommended identity boundary is:
+The social platform runtime currently exists as a SQLite-backed external
+runtime:
 
 ```text
-agent -> target device entity -> SocialAppComponent -> runtime_id/account_id
--> external_runtime_bridge -> SocialPlatformAdapter
+KERN/external_runtimes/social_platform.py
 ```
 
-KERN should prove that an agent is using a particular account by reading world
-state, such as a phone/device component and ownership/access rules. Do not let an
-agent merely pass `account_id` as an untrusted parameter.
+It supports `observe_feed`, `observe_post`, `create_post`, `interact_post`,
+`follow_account`, and checkpoint save/restore. Targeted tests live in
+`tests/test_social_platform_runtime.py`.
 
-Social platform implementation is planned but not yet present in code. The
-current design note is `docs/social_platform_runtime_plan.md`.
+The next KERN-side integration should be intentionally small and screen-driven:
+
+```text
+agent -> phone entity -> ScreenComponent -> runtime_id/account_id
+-> external_runtime_bridge -> SQLiteSocialPlatformRuntime
+```
+
+The first KERN component should be `ScreenComponent`, mounted on a phone or other
+terminal entity. Social effects update that screen with feed cards, the current
+post, selected post ID, cursor, and status text. Planner/grounder code should
+prefer post IDs from `ScreenComponent.feed_items`, `current_post`, or
+`selected_post_id` instead of requiring the agent to remember raw post IDs.
+
+Planner and grounder should receive different projections of that screen state.
+Planner-facing context should expose semantic summaries only, such as post title,
+author, summary, tags, and social context. Grounder-facing context may expose raw
+operational fields such as `post_id`, but only while the screen is fresh. The
+first freshness window should be 2 ticks after a social browsing action updates
+the phone screen. If the screen context is older than that, grounder should not
+reuse stale post IDs and should require a fresh observe action.
+
+Social platform effects currently mutate an external SQLite runtime that is not
+rolled back by KERN's `WorldExecutor` bundle rollback. Keep social effects as
+single-effect bundles in the first version, or place them last in a bundle. Add
+external transaction support later only if this becomes a real consistency
+problem.
+
+Do not prioritize device/session access checks yet. The current product choice
+is to keep the first version focused on social-media simulation behavior. If
+account spoofing, shared devices, or permission problems become real issues,
+upgrade the model later with `SocialAppComponent`, `DeviceAccessComponent`, or
+session components.
+
+Planned social effect types are:
+
+- `ObserveSocialFeed`
+- `ObserveSocialPost`
+- `CreateSocialPost`
+- `InteractSocialPost`
+- `FollowSocialAccount`
+
+The current design note is `docs/social_platform_runtime_plan.md`.
 
 ## Scenario Data Status
 
@@ -618,6 +667,7 @@ Targeted tests that often matter for architecture work:
 ```powershell
 .\venv\Scripts\python.exe -m unittest tests.test_executor_transactions
 .\venv\Scripts\python.exe -m unittest tests.test_external_runtime_bridge
+.\venv\Scripts\python.exe -m unittest tests.test_social_platform_runtime
 .\venv\Scripts\python.exe -m unittest tests.test_archive
 .\venv\Scripts\python.exe -m unittest tests.test_environment_scopes
 .\venv\Scripts\python.exe -m unittest tests.test_dynamic_text

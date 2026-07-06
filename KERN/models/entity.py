@@ -13,6 +13,7 @@ from .components import (
 	LogicControlComponent,
 	MemoryComponent,
 	PlayerControlComponent,
+	ScreenComponent,
 	TagComponent,
 	TaskHostComponent,
 	WorldStateEntityComponent,
@@ -29,6 +30,7 @@ ComponentValue = (
 	| PlayerControlComponent
 	| LogicControlComponent
 	| MemoryComponent
+	| ScreenComponent
 	| DecisionArbiterComponent
 	| TaskHostComponent
 	| CustomComponent

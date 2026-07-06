@@ -16,6 +16,7 @@ from .logic_control import LogicControlComponent
 from .memory import MemoryComponent
 from .perception import PerceptionComponent
 from .player_control import PlayerControlComponent
+from .screen import ScreenComponent
 from .status import StatusComponent
 from .tag import TagComponent
 from .task_host import TaskHostComponent
@@ -39,6 +40,7 @@ __all__ = [
 	"EquipmentComponent",
 	"PerceptionComponent",
 	"StatusComponent",
+	"ScreenComponent",
 	"TagComponent",
 	"TaskHostComponent",
 	"ValuableComponent",

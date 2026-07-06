@@ -78,6 +78,8 @@ def execute_apply_memory_patch(executor: Any, ws: Any, data: dict[str, Any], con
 	if not isinstance(mem, MemoryComponent):
 		mem = MemoryComponent()
 		target.add_component("MemoryComponent", mem)
+	tick = int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
+	mem.prune_to_tick(tick)
 	notes = [dict(x) for x in list(data.get("notes", []) or []) if isinstance(x, dict)]
 	for note in notes:
 		mem.add_short_term(note)
