@@ -348,6 +348,7 @@ def run_workflow_cycle(ws: Any, actor_id: str, workflow: Any, reason: str, mode_
 		if not _apply_memory_patch(ws, actor_id, mem_patch):
 			_record_workflow_error_event(ws, actor_id, "memory_patch_apply_failed", {"reason": "executor_failed"})
 			return {"type": "noop"}
+		ws_view = _build_workflow_ws_view(ws, actor_id, reason, mode_context)
 	try:
 		decision_raw = workflow.decide(ws_view, recipe_db, actor_id, reason, mode_context)
 	except Exception as e:

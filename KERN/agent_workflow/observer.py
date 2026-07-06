@@ -103,59 +103,7 @@ def _build_map_topology(full_ws_view: dict[str, Any]) -> list[dict[str, Any]]:
 	return out
 
 
-def _screen_feed_item_for_planner(item: dict[str, Any]) -> dict[str, Any]:
-	out = {
-		"author_display_name": _safe_str(item.get("author_display_name")),
-		"summary": _safe_str(item.get("summary")),
-		"tags": [str(x) for x in list(item.get("tags", []) or [])],
-		"social_context": _safe_str(item.get("social_context")),
-		"why_visible": _safe_str(item.get("why_visible")),
-	}
-	return {k: v for k, v in out.items() if v not in ("", [])}
-
-
-def _screen_post_for_planner(post: Any) -> dict[str, Any] | None:
-	if not isinstance(post, dict):
-		return None
-	out = {
-		"author_display_name": _safe_str(post.get("author_display_name")),
-		"text": _safe_str(post.get("text")),
-		"tags": [str(x) for x in list(post.get("tags", []) or [])],
-		"metrics": dict(post.get("metrics", {}) or {}) if isinstance(post.get("metrics", {}), dict) else {},
-		"top_comments": [
-			{
-				"author_display_name": _safe_str(c.get("author_display_name")),
-				"text": _safe_str(c.get("text")),
-				"like_count": int(c.get("like_count", 0) or 0),
-			}
-			for c in list(post.get("top_comments", []) or [])
-			if isinstance(c, dict)
-		],
-	}
-	return {k: v for k, v in out.items() if v not in ("", [], {})}
-
-
-def _screen_for_planner(screen: Any) -> dict[str, Any]:
-	if not isinstance(screen, dict) or not screen:
-		return {}
-	out: dict[str, Any] = {
-		"app": _safe_str(screen.get("app")),
-		"view": _safe_str(screen.get("view")),
-		"title": _safe_str(screen.get("title")),
-		"feed_items": [
-			_screen_feed_item_for_planner(dict(x))
-			for x in list(screen.get("feed_items", []) or [])
-			if isinstance(x, dict)
-		],
-		"current_post": _screen_post_for_planner(screen.get("current_post")),
-		"cursor": int(screen.get("cursor", 0) or 0),
-		"updated_tick": int(screen.get("updated_tick", 0) or 0),
-		"status_text": _safe_str(screen.get("status_text")),
-	}
-	return {k: v for k, v in out.items() if v not in ("", [], {}, None)}
-
-
-def _grounder_screen_context(screen: Any, entity_id: str, entity_name: str, tick: int, window_ticks: int) -> dict[str, Any] | None:
+def _operable_screen_context(screen: Any, entity_id: str, entity_name: str, tick: int, window_ticks: int) -> dict[str, Any] | None:
 	if not isinstance(screen, dict) or not screen:
 		return None
 	updated_tick = int(screen.get("updated_tick", 0) or 0)
@@ -271,7 +219,6 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 				"contained_in_slot": _safe_str(contain_info.get("slot_id")),
 				"is_top_level": bool(eid in location_entity_ids) and not bool(contain_info),
 				"tasks": [dict(x) for x in list(ent.get("task_host_tasks", []) or []) if isinstance(x, dict)],
-				"screen": _screen_for_planner(ent.get("screen", {})),
 			}
 		)
 
@@ -345,21 +292,23 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 		"hidden_entity_count": max(0, len(containment.keys()) - len([x for x in visible_ids if x in containment])),
 		"tick": int(view.get("tick", 0) or 0),
 	}
-	grounder_contexts: list[dict[str, Any]] = []
+	operable_screen_contexts: list[dict[str, Any]] = []
 	grounder_mode = bool((view.get("mode_context", {}) or {}).get("grounder", False)) if isinstance(view.get("mode_context", {}), dict) else False
 	if grounder_mode:
 		window_ticks = int((view.get("mode_context", {}) or {}).get("grounder_screen_context_window_ticks", 2) or 2)
-		for eid in visible_ids:
-			ent = entities.get(eid, {})
-			ctx = _grounder_screen_context(
-				ent.get("screen", {}),
+		for item in list(self_ent.get("inventory", []) or []):
+			if not isinstance(item, dict):
+				continue
+			eid = _safe_str(item.get("id"))
+			ctx = _operable_screen_context(
+				item.get("screen", {}),
 				eid,
-				_safe_str(ent.get("agent_name")) or _safe_str(ent.get("name")),
+				_safe_str(item.get("name")) or eid,
 				int(view.get("tick", 0) or 0),
 				window_ticks,
 			)
 			if ctx is not None:
-				grounder_contexts.append(ctx)
-	if grounder_contexts:
-		out["grounder_screen_contexts"] = grounder_contexts
+				operable_screen_contexts.append(ctx)
+	if operable_screen_contexts:
+		out["operable_screen_contexts"] = operable_screen_contexts
 	return out

@@ -223,6 +223,7 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 							"tags": list(item_ent.get_all_tags()) if hasattr(item_ent, "get_all_tags") else [],
 							"slot": str(slot_id),
 							"statuses": item_statuses,
+							"screen": _read_screen_component_dict(item_ent),
 						}
 					)
 

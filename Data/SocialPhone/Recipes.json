@@ -1,8 +1,8 @@
 {
   "social_phone_browse_feed": {
     "verb": "BrowseSocialFeed",
-    "planner_hint": "Browse the recommendation feed on a visible phone.",
-    "grounder_hint": "target_id must be a visible phone with ScreenComponent. parameters.limit is optional.",
+    "planner_hint": "Browse the recommendation feed on a phone you carry.",
+    "grounder_hint": "target_id must be the carried phone from your inventory. parameters.limit is optional.",
     "condition": {
       "type": "all",
       "conditions": [
@@ -17,9 +17,9 @@
           "component": "ScreenComponent"
         },
         {
-          "type": "same_location",
-          "left": "self",
-          "right": "target"
+          "type": "inventory_contains",
+          "owner": "self",
+          "item_ref": "target"
         }
       ]
     },
@@ -38,8 +38,8 @@
   },
   "social_phone_open_post": {
     "verb": "OpenSocialPost",
-    "planner_hint": "Open a post from the phone's current recommendation feed by slot.",
-    "grounder_hint": "target_id must be the phone. parameters.slot selects the feed item; default is 0.",
+    "planner_hint": "Open a post from the carried phone's current recommendation feed by slot.",
+    "grounder_hint": "target_id must be the carried phone from your inventory. parameters.slot selects the feed item from the fresh phone screen context; default is 0.",
     "condition": {
       "type": "all",
       "conditions": [
@@ -54,9 +54,9 @@
           "component": "ScreenComponent"
         },
         {
-          "type": "same_location",
-          "left": "self",
-          "right": "target"
+          "type": "inventory_contains",
+          "owner": "self",
+          "item_ref": "target"
         }
       ]
     },
@@ -75,8 +75,8 @@
   },
   "social_phone_comment_post": {
     "verb": "CommentSocialPost",
-    "planner_hint": "Comment on a post currently visible on the phone screen.",
-    "grounder_hint": "target_id must be the phone. parameters.slot is optional; parameters.text is required.",
+    "planner_hint": "Comment on a post currently visible on the carried phone screen.",
+    "grounder_hint": "target_id must be the carried phone from your inventory. parameters.slot is optional; parameters.text is required.",
     "condition": {
       "type": "all",
       "conditions": [
@@ -91,9 +91,9 @@
           "component": "ScreenComponent"
         },
         {
-          "type": "same_location",
-          "left": "self",
-          "right": "target"
+          "type": "inventory_contains",
+          "owner": "self",
+          "item_ref": "target"
         }
       ]
     },
@@ -108,6 +108,196 @@
           "slot": "param:slot",
           "action": "comment",
           "text": "param:text"
+        }
+      ]
+    }
+  },
+  "social_phone_like_post": {
+    "verb": "LikeSocialPost",
+    "planner_hint": "Like the currently open post or a visible feed item on the carried phone.",
+    "grounder_hint": "target_id must be the carried phone from your inventory. parameters.slot is optional; use the fresh screen context if choosing a feed item.",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tag",
+          "target": "target",
+          "tag": "phone"
+        },
+        {
+          "type": "has_component",
+          "target": "target",
+          "component": "ScreenComponent"
+        },
+        {
+          "type": "inventory_contains",
+          "owner": "self",
+          "item_ref": "target"
+        }
+      ]
+    },
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "InteractSocialPost",
+          "target": "target",
+          "slot": "param:slot",
+          "action": "like"
+        }
+      ]
+    }
+  },
+  "social_phone_unlike_post": {
+    "verb": "UnlikeSocialPost",
+    "planner_hint": "Remove your like from the currently open post or a visible feed item on the carried phone.",
+    "grounder_hint": "target_id must be the carried phone from your inventory. parameters.slot is optional; use the fresh screen context if choosing a feed item.",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tag",
+          "target": "target",
+          "tag": "phone"
+        },
+        {
+          "type": "has_component",
+          "target": "target",
+          "component": "ScreenComponent"
+        },
+        {
+          "type": "inventory_contains",
+          "owner": "self",
+          "item_ref": "target"
+        }
+      ]
+    },
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "InteractSocialPost",
+          "target": "target",
+          "slot": "param:slot",
+          "action": "unlike"
+        }
+      ]
+    }
+  },
+  "social_phone_repost_post": {
+    "verb": "RepostSocialPost",
+    "planner_hint": "Repost the currently open post or a visible feed item on the carried phone.",
+    "grounder_hint": "target_id must be the carried phone from your inventory. parameters.slot is optional; parameters.text may contain a short repost note.",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tag",
+          "target": "target",
+          "tag": "phone"
+        },
+        {
+          "type": "has_component",
+          "target": "target",
+          "component": "ScreenComponent"
+        },
+        {
+          "type": "inventory_contains",
+          "owner": "self",
+          "item_ref": "target"
+        }
+      ]
+    },
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "InteractSocialPost",
+          "target": "target",
+          "slot": "param:slot",
+          "action": "repost",
+          "text": "param:text"
+        }
+      ]
+    }
+  },
+  "social_phone_create_post": {
+    "verb": "CreateSocialPost",
+    "planner_hint": "Create a new post from the carried phone.",
+    "grounder_hint": "target_id must be the carried phone from your inventory. parameters.text is required; parameters.tags is optional.",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tag",
+          "target": "target",
+          "tag": "phone"
+        },
+        {
+          "type": "has_component",
+          "target": "target",
+          "component": "ScreenComponent"
+        },
+        {
+          "type": "inventory_contains",
+          "owner": "self",
+          "item_ref": "target"
+        }
+      ]
+    },
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "CreateSocialPost",
+          "target": "target",
+          "text": "param:text",
+          "tags": "param:tags"
+        }
+      ]
+    }
+  },
+  "social_phone_follow_account": {
+    "verb": "FollowSocialAccount",
+    "planner_hint": "Follow an account visible in the carried phone's fresh screen context, such as the author of the current post.",
+    "grounder_hint": "target_id must be the carried phone from your inventory. parameters.target_account_id is required and should come from author_id in the fresh screen context.",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tag",
+          "target": "target",
+          "tag": "phone"
+        },
+        {
+          "type": "has_component",
+          "target": "target",
+          "component": "ScreenComponent"
+        },
+        {
+          "type": "inventory_contains",
+          "owner": "self",
+          "item_ref": "target"
+        }
+      ]
+    },
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "FollowSocialAccount",
+          "target": "target",
+          "target_account_id": "param:target_account_id"
         }
       ]
     }

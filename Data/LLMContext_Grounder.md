@@ -20,6 +20,9 @@
 - 你的背包物品（Inventory）：
 {{inventory_table}}
 
+- 背包设备的短期可操作屏幕上下文：
+{{operable_screen_contexts_text}}
+
 #### 1.3 可用动词列表
 {{available_verbs_list}}
 

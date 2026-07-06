@@ -34,6 +34,18 @@ def _runtime_with_temp_social_db(db_path: Path) -> KernRuntime:
 	)
 
 
+def _run_command(runtime: KernRuntime, verb: str, parameters: dict, target_id: str = "phone_01") -> list[dict]:
+	ws = runtime.world_state
+	cmd = runtime.interaction_engine.process_command(
+		ws,
+		"agent_01",
+		{"verb": verb, "target_id": target_id, "parameters": dict(parameters or {})},
+	)
+	if cmd.get("status") != "success":
+		raise AssertionError(f"{verb} command failed: {cmd}")
+	return runtime.executor.execute_bundle(ws, cmd["bundle"], cmd["context"])
+
+
 class SocialPhoneConfigRuntimeTests(unittest.TestCase):
 	def test_config_declares_sqlite_social_runtime_and_seed_data(self) -> None:
 		with tempfile.TemporaryDirectory() as td:
@@ -52,6 +64,8 @@ class SocialPhoneConfigRuntimeTests(unittest.TestCase):
 			runtime = _runtime_with_temp_social_db(Path(td) / "social.sqlite3")
 			ws = runtime.world_state
 			ws.services["external_runtime_bridge"] = ExternalRuntimeBridge(runtime.external_runtimes)
+			agent_inventory = ws.get_entity_by_id("agent_01").get_component("ContainerComponent").slots["inventory"].items
+			self.assertIn("phone_01", agent_inventory)
 
 			feed_cmd = runtime.interaction_engine.process_command(
 				ws,
@@ -78,6 +92,65 @@ class SocialPhoneConfigRuntimeTests(unittest.TestCase):
 			self.assertEqual(open_events[0]["type"], "SocialPostObserved")
 			self.assertEqual(screen.view, "post")
 			self.assertEqual(screen.current_post["post_id"], screen.selected_post_id)
+
+	def test_social_phone_recipes_require_carried_phone_target(self) -> None:
+		with tempfile.TemporaryDirectory() as td:
+			runtime = _runtime_with_temp_social_db(Path(td) / "social.sqlite3")
+			ws = runtime.world_state
+			agent = ws.get_entity_by_id("agent_01")
+			container = agent.get_component("ContainerComponent")
+			self.assertTrue(container.remove_entity_by_id("phone_01"))
+			ws.get_location_by_id("social_test_room").add_entity_id("phone_01")
+
+			cmd = runtime.interaction_engine.process_command(
+				ws,
+				"agent_01",
+				{"verb": "BrowseSocialFeed", "target_id": "phone_01", "parameters": {"limit": 1}},
+			)
+
+			self.assertEqual(cmd["status"], "failed")
+			self.assertEqual(cmd["reason"], "NO_RECIPE")
+
+	def test_social_phone_scene_exposes_all_social_runtime_actions(self) -> None:
+		with tempfile.TemporaryDirectory() as td:
+			runtime = _runtime_with_temp_social_db(Path(td) / "social.sqlite3")
+			ws = runtime.world_state
+			ws.services["external_runtime_bridge"] = ExternalRuntimeBridge(runtime.external_runtimes)
+
+			feed_events = _run_command(runtime, "BrowseSocialFeed", {"limit": 3})
+			self.assertEqual(feed_events[0]["type"], "SocialFeedObserved")
+
+			open_events = _run_command(runtime, "OpenSocialPost", {"slot": 0})
+			self.assertEqual(open_events[0]["type"], "SocialPostObserved")
+			current_author = open_events[0]["post"]["author_id"]
+
+			like_events = _run_command(runtime, "LikeSocialPost", {"slot": 0})
+			self.assertEqual(like_events[0]["type"], "SocialPostInteracted")
+			self.assertEqual(like_events[0]["action"], "like")
+
+			unlike_events = _run_command(runtime, "UnlikeSocialPost", {"slot": 0})
+			self.assertEqual(unlike_events[0]["type"], "SocialPostInteracted")
+			self.assertEqual(unlike_events[0]["action"], "unlike")
+
+			comment_events = _run_command(runtime, "CommentSocialPost", {"slot": 0, "text": "Inspector test comment."})
+			self.assertEqual(comment_events[0]["type"], "SocialPostInteracted")
+			self.assertEqual(comment_events[0]["action"], "comment")
+
+			repost_events = _run_command(runtime, "RepostSocialPost", {"slot": 0, "text": "Inspector test repost."})
+			self.assertEqual(repost_events[0]["type"], "SocialPostInteracted")
+			self.assertEqual(repost_events[0]["action"], "repost")
+
+			follow_events = _run_command(runtime, "FollowSocialAccount", {"target_account_id": current_author})
+			self.assertEqual(follow_events[0]["type"], "SocialAccountFollowed")
+			self.assertEqual(follow_events[0]["target_account_id"], current_author)
+
+			create_events = _run_command(
+				runtime,
+				"CreateSocialPost",
+				{"text": "Inspector created post.", "tags": ["inspection", "smoke"]},
+			)
+			self.assertEqual(create_events[0]["type"], "SocialPostCreated")
+			self.assertIn("Inspector created post.", create_events[0]["text"])
 
 	def test_seed_post_generator_expands_text_rows(self) -> None:
 		posts = build_seed_posts(

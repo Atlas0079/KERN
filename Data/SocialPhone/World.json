@@ -11,16 +11,18 @@
         {
           "instance_id": "agent_01",
           "template_id": "SocialPhoneAgent"
-        },
-        {
-          "instance_id": "phone_01",
-          "template_id": "SocialPhone"
         }
       ]
     }
   ],
   "paths": [],
-  "entities": [],
+  "entities": [
+    {
+      "instance_id": "phone_01",
+      "template_id": "SocialPhone",
+      "parent_container": "agent_01"
+    }
+  ],
   "environment_scopes": [
     {
       "scope_id": "social_test_room_env",

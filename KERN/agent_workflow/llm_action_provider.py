@@ -148,6 +148,36 @@ def _inventory_table_planner(inventory: list[dict[str, Any]]) -> str:
 	return "\n".join(lines) if lines else "(Empty)"
 
 
+def _operable_screen_contexts_text(contexts: list[dict[str, Any]]) -> str:
+	lines: list[str] = []
+	for ctx in list(contexts or []):
+		if not isinstance(ctx, dict):
+			continue
+		entity_id = str(ctx.get("entity_id", "") or "")
+		entity_name = str(ctx.get("entity_name", "") or entity_id)
+		view = str(ctx.get("view", "") or "")
+		title = str(ctx.get("title", "") or "")
+		updated_tick = int(ctx.get("updated_tick", 0) or 0)
+		lines.append(
+			f"- device_id: {entity_id}, name: {entity_name}, view: {view or 'unknown'}, title: {title}, updated_tick: {updated_tick}"
+		)
+		feed_items = [dict(x) for x in list(ctx.get("feed_items", []) or []) if isinstance(x, dict)]
+		for idx, item in enumerate(feed_items):
+			post_id = str(item.get("post_id", "") or "")
+			author_id = str(item.get("author_id", "") or "").strip()
+			author = str(item.get("author_display_name", "") or author_id).strip()
+			title_or_summary = str(item.get("title", "") or item.get("summary", "") or "").strip()
+			lines.append(f"  - slot {idx}: post_id={post_id}, author_id={author_id}, author={author}, title_or_summary={title_or_summary}")
+		current = ctx.get("current_post", {}) or {}
+		if isinstance(current, dict) and current:
+			post_id = str(current.get("post_id", "") or "")
+			author_id = str(current.get("author_id", "") or "").strip()
+			author = str(current.get("author_display_name", "") or author_id).strip()
+			title_or_summary = str(current.get("title", "") or current.get("summary", "") or current.get("text", "") or "").strip()
+			lines.append(f"  - current_post: post_id={post_id}, author_id={author_id}, author={author}, title_or_summary={title_or_summary}")
+	return "\n".join(lines) if lines else "(No operable screen contexts)"
+
+
 def _reachable_locations_text(reachable_locations: list[dict[str, Any]]) -> str:
 	lines: list[str] = []
 	for item in list(reachable_locations or []):
@@ -300,6 +330,7 @@ def _build_agent_context(perception: dict[str, Any], self_id: str) -> dict[str, 
 		"reachable_locations": list(p.get("reachable_locations", []) or []),
 		"visible_entities": list(p.get("entities", []) or []),
 		"inventory": list(p.get("inventory", []) or []),
+		"operable_screen_contexts": list(p.get("operable_screen_contexts", []) or []),
 		"can_start_conversation_here": bool(p.get("can_start_conversation_here", True)),
 		"current_task_id": str(p.get("current_task_id", "") or ""),
 		"current_task_type": str(p.get("current_task_type", "") or ""),
@@ -920,6 +951,7 @@ Output rules:
 				"can_start_conversation_here": str(can_start_conversation_here).lower(),
 				"visible_entities_table": _entities_table(visible_entities),
 				"inventory_table": _inventory_table(inventory),
+				"operable_screen_contexts_text": _operable_screen_contexts_text(list(agent_context.get("operable_screen_contexts", []) or [])),
 				"available_verbs_list": available_verbs_list,
 				"grounder_recipe_hints": grounder_recipe_hints,
 				"recent_interactions_text": short_term_memory_text,

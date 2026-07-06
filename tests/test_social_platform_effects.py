@@ -9,18 +9,19 @@ from KERN.agent_workflow.memory_policy import build_memory_patch
 from KERN.agent_workflow.observer import build_agent_perception
 from KERN.executor.executor import WorldExecutor
 from KERN.external_runtimes import SQLiteSocialPlatformRuntime
-from KERN.models.components import MemoryComponent, ScreenComponent, TagComponent
+from KERN.models.components import ContainerComponent, ContainerSlot, MemoryComponent, ScreenComponent, TagComponent
 from KERN.models.entity import Entity
 from KERN.models.location import Location
 from KERN.models.world_state import WorldState
 
 
-def _world_with_phone(db_path: Path) -> tuple[WorldState, SQLiteSocialPlatformRuntime]:
+def _world_with_phone(db_path: Path, *, phone_in_inventory: bool = True) -> tuple[WorldState, SQLiteSocialPlatformRuntime]:
 	ws = WorldState()
 	loc = Location(location_id="room", location_name="Room", description="")
 	ws.register_location(loc)
 	agent = Entity(entity_id="agent_01", template_id="Agent", entity_name="Agent")
 	agent.add_component("MemoryComponent", MemoryComponent(short_term_max_entries=5))
+	agent.add_component("ContainerComponent", ContainerComponent(slots={"inventory": ContainerSlot(config={"capacity_count": 4}, items=[])}))
 	ws.register_entity(agent)
 	loc.add_entity_id(agent.entity_id)
 	phone = Entity(entity_id="phone_01", template_id="Phone", entity_name="Phone")
@@ -30,7 +31,10 @@ def _world_with_phone(db_path: Path) -> tuple[WorldState, SQLiteSocialPlatformRu
 		ScreenComponent(runtime_id="social", account_id="acc_agent", app="social_platform"),
 	)
 	ws.register_entity(phone)
-	loc.add_entity_id(phone.entity_id)
+	if phone_in_inventory:
+		agent.get_component("ContainerComponent").slots["inventory"].items.append(phone.entity_id)
+	else:
+		loc.add_entity_id(phone.entity_id)
 	rt = SQLiteSocialPlatformRuntime(db_path, runtime_id="social")
 	rt.upsert_account("acc_agent", "Agent", interests={"kindergarten": 1.0, "outdoor": 1.0})
 	rt.upsert_account("acc_teacher", "Teacher", interests={"kindergarten": 1.0})
@@ -80,9 +84,9 @@ class SocialPlatformEffectTests(unittest.TestCase):
 			self.assertEqual(screen.view, "post")
 			self.assertEqual(screen.current_post["post_id"], "post_outdoor")
 
-	def test_planner_projection_hides_post_id_but_grounder_gets_fresh_screen_context(self) -> None:
+	def test_environment_phone_screen_is_not_agent_observable(self) -> None:
 		with tempfile.TemporaryDirectory() as td:
-			ws, _rt = _world_with_phone(Path(td) / "social.sqlite3")
+			ws, _rt = _world_with_phone(Path(td) / "social.sqlite3", phone_in_inventory=False)
 			executor = WorldExecutor()
 			ws.game_time.total_ticks = 10
 			executor.execute(
@@ -94,20 +98,40 @@ class SocialPlatformEffectTests(unittest.TestCase):
 			planner_view = build_full_ws_view(ws, "agent_01", "test", {})
 			planner_perception = build_agent_perception(planner_view, "agent_01")
 			phone = next(x for x in planner_perception["entities"] if x["id"] == "phone_01")
-			self.assertEqual(phone["screen"]["view"], "feed")
-			self.assertNotIn("post_id", phone["screen"]["feed_items"][0])
-			self.assertNotIn("grounder_screen_contexts", planner_perception)
+			self.assertNotIn("screen", phone)
+			self.assertNotIn("operable_screen_contexts", planner_perception)
 
 			grounder_view = build_full_ws_view(ws, "agent_01", "test", {"grounder": True})
 			grounder_perception = build_agent_perception(grounder_view, "agent_01")
-			ctx = grounder_perception["grounder_screen_contexts"][0]
+			self.assertEqual(grounder_perception.get("operable_screen_contexts", []), [])
+
+	def test_grounder_gets_fresh_screen_context_only_for_inventory_phone(self) -> None:
+		with tempfile.TemporaryDirectory() as td:
+			ws, _rt = _world_with_phone(Path(td) / "social.sqlite3", phone_in_inventory=True)
+			executor = WorldExecutor()
+			ws.game_time.total_ticks = 10
+			executor.execute(
+				ws,
+				{"effect": "ObserveSocialFeed", "target": "phone_01", "limit": 1},
+				{"self_id": "agent_01"},
+			)
+
+			planner_view = build_full_ws_view(ws, "agent_01", "test", {})
+			planner_perception = build_agent_perception(planner_view, "agent_01")
+			self.assertFalse(any(x["id"] == "phone_01" for x in planner_perception["entities"]))
+			self.assertNotIn("operable_screen_contexts", planner_perception)
+
+			grounder_view = build_full_ws_view(ws, "agent_01", "test", {"grounder": True})
+			grounder_perception = build_agent_perception(grounder_view, "agent_01")
+			ctx = grounder_perception["operable_screen_contexts"][0]
 			self.assertEqual(ctx["entity_id"], "phone_01")
 			self.assertEqual(ctx["feed_items"][0]["post_id"], "post_outdoor")
+			self.assertIn("outdoor play", ctx["feed_items"][0]["summary"])
 
 			ws.game_time.total_ticks = 13
 			expired_view = build_full_ws_view(ws, "agent_01", "test", {"grounder": True})
 			expired_perception = build_agent_perception(expired_view, "agent_01")
-			self.assertEqual(expired_perception.get("grounder_screen_contexts", []), [])
+			self.assertEqual(expired_perception.get("operable_screen_contexts", []), [])
 
 	def test_social_feed_exposure_can_enter_memory_with_low_importance(self) -> None:
 		with tempfile.TemporaryDirectory() as td:
