@@ -160,6 +160,7 @@ class KernRuntime:
 		validate: bool = True,
 		configure_logging: bool = True,
 		overrides: dict[str, Any] | None = None,
+		external_runtimes: dict[str, Any] | None = None,
 	) -> "KernRuntime":
 		"""
 		Create a ready-to-run KERN runtime from a runtime config file.
@@ -198,10 +199,20 @@ class KernRuntime:
 			bundles_jsons=bundles_jsons,
 		)
 		restore_path = resolve_checkpoint_file(_cfg_get(cfg, "CHECKPOINT_RESTORE_FILE", ""), _cfg_get(cfg, "CHECKPOINT_RESTORE_DIR", ""))
+		external_runtime_map = dict(external_runtimes or {})
+		external_runtime_bridge = ExternalRuntimeBridge(external_runtime_map)
 		if restore_path is not None:
 			ws = restore_world_state_from_checkpoint(restore_path, bundle.entity_templates, bundle.named_bundles)
 			if not ws.entities or not ws.locations:
 				raise ValueError(f"Invalid checkpoint format or empty world state: {restore_path}")
+			restore_events = external_runtime_bridge.restore_checkpoint(
+				cls._build_checkpoint_context_for_world(
+					ws,
+					run_id=str(getattr(ws, "_checkpoint_run_id", "") or ""),
+					phase="restore",
+				)
+			)
+			cls._raise_on_external_checkpoint_error(restore_events, "restore")
 		else:
 			if validate:
 				from tools.scenario_lint import lint_bundle
@@ -237,6 +248,7 @@ class KernRuntime:
 			interaction_engine=InteractionEngine(recipe_db=bundle.recipes),
 			executor=WorldExecutor(entity_templates=bundle.entity_templates),
 			action_provider=action_provider,
+			external_runtimes=external_runtime_map,
 			reaction_rules=list((bundle.reactions or {}).get("rules", []) or []),
 			max_trigger_depth=_cfg_int(cfg, "MAX_TRIGGER_DEPTH", 4),
 			dialogue_budget_limit_per_location=_cfg_int(cfg, "DIALOGUE_BUDGET_LIMIT_PER_LOCATION", 4),
@@ -411,20 +423,51 @@ class KernRuntime:
 	def _build_simulation_log_payload(self) -> dict[str, Any]:
 		return build_simulation_log_payload_from_world_state(self.world_state, run_id=str(self.run_id or "").strip())
 
+	@staticmethod
+	def _build_checkpoint_context_for_world(
+		ws: WorldState,
+		*,
+		run_id: str,
+		phase: str = "",
+	) -> dict[str, Any]:
+		return {
+			"run_id": str(run_id or ""),
+			"tick": int(getattr(ws.game_time, "total_ticks", 0) or 0),
+			"time_str": ws.game_time.time_to_string(),
+			"phase": str(phase or ""),
+		}
+
+	@staticmethod
+	def _raise_on_external_checkpoint_error(events: list[dict[str, Any]], phase: str) -> None:
+		for ev in list(events or []):
+			if is_execution_error_event(ev):
+				raise RuntimeError(f"External runtime checkpoint {phase} failed: {ev.get('message', ev)}")
+
+	def _build_checkpoint_context(self, phase: str) -> dict[str, Any]:
+		return self._build_checkpoint_context_for_world(
+			self.world_state,
+			run_id=str(self.run_id or ""),
+			phase=str(phase or ""),
+		)
+
 	def _save_checkpoint(self) -> None:
 		if not self.checkpoint_enabled:
 			return
 		if self.archive_recorder is None:
 			return
+		logger = get_logger()
+		tick = int(getattr(self.world_state.game_time, "total_ticks", 0) or 0)
 		try:
 			self.archive_recorder.record_tick(self.world_state)
-			logger = get_logger()
-			tick = int(getattr(self.world_state.game_time, "total_ticks", 0) or 0)
 			logger.debug("checkpoint", "archive_recorded", context={"tick": tick, "path": str(self.checkpoint_dir)})
+			bridge = ExternalRuntimeBridge(dict(self.external_runtimes or {}))
+			events = bridge.save_checkpoint(self._build_checkpoint_context("save"))
+			self._raise_on_external_checkpoint_error(events, "save")
+			if events:
+				logger.debug("checkpoint", "external_runtime_checkpoint_saved", context={"tick": tick, "event_count": len(events)})
 		except Exception as e:
-			logger = get_logger()
-			tick = int(getattr(self.world_state.game_time, "total_ticks", 0) or 0)
-			logger.warn("checkpoint", "archive_record_failed", context={"tick": tick, "path": str(self.checkpoint_dir), "error": str(e)})
+			logger.warn("checkpoint", "checkpoint_record_failed", context={"tick": tick, "path": str(self.checkpoint_dir), "error": str(e)})
+			raise
 
 	def _save_simulation_log(self) -> None:
 		if not self.checkpoint_enabled or not self.checkpoint_write_global_log:

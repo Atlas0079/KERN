@@ -390,4 +390,6 @@ def restore_world_state_from_checkpoint(
 		default=0,
 	)
 	setattr(ws, "_checkpoint_run_id", str(meta.get("run_id", "") or "").strip())
+	setattr(ws, "_checkpoint_restore_tick", int(meta.get("tick", getattr(ws.game_time, "total_ticks", 0)) or 0))
+	setattr(ws, "_checkpoint_restore_time_str", str(meta.get("time_str", "") or ""))
 	return ws

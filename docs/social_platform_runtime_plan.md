@@ -2,6 +2,23 @@
 
 本文记录当前关于“外部社交平台 runtime 接入 KERN”的设计方向。目标是让社交平台作为一个可以独立运作的外部系统存在，同时通过 KERN 的 bridge 服务被 agent 使用。
 
+它是给 LLM agent 使用的外部信息环境，不需要 UI，也不面向真人用户操作。KERN 只需要知道 agent 做了什么社交平台动作、平台返回了什么可见信息、产生了什么事件和 memory hint；社交平台 runtime 自己维护账号、帖子、推荐、曝光、浏览、互动和 checkpoint 状态。
+
+## OASIS 参考取舍
+
+OASIS 的社交仿真架构可以作为参考：它把系统拆成 platform、agents、actions、recommendation system 和 simulation engine，并由平台维护帖子、评论、关系、行为 trace 和推荐缓存。
+
+本项目只借鉴结构，不照搬复杂度：
+
+- 借鉴：平台状态由平台 runtime 自己拥有；agent 通过动作空间与平台交互；推荐同时考虑兴趣、关注网络、热度和新鲜度。
+- 不借鉴：不做 UI，不做大规模分布式服务，不做复杂 embedding/TwHIN 推荐，不把平台内部数据库暴露给 KERN。
+
+参考：
+
+- https://docs.oasis.camel-ai.org/overview
+- https://arxiv.org/html/2411.11581v4
+- https://github.com/camel-ai/oasis
+
 ## 边界
 
 KERN 继续作为模拟内核：负责 world state、agent workflow、recipe、effect、reaction 和 checkpoint。社交平台 runtime 是外部应用系统，拥有自己的账号、帖子、评论、点赞、分享、关注关系、推荐算法、浏览记录和通知状态。
@@ -13,12 +30,22 @@ KERN core 只提供一个桥梁服务：`external_runtime_bridge`。每个外部
 ```text
 SocialPlatformRuntime
 + SocialAccount / SocialApp 组件
-+ ObserveRecommendedFeed effect
++ ObserveSocialFeed effect
 + ObserveSocialPost effect
++ CreateSocialPost effect
 + InteractWithSocialPost effect
++ FollowSocialAccount effect
 + SocialPlatformAdapter
 + 社交平台自己的状态和推荐算法
 ```
+
+属于社交平台领域本身的 effect 必须放在单独文件中，方便后续按领域启用，例如：
+
+```text
+KERN/executor/_effect_social_platform.py
+```
+
+组件不要求单独文件边界。第一版可以只需要一个账号绑定组件，用来说明某个 KERN agent 对应哪个平台账号和 runtime。
 
 ## Agent 动作
 
@@ -29,6 +56,132 @@ SocialPlatformRuntime
 - 对帖子操作：一个动作内部支持点赞、分享、评论。
 
 推荐页应该像真实信息流一样维护 feed session。每个账号有 feed cursor 和曝光记录。每次观察推荐页返回下一批帖子，并记录这些帖子曾经出现在推荐页上，但不默认把每条曝光内容写入 agent 记忆。
+
+## KERN-facing Capability Contract
+
+KERN 不需要社交平台提供 UI、页面、HTML、数据库路径或原始 SQL 查询能力。KERN 需要的是稳定的动作能力和 LLM 可消费的信息返回。
+
+第一版 runtime 需要提供这些操作：
+
+```text
+observe_feed
+observe_post
+create_post
+interact_post
+follow_account
+```
+
+这些操作通过领域 effect handler 调用：
+
+```text
+KERN recipe/decision
+-> ObserveSocialFeed / ObserveSocialPost / ...
+-> _effect_social_platform.py
+-> external_runtime_bridge.invoke(runtime_id, operation, payload, context)
+-> SQLiteSocialPlatformRuntime.invoke(...)
+-> KERN event dictionaries
+```
+
+返回事件必须是 KERN event dict，并且包含足够给 LLM agent 使用的摘要信息。返回内容应该是“agent 此刻看到了什么”，而不是数据库原始行。
+
+### observe_feed
+
+用途：agent 查看推荐流。
+
+返回轻量帖子卡片，适合放入当轮观察上下文：
+
+```json
+{
+  "type": "SocialFeedObserved",
+  "account_id": "acc_doudou",
+  "items": [
+    {
+      "post_id": "post_001",
+      "author_id": "acc_teacher",
+      "author_display_name": "老师",
+      "summary": "明天户外活动需要带水壶。",
+      "tags": ["kindergarten", "outdoor"],
+      "social_context": "12 likes, 3 comments",
+      "why_visible": "interest_match"
+    }
+  ],
+  "memory_hint": {
+    "should_remember_by_default": false,
+    "importance": 0.1
+  }
+}
+```
+
+推荐页曝光必须写入社交平台 runtime 的 exposure log，但默认不写入 agent memory。agent 是否记住某条推荐页曝光，由后续 memory attention 决定。
+
+### observe_post
+
+用途：agent 点开某个帖子。
+
+返回完整正文和评论摘要：
+
+```json
+{
+  "type": "SocialPostObserved",
+  "account_id": "acc_doudou",
+  "post": {
+    "post_id": "post_001",
+    "author_id": "acc_teacher",
+    "author_display_name": "老师",
+    "text": "明天户外活动需要带水壶。",
+    "tags": ["kindergarten", "outdoor"],
+    "metrics": {
+      "likes": 12,
+      "comments": 3,
+      "reposts": 1
+    },
+    "top_comments": []
+  },
+  "memory_hint": {
+    "should_remember_by_default": true,
+    "importance": 0.45
+  }
+}
+```
+
+### interact_post
+
+用途：agent 对帖子互动。第一版支持：
+
+```text
+like
+unlike
+repost
+comment
+```
+
+返回事件：
+
+```text
+SocialPostInteracted
+```
+
+评论、转发、重要人物回复等事件可以给较高 `memory_hint`。普通点赞可以给低权重 hint。
+
+### create_post
+
+用途：agent 发布新帖子。
+
+返回事件：
+
+```text
+SocialPostCreated
+```
+
+### follow_account
+
+用途：agent 关注另一个账号。
+
+返回事件：
+
+```text
+SocialAccountFollowed
+```
 
 ## 社交平台状态
 
@@ -41,6 +194,164 @@ SocialPlatformRuntime
 - 后续可加入私信和通知
 
 浏览历史主要属于社交平台 runtime。agent memory 只保存 agent 真正注意到、互动过，或经过权重衰减后仍然重要的信息。
+
+## SQLite-first Runtime
+
+社交平台 runtime 第一版直接使用 SQLite，不做纯内存实现。SQLite 文件由 runtime 自己管理；KERN 不读取、不写入、不传入保存路径。
+
+建议包位置：
+
+```text
+KERN/external_runtimes/social_platform.py
+```
+
+建议主类：
+
+```text
+SQLiteSocialPlatformRuntime
+```
+
+它需要实现：
+
+```python
+invoke(operation, payload, context) -> list[dict]
+save_checkpoint(context) -> list[dict] | None
+restore_checkpoint(context) -> list[dict] | None
+```
+
+## SQLite 表设计
+
+第一版建议表：
+
+```text
+runtime_meta
+accounts
+account_interests
+posts
+post_tags
+comments
+likes
+reposts
+follows
+feed_sessions
+exposures
+view_history
+action_traces
+checkpoint_snapshots
+```
+
+### runtime_meta
+
+- `key`
+- `value`
+
+用于保存 schema version 等运行时元信息。
+
+### accounts
+
+- `account_id`
+- `display_name`
+- `bio`
+- `created_tick`
+- `follower_count`
+- `following_count`
+- `status`
+
+### account_interests
+
+- `account_id`
+- `tag`
+- `weight`
+
+### posts
+
+- `post_id`
+- `author_id`
+- `text`
+- `created_tick`
+- `like_count`
+- `comment_count`
+- `repost_count`
+- `status`
+
+### post_tags
+
+- `post_id`
+- `tag`
+
+### comments
+
+- `comment_id`
+- `post_id`
+- `author_id`
+- `text`
+- `created_tick`
+- `like_count`
+- `status`
+
+### likes
+
+- `account_id`
+- `post_id`
+- `created_tick`
+
+### reposts
+
+- `repost_id`
+- `account_id`
+- `post_id`
+- `text`
+- `created_tick`
+
+### follows
+
+- `follower_id`
+- `followee_id`
+- `created_tick`
+
+### feed_sessions
+
+- `account_id`
+- `cursor`
+- `last_refresh_tick`
+
+### exposures
+
+- `exposure_id`
+- `account_id`
+- `post_id`
+- `tick`
+- `source`
+- `score`
+- `position`
+- `seen_count`
+
+### view_history
+
+- `account_id`
+- `post_id`
+- `tick`
+- `view_type`
+
+### action_traces
+
+- `trace_id`
+- `account_id`
+- `operation`
+- `target_type`
+- `target_id`
+- `tick`
+- `payload_json`
+
+### checkpoint_snapshots
+
+- `run_id`
+- `tick`
+- `time_str`
+- `snapshot_json`
+- `created_at`
+
+第一版可以用 JSON 快照保存全部平台状态，恢复时用该快照重建表。后续如果数据量变大，再改成增量 checkpoint 或 SQLite backup。
 
 ## 账号身份边界
 
@@ -78,11 +389,24 @@ agent entity
 }
 ```
 
+如果第一版暂时不建模设备实体，也可以新增一个轻量账号绑定组件作为过渡：
+
+```json
+{
+  "SocialAccountComponent": {
+    "runtime_id": "weibo",
+    "account_id": "acc_doudou"
+  }
+}
+```
+
+推荐优先使用设备/app session 绑定，因为它更接近“agent 正在使用哪个世界实体”。轻量 `SocialAccountComponent` 只适合最小闭环阶段，后续应收敛到可验证的设备与 app session 模型。
+
 effect 的输入应该类似：
 
 ```json
 {
-  "effect": "ObserveRecommendedFeed",
+  "effect": "ObserveSocialFeed",
   "target": "phone",
   "limit": 5
 }
@@ -92,7 +416,7 @@ effect 的输入应该类似：
 
 ```json
 {
-  "effect": "ObserveRecommendedFeed",
+  "effect": "ObserveSocialFeed",
   "account_id": "acct_001",
   "limit": 5
 }
@@ -146,6 +470,25 @@ KERN restore snapshot tick T
 -> bridge.restore_checkpoint(runtime_id, snapshot_ref, expected_hash)
 -> attach restored adapter state
 ```
+
+如果第一版使用 SQLite runtime，`save_checkpoint(context)` / `restore_checkpoint(context)` 的 context 只需要包含同步身份：
+
+```json
+{
+  "run_id": "...",
+  "tick": 123,
+  "time_str": "...",
+  "phase": "save"
+}
+```
+
+KERN 不传社交平台数据库路径，也不托管外部 runtime 文件。社交平台 runtime 用 `run_id/tick` 自己保存和恢复状态。
+
+失败语义：
+
+- 社交平台 save checkpoint 失败时，KERN checkpoint 也失败并中断。
+- 社交平台 restore checkpoint 失败时，KERN runtime 启动失败。
+- 不允许静默降级到不同步状态。
 
 第一版外部 runtime 可以保存完整快照，不必一开始就实现 delta。社交平台状态虽然字段多，但结构清晰，完整快照更容易验证：
 
@@ -342,17 +685,40 @@ validate-and-repair-posts
 
 ## 推荐算法草案
 
-可以先做一个简化的微博式推荐分数：
+可以先做一个轻量微博式推荐，不做 embedding。候选来源：
+
+```text
+followed_authors: 40%
+interest_match: 40%
+hot_explore: 20%
+```
+
+推荐分数：
 
 ```text
 score =
-  interest_match
-+ author_affinity
-+ freshness
-+ engagement
-+ exploration_bonus
-- negative_feedback
+  2.0 * interest_match
++ 1.5 * follow_boost
++ 1.2 * freshness
++ 1.0 * engagement
++ 0.8 * author_affinity
++ 0.4 * exploration_bonus
+- 2.0 * seen_penalty
+- 3.0 * negative_feedback
 ```
+
+字段含义：
+
+- `interest_match`：账号兴趣 tags 与帖子 tags 的重合和权重。
+- `follow_boost`：是否关注作者。
+- `freshness`：根据当前 tick 和帖子创建 tick 衰减。
+- `engagement`：基于点赞、评论、转发的热度。
+- `author_affinity`：agent 过去是否看过、互动过该作者内容。
+- `exploration_bonus`：小随机项，避免推荐完全固定。
+- `seen_penalty`：已经曝光过的帖子降权。
+- `negative_feedback`：后续支持不感兴趣、拉黑、静音后使用。
+
+推荐结果应该可复现。第一版可以用 `run_id/account_id/tick/cursor` 派生随机种子，避免恢复后同一 tick 的推荐流漂移。
 
 第一版不需要追求真实复杂度，只需要能产生合理的基于兴趣的浏览流，并留下足够的曝光记录供后续行为和算法使用。
 
@@ -471,10 +837,22 @@ final_weight =
 
 建议实施顺序：
 
-1. 先实现社交平台 runtime 的最小状态模型、账号数据和推荐页浏览记录。
-2. 实现手机/设备实体上的 `SocialAppComponent` 身份绑定，并在 binder 中验证 agent 使用权限。
-3. 实现三个社交平台动作：观察推荐页、观察具体帖子、对帖子操作。
-4. 扩展 `external_runtime_bridge` 和 archive，让外部 runtime 作为 checkpoint participant 参与同 tick 存档与恢复。
-5. 将社交平台事件通过 `memory_hint` 和 attention category 接入记忆机制。
-6. 实现 `memory_attention.py` 的候选过滤和类别级启发式评分。
-7. 升级 `MemoryComponent`，让短期记忆按权重和衰减维护，而不是纯 FIFO。
+1. 扩展本文档并对齐契约。
+2. 实现 SQLite social platform runtime 本体、最小状态模型、账号数据和推荐页浏览记录。
+3. 实现 `KERN/executor/_effect_social_platform.py` 和 effect contract。
+4. 新增 `SocialAccountComponent` 或手机/设备实体上的 `SocialAppComponent` 身份绑定，并在 binder 中验证 agent 使用权限。
+5. 实现五个社交平台动作：观察推荐页、观察具体帖子、发布帖子、对帖子操作、关注账号。
+6. 用 mock/小型数据验证 feed、post、interact、checkpoint restore 闭环。
+7. 扩展 `external_runtime_bridge` 和 archive，让外部 runtime 作为 checkpoint participant 参与同 tick 存档与恢复。
+8. 将社交平台事件通过 `memory_hint` 和 attention category 接入记忆机制。
+9. 实现 `memory_attention.py` 的候选过滤和类别级启发式评分。
+10. 升级 `MemoryComponent`，让短期记忆按权重和衰减维护，而不是纯 FIFO。
+
+第一版不做：
+
+- UI
+- Web server
+- 私信/通知
+- 图片/视频
+- 复杂 embedding 推荐
+- 真实多用户并发服务
