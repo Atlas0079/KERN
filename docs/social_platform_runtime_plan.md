@@ -658,3 +658,63 @@ rt.invoke("follow_account", ...)
 7. 更新 planner/grounder 约定：帖子 ID 优先来自 `ScreenComponent.feed_items/current_post/selected_post_id`，不是 agent memory。
 8. 更新 memory policy，让 social events 按 `memory_hint`、权重和时间衰减进入短期记忆并自然遗忘。
 9. 再考虑初始化数据生成工具。
+
+## Config-declared runtime and seed status
+
+The social runtime is now intended to be declared by runtime config, not only
+manually attached by tests or app code. The config key is:
+
+```text
+EXTERNAL_RUNTIMES_JSON
+```
+
+It is a JSON object keyed by runtime id:
+
+```json
+{
+  "social": {
+    "type": "sqlite_social_platform",
+    "db_path": "checkpoints/social_phone_smoke/social.sqlite3",
+    "reset_db": true,
+    "seed_json": "Data/SocialPhone/social_seed.json"
+  }
+}
+```
+
+Current implementation:
+
+- `KernRuntime.from_config(...)` builds configured external runtime adapters
+  before world restore/build.
+- `sqlite_social_platform` creates a `SQLiteSocialPlatformRuntime`.
+- `seed_json` is applied through `KERN.external_runtimes.social_seed`.
+- Explicit `external_runtimes={...}` passed to `from_config(...)` can still
+  override config-declared adapters for tests or app wiring.
+
+The first independent scenario for this integration is:
+
+```text
+Data/SocialPhone/
+runtime_config.social_phone.smoke.json
+```
+
+It contains one test agent, one phone with `ScreenComponent`, three recipes
+(`BrowseSocialFeed`, `OpenSocialPost`, `CommentSocialPost`), and a seeded social
+runtime. This scenario is deliberately separate from Camping/Farm so phone
+behavior can be tested without pulling in survival gameplay.
+
+Initial post generation is currently a lightweight deterministic seed module:
+
+```text
+KERN/external_runtimes/social_seed.py
+```
+
+Seed files support:
+
+- `accounts`: platform accounts and interests.
+- `posts`: explicit initial post rows.
+- `post_generators`: repeated text rows expanded into deterministic post ids.
+- `follows`: initial follow graph edges.
+
+This module is the right place to add later sampling or lightweight LLM
+expansion. The runtime itself should keep owning platform behavior; the seed
+module should only prepare initial platform state.

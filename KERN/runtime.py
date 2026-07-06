@@ -21,6 +21,8 @@ from .effect_bundle import effect_bundle_from_raw
 from .execution_errors import executor_error, is_execution_error_event
 from .executor.executor import WorldExecutor
 from .external_runtime import ExternalRuntimeBridge
+from .external_runtimes import SQLiteSocialPlatformRuntime
+from .external_runtimes.social_seed import seed_social_platform_runtime_from_file
 from .interaction.engine import InteractionEngine
 from .log_manager import configure_logger, get_logger
 from .models.world_state import WorldState
@@ -71,6 +73,62 @@ def _cfg_int(cfg: dict[str, str], key: str, default: int) -> int:
 		return int(raw)
 	except Exception:
 		return int(default)
+
+
+def _truthy_config_value(value: Any) -> bool:
+	if isinstance(value, bool):
+		return bool(value)
+	text = str(value or "").strip().lower()
+	return text in {"1", "true", "yes", "on"}
+
+
+def _resolve_config_relative_path(project_root: Path, config_path: Path, value: str) -> Path:
+	raw = str(value or "").strip()
+	if not raw:
+		return Path()
+	path = Path(raw)
+	if path.is_absolute():
+		return path
+	base = config_path.parent if config_path.parent.exists() else project_root
+	return (base / path).resolve()
+
+
+def _build_configured_external_runtimes(
+	project_root: Path,
+	config_path: Path,
+	cfg: dict[str, str],
+) -> dict[str, Any]:
+	raw = _cfg_get(cfg, "EXTERNAL_RUNTIMES_JSON", "")
+	if not raw:
+		return {}
+	try:
+		specs = json.loads(raw)
+	except Exception as exc:
+		raise ValueError(f"EXTERNAL_RUNTIMES_JSON must be valid JSON: {exc}") from exc
+	if not isinstance(specs, dict):
+		raise ValueError("EXTERNAL_RUNTIMES_JSON must be a JSON object")
+	out: dict[str, Any] = {}
+	for runtime_id, spec_raw in specs.items():
+		rid = str(runtime_id or "").strip()
+		if not rid:
+			raise ValueError("EXTERNAL_RUNTIMES_JSON contains blank runtime id")
+		spec = dict(spec_raw or {}) if isinstance(spec_raw, dict) else {}
+		rtype = str(spec.get("type", "") or "").strip()
+		if rtype not in {"sqlite_social_platform", "social_platform_sqlite"}:
+			raise ValueError(f"unsupported external runtime type for {rid}: {rtype}")
+		db_path_raw = str(spec.get("db_path", "") or "").strip()
+		if not db_path_raw:
+			raise ValueError(f"external runtime {rid} missing db_path")
+		db_path = _resolve_config_relative_path(project_root, config_path, db_path_raw)
+		if _truthy_config_value(spec.get("reset_db", False)) and db_path.exists():
+			db_path.unlink()
+		runtime = SQLiteSocialPlatformRuntime(db_path, runtime_id=rid)
+		seed_path_raw = str(spec.get("seed_json", "") or "").strip()
+		if seed_path_raw:
+			seed_path = _resolve_config_relative_path(project_root, config_path, seed_path_raw)
+			seed_social_platform_runtime_from_file(runtime, seed_path)
+		out[rid] = runtime
+	return out
 
 
 @dataclass
@@ -199,7 +257,8 @@ class KernRuntime:
 			bundles_jsons=bundles_jsons,
 		)
 		restore_path = resolve_checkpoint_file(_cfg_get(cfg, "CHECKPOINT_RESTORE_FILE", ""), _cfg_get(cfg, "CHECKPOINT_RESTORE_DIR", ""))
-		external_runtime_map = dict(external_runtimes or {})
+		external_runtime_map = _build_configured_external_runtimes(root, resolved_config_path, cfg)
+		external_runtime_map.update(dict(external_runtimes or {}))
 		external_runtime_bridge = ExternalRuntimeBridge(external_runtime_map)
 		if restore_path is not None:
 			ws = restore_world_state_from_checkpoint(restore_path, bundle.entity_templates, bundle.named_bundles)

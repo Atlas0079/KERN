@@ -1,0 +1,115 @@
+{
+  "social_phone_browse_feed": {
+    "verb": "BrowseSocialFeed",
+    "planner_hint": "Browse the recommendation feed on a visible phone.",
+    "grounder_hint": "target_id must be a visible phone with ScreenComponent. parameters.limit is optional.",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tag",
+          "target": "target",
+          "tag": "phone"
+        },
+        {
+          "type": "has_component",
+          "target": "target",
+          "component": "ScreenComponent"
+        },
+        {
+          "type": "same_location",
+          "left": "self",
+          "right": "target"
+        }
+      ]
+    },
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "ObserveSocialFeed",
+          "target": "target",
+          "limit": "param:limit"
+        }
+      ]
+    }
+  },
+  "social_phone_open_post": {
+    "verb": "OpenSocialPost",
+    "planner_hint": "Open a post from the phone's current recommendation feed by slot.",
+    "grounder_hint": "target_id must be the phone. parameters.slot selects the feed item; default is 0.",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tag",
+          "target": "target",
+          "tag": "phone"
+        },
+        {
+          "type": "has_component",
+          "target": "target",
+          "component": "ScreenComponent"
+        },
+        {
+          "type": "same_location",
+          "left": "self",
+          "right": "target"
+        }
+      ]
+    },
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "ObserveSocialPost",
+          "target": "target",
+          "slot": "param:slot"
+        }
+      ]
+    }
+  },
+  "social_phone_comment_post": {
+    "verb": "CommentSocialPost",
+    "planner_hint": "Comment on a post currently visible on the phone screen.",
+    "grounder_hint": "target_id must be the phone. parameters.slot is optional; parameters.text is required.",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {
+          "type": "has_tag",
+          "target": "target",
+          "tag": "phone"
+        },
+        {
+          "type": "has_component",
+          "target": "target",
+          "component": "ScreenComponent"
+        },
+        {
+          "type": "same_location",
+          "left": "self",
+          "right": "target"
+        }
+      ]
+    },
+    "process": {
+      "required_progress": 0
+    },
+    "bundle": {
+      "effects": [
+        {
+          "effect": "InteractSocialPost",
+          "target": "target",
+          "slot": "param:slot",
+          "action": "comment",
+          "text": "param:text"
+        }
+      ]
+    }
+  }
+}

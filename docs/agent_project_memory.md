@@ -128,10 +128,15 @@ Important config keys:
 - `CHECKPOINT_EVERY_TICK`: enables checkpoint/archive output when truthy.
 - `CHECKPOINT_SNAPSHOT_INTERVAL_TICKS`: full snapshot interval for archives.
 - `CHECKPOINT_RESTORE_FILE` / `CHECKPOINT_RESTORE_DIR`: restore source.
+- `EXTERNAL_RUNTIMES_JSON`: JSON object declaring external runtime adapters.
+  The first supported type is `sqlite_social_platform`, with `db_path`,
+  optional `reset_db`, and optional `seed_json`.
 
 Committed configs currently include:
 
 - `runtime_config.camping.smoke.json`: no-LLM Camping smoke configuration.
+- `runtime_config.social_phone.smoke.json`: no-LLM social phone smoke
+  configuration with a config-declared SQLite social runtime.
 - `runtime_config.example.json`: example LLM-enabled config using Farm data.
 
 Runtime configs may contain local credentials. Keep real local configs ignored;
@@ -205,6 +210,7 @@ Modeled components include:
 - `EdibleComponent`
 - `ValuableComponent`
 - `WorldStateEntityComponent`
+- `ScreenComponent`
 - `TagComponent`
 
 Unknown scenario-defined components are valid and become `CustomComponent`.
@@ -335,6 +341,8 @@ Important built-in effect groups:
 - resources/abort: `ExchangeResources`, `AbortSimulation`
 - environment: `SetEnvironmentField`, `AddEnvironmentCondition`,
   `RemoveEnvironmentCondition`, `EnvironmentConditionTick`
+- social platform: `ObserveSocialFeed`, `ObserveSocialPost`,
+  `CreateSocialPost`, `InteractSocialPost`, `FollowSocialAccount`
 
 ## Conditions, Queries, And Dynamic Text
 
@@ -456,14 +464,13 @@ Current memory policy is implemented in `KERN.agent_workflow.memory_policy`.
 It filters event and interaction deltas, builds actor-specific memory entries,
 and applies them through `ApplyMemoryPatch`.
 
-The current short-term memory eviction is still mostly FIFO: when
-`short_term_queue` exceeds its limit, evicted entries move into
-`mid_term_prep_queue`. The intended next direction is a weighted attention queue:
-memory entries should combine initial importance, current weight, age/decay, and
-recent access. Low-scoring entries should be removed quickly. Social feed
-exposures may enter short-term memory with very low importance and fast decay;
-they should usually disappear after a small number of ticks unless later
-interaction makes them salient.
+Short-term memory entries combine initial importance, current weight, age/decay,
+created tick, and last accessed tick. Low-scoring entries are pruned. When
+`short_term_queue` exceeds its limit, the lowest-scoring entry is evicted; only
+entries with enough importance move into `mid_term_prep_queue`. Social feed
+exposures may enter short-term memory with very low importance and fast decay,
+so they usually disappear after a small number of ticks unless later interaction
+makes them salient.
 
 For natural-language-heavy events, a later lightweight LLM scorer may adjust
 importance after heuristic filtering. Keep that scorer behind the memory policy
@@ -574,9 +581,22 @@ Returned events must be a list of dictionaries and each dictionary must have a
 non-empty `type`. Bridge contract errors are returned as `ExecutorError` events.
 
 `KernRuntime` injects the bridge each tick from `runtime.external_runtimes`.
-There is currently no config-driven external adapter construction in
-`from_config(...)`; apps/tests can attach adapters to `runtime.external_runtimes`
-after construction.
+`from_config(...)` can construct external runtimes from `EXTERNAL_RUNTIMES_JSON`.
+The supported social declaration shape is:
+
+```json
+{
+  "social": {
+    "type": "sqlite_social_platform",
+    "db_path": "checkpoints/social_phone_smoke/social.sqlite3",
+    "reset_db": true,
+    "seed_json": "Data/SocialPhone/social_seed.json"
+  }
+}
+```
+
+Callers may still pass `external_runtimes={...}` to override or add adapters in
+tests and app code.
 
 The social platform runtime currently exists as a SQLite-backed external
 runtime:
@@ -588,6 +608,11 @@ KERN/external_runtimes/social_platform.py
 It supports `observe_feed`, `observe_post`, `create_post`, `interact_post`,
 `follow_account`, and checkpoint save/restore. Targeted tests live in
 `tests/test_social_platform_runtime.py`.
+
+Initial social data can be loaded through
+`KERN.external_runtimes.social_seed`. The seed format supports explicit
+`accounts`, `posts`, and `follows`, plus lightweight `post_generators` that
+expand topic/text rows into deterministic initial posts.
 
 The next KERN-side integration should be intentionally small and screen-driven:
 
@@ -641,6 +666,8 @@ levels:
   `Data/Bundles.json`.
 - `Data/Camping/`: committed no-LLM smoke scenario used by
   `runtime_config.camping.smoke.json`.
+- `Data/SocialPhone/`: minimal phone/social-media smoke scenario used by
+  `runtime_config.social_phone.smoke.json`.
 - `Data/Farm/`: example scenario used by `runtime_config.example.json`.
 - `Data/SpaceWerewolf/` plus `Data/World_SpaceWerewolf.json`: older/experimental
   scenario data.
@@ -658,6 +685,7 @@ Fast local checks:
 .\venv\Scripts\python.exe -m unittest
 .\venv\Scripts\python.exe -m compileall KERN tools default_orchestrator.py tests
 .\venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.camping.smoke.json
+.\venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.social_phone.smoke.json
 .\venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.example.json
 .\venv\Scripts\python.exe default_orchestrator.py --config runtime_config.camping.smoke.json
 ```
@@ -668,6 +696,7 @@ Targeted tests that often matter for architecture work:
 .\venv\Scripts\python.exe -m unittest tests.test_executor_transactions
 .\venv\Scripts\python.exe -m unittest tests.test_external_runtime_bridge
 .\venv\Scripts\python.exe -m unittest tests.test_social_platform_runtime
+.\venv\Scripts\python.exe -m unittest tests.test_social_phone_config_runtime
 .\venv\Scripts\python.exe -m unittest tests.test_archive
 .\venv\Scripts\python.exe -m unittest tests.test_environment_scopes
 .\venv\Scripts\python.exe -m unittest tests.test_dynamic_text

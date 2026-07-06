@@ -1,0 +1,57 @@
+{
+  "accounts": [
+    {
+      "account_id": "acc_agent",
+      "display_name": "Phone Tester",
+      "interests": {
+        "kindergarten": 1.0,
+        "outdoor": 1.0,
+        "notice": 0.8
+      }
+    },
+    {
+      "account_id": "acc_teacher",
+      "display_name": "Teacher Lin",
+      "interests": {
+        "kindergarten": 1.0,
+        "notice": 1.0
+      }
+    },
+    {
+      "account_id": "acc_parent",
+      "display_name": "Parent Group",
+      "interests": {
+        "outdoor": 1.0,
+        "family": 1.0
+      }
+    }
+  ],
+  "post_generators": [
+    {
+      "author_id": "acc_teacher",
+      "post_id_prefix": "post_teacher_notice",
+      "tick": 1,
+      "tags": ["kindergarten", "outdoor", "notice"],
+      "texts": [
+        "Bring a water bottle for outdoor play tomorrow.",
+        "Class photos will be shared after the morning activity."
+      ]
+    },
+    {
+      "author_id": "acc_parent",
+      "post_id_prefix": "post_parent_share",
+      "tick": 3,
+      "tags": ["outdoor", "family"],
+      "texts": [
+        "The park picnic area was sunny and quiet this afternoon."
+      ]
+    }
+  ],
+  "follows": [
+    {
+      "follower_id": "acc_agent",
+      "followee_id": "acc_teacher",
+      "tick": 1
+    }
+  ]
+}

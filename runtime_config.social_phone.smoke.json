@@ -1,0 +1,16 @@
+{
+  "env": {
+    "USE_LLM": "0",
+    "WORLD_JSON": "SocialPhone/World.json",
+    "RECIPES_JSONS": "SocialPhone/Recipes.json",
+    "REACTIONS_JSONS": "Reactions.json",
+    "BUNDLES_JSONS": "Bundles.json",
+    "ENTITIES_DIRS": "SocialPhone/Entities",
+    "LOG_LEVEL": "warn",
+    "LOG_CATEGORIES": "system,executor,interaction,checkpoint",
+    "MAX_TICKS": "5",
+    "CHECKPOINT_DIR": "checkpoints/social_phone_smoke",
+    "CHECKPOINT_EVERY_TICK": "0",
+    "EXTERNAL_RUNTIMES_JSON": "{\"social\":{\"type\":\"sqlite_social_platform\",\"db_path\":\"checkpoints/social_phone_smoke/social.sqlite3\",\"reset_db\":true,\"seed_json\":\"Data/SocialPhone/social_seed.json\"}}"
+  }
+}
