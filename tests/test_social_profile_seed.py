@@ -46,10 +46,17 @@ class SocialProfileSeedTests(unittest.TestCase):
 			"consumption_style",
 			"practical_interests",
 			"aspirational_interests",
+			"high_cost_consumption_interests",
+			"family_profile",
 			"big_five",
 			"specifics",
 		]:
 			self.assertIn(key, sample)
+		family = sample["family_profile"]
+		for key in ["marital_status", "children_status", "parent_support", "family_burden", "labels"]:
+			self.assertIn(key, family)
+		for key in ["marital_status", "children_status", "parent_support", "family_burden"]:
+			self.assertTrue(str(family["labels"].get(key, "")).strip())
 		specifics = sample["specifics"]
 		self.assertIn("age", specifics)
 		self.assertIsInstance(specifics["age"], int)
@@ -67,6 +74,7 @@ class SocialProfileSeedTests(unittest.TestCase):
 			self.assertTrue(str(specifics.get(key, "")).strip())
 		self.assertEqual(len(specifics["practical_interests"]), len(sample["practical_interests"]))
 		self.assertEqual(len(specifics["aspirational_interests"]), len(sample["aspirational_interests"]))
+		self.assertEqual(len(specifics["high_cost_consumption_interests"]), len(sample["high_cost_consumption_interests"]))
 
 		self.assertGreaterEqual(len(sample["practical_interests"]), 2)
 		self.assertGreaterEqual(len(sample["aspirational_interests"]), 1)
@@ -85,6 +93,10 @@ class SocialProfileSeedTests(unittest.TestCase):
 		self.assertIn("社交平台账号", profile["llm_background_prompt"])
 		self.assertIn("只输出自然语言正文", profile["llm_background_prompt"])
 		self.assertIn("不要使用“姓名：”", profile["llm_background_prompt"])
+		self.assertIn("家庭结构", profile["llm_background_prompt"])
+		self.assertIn("高成本持续消费/计划兴趣", profile["llm_background_prompt"])
+		self.assertIn("职业/身份、家庭关系、兴趣爱好必须保持各自独立", profile["llm_background_prompt"])
+		self.assertIn("不能被写成“路边摊小贩”", profile["llm_background_prompt"])
 
 	def test_young_age_can_bias_economic_weights_without_hard_exclusion(self) -> None:
 		profiles = generate_social_profiles(count=50, seed="young-bias", include_debug=True)
@@ -117,6 +129,11 @@ class SocialProfileSeedTests(unittest.TestCase):
 		self.assertIn("specific_occupation", debug["debug"]["weights"])
 		self.assertIn("specific_living_situation", debug["debug"]["weights"])
 		self.assertIn("specific_media_habit", debug["debug"]["weights"])
+		self.assertIn("high_cost_consumption_interests", debug["debug"]["weights"])
+		self.assertIn("family_marital_status", debug["debug"]["weights"])
+		self.assertIn("family_children_status", debug["debug"]["weights"])
+		self.assertIn("family_parent_support", debug["debug"]["weights"])
+		self.assertIn("family_family_burden", debug["debug"]["weights"])
 		self.assertTrue(debug["debug"]["sampling_trace"])
 
 	def test_specific_occupation_weights_follow_background(self) -> None:
@@ -142,6 +159,34 @@ class SocialProfileSeedTests(unittest.TestCase):
 		self.assertGreater(living_weights["住在自有老房"], living_weights["住在贷款中的两居室"])
 		self.assertTrue(any(t["field"] == "specific_living_situation" for t in older["debug"]["sampling_trace"]))
 
+	def test_high_cost_consumption_is_separate_from_aspirational_interests(self) -> None:
+		profiles = generate_social_profiles(count=500, seed="high-cost-separation", include_debug=True)
+		tight = [p for p in profiles if p["sample"]["economic_status"] in {"struggling", "tight"}]
+		affluent = [p for p in profiles if p["sample"]["economic_status"] == "affluent"]
+		tight_high_cost = [p for p in tight if p["sample"]["high_cost_consumption_interests"]]
+		affluent_high_cost = [p for p in affluent if p["sample"]["high_cost_consumption_interests"]]
+		aspirational_watchers = [
+			p
+			for p in tight
+			if any(str(x.get("id", "")).endswith("_watching") for x in p["sample"]["aspirational_interests"])
+		]
+
+		self.assertLessEqual(len(tight_high_cost), max(1, int(len(tight) * 0.08)))
+		self.assertGreaterEqual(len(aspirational_watchers), 1)
+		self.assertGreaterEqual(len(affluent_high_cost), 1)
+
+	def test_family_rules_bias_implausible_combinations_down(self) -> None:
+		profiles = generate_social_profiles(count=500, seed="family-bias", include_debug=True)
+		young = next(p for p in profiles if p["sample"]["age_band"] == "18-24")
+		young_child_weights = young["debug"]["weights"]["family_children_status"]
+		student = next(p for p in profiles if p["sample"]["occupation_domain"] == "student")
+		student_marital_weights = student["debug"]["weights"]["family_marital_status"]
+
+		self.assertGreater(young_child_weights["no_children"], young_child_weights["adult_children"])
+		self.assertGreater(student_marital_weights["single"], student_marital_weights["married"])
+		self.assertTrue(any(t["field"] == "children_status" for t in young["debug"]["sampling_trace"]))
+		self.assertTrue(any(t["field"] == "marital_status" for t in student["debug"]["sampling_trace"]))
+
 	def test_report_includes_calibration_data(self) -> None:
 		profiles = generate_social_profiles(count=100, seed="report-calibration")
 		data = build_report_data("report-calibration", profiles)
@@ -150,6 +195,10 @@ class SocialProfileSeedTests(unittest.TestCase):
 		self.assertIn("target_comparison", data)
 		self.assertIn("platform_archetype", data["target_comparison"])
 		self.assertIn("flag_reason_counts", data)
+		self.assertIn("high_cost_consumption_interests", data["distributions"])
+		self.assertIn("family_marital_status", data["distributions"])
+		self.assertIn("family_children_status", data["distributions"])
+		self.assertIn("age_by_children", data["cross_tabs"])
 		self.assertEqual(len(data["samples"]), 100)
 
 	def test_cli_writes_utf8_json(self) -> None:

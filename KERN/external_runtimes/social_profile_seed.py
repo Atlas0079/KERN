@@ -124,18 +124,54 @@ PRACTICAL_INTERESTS: WeightedOptions = {
 }
 
 ASPIRATIONAL_INTERESTS: WeightedOptions = {
-	"luxury_cars": 0.12,
-	"golf_culture": 0.06,
-	"high_fashion": 0.08,
-	"fine_dining": 0.08,
-	"international_travel": 0.13,
-	"art_collecting": 0.05,
+	"luxury_cars_watching": 0.12,
+	"golf_culture_watching": 0.06,
+	"high_fashion_watching": 0.08,
+	"fine_dining_watching": 0.08,
+	"international_travel_watching": 0.13,
+	"art_collecting_watching": 0.05,
 	"esports_viewing": 0.10,
 	"celebrity_culture": 0.07,
 	"premium_tech": 0.10,
 	"home_design": 0.10,
 	"motorsport": 0.05,
 	"financial_freedom": 0.16,
+}
+
+HIGH_COST_CONSUMPTION_INTERESTS: WeightedOptions = {
+	"luxury_car_purchase_planning": 0.04,
+	"golf_membership": 0.03,
+	"high_fashion_regular": 0.04,
+	"fine_dining_regular": 0.04,
+	"international_travel_regular": 0.04,
+	"art_collecting_regular": 0.02,
+}
+
+FAMILY_WEIGHTS: dict[str, WeightedOptions] = {
+	"marital_status": {
+		"single": 0.34,
+		"dating": 0.14,
+		"married": 0.42,
+		"divorced": 0.08,
+		"widowed": 0.02,
+	},
+	"children_status": {
+		"no_children": 0.48,
+		"young_children": 0.16,
+		"school_age_children": 0.18,
+		"adult_children": 0.18,
+	},
+	"parent_support": {
+		"no_parent_support": 0.44,
+		"supports_parents_lightly": 0.38,
+		"supports_parents_heavily": 0.10,
+		"caregiver_for_elder": 0.08,
+	},
+	"family_burden": {
+		"low_family_responsibility": 0.44,
+		"moderate_family_responsibility": 0.42,
+		"heavy_family_responsibility": 0.14,
+	},
 }
 
 SPECIFIC_OPTIONS: dict[str, dict[str, list[str]]] = {
@@ -237,18 +273,24 @@ SPECIFIC_INTERESTS: dict[str, list[str]] = {
 	"team_sports": ["打羽毛球", "打篮球", "踢五人制足球", "打乒乓球", "参加社区球局"],
 	"volunteering": ["社区志愿活动", "流浪动物救助", "公益市集帮忙", "给老人送物资", "参与环保活动"],
 	"budget_travel": ["周边一日游", "坐绿皮火车旅行", "低价机票攻略", "青旅旅行", "城市徒步打卡"],
-	"luxury_cars": ["看豪车测评", "收藏跑车图片", "看改装车视频", "关注车展", "听引擎声合集"],
-	"golf_culture": ["看高尔夫赛事", "关注高尔夫穿搭", "刷球场生活方式内容", "看球杆测评", "向往会员制球场"],
-	"high_fashion": ["看秀场视频", "关注潮牌联名", "收藏穿搭图", "看高定工艺纪录片", "研究设计师品牌"],
-	"fine_dining": ["看高级餐厅探店", "收藏米其林榜单", "关注侍酒和菜单设计", "看主厨纪录片", "向往预约制餐厅"],
-	"international_travel": ["看海外旅行 vlog", "收藏城市攻略", "关注移居生活分享", "看廉航攻略", "向往长线旅行"],
-	"art_collecting": ["看画廊展览内容", "收藏艺术家访谈", "关注版画和小雕塑", "看拍卖新闻", "逛艺术市集"],
+	"luxury_cars_watching": ["看豪车测评", "收藏跑车图片", "看改装车视频", "关注车展", "听引擎声合集"],
+	"golf_culture_watching": ["看高尔夫赛事", "关注高尔夫穿搭", "刷球场生活方式内容", "看球杆测评", "向往会员制球场"],
+	"high_fashion_watching": ["看秀场视频", "关注潮牌联名", "收藏穿搭图", "看高定工艺纪录片", "研究设计师品牌"],
+	"fine_dining_watching": ["看高级餐厅探店", "收藏米其林榜单", "关注侍酒和菜单设计", "看主厨纪录片", "向往预约制餐厅"],
+	"international_travel_watching": ["看海外旅行 vlog", "收藏城市攻略", "关注移居生活分享", "看廉航攻略", "向往长线旅行"],
+	"art_collecting_watching": ["看画廊展览内容", "收藏艺术家访谈", "关注版画和小雕塑", "看拍卖新闻", "逛艺术市集"],
 	"esports_viewing": ["追电竞比赛", "看战术复盘", "关注职业选手", "看赛事直播", "刷精彩操作剪辑"],
 	"celebrity_culture": ["追综艺片段", "看明星访谈", "围观娱乐新闻", "关注演员动态", "收藏舞台剪辑"],
 	"premium_tech": ["看旗舰手机测评", "关注电脑硬件", "收藏耳机评测", "看智能家居视频", "研究新款平板"],
 	"home_design": ["看家装案例", "收藏户型改造", "关注收纳设计", "看理想住宅视频", "研究软装搭配"],
 	"motorsport": ["看 F1 集锦", "关注拉力赛", "看赛车纪录片", "研究赛道和车队", "看摩托车赛事"],
 	"financial_freedom": ["看财富自由故事", "关注副业经验", "收藏理财方法", "看创业复盘", "研究提前退休案例"],
+	"luxury_car_purchase_planning": ["认真比较豪华品牌车型", "关注豪车贷款和保养成本", "计划几年内置换高端车", "研究豪华新能源车配置"],
+	"golf_membership": ["固定去高尔夫练习场", "考虑球会会员权益", "关注球具升级和课程", "安排商务高尔夫活动"],
+	"high_fashion_regular": ["定期购买设计师品牌", "关注高端买手店上新", "为重要场合配置高级成衣", "维护几件高价经典款"],
+	"fine_dining_regular": ["定期预约高级餐厅", "关注酒单和主厨菜单", "把高级餐饮当作社交安排", "为纪念日预订精致餐厅"],
+	"international_travel_regular": ["每年安排海外旅行", "关注长线航班和高端酒店", "规划跨国度假路线", "熟悉签证和境外交通"],
+	"art_collecting_regular": ["定期购买版画或小型雕塑", "关注画廊和拍卖预展", "和艺术顾问保持联系", "为家里添置艺术品"],
 }
 
 SPECIFIC_OCCUPATION_WEIGHTS: dict[str, WeightedOptions] = {
@@ -320,18 +362,24 @@ INTEREST_LABELS: dict[str, str] = {
 	"team_sports": "参与型球类/团队运动",
 	"volunteering": "社区志愿活动",
 	"budget_travel": "低预算旅行",
-	"luxury_cars": "豪车文化",
-	"golf_culture": "高尔夫赛事/高尔夫生活方式",
-	"high_fashion": "高定、潮牌或时尚产业",
-	"fine_dining": "高级餐厅和美食评鉴",
-	"international_travel": "海外旅行和异国生活方式",
-	"art_collecting": "艺术收藏和画廊文化",
+	"luxury_cars_watching": "豪车文化观看/向往",
+	"golf_culture_watching": "高尔夫赛事/高尔夫生活方式观看",
+	"high_fashion_watching": "高定、潮牌或时尚产业观看",
+	"fine_dining_watching": "高级餐厅和美食评鉴观看",
+	"international_travel_watching": "海外旅行和异国生活方式观看",
+	"art_collecting_watching": "艺术收藏和画廊文化观看",
 	"esports_viewing": "电竞赛事观看",
 	"celebrity_culture": "明星、娱乐圈和粉丝文化",
 	"premium_tech": "高端电子产品",
 	"home_design": "理想住宅和室内设计",
 	"motorsport": "赛车和改装文化",
 	"financial_freedom": "财富自由叙事",
+	"luxury_car_purchase_planning": "豪华车购买计划",
+	"golf_membership": "高尔夫会员/固定练习",
+	"high_fashion_regular": "高端时尚持续消费",
+	"fine_dining_regular": "高级餐厅持续消费",
+	"international_travel_regular": "定期海外旅行",
+	"art_collecting_regular": "艺术品持续收藏",
 }
 
 CATEGORY_LABELS: dict[str, dict[str, str]] = {
@@ -465,16 +513,47 @@ INTEREST_RULES: tuple[InfluenceRule, ...] = (
 	InfluenceRule("age_band", ("55+",), "practical_interests", {"gardening_plants": 1.75, "walking_hiking": 1.45, "volunteering": 1.4, "video_games": 0.35, "diy_repairs": 1.15}, "55+ 更常见园艺、散步和社区活动。"),
 	InfluenceRule("social_style", ("outgoing_connector", "community_or_family_centered"), "practical_interests", {"team_sports": 1.45, "volunteering": 1.45, "home_cooking": 1.2}, "外向或社区型人格更容易选择和他人共同参与的活动。"),
 	InfluenceRule("social_style", ("reserved_close_circle",), "practical_interests", {"reading_writing": 1.45, "crafts_making": 1.25, "gardening_plants": 1.15, "team_sports": 0.55}, "内敛小圈层更偏独处或低社交密度活动。"),
-	InfluenceRule("economic_status", ("struggling", "tight"), "aspirational_interests", {"luxury_cars": 1.15, "financial_freedom": 1.65, "esports_viewing": 1.25, "golf_culture": 0.65, "fine_dining": 0.75, "international_travel": 0.9}, "经济压力不会阻止观赏性向往，但会压低高消费实践型文化的贴近度。"),
-	InfluenceRule("economic_status", ("comfortable", "affluent"), "aspirational_interests", {"fine_dining": 1.45, "international_travel": 1.45, "golf_culture": 1.35, "art_collecting": 1.3, "luxury_cars": 1.2}, "经济宽裕让高消费兴趣从纯观看更接近日常想象。"),
-	InfluenceRule("age_band", ("18-24",), "aspirational_interests", {"esports_viewing": 1.7, "celebrity_culture": 1.35, "premium_tech": 1.25, "home_design": 0.65, "golf_culture": 0.45}, "年轻人更偏线上娱乐、消费电子和流行文化。"),
-	InfluenceRule("age_band", ("45-54", "55+"), "aspirational_interests", {"home_design": 1.35, "financial_freedom": 1.25, "golf_culture": 1.2, "celebrity_culture": 0.55}, "中老年阶段更关注居住、资产和稳定生活想象。"),
-	InfluenceRule("media_style", ("visual_lifestyle", "short_video_scroller"), "aspirational_interests", {"luxury_cars": 1.25, "high_fashion": 1.35, "fine_dining": 1.2, "celebrity_culture": 1.25}, "视觉生活方式内容会放大身份消费和审美向往。"),
+	InfluenceRule("economic_status", ("struggling", "tight"), "aspirational_interests", {"luxury_cars_watching": 1.15, "financial_freedom": 1.65, "esports_viewing": 1.25, "golf_culture_watching": 0.65, "fine_dining_watching": 0.75, "international_travel_watching": 0.9}, "经济压力不会阻止观赏性向往，但会压低高消费实践型文化的贴近度。"),
+	InfluenceRule("economic_status", ("comfortable", "affluent"), "aspirational_interests", {"fine_dining_watching": 1.45, "international_travel_watching": 1.45, "golf_culture_watching": 1.35, "art_collecting_watching": 1.3, "luxury_cars_watching": 1.2}, "经济宽裕让高消费兴趣从纯观看更接近日常想象。"),
+	InfluenceRule("age_band", ("18-24",), "aspirational_interests", {"esports_viewing": 1.7, "celebrity_culture": 1.35, "premium_tech": 1.25, "home_design": 0.65, "golf_culture_watching": 0.45}, "年轻人更偏线上娱乐、消费电子和流行文化。"),
+	InfluenceRule("age_band", ("45-54", "55+"), "aspirational_interests", {"home_design": 1.35, "financial_freedom": 1.25, "golf_culture_watching": 1.2, "celebrity_culture": 0.55}, "中老年阶段更关注居住、资产和稳定生活想象。"),
+	InfluenceRule("media_style", ("visual_lifestyle", "short_video_scroller"), "aspirational_interests", {"luxury_cars_watching": 1.25, "high_fashion_watching": 1.35, "fine_dining_watching": 1.2, "celebrity_culture": 1.25}, "视觉生活方式内容会放大身份消费和审美向往。"),
 	InfluenceRule("platform_archetype", ("private_social",), "aspirational_interests", {"home_design": 1.35, "financial_freedom": 1.15, "celebrity_culture": 0.75, "esports_viewing": 0.7}, "熟人社交更容易放大家庭生活、居住和稳定感想象。"),
-	InfluenceRule("platform_archetype", ("short_video_mass",), "aspirational_interests", {"luxury_cars": 1.25, "celebrity_culture": 1.25, "premium_tech": 1.2, "financial_freedom": 1.15}, "短视频平台放大高可见度消费和成功叙事。"),
+	InfluenceRule("platform_archetype", ("short_video_mass",), "aspirational_interests", {"luxury_cars_watching": 1.25, "celebrity_culture": 1.25, "premium_tech": 1.2, "financial_freedom": 1.15}, "短视频平台放大高可见度消费和成功叙事。"),
 	InfluenceRule("platform_archetype", ("public_discussion",), "aspirational_interests", {"financial_freedom": 1.35, "premium_tech": 1.1, "celebrity_culture": 0.75}, "公共讨论平台更容易连到财富、职场和技术议题。"),
-	InfluenceRule("platform_archetype", ("lifestyle_discovery",), "aspirational_interests", {"high_fashion": 1.65, "fine_dining": 1.45, "international_travel": 1.35, "home_design": 1.3, "esports_viewing": 0.55}, "生活方式发现平台更强化审美、旅行和消费向往。"),
-	InfluenceRule("platform_archetype", ("interest_community",), "aspirational_interests", {"esports_viewing": 1.7, "premium_tech": 1.45, "motorsport": 1.2, "high_fashion": 0.65}, "兴趣社区更强化电竞、科技装备和垂直爱好观看。"),
+	InfluenceRule("platform_archetype", ("lifestyle_discovery",), "aspirational_interests", {"high_fashion_watching": 1.65, "fine_dining_watching": 1.45, "international_travel_watching": 1.35, "home_design": 1.3, "esports_viewing": 0.55}, "生活方式发现平台更强化审美、旅行和消费向往。"),
+	InfluenceRule("platform_archetype", ("interest_community",), "aspirational_interests", {"esports_viewing": 1.7, "premium_tech": 1.45, "motorsport": 1.2, "high_fashion_watching": 0.65}, "兴趣社区更强化电竞、科技装备和垂直爱好观看。"),
+	InfluenceRule("economic_status", ("struggling", "tight"), "high_cost_consumption_interests", {"luxury_car_purchase_planning": 0.04, "golf_membership": 0.03, "high_fashion_regular": 0.04, "fine_dining_regular": 0.04, "international_travel_regular": 0.03, "art_collecting_regular": 0.02}, "经济紧张时仍可关注高价对象，但真实高成本持续消费应极少。"),
+	InfluenceRule("economic_status", ("comfortable",), "high_cost_consumption_interests", {"luxury_car_purchase_planning": 1.4, "golf_membership": 1.3, "fine_dining_regular": 1.45, "international_travel_regular": 1.35, "high_fashion_regular": 1.3}, "经济比较宽裕时，高成本消费兴趣可以少量出现。"),
+	InfluenceRule("economic_status", ("affluent",), "high_cost_consumption_interests", {"luxury_car_purchase_planning": 4.0, "golf_membership": 4.0, "high_fashion_regular": 4.0, "fine_dining_regular": 4.0, "international_travel_regular": 4.2, "art_collecting_regular": 4.0}, "富裕用户更可能把部分高价兴趣转化为真实持续消费或计划。"),
+	InfluenceRule("age_band", ("18-24",), "high_cost_consumption_interests", {"luxury_car_purchase_planning": 0.2, "golf_membership": 0.1, "art_collecting_regular": 0.15, "international_travel_regular": 0.35}, "年轻用户可以关注高价对象，但真实高成本持续消费更少。"),
+	InfluenceRule("platform_archetype", ("lifestyle_discovery",), "high_cost_consumption_interests", {"high_fashion_regular": 1.4, "fine_dining_regular": 1.35, "international_travel_regular": 1.25}, "生活方式平台会提高高端时尚、餐饮和旅行消费的可见度。"),
+)
+
+FAMILY_RULES: tuple[InfluenceRule, ...] = (
+	InfluenceRule("age_band", ("18-24",), "marital_status", {"single": 3.5, "dating": 1.6, "married": 0.18, "divorced": 0.04, "widowed": 0.01}, "18-24 更常见单身或恋爱，婚育状态保留极低概率。"),
+	InfluenceRule("age_band", ("25-34",), "marital_status", {"single": 1.35, "dating": 1.2, "married": 1.2, "divorced": 0.55, "widowed": 0.05}, "25-34 在单身、恋爱和结婚之间分布更分散。"),
+	InfluenceRule("age_band", ("35-44",), "marital_status", {"single": 0.55, "dating": 0.55, "married": 1.7, "divorced": 1.25, "widowed": 0.1}, "35-44 更常见稳定家庭，也保留离异概率。"),
+	InfluenceRule("age_band", ("45-54",), "marital_status", {"single": 0.4, "dating": 0.45, "married": 1.75, "divorced": 1.35, "widowed": 0.25}, "45-54 更常见已婚、离异或长期家庭状态。"),
+	InfluenceRule("age_band", ("55+",), "marital_status", {"single": 0.35, "dating": 0.25, "married": 1.5, "divorced": 1.15, "widowed": 1.4}, "55+ 的婚姻状态更偏长期伴侣、离异或丧偶。"),
+	InfluenceRule("occupation_domain", ("student",), "marital_status", {"single": 2.0, "dating": 1.4, "married": 0.12, "divorced": 0.04, "widowed": 0.01}, "学生或刚进入社会阶段极少有复杂婚姻状态。"),
+	InfluenceRule("age_band", ("18-24",), "children_status", {"no_children": 7.0, "young_children": 0.08, "school_age_children": 0.01, "adult_children": 0.001}, "18-24 有成年子女属于明显反常识组合，应压到极低。"),
+	InfluenceRule("age_band", ("25-34",), "children_status", {"no_children": 1.8, "young_children": 1.5, "school_age_children": 0.45, "adult_children": 0.01}, "25-34 可有幼儿，成年子女极少。"),
+	InfluenceRule("age_band", ("35-44",), "children_status", {"no_children": 0.8, "young_children": 1.3, "school_age_children": 1.8, "adult_children": 0.08}, "35-44 更常见幼儿或学龄子女。"),
+	InfluenceRule("age_band", ("45-54",), "children_status", {"no_children": 0.65, "young_children": 0.25, "school_age_children": 1.4, "adult_children": 1.3}, "45-54 更常见学龄或成年子女。"),
+	InfluenceRule("age_band", ("55+",), "children_status", {"no_children": 0.55, "young_children": 0.03, "school_age_children": 0.2, "adult_children": 2.4}, "55+ 更常见成年子女。"),
+	InfluenceRule("marital_status", ("single", "dating"), "children_status", {"no_children": 2.2, "young_children": 0.25, "school_age_children": 0.22, "adult_children": 0.55}, "单身或恋爱不排除孩子，但概率低于已婚/离异。"),
+	InfluenceRule("marital_status", ("married",), "children_status", {"young_children": 1.4, "school_age_children": 1.35, "adult_children": 1.2}, "已婚状态更常和子女状态同时出现。"),
+	InfluenceRule("marital_status", ("divorced", "widowed"), "children_status", {"school_age_children": 1.2, "adult_children": 1.25, "no_children": 0.8}, "离异或丧偶状态可以伴随学龄或成年子女。"),
+	InfluenceRule("occupation_domain", ("student",), "children_status", {"no_children": 3.0, "young_children": 0.08, "school_age_children": 0.02, "adult_children": 0.01}, "学生和孩子状态组合应非常少见。"),
+	InfluenceRule("age_band", ("18-24",), "parent_support", {"no_parent_support": 2.4, "supports_parents_lightly": 0.55, "supports_parents_heavily": 0.08, "caregiver_for_elder": 0.05}, "18-24 通常还未形成固定赡养责任。"),
+	InfluenceRule("age_band", ("35-44", "45-54"), "parent_support", {"supports_parents_lightly": 1.5, "supports_parents_heavily": 1.25, "caregiver_for_elder": 1.35}, "中年阶段更常承担父母支持或照护。"),
+	InfluenceRule("economic_status", ("struggling", "tight"), "parent_support", {"supports_parents_heavily": 1.45, "caregiver_for_elder": 1.25}, "经济压力和家庭支持责任可能叠加。"),
+	InfluenceRule("economic_status", ("affluent",), "parent_support", {"supports_parents_heavily": 0.55, "caregiver_for_elder": 0.7}, "富裕状态下较重照护压力仍可能存在，但权重较低。"),
+	InfluenceRule("children_status", ("young_children", "school_age_children"), "family_burden", {"moderate_family_responsibility": 1.9, "heavy_family_responsibility": 1.7, "low_family_responsibility": 0.65}, "幼儿或学龄子女提高家庭责任。"),
+	InfluenceRule("parent_support", ("supports_parents_heavily", "caregiver_for_elder"), "family_burden", {"moderate_family_responsibility": 1.6, "heavy_family_responsibility": 2.5, "low_family_responsibility": 0.45}, "较重赡养或照护提高家庭负担。"),
+	InfluenceRule("economic_status", ("struggling", "tight"), "family_burden", {"heavy_family_responsibility": 1.8, "moderate_family_responsibility": 1.2, "low_family_responsibility": 0.7}, "经济压力会放大家庭责任感。"),
+	InfluenceRule("economic_status", ("affluent",), "family_burden", {"heavy_family_responsibility": 0.45, "low_family_responsibility": 1.25}, "富裕状态下家庭责任可能存在，但不宜大面积沉重化。"),
 )
 
 BIG_FIVE_BASE: dict[str, float] = {"openness": 0.5, "conscientiousness": 0.5, "extraversion": 0.5, "agreeableness": 0.5, "neuroticism": 0.5}
@@ -581,6 +660,42 @@ def _specific_interest(rng: random.Random, interest_id: str) -> str:
 	return str(rng.choice(options))
 
 
+def _sample_family_field(rng: random.Random, field: str, profile: dict[str, Any], extra_rules: tuple[InfluenceRule, ...]) -> tuple[str, dict[str, float], list[dict[str, Any]]]:
+	base = FAMILY_WEIGHTS[field]
+	weights, trace = _apply_rules(base, field, profile, extra_rules)
+	return _weighted_choice(rng, weights), {k: round(v, 4) for k, v in weights.items()}, trace
+
+
+def _family_label(field: str, value: str) -> str:
+	labels = {
+		"marital_status": {
+			"single": "单身",
+			"dating": "恋爱中",
+			"married": "已婚",
+			"divorced": "离异",
+			"widowed": "丧偶",
+		},
+		"children_status": {
+			"no_children": "无子女",
+			"young_children": "有幼儿",
+			"school_age_children": "有学龄子女",
+			"adult_children": "有成年子女",
+		},
+		"parent_support": {
+			"no_parent_support": "无固定赡养支持",
+			"supports_parents_lightly": "轻度支持父母",
+			"supports_parents_heavily": "较重支持父母",
+			"caregiver_for_elder": "照顾年迈长辈",
+		},
+		"family_burden": {
+			"low_family_responsibility": "家庭责任较轻",
+			"moderate_family_responsibility": "家庭责任中等",
+			"heavy_family_responsibility": "家庭责任较重",
+		},
+	}
+	return labels.get(field, {}).get(value, value)
+
+
 class SocialProfileSampler:
 	def __init__(self, seed: int | str | None = None):
 		self.rng = random.Random(seed)
@@ -611,12 +726,20 @@ class SocialProfileSampler:
 
 		practical_weights, practical_trace = _apply_rules(PRACTICAL_INTERESTS, "practical_interests", sample, INTEREST_RULES)
 		aspirational_weights, aspirational_trace = _apply_rules(ASPIRATIONAL_INTERESTS, "aspirational_interests", sample, INTEREST_RULES)
+		high_cost_weights, high_cost_trace = _apply_rules(HIGH_COST_CONSUMPTION_INTERESTS, "high_cost_consumption_interests", sample, INTEREST_RULES)
 		trace.extend(practical_trace)
 		trace.extend(aspirational_trace)
+		trace.extend(high_cost_trace)
 		weights_debug["practical_interests"] = {k: round(v, 4) for k, v in practical_weights.items()}
 		weights_debug["aspirational_interests"] = {k: round(v, 4) for k, v in aspirational_weights.items()}
+		weights_debug["high_cost_consumption_interests"] = {k: round(v, 4) for k, v in high_cost_weights.items()}
 		sample["practical_interests"] = _label_list(_sample_many(self.rng, practical_weights, self.rng.randint(2, 3)))
 		sample["aspirational_interests"] = _label_list(_sample_many(self.rng, aspirational_weights, self.rng.randint(1, 2)))
+		high_cost_count = 1 if self.rng.random() < self._high_cost_interest_probability(sample) else 0
+		sample["high_cost_consumption_interests"] = _label_list(_sample_many(self.rng, high_cost_weights, high_cost_count))
+		sample["family_profile"], family_weights_debug, family_trace = self._sample_family_profile(sample)
+		weights_debug.update(family_weights_debug)
+		trace.extend(family_trace)
 		sample["big_five"] = self._sample_big_five(sample)
 		sample["specifics"], specific_weights_debug, specific_trace = self._sample_specifics(sample)
 		weights_debug.update(specific_weights_debug)
@@ -631,6 +754,7 @@ class SocialProfileSampler:
 			"interest_notes": [
 			"practical_interests are activities the account owner plausibly does or has done.",
 			"aspirational_interests are things the account owner may follow, admire, watch, or fantasize about without regularly practicing.",
+			"high_cost_consumption_interests are actual high-cost habits or plans; they should stay rare and require stronger economic support.",
 			],
 		}
 		profile["llm_background_prompt"] = build_llm_background_prompt(profile)
@@ -663,6 +787,41 @@ class SocialProfileSampler:
 		weights, trace = _apply_rules(base, target_field, sample, SPECIFIC_VALUE_RULES)
 		return _weighted_choice(self.rng, weights), {k: round(v, 4) for k, v in weights.items()}, trace
 
+	def _high_cost_interest_probability(self, sample: dict[str, Any]) -> float:
+		economic = str(sample.get("economic_status", ""))
+		platform = str(sample.get("platform_archetype", ""))
+		prob = {
+			"struggling": 0.01,
+			"tight": 0.02,
+			"stable": 0.05,
+			"comfortable": 0.16,
+			"affluent": 0.34,
+		}.get(economic, 0.04)
+		if platform == "lifestyle_discovery":
+			prob *= 1.25
+		if str(sample.get("age_band", "")) == "18-24":
+			prob *= 0.45
+		return _clamp(prob, 0.0, 0.55)
+
+	def _sample_family_profile(self, sample: dict[str, Any]) -> tuple[dict[str, str], dict[str, dict[str, float]], list[dict[str, Any]]]:
+		family: dict[str, str] = {}
+		weights_debug: dict[str, dict[str, float]] = {}
+		trace: list[dict[str, Any]] = []
+		for field in ["marital_status", "children_status", "parent_support", "family_burden"]:
+			context = dict(sample)
+			context.update(family)
+			value, weights, field_trace = _sample_family_field(self.rng, field, context, FAMILY_RULES)
+			family[field] = value
+			weights_debug[f"family_{field}"] = weights
+			trace.extend(field_trace)
+		family["labels"] = {
+			"marital_status": _family_label("marital_status", family["marital_status"]),
+			"children_status": _family_label("children_status", family["children_status"]),
+			"parent_support": _family_label("parent_support", family["parent_support"]),
+			"family_burden": _family_label("family_burden", family["family_burden"]),
+		}
+		return family, weights_debug, trace
+
 	def _sample_specifics(self, sample: dict[str, Any]) -> tuple[dict[str, Any], dict[str, dict[str, float]], list[dict[str, Any]]]:
 		age_min, age_max = AGE_RANGES.get(str(sample.get("age_band", "")), (25, 34))
 		occupation, occupation_weights, occupation_trace = self._specific_occupation(sample)
@@ -682,6 +841,12 @@ class SocialProfileSampler:
 				continue
 			interest_id = str(item.get("id", "") or "")
 			aspirational.append({"id": interest_id, "label": str(item.get("label", "") or ""), "specific": _specific_interest(self.rng, interest_id)})
+		high_cost = []
+		for item in list(sample.get("high_cost_consumption_interests", []) or []):
+			if not isinstance(item, dict):
+				continue
+			interest_id = str(item.get("id", "") or "")
+			high_cost.append({"id": interest_id, "label": str(item.get("label", "") or ""), "specific": _specific_interest(self.rng, interest_id)})
 		return {
 			"age": self.rng.randint(int(age_min), int(age_max)),
 			"education": education,
@@ -691,6 +856,7 @@ class SocialProfileSampler:
 			"consumption_habit": consumption,
 			"practical_interests": practical,
 			"aspirational_interests": aspirational,
+			"high_cost_consumption_interests": high_cost,
 		}, {
 			"specific_education": education_weights,
 			"specific_occupation": occupation_weights,
@@ -709,21 +875,26 @@ def _interest_labels(items: list[dict[str, str]]) -> str:
 	return "、".join(str(x.get("label", x.get("id", ""))) for x in list(items or []) if isinstance(x, dict))
 
 
+def _specific_interest_text(specifics: dict[str, Any], kind: str) -> str:
+	return "、".join(
+		str(x.get("specific", x.get("label", "")))
+		for x in list(specifics.get(kind, []) or [])
+		if isinstance(x, dict)
+	)
+
+
 def build_llm_background_prompt(profile: dict[str, Any]) -> str:
 	sample = dict(profile.get("sample", {}) or {})
 	big_five = dict(sample.get("big_five", {}) or {})
 	specifics = dict(sample.get("specifics", {}) or {})
 	display = dict(profile.get("display", {}) or {})
-	practical_specifics = "、".join(
-		str(x.get("specific", x.get("label", "")))
-		for x in list(specifics.get("practical_interests", []) or [])
-		if isinstance(x, dict)
-	)
-	aspirational_specifics = "、".join(
-		str(x.get("specific", x.get("label", "")))
-		for x in list(specifics.get("aspirational_interests", []) or [])
-		if isinstance(x, dict)
-	)
+	family = dict(sample.get("family_profile", {}) or {})
+	family_labels = dict(family.get("labels", {}) or {})
+	practical_specifics = _specific_interest_text(specifics, "practical_interests")
+	aspirational_specifics = _specific_interest_text(specifics, "aspirational_interests")
+	high_cost_specifics = _specific_interest_text(specifics, "high_cost_consumption_interests")
+	if not high_cost_specifics:
+		high_cost_specifics = "无"
 	return (
 		"请根据以下结构化采样，为一个社交平台账号背后的模拟 agent 写一份中文自然语言角色背景。"
 		"采样是约束而不是逐字模板；可以自由补充细节，但整体要大致符合。\n\n"
@@ -733,6 +904,13 @@ def build_llm_background_prompt(profile: dict[str, Any]) -> str:
 		"- 要把年龄、生活压力、社交习惯、兴趣和性格倾向融入叙述，让读者通过细节感受到这些设定。\n"
 		"- 可以给角色起一个自然的中文姓名，但姓名也要融进句子里，不要单独作为字段。\n"
 		"- 写 2 到 4 段，总长度适中，适合作为 agent 的背景设定文本。\n\n"
+		"硬性约束：\n"
+		"- 职业/身份、家庭关系、兴趣爱好必须保持各自独立；不要把两个字段柔和成一个新事实。\n"
+		"- 例如 small_business_owner + street_food 不能被写成“路边摊小贩”，除非具体职业/身份本身就是相关职业；service_retail + 美妆兴趣也不能自动写成美妆从业者。\n"
+		"- 观赏性/向往型兴趣只表示会关注、收藏、观看、想象或讨论，不等于已经拥有、经常消费或具备相应资产。\n"
+		"- 高成本持续消费/计划兴趣才可以写成真实高价消费习惯或明确购买计划；如果为“无”，不要补出豪车、会员、高端旅行等持续消费事实。\n"
+		"- 健康、医学、心理、养老等相关兴趣只能写成内容关注或日常经验，不要推导出本人患病、家人患病或职业身份。\n"
+		"- 家庭结构以采样信息为准，不要额外发明婚姻变故、配偶职业、子女疾病、债务来源等强情节。\n\n"
 		"采样信息：\n"
 		f"- 平台使用倾向：{display.get('platform_archetype', sample.get('platform_archetype'))}\n"
 		f"- 年龄段：{display.get('age_band', sample.get('age_band'))}\n"
@@ -744,6 +922,7 @@ def build_llm_background_prompt(profile: dict[str, Any]) -> str:
 		f"- 经济状态：{display.get('economic_status', sample.get('economic_status'))}\n"
 		f"- 居住状态：{display.get('living_situation', sample.get('living_situation'))}\n"
 		f"- 具体居住处境：{specifics.get('living_situation')}\n"
+		f"- 家庭结构：{family_labels.get('marital_status', family.get('marital_status'))}，{family_labels.get('children_status', family.get('children_status'))}，{family_labels.get('parent_support', family.get('parent_support'))}，{family_labels.get('family_burden', family.get('family_burden'))}\n"
 		f"- 社交风格：{display.get('social_style', sample.get('social_style'))}\n"
 		f"- 媒体偏好：{display.get('media_style', sample.get('media_style'))}\n"
 		f"- 具体媒体习惯：{specifics.get('media_habit')}\n"
@@ -754,4 +933,6 @@ def build_llm_background_prompt(profile: dict[str, Any]) -> str:
 		f"- 实操性爱好具体表现：{practical_specifics}\n"
 		f"- 观赏性/向往型兴趣大类：{_interest_labels(list(sample.get('aspirational_interests', []) or []))}\n"
 		f"- 观赏性/向往型兴趣具体表现：{aspirational_specifics}\n"
+		f"- 高成本持续消费/计划兴趣：{_interest_labels(list(sample.get('high_cost_consumption_interests', []) or [])) or '无'}\n"
+		f"- 高成本持续消费/计划具体表现：{high_cost_specifics}\n"
 	)

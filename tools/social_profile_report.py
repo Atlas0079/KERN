@@ -16,6 +16,11 @@ if str(ROOT) not in sys.path:
 from KERN.external_runtimes.social_profile_seed import AGE_BANDS, BASE_WEIGHTS, PLATFORM_ARCHETYPES
 
 
+DEFAULT_PROFILE_PATH = "KERN/external_runtimes/social_profiles/generated_social_profiles.json"
+DEFAULT_REPORT_PATH = "KERN/external_runtimes/social_profiles/social_profile_distribution_report.html"
+DEFAULT_SUMMARY_PATH = "KERN/external_runtimes/social_profiles/social_profile_distribution_summary.json"
+
+
 def _load_profiles(path: Path) -> tuple[str, list[dict[str, Any]]]:
 	data = json.loads(path.read_text(encoding="utf-8"))
 	if isinstance(data, dict):
@@ -45,8 +50,17 @@ def _display(profile: dict[str, Any]) -> dict[str, str]:
 	return {str(k): str(v) for k, v in dict(d).items()} if isinstance(d, dict) else {}
 
 
+def _family(profile: dict[str, Any]) -> dict[str, Any]:
+	f = _sample(profile).get("family_profile", {}) or {}
+	return dict(f) if isinstance(f, dict) else {}
+
+
 def _count_field(profiles: list[dict[str, Any]], field: str) -> dict[str, int]:
 	return dict(Counter(str(_sample(p).get(field, "")) for p in profiles if str(_sample(p).get(field, ""))))
+
+
+def _count_family_field(profiles: list[dict[str, Any]], field: str) -> dict[str, int]:
+	return dict(Counter(str(_family(p).get(field, "")) for p in profiles if str(_family(p).get(field, ""))))
 
 
 def _count_specific(profiles: list[dict[str, Any]], field: str) -> dict[str, int]:
@@ -59,6 +73,16 @@ def _cross_count(profiles: list[dict[str, Any]], row_field: str, col_field: str)
 		s = _sample(p)
 		row = str(s.get(row_field, ""))
 		col = str(s.get(col_field, ""))
+		if row and col:
+			out[row][col] += 1
+	return {k: dict(v) for k, v in out.items()}
+
+
+def _cross_sample_family_count(profiles: list[dict[str, Any]], row_field: str, family_field: str) -> dict[str, dict[str, int]]:
+	out: dict[str, Counter[str]] = defaultdict(Counter)
+	for p in profiles:
+		row = str(_sample(p).get(row_field, ""))
+		col = str(_family(p).get(family_field, ""))
 		if row and col:
 			out[row][col] += 1
 	return {k: dict(v) for k, v in out.items()}
@@ -117,6 +141,15 @@ def _flag_profiles(profiles: list[dict[str, Any]]) -> list[dict[str, Any]]:
 			reasons.append("affluent high-education frontline service")
 		if s.get("economic_status") in {"struggling", "tight"} and s.get("living_situation") == "owned_home":
 			reasons.append("tight economy with owned home")
+		family = _family(p)
+		if s.get("age_band") == "18-24" and family.get("children_status") == "adult_children":
+			reasons.append("young age with adult children")
+		if s.get("occupation_domain") == "student" and family.get("children_status") != "no_children":
+			reasons.append("student with children")
+		if s.get("economic_status") in {"struggling", "tight"} and list(s.get("high_cost_consumption_interests", []) or []):
+			reasons.append("tight economy with high-cost consumption")
+		if family.get("family_burden") == "heavy_family_responsibility" and family.get("children_status") == "no_children" and family.get("parent_support") == "no_parent_support":
+			reasons.append("heavy family burden without dependents")
 		if reasons:
 			flags.append({"profile_id": pid, "reasons": reasons, "summary": str(p.get("summary_line", "")), "specifics": sp})
 	return flags
@@ -163,8 +196,14 @@ def build_report_data(seed: str, profiles: list[dict[str, Any]]) -> dict[str, An
 		"specific_living": _count_specific(profiles, "living_situation"),
 		"practical_interests": _interest_counts(profiles, "practical_interests"),
 		"aspirational_interests": _interest_counts(profiles, "aspirational_interests"),
+		"high_cost_consumption_interests": _interest_counts(profiles, "high_cost_consumption_interests"),
 		"specific_practical_interests": _specific_interest_counts(profiles, "practical_interests"),
 		"specific_aspirational_interests": _specific_interest_counts(profiles, "aspirational_interests"),
+		"specific_high_cost_consumption_interests": _specific_interest_counts(profiles, "high_cost_consumption_interests"),
+		"family_marital_status": _count_family_field(profiles, "marital_status"),
+		"family_children_status": _count_family_field(profiles, "children_status"),
+		"family_parent_support": _count_family_field(profiles, "parent_support"),
+		"family_burden": _count_family_field(profiles, "family_burden"),
 	}
 	flags = _flag_profiles(profiles)
 	return {
@@ -184,6 +223,8 @@ def build_report_data(seed: str, profiles: list[dict[str, Any]]) -> dict[str, An
 			"education_by_occupation": _cross_count(profiles, "education", "occupation_domain"),
 			"economic_by_living": _cross_count(profiles, "economic_status", "living_situation"),
 			"platform_by_media": _cross_count(profiles, "platform_archetype", "media_style"),
+			"age_by_children": _cross_sample_family_count(profiles, "age_band", "children_status"),
+			"economic_by_family_burden": _cross_sample_family_count(profiles, "economic_status", "family_burden"),
 		},
 		"flags": flags,
 		"flag_reason_counts": _flag_reason_counts(flags),
@@ -261,7 +302,12 @@ const distNames = {{
   media_style: "媒体偏好",
   consumption_style: "消费风格",
   practical_interests: "实操爱好大类",
-  aspirational_interests: "观赏/向往兴趣大类"
+  aspirational_interests: "观赏/向往兴趣大类",
+  high_cost_consumption_interests: "高成本持续消费/计划",
+  family_marital_status: "婚恋状态",
+  family_children_status: "子女状态",
+  family_parent_support: "父母支持/照护",
+  family_burden: "家庭责任"
 }};
 function entries(obj) {{ return Object.entries(obj || {{}}).sort((a,b) => b[1]-a[1] || a[0].localeCompare(b[0], 'zh-Hans-CN')); }}
 function card(title, body, cls='') {{ return `<section class="card ${{cls}}"><h2>${{title}}</h2>${{body}}</section>`; }}
@@ -326,6 +372,8 @@ function render() {{
   cards.push(card('年龄 x 职业大类', crossTable(DATA.cross_tabs.age_by_occupation), 'full'));
   cards.push(card('教育 x 职业大类', crossTable(DATA.cross_tabs.education_by_occupation), 'full'));
   cards.push(card('经济 x 居住', crossTable(DATA.cross_tabs.economic_by_living), 'full'));
+  cards.push(card('年龄 x 子女状态', crossTable(DATA.cross_tabs.age_by_children), 'full'));
+  cards.push(card('经济 x 家庭责任', crossTable(DATA.cross_tabs.economic_by_family_burden), 'full'));
   const flags = (DATA.flags || []).slice(0, 80).map(f => `<div class="flag"><b>${{f.profile_id}}</b> ${{(f.reasons || []).join(', ')}}<div class="small">${{f.summary}}</div></div>`).join('') || '<div class="small">No flagged combinations.</div>';
   cards.push(card(`待审查组合 (${{(DATA.flags || []).length}})`, bars('flag_reason_counts', DATA.flag_reason_counts, 10) + flags, 'full'));
   cards.push(card('样本筛选预览', sampleExplorer(), 'full'));
@@ -343,9 +391,9 @@ render();
 
 def main() -> None:
 	parser = argparse.ArgumentParser(description="Create an HTML distribution report for generated social profiles.")
-	parser.add_argument("--input", default="checkpoints/generated_social_profiles.json", help="Generated social profiles JSON.")
-	parser.add_argument("--output", default="checkpoints/social_profile_distribution_report.html", help="Output HTML path.")
-	parser.add_argument("--summary-output", default="checkpoints/social_profile_distribution_summary.json", help="Output summary JSON path.")
+	parser.add_argument("--input", default=DEFAULT_PROFILE_PATH, help="Generated social profiles JSON.")
+	parser.add_argument("--output", default=DEFAULT_REPORT_PATH, help="Output HTML path.")
+	parser.add_argument("--summary-output", default=DEFAULT_SUMMARY_PATH, help="Output summary JSON path.")
 	args = parser.parse_args()
 
 	in_path = Path(args.input)

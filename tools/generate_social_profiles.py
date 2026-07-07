@@ -14,6 +14,9 @@ if str(ROOT) not in sys.path:
 from KERN.external_runtimes.social_profile_seed import generate_social_profiles
 
 
+DEFAULT_OUTPUT = "KERN/external_runtimes/social_profiles/generated_social_profiles.json"
+
+
 def _write_json(path: Path, data: Any) -> None:
 	path.parent.mkdir(parents=True, exist_ok=True)
 	path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -29,7 +32,7 @@ def main() -> None:
 	parser = argparse.ArgumentParser(description="Generate deterministic weighted social-account profile samples.")
 	parser.add_argument("--count", type=int, default=100, help="Number of profiles to generate.")
 	parser.add_argument("--seed", default="kern-social-profiles-v1", help="Random seed. Same seed gives same output.")
-	parser.add_argument("--output", default="checkpoints/generated_social_profiles.json", help="Output path.")
+	parser.add_argument("--output", default=DEFAULT_OUTPUT, help="Output path.")
 	parser.add_argument("--format", choices=["json", "jsonl"], default="json", help="Output format.")
 	parser.add_argument("--include-debug", action="store_true", help="Include sampling trace and adjusted weights.")
 	args = parser.parse_args()

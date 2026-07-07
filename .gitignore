@@ -33,6 +33,7 @@ runtime_config.companion_robot*.json
 checkpoints/
 Saves/
 video/
+KERN/external_runtimes/social_profiles/
 
 # Personal and scratch Markdown documents in repository root
 /*.md
