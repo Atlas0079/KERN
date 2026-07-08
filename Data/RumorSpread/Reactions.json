@@ -1,0 +1,30 @@
+{
+  "rules": [
+    {
+      "id": "rumor_world_tick_social_activity_gate",
+      "on_event": "WorldTickAdvanced",
+      "bundle": {
+        "effects": [
+          {
+            "effect": "SocialActivityGateTick",
+            "provider_id": "social_llm",
+            "max_agents_per_tick": 10,
+            "max_actions_per_agent": 1,
+            "default_screen_context_window_ticks": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "rumor_world_tick_environment_condition",
+      "on_event": "WorldTickAdvanced",
+      "bundle": {
+        "effects": [
+          {
+            "effect": "EnvironmentConditionTick"
+          }
+        ]
+      }
+    }
+  ]
+}

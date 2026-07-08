@@ -47,6 +47,7 @@ EFFECT_SPECS: dict[str, dict[str, str]] = {
 	"CreateSocialPost": {"module": "KERN.executor._effect_social_platform"},
 	"InteractSocialPost": {"module": "KERN.executor._effect_social_platform"},
 	"FollowSocialAccount": {"module": "KERN.executor._effect_social_platform"},
+	"SocialActivityGateTick": {"module": "KERN.executor._effect_social_activity"},
 }
 
 EFFECT_TYPES = frozenset(EFFECT_SPECS.keys())

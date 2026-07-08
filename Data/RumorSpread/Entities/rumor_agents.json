@@ -1,0 +1,140 @@
+{
+  "RumorStudentAgent": {
+    "name": "Student Rumor Participant",
+    "components": {
+      "TagComponent": {
+        "tags": ["character", "agent", "rumor_participant"]
+      },
+      "AgentSetting": {
+        "agent_name": "Student Participant",
+        "personality_summary": "A student with flexible time and frequent social media habits.",
+        "common_knowledge_summary": "You use your phone to follow local social platform discussions and may react to rumors or clarifications."
+      },
+      "AgentControlComponent": {
+        "provider_id": "social_llm"
+      },
+      "MemoryComponent": {
+        "short_term_queue": [],
+        "short_term_max_entries": 12,
+        "mid_term_prep_queue": [],
+        "mid_term_prep_max_entries": 20,
+        "mid_term_queue": [],
+        "mid_term_max_entries": 10
+      },
+      "ContainerComponent": {
+        "slots": {
+          "inventory": {
+            "capacity_volume": 5,
+            "capacity_count": 4,
+            "accepted_tags": []
+          }
+        }
+      },
+      "DecisionArbiterComponent": {
+        "rules": []
+      },
+      "SocialBehaviorComponent": {
+        "base_activity_rate": 0.8,
+        "active_hours": [],
+        "cooldown_ticks": 2,
+        "event_reaction_sensitivity": 0.7,
+        "expression_opportunity_rate": 0.45,
+        "routine_browse_rate": 0.75
+      }
+    }
+  },
+  "RumorWorkerAgent": {
+    "name": "Worker Rumor Participant",
+    "components": {
+      "TagComponent": {
+        "tags": ["character", "agent", "rumor_participant"]
+      },
+      "AgentSetting": {
+        "agent_name": "Worker Participant",
+        "personality_summary": "A worker with less frequent browsing and more evening-focused phone use.",
+        "common_knowledge_summary": "You use your phone to check social platform discussions when there is time."
+      },
+      "AgentControlComponent": {
+        "provider_id": "social_llm"
+      },
+      "MemoryComponent": {
+        "short_term_queue": [],
+        "short_term_max_entries": 12,
+        "mid_term_prep_queue": [],
+        "mid_term_prep_max_entries": 20,
+        "mid_term_queue": [],
+        "mid_term_max_entries": 10
+      },
+      "ContainerComponent": {
+        "slots": {
+          "inventory": {
+            "capacity_volume": 5,
+            "capacity_count": 4,
+            "accepted_tags": []
+          }
+        }
+      },
+      "DecisionArbiterComponent": {
+        "rules": []
+      },
+      "SocialBehaviorComponent": {
+        "base_activity_rate": 0.35,
+        "active_hours": [7, 12, 20, 21, 22],
+        "cooldown_ticks": 4,
+        "event_reaction_sensitivity": 0.45,
+        "expression_opportunity_rate": 0.25,
+        "routine_browse_rate": 0.65
+      }
+    }
+  },
+  "RumorStudentPhone": {
+    "name": "Student Phone",
+    "components": {
+      "TagComponent": {
+        "tags": ["device", "phone", "social_media_terminal"]
+      },
+      "DescriptionComponent": {
+        "description": "A phone logged into a student's social account.",
+        "base_description": "A phone.",
+        "observed_description": "A phone showing a social media app."
+      },
+      "ScreenComponent": {
+        "runtime_id": "social",
+        "account_id": "acc_student",
+        "app": "social_platform",
+        "view": "blank",
+        "title": "",
+        "feed_items": [],
+        "current_post": null,
+        "selected_post_id": "",
+        "cursor": 0,
+        "updated_tick": 0
+      }
+    }
+  },
+  "RumorWorkerPhone": {
+    "name": "Worker Phone",
+    "components": {
+      "TagComponent": {
+        "tags": ["device", "phone", "social_media_terminal"]
+      },
+      "DescriptionComponent": {
+        "description": "A phone logged into a worker's social account.",
+        "base_description": "A phone.",
+        "observed_description": "A phone showing a social media app."
+      },
+      "ScreenComponent": {
+        "runtime_id": "social",
+        "account_id": "acc_worker",
+        "app": "social_platform",
+        "view": "blank",
+        "title": "",
+        "feed_items": [],
+        "current_post": null,
+        "selected_post_id": "",
+        "cursor": 0,
+        "updated_tick": 0
+      }
+    }
+  }
+}

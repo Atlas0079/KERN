@@ -321,7 +321,14 @@ def _apply_operations(ws: Any, actor_id: str, operations: list[dict[str, Any]]) 
 	return False, bool(ops)
 
 
-def run_workflow_cycle(ws: Any, actor_id: str, workflow: Any, reason: str, mode_context: dict[str, Any]) -> dict[str, Any]:
+def run_workflow_cycle(
+	ws: Any,
+	actor_id: str,
+	workflow: Any,
+	reason: str,
+	mode_context: dict[str, Any],
+	max_commands: int | None = None,
+) -> dict[str, Any]:
 	ws_view = _build_workflow_ws_view(ws, actor_id, reason, mode_context)
 	recipe_db = _build_workflow_recipe_db(ws)
 	if not hasattr(workflow, "build_memory_patch_data"):
@@ -358,7 +365,42 @@ def run_workflow_cycle(ws: Any, actor_id: str, workflow: Any, reason: str, mode_
 	if decision is None:
 		_record_workflow_error_event(ws, actor_id, "contract_invalid", {"error": str(err), "raw": str(decision_raw)})
 		return {"type": "error", "error": {"kind": "contract", "code": "WORKFLOW_CONTRACT_INVALID_DECISION", "message": str(err)}}
+	if max_commands is not None and str(decision.get("type", "") or "") == "apply_commands":
+		limit = max(0, int(max_commands or 0))
+		decision["commands"] = [dict(x) for x in list(decision.get("commands", []) or [])[:limit] if isinstance(x, dict)]
 	return _decision_to_outcome(ws, actor_id, str(reason or ""), decision)
+
+
+def run_social_activity_cycle(
+	ws: Any,
+	actor_id: str,
+	workflow: Any,
+	reason: str,
+	mode_context: dict[str, Any],
+	max_actions: int = 1,
+) -> dict[str, Any]:
+	"""
+	Run one bounded social-platform action opportunity for an agent.
+
+	This bypasses the interrupt while-loop used by AgentControlTick. The caller
+	controls when the opportunity exists; the workflow still decides what to do.
+	"""
+
+	limit = max(0, int(max_actions or 0))
+	ctx = dict(mode_context or {})
+	ctx.setdefault("social_activity_opportunity", True)
+	ctx.setdefault("max_social_actions", limit)
+	ctx.setdefault("grounder", True)
+	outcome = run_workflow_cycle(ws, actor_id, workflow, reason, ctx, max_commands=limit)
+	otype = str((outcome or {}).get("type", "") or "")
+	if otype == "apply_operations":
+		stop_loop, consumed = _apply_operations(ws, actor_id, list((outcome or {}).get("operations", []) or []))
+		return {
+			"type": "applied" if consumed else "noop",
+			"consumed": bool(consumed),
+			"stop_loop": bool(stop_loop),
+		}
+	return dict(outcome or {"type": "noop"})
 
 
 def run_agent_control_tick(ws: Any, actor_id: str, workflow: Any, max_actions_in_tick: int) -> None:

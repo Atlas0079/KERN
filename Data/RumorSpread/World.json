@@ -1,0 +1,47 @@
+{
+  "world_state": {
+    "current_tick": 0
+  },
+  "locations": [
+    {
+      "location_id": "rumor_lab_room",
+      "location_name": "Rumor Spread Lab",
+      "description": "A minimal virtual room for social platform rumor propagation experiments.",
+      "entities": [
+        {
+          "instance_id": "agent_student",
+          "template_id": "RumorStudentAgent"
+        },
+        {
+          "instance_id": "agent_worker",
+          "template_id": "RumorWorkerAgent"
+        }
+      ]
+    }
+  ],
+  "paths": [],
+  "entities": [
+    {
+      "instance_id": "phone_student",
+      "template_id": "RumorStudentPhone",
+      "parent_container": "agent_student"
+    },
+    {
+      "instance_id": "phone_worker",
+      "template_id": "RumorWorkerPhone",
+      "parent_container": "agent_worker"
+    }
+  ],
+  "environment_scopes": [
+    {
+      "scope_id": "rumor_lab_env",
+      "scope_type": "region",
+      "location_ids": ["rumor_lab_room"],
+      "priority": 0,
+      "fields": {
+        "light_level": 2
+      },
+      "conditions": []
+    }
+  ]
+}

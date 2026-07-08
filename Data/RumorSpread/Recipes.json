@@ -1,0 +1,97 @@
+{
+  "rumor_browse_feed": {
+    "verb": "BrowseSocialFeed",
+    "planner_hint": "Browse the recommendation feed on your carried phone when you have a social platform activity opportunity.",
+    "grounder_hint": "target_id must be the carried phone from inventory. parameters.limit is optional.",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {"type": "has_tag", "target": "target", "tag": "phone"},
+        {"type": "has_component", "target": "target", "component": "ScreenComponent"},
+        {"type": "inventory_contains", "owner": "self", "item_ref": "target"}
+      ]
+    },
+    "process": {"required_progress": 0},
+    "bundle": {
+      "effects": [
+        {"effect": "ObserveSocialFeed", "target": "target", "limit": "param:limit"}
+      ]
+    }
+  },
+  "rumor_open_post": {
+    "verb": "OpenSocialPost",
+    "planner_hint": "Open a visible post from the carried phone's fresh feed context.",
+    "grounder_hint": "target_id must be the carried phone. parameters.slot selects the feed item; default is 0.",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {"type": "has_tag", "target": "target", "tag": "phone"},
+        {"type": "has_component", "target": "target", "component": "ScreenComponent"},
+        {"type": "inventory_contains", "owner": "self", "item_ref": "target"}
+      ]
+    },
+    "process": {"required_progress": 0},
+    "bundle": {
+      "effects": [
+        {"effect": "ObserveSocialPost", "target": "target", "slot": "param:slot"}
+      ]
+    }
+  },
+  "rumor_comment_post": {
+    "verb": "CommentSocialPost",
+    "planner_hint": "Comment on a currently visible or open post if your reaction is grounded in the context.",
+    "grounder_hint": "target_id must be the carried phone. parameters.text is required; parameters.slot is optional.",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {"type": "has_tag", "target": "target", "tag": "phone"},
+        {"type": "has_component", "target": "target", "component": "ScreenComponent"},
+        {"type": "inventory_contains", "owner": "self", "item_ref": "target"}
+      ]
+    },
+    "process": {"required_progress": 0},
+    "bundle": {
+      "effects": [
+        {"effect": "InteractSocialPost", "target": "target", "slot": "param:slot", "action": "comment", "text": "param:text"}
+      ]
+    }
+  },
+  "rumor_repost_post": {
+    "verb": "RepostSocialPost",
+    "planner_hint": "Repost a currently visible or open post if you decide to amplify it.",
+    "grounder_hint": "target_id must be the carried phone. parameters.text may contain a repost note; parameters.slot is optional.",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {"type": "has_tag", "target": "target", "tag": "phone"},
+        {"type": "has_component", "target": "target", "component": "ScreenComponent"},
+        {"type": "inventory_contains", "owner": "self", "item_ref": "target"}
+      ]
+    },
+    "process": {"required_progress": 0},
+    "bundle": {
+      "effects": [
+        {"effect": "InteractSocialPost", "target": "target", "slot": "param:slot", "action": "repost", "text": "param:text"}
+      ]
+    }
+  },
+  "rumor_create_post": {
+    "verb": "CreateSocialPost",
+    "planner_hint": "Create an original post only when recent memories, offline context, or platform content gives you a reason to react.",
+    "grounder_hint": "target_id must be the carried phone. parameters.text is required; parameters.tags is optional.",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {"type": "has_tag", "target": "target", "tag": "phone"},
+        {"type": "has_component", "target": "target", "component": "ScreenComponent"},
+        {"type": "inventory_contains", "owner": "self", "item_ref": "target"}
+      ]
+    },
+    "process": {"required_progress": 0},
+    "bundle": {
+      "effects": [
+        {"effect": "CreateSocialPost", "target": "target", "text": "param:text", "tags": "param:tags"}
+      ]
+    }
+  }
+}

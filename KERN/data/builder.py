@@ -21,6 +21,7 @@ from ..models.components import (
 	PerceptionComponent,
 	PlayerControlComponent,
 	ScreenComponent,
+	SocialBehaviorComponent,
 	StatusComponent,
 	TagComponent,
 	TaskHostComponent,
@@ -543,6 +544,21 @@ def _build_component(component_name: str, comp_data: Any):
 			status_text=str(d.get("status_text", "") or ""),
 			last_event_type=str(d.get("last_event_type", "") or ""),
 			last_error=str(d.get("last_error", "") or ""),
+		)
+
+	if component_name == "SocialBehaviorComponent":
+		d = comp_data or {}
+		if not isinstance(d, dict):
+			d = {}
+		return SocialBehaviorComponent(
+			base_activity_rate=float(d.get("base_activity_rate", 0.2) or 0.0),
+			active_hours=[int(x) for x in list(d.get("active_hours", []) or [])],
+			cooldown_ticks=int(d.get("cooldown_ticks", 3) or 0),
+			last_social_opportunity_tick=int(d.get("last_social_opportunity_tick", -10**9) or -10**9),
+			event_reaction_sensitivity=float(d.get("event_reaction_sensitivity", 0.5) or 0.0),
+			expression_opportunity_rate=float(d.get("expression_opportunity_rate", 0.2) or 0.0),
+			routine_browse_rate=float(d.get("routine_browse_rate", 0.8) or 0.0),
+			fatigue=float(d.get("fatigue", 0.0) or 0.0),
 		)
 
 	if component_name == "EquipmentComponent":

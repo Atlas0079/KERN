@@ -17,6 +17,7 @@ from .memory import MemoryComponent
 from .perception import PerceptionComponent
 from .player_control import PlayerControlComponent
 from .screen import ScreenComponent
+from .social_behavior import SocialBehaviorComponent
 from .status import StatusComponent
 from .tag import TagComponent
 from .task_host import TaskHostComponent
@@ -41,6 +42,7 @@ __all__ = [
 	"PerceptionComponent",
 	"StatusComponent",
 	"ScreenComponent",
+	"SocialBehaviorComponent",
 	"TagComponent",
 	"TaskHostComponent",
 	"ValuableComponent",

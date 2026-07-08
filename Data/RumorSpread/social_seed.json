@@ -1,0 +1,76 @@
+{
+  "accounts": [
+    {
+      "account_id": "acc_student",
+      "display_name": "Student Participant",
+      "interests": {
+        "campus": 1.0,
+        "health": 0.8,
+        "rumor": 0.7
+      }
+    },
+    {
+      "account_id": "acc_worker",
+      "display_name": "Worker Participant",
+      "interests": {
+        "local": 1.0,
+        "health": 0.7,
+        "rumor": 0.4
+      }
+    },
+    {
+      "account_id": "acc_seed",
+      "display_name": "Local Rumor Watch",
+      "interests": {
+        "local": 1.0,
+        "rumor": 1.0
+      }
+    },
+    {
+      "account_id": "acc_official",
+      "display_name": "Official Notice",
+      "interests": {
+        "clarification": 1.0,
+        "health": 1.0
+      }
+    }
+  ],
+  "posts": [
+    {
+      "account_id": "acc_seed",
+      "post_id": "post_rumor_seed_001",
+      "text": "有人说学校附近的饮水机不安全，很多人已经在转了，大家最好先别喝。",
+      "tags": ["rumor", "health", "campus", "local"],
+      "tick": 1
+    },
+    {
+      "account_id": "acc_official",
+      "post_id": "post_clarification_001",
+      "text": "关于饮水机安全的传言正在核实，请以官方检测公告为准，不要传播未经确认的信息。",
+      "tags": ["clarification", "health", "campus", "local"],
+      "tick": 3
+    }
+  ],
+  "follows": [
+    {
+      "follower_id": "acc_student",
+      "followee_id": "acc_seed",
+      "tick": 1
+    },
+    {
+      "follower_id": "acc_worker",
+      "followee_id": "acc_seed",
+      "tick": 1
+    },
+    {
+      "follower_id": "acc_student",
+      "followee_id": "acc_official",
+      "tick": 1
+    },
+    {
+      "follower_id": "acc_worker",
+      "followee_id": "acc_official",
+      "tick": 1
+    }
+  ]
+}

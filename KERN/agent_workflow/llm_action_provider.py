@@ -755,6 +755,7 @@ Output rules:
 	) -> list[dict[str, Any]]:
 		logger = get_logger()
 		decision_mode_context = {
+			**dict((perception or {}).get("mode_context", {}) or {}),
 			"reason": str(reason or ""),
 			"interrupt_decision_mode": bool((perception or {}).get("interrupt_decision_mode", False)),
 			"interrupt_reason": str((perception or {}).get("interrupt_reason", "") or ""),
