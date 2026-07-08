@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from ..models.components.memory import MemoryComponent
+from .view_profile import normalize_workflow_view_profile
 
 
 DROP_EVENT_TYPES = {
@@ -97,7 +98,8 @@ def _interaction_content(
 	return f"{actor_name}执行了{verb}"
 
 
-def _event_to_memory_entry(actor_id: str, actor_loc_id: str, item: dict[str, Any]) -> dict[str, Any] | None:
+def _event_to_memory_entry(actor_id: str, actor_loc_id: str, item: dict[str, Any], profile: dict[str, Any] | None = None) -> dict[str, Any] | None:
+	memory_profile = dict((profile or {}).get("memory", {}) or {})
 	ev = item.get("event", {}) or {}
 	if not isinstance(ev, dict):
 		return None
@@ -106,6 +108,11 @@ def _event_to_memory_entry(actor_id: str, actor_loc_id: str, item: dict[str, Any
 		return None
 	hint = ev.get("memory_hint", {}) or {}
 	if isinstance(hint, dict) and "importance" in hint:
+		owner = _safe_str(item.get("actor_id"))
+		event_entity_id = _safe_str(ev.get("entity_id"))
+		is_self_related = bool(owner == actor_id or event_entity_id == actor_id)
+		if not is_self_related and not bool(memory_profile.get("include_social_events_from_other_actors", True)):
+			return None
 		try:
 			importance = float(hint.get("importance", 0.1) or 0.1)
 		except Exception:
@@ -136,6 +143,8 @@ def _event_to_memory_entry(actor_id: str, actor_loc_id: str, item: dict[str, Any
 	event_entity_id = _safe_str(ev.get("entity_id"))
 	is_self_related = bool(owner == actor_id or event_entity_id == actor_id)
 	is_same_location = bool(location_id and location_id == actor_loc_id)
+	if is_same_location and not is_self_related and not bool(memory_profile.get("include_same_location_events", True)):
+		is_same_location = False
 	if not is_self_related and not is_same_location:
 		return None
 	topic = "event"
@@ -209,7 +218,9 @@ def _interaction_to_memory_entry(
 	actor_id: str,
 	actor_loc_id: str,
 	item: dict[str, Any],
+	profile: dict[str, Any] | None = None,
 ) -> dict[str, Any] | None:
+	memory_profile = dict((profile or {}).get("memory", {}) or {})
 	if bool(item.get("is_reaction", False)):
 		return None
 	owner = _safe_str(item.get("actor_id"))
@@ -225,6 +236,8 @@ def _interaction_to_memory_entry(
 	is_dialogue = bool(item.get("is_dialogue", False)) or verb == "Say"
 	is_self_related = bool(owner == actor_id or target_id == actor_id)
 	is_same_location = bool(location_id and location_id == actor_loc_id)
+	if is_same_location and not is_self_related and not bool(memory_profile.get("include_same_location_interactions", True)):
+		is_same_location = False
 	if not is_self_related and not is_same_location:
 		return None
 	if is_dialogue:
@@ -256,6 +269,10 @@ def build_memory_patch(
 	min_importance: float = 0.45,
 ) -> dict[str, Any] | None:
 	view = dict(full_ws_view or {}) if isinstance(full_ws_view, dict) else {}
+	profile = normalize_workflow_view_profile(
+		str((view.get("workflow_view_profile", {}) or {}).get("profile_id", "") or ""),
+		dict(view.get("workflow_view_profile", {}) or {}) if isinstance(view.get("workflow_view_profile", {}), dict) else {},
+	)
 	entities = _build_entities_index(view)
 	actor = entities.get(_safe_str(actor_id), {})
 	if not actor:
@@ -277,7 +294,7 @@ def build_memory_patch(
 		seq = int(item.get("seq", 0) or 0)
 		if seq <= last_event_seq_seen:
 			continue
-		entry = _event_to_memory_entry(_safe_str(actor_id), actor_loc_id, item)
+		entry = _event_to_memory_entry(_safe_str(actor_id), actor_loc_id, item, profile)
 		new_last_event = max(new_last_event, seq)
 		if entry is None:
 			continue
@@ -289,7 +306,7 @@ def build_memory_patch(
 		seq = int(item.get("seq", 0) or 0)
 		if seq <= last_interaction_seq_seen:
 			continue
-		entry = _interaction_to_memory_entry(recipe_db, _safe_str(actor_id), actor_loc_id, item)
+		entry = _interaction_to_memory_entry(recipe_db, _safe_str(actor_id), actor_loc_id, item, profile)
 		new_last_interaction = max(new_last_interaction, seq)
 		if entry is None:
 			continue

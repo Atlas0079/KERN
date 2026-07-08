@@ -5,6 +5,7 @@ from typing import Any
 from ..execution_errors import is_execution_error_event
 from .full_ws_view_builder import build_full_ws_view
 from .interrupt_runtime import check_if_interrupt_is_needed
+from .view_profile import active_workflow_view_profile
 from .workflow_contract import validate_workflow_decision
 
 
@@ -25,10 +26,13 @@ def _record_workflow_error_event(ws: Any, actor_id: str, stage: str, detail: dic
 
 def _build_workflow_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[str, Any]) -> dict[str, Any]:
 	full_view = build_full_ws_view(ws, actor_id, reason, mode_context)
+	profile = active_workflow_view_profile(ws=ws, mode_context=mode_context, full_ws_view=full_view)
+	full_view["workflow_view_profile"] = dict(profile)
 	return {
 		"full_ws_view": full_view,
 		"interrupt_reason": str(reason or ""),
 		"mode_context": dict(mode_context or {}),
+		"workflow_view_profile": dict(profile),
 	}
 
 

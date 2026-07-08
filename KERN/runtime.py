@@ -8,6 +8,7 @@ from uuid import uuid4
 
 from .agent_workflow.llm_action_provider import build_default_llm_provider
 from .agent_workflow.simple_policy import SimplePolicyActionProvider
+from .agent_workflow.view_profile import normalize_workflow_view_profile
 from .data.archive import ArchiveRecorder
 from .data.builder import build_world_state
 from .data.checkpoint import (
@@ -131,6 +132,21 @@ def _build_configured_external_runtimes(
 	return out
 
 
+def _build_workflow_view_profile(project_root: Path, config_path: Path, cfg: dict[str, str]) -> dict[str, Any]:
+	profile_id = _cfg_get(cfg, "WORKFLOW_VIEW_PROFILE", "")
+	override: dict[str, Any] = {}
+	profile_path_raw = _cfg_get(cfg, "WORKFLOW_VIEW_PROFILE_JSON", "")
+	if profile_path_raw:
+		profile_path = _resolve_config_relative_path(project_root, config_path, profile_path_raw)
+		data = json.loads(profile_path.read_text(encoding="utf-8"))
+		if not isinstance(data, dict):
+			raise ValueError(f"WORKFLOW_VIEW_PROFILE_JSON must be a JSON object: {profile_path}")
+		override = data
+		if not profile_id:
+			profile_id = str(data.get("profile_id", "") or "")
+	return normalize_workflow_view_profile(profile_id, override)
+
+
 @dataclass
 class KernRuntime:
 	"""
@@ -185,6 +201,7 @@ class KernRuntime:
 	runtime_config: dict[str, str] = field(default_factory=dict)
 	data_bundle: Any = None
 	configured_max_ticks: int = 100
+	workflow_view_profile: dict[str, Any] = field(default_factory=dict)
 
 	def __post_init__(self) -> None:
 		if self.trigger_system is None:
@@ -260,6 +277,7 @@ class KernRuntime:
 		external_runtime_map = _build_configured_external_runtimes(root, resolved_config_path, cfg)
 		external_runtime_map.update(dict(external_runtimes or {}))
 		external_runtime_bridge = ExternalRuntimeBridge(external_runtime_map)
+		workflow_view_profile = _build_workflow_view_profile(root, resolved_config_path, cfg)
 		if restore_path is not None:
 			ws = restore_world_state_from_checkpoint(restore_path, bundle.entity_templates, bundle.named_bundles)
 			if not ws.entities or not ws.locations:
@@ -317,6 +335,7 @@ class KernRuntime:
 			checkpoint_include_logs=_cfg_bool(cfg, "CHECKPOINT_INCLUDE_LOGS", True),
 			checkpoint_snapshot_interval_ticks=_cfg_int(cfg, "CHECKPOINT_SNAPSHOT_INTERVAL_TICKS", 60),
 			dialogue_log_full=_cfg_bool(cfg, "DIALOGUE_LOG_FULL", False),
+			workflow_view_profile=workflow_view_profile,
 			project_root=root,
 			config_path=resolved_config_path,
 			runtime_config=dict(cfg),
@@ -573,6 +592,7 @@ class KernRuntime:
 			"default_action_provider": self.action_provider,
 			"action_providers": dict(self.action_providers or {}),
 			"external_runtime_bridge": ExternalRuntimeBridge(dict(self.external_runtimes or {})),
+			"workflow_view_profile": dict(self.workflow_view_profile or {}),
 			"request_stop": self.request_stop,
 		}
 		from .models.runtime_state import RuntimeState

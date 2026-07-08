@@ -12,6 +12,7 @@
     "CHECKPOINT_DIR": "checkpoints/rumor_spread_smoke",
     "CHECKPOINT_EVERY_TICK": "0",
     "WORKFLOW_CONTRACT_ON_ERROR": "degrade_to_noop",
+    "WORKFLOW_VIEW_PROFILE": "social_platform",
     "EXTERNAL_RUNTIMES_JSON": "{\"social\":{\"type\":\"sqlite_social_platform\",\"db_path\":\"checkpoints/rumor_spread_smoke/social.sqlite3\",\"reset_db\":true,\"seed_json\":\"Data/RumorSpread/social_seed.json\"}}"
   }
 }

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from .view_profile import normalize_workflow_view_profile
+
 
 def _safe_str(v: Any) -> str:
 	return str(v or "")
@@ -117,6 +119,11 @@ def _operable_screen_context(screen: Any, entity_id: str, entity_name: str, tick
 
 def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[str, Any]:
 	view = dict(full_ws_view or {}) if isinstance(full_ws_view, dict) else {}
+	profile = normalize_workflow_view_profile(
+		str((view.get("workflow_view_profile", {}) or {}).get("profile_id", "") or ""),
+		dict(view.get("workflow_view_profile", {}) or {}) if isinstance(view.get("workflow_view_profile", {}), dict) else {},
+	)
+	perception_profile = dict(profile.get("perception", {}) or {})
 	self_id_s = _safe_str(self_id)
 	entities = _build_entity_index(view)
 	locations = _build_location_index(view)
@@ -253,6 +260,7 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 	)
 
 	worker_task = self_ent.get("worker_current_task", {}) or {}
+	location_description = _safe_str(self_loc.get("description")) if bool(perception_profile.get("include_location_description", True)) else ""
 	out = {
 		"self_id": self_id_s,
 		"agent_name": _safe_str(self_ent.get("agent_name")) or _safe_str(self_ent.get("name")),
@@ -265,15 +273,15 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 		"location": {
 			"id": self_loc_id,
 			"name": _safe_str(self_loc.get("name")),
-			"description": _safe_str(self_loc.get("description")),
+			"description": location_description,
 			"light_level": self_loc_light_level,
 			"environment": dict(self_loc_environment),
 		},
 		"perception_blocked_by_darkness": bool(perception_blocked_by_darkness),
-		"map_topology": _build_map_topology(view),
-		"reachable_locations": reachable_locations,
-		"can_start_conversation_here": bool(can_start_conversation_here),
-		"entities": visible_entities,
+		"map_topology": _build_map_topology(view) if bool(perception_profile.get("include_map_topology", True)) else [],
+		"reachable_locations": reachable_locations if bool(perception_profile.get("include_reachable_locations", True)) else [],
+		"can_start_conversation_here": bool(can_start_conversation_here) and bool(perception_profile.get("can_start_conversation_here", True)),
+		"entities": visible_entities if bool(perception_profile.get("include_visible_entities", True)) else [],
 		"current_task_id": _safe_str(worker_task.get("task_id")),
 		"current_task_type": _safe_str(worker_task.get("task_type")),
 		"current_task_status": _safe_str(worker_task.get("task_status")),
@@ -288,13 +296,13 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 			{"preset_id": pid, "description": _safe_str(interrupt_preset_descriptions.get(pid))}
 			for pid in available_interrupt_presets
 		],
-		"inventory": [dict(x) for x in list(self_ent.get("inventory", []) or []) if isinstance(x, dict)],
+		"inventory": [dict(x) for x in list(self_ent.get("inventory", []) or []) if isinstance(x, dict)] if bool(perception_profile.get("include_inventory", True)) else [],
 		"hidden_entity_count": max(0, len(containment.keys()) - len([x for x in visible_ids if x in containment])),
 		"tick": int(view.get("tick", 0) or 0),
 	}
 	operable_screen_contexts: list[dict[str, Any]] = []
 	grounder_mode = bool((view.get("mode_context", {}) or {}).get("grounder", False)) if isinstance(view.get("mode_context", {}), dict) else False
-	if grounder_mode:
+	if grounder_mode and bool(perception_profile.get("include_operable_screen_contexts", True)):
 		window_ticks = int((view.get("mode_context", {}) or {}).get("grounder_screen_context_window_ticks", 2) or 2)
 		for item in list(self_ent.get("inventory", []) or []):
 			if not isinstance(item, dict):

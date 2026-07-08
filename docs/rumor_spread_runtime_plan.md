@@ -669,6 +669,60 @@ score =
 
 已修复一个重要时间问题：feed candidate 现在只包含 `created_tick <= current_tick` 的帖子。否则 scheduled clarification 或后续 PHEME 噪声帖会提前出现在 feed 中。
 
+## Workflow View Profile
+
+社交传播场景不能直接沿用具身智能场景的完整物理感知。若 100 个 agent 位于同一地点，当前感知链路会把同地点实体放入 `visible_entities`，并且 memory policy 可能把同地点事件/interaction 写入记忆，造成上下文和记忆污染。
+
+当前已新增 workflow view profile 机制：
+
+```text
+KERN/agent_workflow/view_profile.py
+```
+
+runtime config 支持：
+
+```json
+{
+  "env": {
+    "WORKFLOW_VIEW_PROFILE": "social_platform"
+  }
+}
+```
+
+也支持后续用 JSON 文件覆盖：
+
+```json
+{
+  "env": {
+    "WORKFLOW_VIEW_PROFILE_JSON": "Data/RumorSpread/workflow_view_profile.json"
+  }
+}
+```
+
+内置 profile：
+
+- `embodied_default`：默认具身场景行为，保留 visible entities、map topology、reachable locations、同地点事件和 interaction 记忆。
+- `social_platform`：社交传播场景行为，关闭物理实体、地图、可达地点、同地点记忆污染，保留 agent 身份、记忆、inventory phone 和 grounder 的 phone screen context。
+- `social_platform_debug`：调试用，关闭地图/可达地点和同地点记忆，但保留 visible entities。
+
+`runtime_config.rumor_spread.smoke.json` 当前已启用：
+
+```text
+WORKFLOW_VIEW_PROFILE=social_platform
+```
+
+这不是单纯 prompt 层过滤。profile 会被注入 workflow view：
+
+- `observer.build_agent_perception(...)` 根据 profile 裁剪 LLM 可见信息。
+- `memory_policy.build_memory_patch(...)` 根据 profile 过滤同地点无关事件和他人 social feed 事件。
+- 默认 profile 保持旧场景兼容。
+
+对 100-agent 谣言传播生成场景的建议：
+
+- 仍优先使用隔离 room 或少量分组 room，作为物理层双保险。
+- 即使未来放在同一地点，`social_platform` profile 也会避免大部分 prompt 膨胀和记忆污染。
+- KERN agent 之间的传播关系应主要来自 social runtime，而不是物理同地点观察。
+
 ## 推荐第一版验收标准
 
 第一版开发完成后，应至少证明：
