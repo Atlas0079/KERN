@@ -5,16 +5,28 @@
   "locations": [
     {
       "location_id": "rumor_lab_room",
-      "location_name": "Rumor Spread Lab",
-      "description": "A minimal virtual room for social platform rumor propagation experiments.",
+      "location_name": "Shared Study Room",
+      "description": "A shared virtual room used for social-platform rumor-spread experiments.",
       "entities": [
         {
-          "instance_id": "agent_student",
-          "template_id": "RumorStudentAgent"
+          "instance_id": "agent_student_high_media",
+          "template_id": "Rumor5Agent_student"
         },
         {
-          "instance_id": "agent_worker",
-          "template_id": "RumorWorkerAgent"
+          "instance_id": "agent_worker_low_media",
+          "template_id": "Rumor5Agent_worker"
+        },
+        {
+          "instance_id": "agent_extrovert_commenter",
+          "template_id": "Rumor5Agent_outgoing_user"
+        },
+        {
+          "instance_id": "agent_cautious_parent",
+          "template_id": "Rumor5Agent_parent"
+        },
+        {
+          "instance_id": "agent_quiet_observer",
+          "template_id": "Rumor5Agent_quiet_observer"
         }
       ]
     }
@@ -22,14 +34,29 @@
   "paths": [],
   "entities": [
     {
-      "instance_id": "phone_student",
-      "template_id": "RumorStudentPhone",
-      "parent_container": "agent_student"
+      "instance_id": "phone_student_high_media",
+      "template_id": "Rumor5Phone_student",
+      "parent_container": "agent_student_high_media"
     },
     {
-      "instance_id": "phone_worker",
-      "template_id": "RumorWorkerPhone",
-      "parent_container": "agent_worker"
+      "instance_id": "phone_worker_low_media",
+      "template_id": "Rumor5Phone_worker",
+      "parent_container": "agent_worker_low_media"
+    },
+    {
+      "instance_id": "phone_extrovert_commenter",
+      "template_id": "Rumor5Phone_outgoing_user",
+      "parent_container": "agent_extrovert_commenter"
+    },
+    {
+      "instance_id": "phone_cautious_parent",
+      "template_id": "Rumor5Phone_parent",
+      "parent_container": "agent_cautious_parent"
+    },
+    {
+      "instance_id": "phone_quiet_observer",
+      "template_id": "Rumor5Phone_quiet_observer",
+      "parent_container": "agent_quiet_observer"
     }
   ],
   "environment_scopes": [

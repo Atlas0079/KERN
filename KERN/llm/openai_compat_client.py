@@ -262,6 +262,7 @@ class DualModelLLM:
 	client: ChatClient
 	planner_model: str
 	grounder_model: str
+	request_extra: dict[str, Any] | None = None
 
 	def planner_text(self, messages: list[dict[str, Any]], temperature: float = 0.4, max_tokens: int | None = None) -> str:
 		return self.client.chat_text(
@@ -269,6 +270,7 @@ class DualModelLLM:
 			model=str(self.planner_model),
 			temperature=float(temperature),
 			max_tokens=max_tokens,
+			extra=dict(self.request_extra or {}),
 		)
 
 	def grounder_text(
@@ -284,4 +286,5 @@ class DualModelLLM:
 			temperature=float(temperature),
 			max_tokens=max_tokens,
 			response_format=response_format,
+			extra=dict(self.request_extra or {}),
 		)

@@ -30,7 +30,7 @@ BUILTIN_PROFILES: dict[str, dict[str, Any]] = {
 			"include_visible_entities": False,
 			"include_map_topology": False,
 			"include_reachable_locations": False,
-			"include_location_description": True,
+			"include_location_description": False,
 			"include_inventory": True,
 			"include_operable_screen_contexts": True,
 			"can_start_conversation_here": False,

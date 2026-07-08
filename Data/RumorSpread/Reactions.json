@@ -25,6 +25,22 @@
           }
         ]
       }
+    },
+    {
+      "id": "rumor_advance_tick_status",
+      "on_event": "AdvanceTick",
+      "condition": {
+        "type": "has_component",
+        "target": "event_entity",
+        "component": "StatusComponent"
+      },
+      "bundle": {
+        "effects": [
+          {
+            "effect": "StatusTick"
+          }
+        ]
+      }
     }
   ]
 }

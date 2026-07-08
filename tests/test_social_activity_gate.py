@@ -17,6 +17,7 @@ from KERN.models.components import (
 	MemoryComponent,
 	ScreenComponent,
 	SocialBehaviorComponent,
+	StatusComponent,
 	TagComponent,
 )
 from KERN.models.entity import Entity
@@ -26,8 +27,9 @@ from KERN.runtime import KernRuntime
 
 
 class OneCommandSocialProvider:
-	def __init__(self) -> None:
+	def __init__(self, verb: str = "BrowseSocialFeed") -> None:
 		self.calls: list[dict[str, Any]] = []
+		self.verb = str(verb or "BrowseSocialFeed")
 
 	def build_memory_patch_data(self, _ws_view: Any, _recipe_db: dict[str, Any], _actor_id: str) -> dict[str, Any] | None:
 		return None
@@ -51,7 +53,7 @@ class OneCommandSocialProvider:
 		return {
 			"type": "apply_commands",
 			"commands": [
-				{"verb": "BrowseSocialFeed", "target_id": f"phone_{actor_id}", "parameters": {"limit": 1}},
+				{"verb": self.verb, "target_id": f"phone_{actor_id}", "parameters": {"limit": 1, "slot": 0}},
 				{"verb": "CreateSocialPost", "target_id": f"phone_{actor_id}", "parameters": {"text": "should not execute"}},
 			],
 		}
@@ -64,7 +66,8 @@ def _add_agent_with_phone(ws: WorldState, agent_id: str, account_id: str, *, rat
 	agent.add_component("AgentControlComponent", AgentControlComponent(provider_id="social_llm"))
 	agent.add_component("DecisionArbiterComponent", DecisionArbiterComponent.from_template_data({}))
 	agent.add_component("MemoryComponent", MemoryComponent())
-	agent.add_component("SocialBehaviorComponent", SocialBehaviorComponent(base_activity_rate=rate, cooldown_ticks=2))
+	agent.add_component("SocialBehaviorComponent", SocialBehaviorComponent(base_activity_rate=rate))
+	agent.add_component("StatusComponent", StatusComponent())
 	agent.add_component("ContainerComponent", ContainerComponent(slots={"inventory": ContainerSlot(config={"capacity_count": 4}, items=[])}))
 	ws.register_entity(agent)
 	ws.get_location_by_id("room").add_entity_id(agent_id)
@@ -77,7 +80,7 @@ def _add_agent_with_phone(ws: WorldState, agent_id: str, account_id: str, *, rat
 	agent.get_component("ContainerComponent").slots["inventory"].items.append(phone_id)
 
 
-def _world_with_two_social_agents(db_path: Path) -> tuple[WorldState, OneCommandSocialProvider]:
+def _world_with_two_social_agents(db_path: Path, *, provider_verb: str = "BrowseSocialFeed") -> tuple[WorldState, OneCommandSocialProvider]:
 	ws = WorldState()
 	ws.register_location(Location(location_id="room", location_name="Room", description=""))
 	_add_agent_with_phone(ws, "agent_a", "acc_a", rate=1.0)
@@ -88,7 +91,7 @@ def _world_with_two_social_agents(db_path: Path) -> tuple[WorldState, OneCommand
 		rt.upsert_account(aid, display, interests={"rumor": 1.0})
 	rt.invoke("create_post", {"account_id": "acc_seed", "post_id": "post_rumor", "text": "Seed rumor", "tags": ["rumor"], "tick": 0}, {})
 
-	provider = OneCommandSocialProvider()
+	provider = OneCommandSocialProvider(provider_verb)
 	from KERN.interaction.engine import InteractionEngine
 
 	ws.services = {
@@ -104,6 +107,16 @@ def _world_with_two_social_agents(db_path: Path) -> tuple[WorldState, OneCommand
 					"condition": {"type": "has_component", "target": "target", "component": "ScreenComponent"},
 					"bundle": {"effects": [{"effect": "CreateSocialPost", "target": "target", "text": "param:text"}]},
 				},
+				"open": {
+					"verb": "OpenSocialPost",
+					"condition": {"type": "has_component", "target": "target", "component": "ScreenComponent"},
+					"bundle": {
+						"effects": [
+							{"effect": "ObserveSocialPost", "target": "target", "slot": "param:slot"},
+							{"effect": "AddStatus", "target": "self", "status_id": "social_action_cooldown", "duration_ticks": 2},
+						]
+					},
+				},
 			}
 		),
 		"action_providers": {"social_llm": provider},
@@ -115,7 +128,7 @@ def _world_with_two_social_agents(db_path: Path) -> tuple[WorldState, OneCommand
 
 
 class SocialActivityGateTests(unittest.TestCase):
-	def test_gate_grants_at_most_one_social_action_per_selected_agent(self) -> None:
+	def test_browse_feed_does_not_consume_social_time_or_trigger_cooldown(self) -> None:
 		with tempfile.TemporaryDirectory() as td:
 			ws, provider = _world_with_two_social_agents(Path(td) / "social.sqlite3")
 			ws.game_time.total_ticks = 1
@@ -135,7 +148,39 @@ class SocialActivityGateTests(unittest.TestCase):
 			self.assertEqual(len(provider.calls), 2)
 			self.assertEqual([row["verb"] for row in ws.interaction_log], ["BrowseSocialFeed", "BrowseSocialFeed"])
 			self.assertTrue(all(call["mode_context"].get("social_activity_opportunity") for call in provider.calls))
-			self.assertEqual(ws.get_entity_by_id("agent_a").get_component("SocialBehaviorComponent").last_social_opportunity_tick, 1)
+			self.assertFalse(ws.get_entity_by_id("agent_a").get_component("StatusComponent").has_status("social_action_cooldown"))
+
+			ws.game_time.total_ticks = 2
+			next_events = WorldExecutor().execute(
+				ws,
+				{"effect": "SocialActivityGateTick", "provider_id": "social_llm", "max_agents_per_tick": 10},
+				{},
+			)
+			self.assertEqual(len([ev for ev in next_events if ev.get("type") == "SocialActivityOpportunityGranted"]), 2)
+			self.assertEqual(len(provider.calls), 4)
+
+	def test_open_post_consumes_social_time_and_triggers_cooldown(self) -> None:
+		with tempfile.TemporaryDirectory() as td:
+			ws, provider = _world_with_two_social_agents(Path(td) / "social.sqlite3", provider_verb="OpenSocialPost")
+			# Preload each phone screen so OpenSocialPost can resolve slot 0.
+			for agent_id in ("agent_a", "agent_b"):
+				WorldExecutor().execute(
+					ws,
+					{"effect": "ObserveSocialFeed", "target": f"phone_{agent_id}", "limit": 1},
+					{"self_id": agent_id},
+				)
+
+			ws.game_time.total_ticks = 1
+			events = WorldExecutor().execute(
+				ws,
+				{"effect": "SocialActivityGateTick", "provider_id": "social_llm", "max_agents_per_tick": 10},
+				{},
+			)
+
+			granted = [ev for ev in events if ev.get("type") == "SocialActivityOpportunityGranted"]
+			self.assertEqual([ev["entity_id"] for ev in granted], ["agent_a", "agent_b"])
+			self.assertTrue(ws.get_entity_by_id("agent_a").get_component("StatusComponent").has_status("social_action_cooldown"))
+			self.assertEqual([row["verb"] for row in ws.interaction_log], ["OpenSocialPost", "OpenSocialPost"])
 
 			ws.game_time.total_ticks = 2
 			cooldown_events = WorldExecutor().execute(

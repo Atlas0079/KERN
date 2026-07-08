@@ -47,10 +47,16 @@ rg --files
 Use the repository virtual environment on this machine when available:
 
 ```powershell
-.\venv\Scripts\python.exe
+.\.venv\Scripts\python.exe
 ```
 
-The plain `python` command may not be available in PATH in this workspace.
+The plain `python` command may not be available in PATH in this workspace. On
+this machine it may resolve to the WindowsApps placeholder instead of a real
+interpreter. The local `.venv` was created from the Codex bundled Python:
+
+```powershell
+C:\Users\atlas\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe
+```
 
 Before changing an API or relying on an interface name, inspect the concrete
 implementation with `rg` and file reads. Do not infer interface names from this
@@ -135,7 +141,7 @@ Important config keys:
 Committed configs currently include:
 
 - `runtime_config.camping.smoke.json`: no-LLM Camping smoke configuration.
-- `runtime_config.social_phone.smoke.json`: no-LLM social phone smoke
+- `runtime_config.rumor_spread.smoke.json`: LLM social rumor-spread smoke
   configuration with a config-declared SQLite social runtime.
 - `runtime_config.example.json`: example LLM-enabled config using Farm data.
 
@@ -588,9 +594,9 @@ The supported social declaration shape is:
 {
   "social": {
     "type": "sqlite_social_platform",
-    "db_path": "checkpoints/social_phone_smoke/social.sqlite3",
+    "db_path": "checkpoints/rumor_spread_smoke/social.sqlite3",
     "reset_db": true,
-    "seed_json": "Data/SocialPhone/social_seed.json"
+    "seed_json": "Data/RumorSpread/social_seed.json"
   }
 }
 ```
@@ -614,18 +620,33 @@ Initial social data can be loaded through
 `accounts`, `posts`, and `follows`, plus lightweight `post_generators` that
 expand topic/text rows into deterministic initial posts.
 
-The next KERN-side integration should be intentionally small and screen-driven:
+Structured social-account profile generation lives in
+`KERN.external_runtimes.social_profile_seed`. It can generate reproducible
+profile samples plus LLM background prompts through:
+
+```powershell
+.\.venv\Scripts\python.exe tools\generate_social_profiles.py --count 100 --seed kern-social-profiles-v1
+.\.venv\Scripts\python.exe tools\social_profile_report.py
+```
+
+Generated profile outputs are ignored under
+`KERN/external_runtimes/social_profiles/`. These profiles are not yet loaded as
+KERN agents automatically; a later scenario generator should convert them into
+agent entities, carried phone entities, social accounts, interests, and follow
+graphs.
+
+The KERN-side integration is intentionally small and screen-driven:
 
 ```text
 agent -> phone entity -> ScreenComponent -> runtime_id/account_id
 -> external_runtime_bridge -> SQLiteSocialPlatformRuntime
 ```
 
-The first KERN component should be `ScreenComponent`, mounted on a phone or other
-terminal entity. Social effects update that screen with feed cards, the current
-post, selected post ID, cursor, and status text. Planner/grounder code should
-prefer post IDs from `ScreenComponent.feed_items`, `current_post`, or
-`selected_post_id` instead of requiring the agent to remember raw post IDs.
+`ScreenComponent` is mounted on a phone or other terminal entity. Social effects
+update that screen with feed cards, the current post, selected post ID, cursor,
+and status text. Planner/grounder code should prefer post IDs from
+`ScreenComponent.feed_items`, `current_post`, or `selected_post_id` instead of
+requiring the agent to remember raw post IDs.
 
 Planner and grounder should receive different projections of that screen state.
 Planner-facing context should expose semantic summaries only, such as post title,
@@ -647,7 +668,7 @@ account spoofing, shared devices, or permission problems become real issues,
 upgrade the model later with `SocialAppComponent`, `DeviceAccessComponent`, or
 session components.
 
-Planned social effect types are:
+Implemented social effect types are:
 
 - `ObserveSocialFeed`
 - `ObserveSocialPost`
@@ -655,7 +676,28 @@ Planned social effect types are:
 - `InteractSocialPost`
 - `FollowSocialAccount`
 
-The current design note is `docs/social_platform_runtime_plan.md`.
+`SocialBehaviorComponent` and `SocialActivityGateTick` provide the current
+rumor-spread scene's social activity gate. The gate gives selected agents a
+bounded social workflow opportunity without using the default
+`AgentControlTick(max_actions=50)` loop. It controls when an agent may act on
+the platform; the LLM/provider still decides what action to take. Browsing the
+feed (`BrowseSocialFeed`) is treated as free screen refresh. Opening a post,
+commenting, liking, reposting, or creating a post consumes social time and
+writes `social_action_cooldown` onto the actor through `AddStatus(...,
+duration_ticks=2)`. `SocialActivityGateTick` only checks that status; it no
+longer reads workflow-internal executed verbs or `SocialBehaviorComponent`
+cooldown fields. `fatigue` on `SocialBehaviorComponent` is a reserved field for
+a future activity-budget model and is not used by the current gate.
+
+Current social documentation:
+
+- `docs/social_platform_runtime_plan.md`: canonical combined note for the
+  external social runtime, phone screen, social effects, recommendation, seed,
+  checkpoint behavior, RumorSpread scenario control flow, prompt/agent flow,
+  `SocialActivityGateTick`, PHEME seed conversion, intervention and dashboard
+  roadmap.
+- `docs/rumor_spread_runtime_plan.md`: compatibility stub that points to the
+  combined social platform note.
 
 ## Scenario Data Status
 
@@ -666,8 +708,10 @@ levels:
   `Data/Bundles.json`.
 - `Data/Camping/`: committed no-LLM smoke scenario used by
   `runtime_config.camping.smoke.json`.
-- `Data/SocialPhone/`: minimal phone/social-media smoke scenario used by
-  `runtime_config.social_phone.smoke.json`.
+- `Data/RumorSpread/`: five-agent LLM social rumor-spread scenario used by
+  `runtime_config.rumor_spread.smoke.json`. It uses its own reactions,
+  `SocialActivityGateTick`, and `WORKFLOW_VIEW_PROFILE=social_platform` to avoid
+  embodied same-location perception/memory pollution.
 - `Data/Farm/`: example scenario used by `runtime_config.example.json`.
 - `Data/SpaceWerewolf/` plus `Data/World_SpaceWerewolf.json`: older/experimental
   scenario data.
@@ -682,26 +726,45 @@ Validate against the actual JSON and runtime behavior.
 Fast local checks:
 
 ```powershell
-.\venv\Scripts\python.exe -m unittest
-.\venv\Scripts\python.exe -m compileall KERN tools default_orchestrator.py tests
-.\venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.camping.smoke.json
-.\venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.social_phone.smoke.json
-.\venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.example.json
-.\venv\Scripts\python.exe default_orchestrator.py --config runtime_config.camping.smoke.json
+.\.venv\Scripts\python.exe -m unittest
+.\.venv\Scripts\python.exe -m compileall KERN tools default_orchestrator.py tests
+.\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.camping.smoke.json
+.\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.rumor_spread.smoke.json
+.\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.example.json
+.\.venv\Scripts\python.exe default_orchestrator.py --config runtime_config.camping.smoke.json
 ```
 
 Targeted tests that often matter for architecture work:
 
 ```powershell
-.\venv\Scripts\python.exe -m unittest tests.test_executor_transactions
-.\venv\Scripts\python.exe -m unittest tests.test_external_runtime_bridge
-.\venv\Scripts\python.exe -m unittest tests.test_social_platform_runtime
-.\venv\Scripts\python.exe -m unittest tests.test_social_phone_config_runtime
-.\venv\Scripts\python.exe -m unittest tests.test_archive
-.\venv\Scripts\python.exe -m unittest tests.test_environment_scopes
-.\venv\Scripts\python.exe -m unittest tests.test_dynamic_text
-.\venv\Scripts\python.exe -m unittest tests.test_task_lifecycle
+.\.venv\Scripts\python.exe -m unittest tests.test_executor_transactions
+.\.venv\Scripts\python.exe -m unittest tests.test_external_runtime_bridge
+.\.venv\Scripts\python.exe -m unittest tests.test_social_platform_runtime
+.\.venv\Scripts\python.exe -m unittest tests.test_rumor_spread_config_runtime
+.\.venv\Scripts\python.exe -m unittest tests.test_archive
+.\.venv\Scripts\python.exe -m unittest tests.test_environment_scopes
+.\.venv\Scripts\python.exe -m unittest tests.test_dynamic_text
+.\.venv\Scripts\python.exe -m unittest tests.test_task_lifecycle
 ```
+
+## Bounded LLM Smoke Tests
+
+Short DeepSeek v4 pro LLM smoke tests are allowed without asking the user for
+separate permission when they are directly relevant to the current agent
+workflow change. Treat these as free for project work, but keep them bounded and
+explicit:
+
+- State the intended scope before running, such as "two workflow rounds" or "one
+  scenario tick".
+- State the timeout or expected maximum duration. Prefer short targeted checks
+  over long runs.
+- Do not use this allowance for long-running full test suites, broad scenario
+  sweeps, or open-ended LLM evaluations.
+- Report the actual elapsed time and the key behavior observed.
+
+Example accepted scope: run the RumorSpread LLM smoke with `deepseek-v4-pro`
+for two workflow rounds, first browsing a carried phone feed and then opening
+one visible post from the operable screen context.
 
 ## Documentation And Encoding Notes
 
@@ -713,7 +776,21 @@ Before making encoding fixes, verify actual bytes with an explicit UTF-8 read,
 for example:
 
 ```powershell
-.\venv\Scripts\python.exe -c "from pathlib import Path; print(Path('docs/social_platform_runtime_plan.md').read_text(encoding='utf-8')[:200])"
+$env:PYTHONIOENCODING='utf-8'
+.\.venv\Scripts\python.exe -c "from pathlib import Path; print(Path('docs/social_platform_runtime_plan.md').read_text(encoding='utf-8')[:200])"
+```
+
+This workspace is commonly launched from Windows PowerShell 5.1 with code page
+936 and Python stdout defaulting to GBK/CP936. That can make valid UTF-8 Chinese
+files look garbled in Codex shell output. For Chinese-heavy reads or Python
+commands that print Chinese, normalize the shell output first:
+
+```powershell
+[Console]::InputEncoding = [System.Text.UTF8Encoding]::new($false)
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+$OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+chcp 65001
+$env:PYTHONIOENCODING='utf-8'
 ```
 
 When editing Chinese text, read and write files as UTF-8.

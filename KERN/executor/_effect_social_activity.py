@@ -5,8 +5,11 @@ from typing import Any
 
 from ..agent_workflow.runtime import run_social_activity_cycle
 from ..execution_errors import ERROR_KIND_CONTRACT, executor_error
-from ..models.components import AgentControlComponent, ContainerComponent, ScreenComponent, SocialBehaviorComponent
+from ..models.components import AgentControlComponent, ContainerComponent, ScreenComponent, SocialBehaviorComponent, StatusComponent
 from ._effect_binder import _base_bind, _resolve_param_token
+
+
+SOCIAL_ACTION_COOLDOWN_STATUS = "social_action_cooldown"
 
 
 def _optional_int(params: dict[str, Any], key: str, ctx: dict[str, Any], default: int) -> int:
@@ -90,8 +93,7 @@ def _active_hour_multiplier(ws: Any, behavior: SocialBehaviorComponent) -> float
 
 def _probability(ws: Any, behavior: SocialBehaviorComponent, base_rate_multiplier: float) -> float:
 	base = _clamp01(getattr(behavior, "base_activity_rate", 0.0)) * max(0.0, float(base_rate_multiplier or 0.0))
-	fatigue = _clamp01(getattr(behavior, "fatigue", 0.0))
-	value = base * _active_hour_multiplier(ws, behavior) * max(0.0, 1.0 - fatigue)
+	value = base * _active_hour_multiplier(ws, behavior)
 	return _clamp01(value)
 
 
@@ -103,6 +105,11 @@ def _workflow_for_agent(ws: Any, ctrl: AgentControlComponent, requested_provider
 	if provider_id:
 		return (action_providers or {}).get(provider_id)
 	return default_provider
+
+
+def _has_status(entity: Any, status_id: str) -> bool:
+	comp = entity.get_component("StatusComponent") if hasattr(entity, "get_component") else None
+	return bool(isinstance(comp, StatusComponent) and comp.has_status(status_id))
 
 
 def execute_social_activity_gate_tick(_executor: Any, ws: Any, data: dict[str, Any], _context: dict[str, Any]) -> list[dict[str, Any]]:
@@ -150,9 +157,7 @@ def execute_social_activity_gate_tick(_executor: Any, ws: Any, data: dict[str, A
 		if workflow is None or not hasattr(workflow, "decide"):
 			skipped["provider"] += 1
 			continue
-		last_tick = int(getattr(behavior, "last_social_opportunity_tick", -10**9) or -10**9)
-		cooldown = max(0, int(getattr(behavior, "cooldown_ticks", 0) or 0))
-		if tick - last_tick < cooldown:
+		if _has_status(agent, SOCIAL_ACTION_COOLDOWN_STATUS):
 			skipped["cooldown"] += 1
 			continue
 		probability = _probability(ws, behavior, base_rate_multiplier)
@@ -163,8 +168,6 @@ def execute_social_activity_gate_tick(_executor: Any, ws: Any, data: dict[str, A
 		opportunity_type = "routine_browse"
 		if _clamp01(getattr(behavior, "expression_opportunity_rate", 0.0)) >= _clamp01(getattr(behavior, "routine_browse_rate", 0.0)):
 			opportunity_type = "expression_opportunity"
-		behavior.last_social_opportunity_tick = int(tick)
-		behavior.fatigue = _clamp01(float(getattr(behavior, "fatigue", 0.0) or 0.0) + 0.1)
 		mode_context = {
 			"social_activity_opportunity": True,
 			"activity_reason": opportunity_type,

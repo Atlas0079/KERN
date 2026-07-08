@@ -6,6 +6,7 @@ __pycache__/
 # Environments
 .env
 .env.*
+!.env.example
 .venv
 env/
 venv/
@@ -27,6 +28,9 @@ runtime_config.json
 runtime_config_abbao.json
 runtime_config.local.json
 runtime_config.*.local.json
+runtime_config*.local*.json
+runtime_config.*.secret.json
+runtime_config.*.private.json
 runtime_config.companion_robot*.json
 
 # Runtime artifacts

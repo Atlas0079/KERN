@@ -2,7 +2,7 @@
   "rumor_browse_feed": {
     "verb": "BrowseSocialFeed",
     "planner_hint": "Browse the recommendation feed on your carried phone when you have a social platform activity opportunity.",
-    "grounder_hint": "target_id must be the carried phone from inventory. parameters.limit is optional.",
+    "grounder_hint": "target_id must be the carried phone from inventory. parameters.limit is optional; use 8 when refreshing a general feed.",
     "condition": {
       "type": "all",
       "conditions": [
@@ -14,7 +14,7 @@
     "process": {"required_progress": 0},
     "bundle": {
       "effects": [
-        {"effect": "ObserveSocialFeed", "target": "target", "limit": "param:limit"}
+        {"effect": "ObserveSocialFeed", "target": "target", "limit": "param:limit:8"}
       ]
     }
   },
@@ -33,7 +33,8 @@
     "process": {"required_progress": 0},
     "bundle": {
       "effects": [
-        {"effect": "ObserveSocialPost", "target": "target", "slot": "param:slot"}
+        {"effect": "ObserveSocialPost", "target": "target", "slot": "param:slot"},
+        {"effect": "AddStatus", "target": "self", "status_id": "social_action_cooldown", "duration_ticks": 2}
       ]
     }
   },
@@ -52,13 +53,14 @@
     "process": {"required_progress": 0},
     "bundle": {
       "effects": [
-        {"effect": "InteractSocialPost", "target": "target", "slot": "param:slot", "action": "comment", "text": "param:text"}
+        {"effect": "InteractSocialPost", "target": "target", "slot": "param:slot", "action": "comment", "text": "param:text"},
+        {"effect": "AddStatus", "target": "self", "status_id": "social_action_cooldown", "duration_ticks": 2}
       ]
     }
   },
   "rumor_repost_post": {
     "verb": "RepostSocialPost",
-    "planner_hint": "Repost a currently visible or open post if you decide to amplify it.",
+    "planner_hint": "Repost a currently visible or open post if you decide the information is worth sharing.",
     "grounder_hint": "target_id must be the carried phone. parameters.text may contain a repost note; parameters.slot is optional.",
     "condition": {
       "type": "all",
@@ -71,13 +73,34 @@
     "process": {"required_progress": 0},
     "bundle": {
       "effects": [
-        {"effect": "InteractSocialPost", "target": "target", "slot": "param:slot", "action": "repost", "text": "param:text"}
+        {"effect": "InteractSocialPost", "target": "target", "slot": "param:slot", "action": "repost", "text": "param:text"},
+        {"effect": "AddStatus", "target": "self", "status_id": "social_action_cooldown", "duration_ticks": 2}
+      ]
+    }
+  },
+  "rumor_like_post": {
+    "verb": "LikeSocialPost",
+    "planner_hint": "Like a currently visible or open post only if you want to register lightweight agreement or attention.",
+    "grounder_hint": "target_id must be the carried phone. parameters.slot is optional; use the fresh screen context if choosing a feed item.",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {"type": "has_tag", "target": "target", "tag": "phone"},
+        {"type": "has_component", "target": "target", "component": "ScreenComponent"},
+        {"type": "inventory_contains", "owner": "self", "item_ref": "target"}
+      ]
+    },
+    "process": {"required_progress": 0},
+    "bundle": {
+      "effects": [
+        {"effect": "InteractSocialPost", "target": "target", "slot": "param:slot", "action": "like"},
+        {"effect": "AddStatus", "target": "self", "status_id": "social_action_cooldown", "duration_ticks": 2}
       ]
     }
   },
   "rumor_create_post": {
     "verb": "CreateSocialPost",
-    "planner_hint": "Create an original post only when recent memories, offline context, or platform content gives you a reason to react.",
+    "planner_hint": "Create an original post only when recent memories, offline context, or platform content gives you a reason to express a grounded reaction.",
     "grounder_hint": "target_id must be the carried phone. parameters.text is required; parameters.tags is optional.",
     "condition": {
       "type": "all",
@@ -90,7 +113,8 @@
     "process": {"required_progress": 0},
     "bundle": {
       "effects": [
-        {"effect": "CreateSocialPost", "target": "target", "text": "param:text", "tags": "param:tags"}
+        {"effect": "CreateSocialPost", "target": "target", "text": "param:text", "tags": "param:tags"},
+        {"effect": "AddStatus", "target": "self", "status_id": "social_action_cooldown", "duration_ticks": 2}
       ]
     }
   }

@@ -26,9 +26,11 @@ def _resolve_param_token(value: Any, ctx: dict[str, Any]) -> Any:
 		key = str(value).strip()
 		if key.startswith("param:"):
 			params = ctx.get("parameters", {}) or {}
+			body = key[len("param:") :]
+			param_key, sep, default = body.partition(":")
 			if isinstance(params, dict):
-				return params.get(key[len("param:") :], "")
-			return ""
+				return params.get(param_key, default if sep else "")
+			return default if sep else ""
 		return value
 	if isinstance(value, list):
 		return [_resolve_param_token(v, ctx) for v in value]

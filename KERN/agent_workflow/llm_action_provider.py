@@ -163,18 +163,16 @@ def _operable_screen_contexts_text(contexts: list[dict[str, Any]]) -> str:
 		)
 		feed_items = [dict(x) for x in list(ctx.get("feed_items", []) or []) if isinstance(x, dict)]
 		for idx, item in enumerate(feed_items):
-			post_id = str(item.get("post_id", "") or "")
-			author_id = str(item.get("author_id", "") or "").strip()
-			author = str(item.get("author_display_name", "") or author_id).strip()
+			author = str(item.get("author_display_name", "") or "").strip()
 			title_or_summary = str(item.get("title", "") or item.get("summary", "") or "").strip()
-			lines.append(f"  - slot {idx}: post_id={post_id}, author_id={author_id}, author={author}, title_or_summary={title_or_summary}")
+			author_text = f", author={author}" if author else ""
+			lines.append(f"  - slot {idx}{author_text}, content={title_or_summary}")
 		current = ctx.get("current_post", {}) or {}
 		if isinstance(current, dict) and current:
-			post_id = str(current.get("post_id", "") or "")
-			author_id = str(current.get("author_id", "") or "").strip()
-			author = str(current.get("author_display_name", "") or author_id).strip()
+			author = str(current.get("author_display_name", "") or "").strip()
 			title_or_summary = str(current.get("title", "") or current.get("summary", "") or current.get("text", "") or "").strip()
-			lines.append(f"  - current_post: post_id={post_id}, author_id={author_id}, author={author}, title_or_summary={title_or_summary}")
+			author_text = f", author={author}" if author else ""
+			lines.append(f"  - current_post{author_text}, content={title_or_summary}")
 	return "\n".join(lines) if lines else "(No operable screen contexts)"
 
 
@@ -1267,6 +1265,15 @@ def build_default_llm_provider(config: dict[str, Any] | None = None) -> LLMActio
 			return int(raw)
 		except Exception:
 			return int(default)
+	def _cfg_json(key: str) -> dict[str, Any]:
+		raw = _cfg(key, "")
+		if not raw:
+			return {}
+		try:
+			data = json.loads(raw)
+		except Exception:
+			return {}
+		return dict(data) if isinstance(data, dict) else {}
 
 	timeout_env = _cfg("LLM_TIMEOUT_SECONDS", "")
 	retries_env = _cfg("LLM_MAX_RETRIES", "")
@@ -1294,7 +1301,8 @@ def build_default_llm_provider(config: dict[str, Any] | None = None) -> LLMActio
 		)
 		planner_model = _cfg("LLM_PLANNER_MODEL", "") or "gemini-3-pro-preview"
 		grounder_model = _cfg("LLM_GROUNDER_MODEL", "") or "gemini-3-flash-preview"
-	llm = DualModelLLM(client=client, planner_model=planner_model, grounder_model=grounder_model)
+	request_extra = _cfg_json("LLM_REQUEST_EXTRA_JSON")
+	llm = DualModelLLM(client=client, planner_model=planner_model, grounder_model=grounder_model, request_extra=request_extra)
 	return LLMActionProvider(
 		llm=llm,
 		debug=False,

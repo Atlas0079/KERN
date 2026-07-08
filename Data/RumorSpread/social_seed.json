@@ -1,26 +1,58 @@
 {
   "accounts": [
     {
-      "account_id": "acc_student",
-      "display_name": "Student Participant",
+      "account_id": "acc_student_high_media",
+      "display_name": "Student High Media",
       "interests": {
         "campus": 1.0,
-        "health": 0.8,
-        "rumor": 0.7
+        "health": 0.9,
+        "rumor": 0.8,
+        "local": 0.4
       }
     },
     {
-      "account_id": "acc_worker",
-      "display_name": "Worker Participant",
+      "account_id": "acc_worker_low_media",
+      "display_name": "Worker Low Media",
       "interests": {
         "local": 1.0,
         "health": 0.7,
-        "rumor": 0.4
+        "clarification": 0.8,
+        "rumor": 0.3
+      }
+    },
+    {
+      "account_id": "acc_extrovert_commenter",
+      "display_name": "Extrovert Commenter",
+      "interests": {
+        "local": 0.8,
+        "campus": 0.7,
+        "health": 0.8,
+        "rumor": 0.6
+      }
+    },
+    {
+      "account_id": "acc_cautious_parent",
+      "display_name": "Cautious Parent",
+      "interests": {
+        "health": 1.0,
+        "campus": 0.9,
+        "clarification": 0.9,
+        "rumor": 0.5
+      }
+    },
+    {
+      "account_id": "acc_quiet_observer",
+      "display_name": "Quiet Observer",
+      "interests": {
+        "local": 0.7,
+        "health": 0.7,
+        "clarification": 0.8,
+        "rumor": 0.2
       }
     },
     {
       "account_id": "acc_seed",
-      "display_name": "Local Rumor Watch",
+      "display_name": "本地生活观察",
       "interests": {
         "local": 1.0,
         "rumor": 1.0
@@ -28,14 +60,181 @@
     },
     {
       "account_id": "acc_official",
-      "display_name": "Official Notice",
+      "display_name": "校务通知",
       "interests": {
         "clarification": 1.0,
-        "health": 1.0
+        "health": 1.0,
+        "campus": 1.0
+      }
+    },
+    {
+      "account_id": "acc_background",
+      "display_name": "Campus Chatter",
+      "interests": {
+        "campus": 1.0,
+        "local": 0.8
+      }
+    },
+    {
+      "account_id": "acc_food_updates",
+      "display_name": "食堂小黑板",
+      "interests": {
+        "food": 1.0,
+        "campus": 0.7
+      }
+    },
+    {
+      "account_id": "acc_local_transit",
+      "display_name": "周边通勤提醒",
+      "interests": {
+        "local": 1.0,
+        "traffic": 0.9
+      }
+    },
+    {
+      "account_id": "acc_club_events",
+      "display_name": "活动日历",
+      "interests": {
+        "campus": 0.8,
+        "events": 1.0
+      }
+    },
+    {
+      "account_id": "acc_health_life",
+      "display_name": "健康生活角",
+      "interests": {
+        "health": 1.0,
+        "local": 0.5
       }
     }
   ],
   "posts": [
+    {
+      "account_id": "acc_background",
+      "post_id": "post_background_001",
+      "text": "今天校园周边人流比较多，大家通勤注意时间。",
+      "tags": ["background", "campus", "local"],
+      "tick": 0
+    },
+    {
+      "account_id": "acc_food_updates",
+      "post_id": "post_background_002",
+      "text": "二楼窗口今天新增热汤，午饭高峰可能需要多排几分钟。",
+      "tags": ["background", "food", "campus"],
+      "tick": 0
+    },
+    {
+      "account_id": "acc_local_transit",
+      "post_id": "post_background_003",
+      "text": "东门外施工路段还在围挡，骑车经过最好提前绕一下。",
+      "tags": ["background", "traffic", "local"],
+      "tick": 0
+    },
+    {
+      "account_id": "acc_club_events",
+      "post_id": "post_background_004",
+      "text": "今晚自习室旁边有社团招新咨询，路过的同学可以看看。",
+      "tags": ["background", "events", "campus"],
+      "tick": 0
+    },
+    {
+      "account_id": "acc_health_life",
+      "post_id": "post_background_005",
+      "text": "天气转热，外出和运动后记得及时补水，别等口渴才喝。",
+      "tags": ["background", "health", "local"],
+      "tick": 0
+    },
+    {
+      "account_id": "acc_background",
+      "post_id": "post_background_006",
+      "text": "图书馆一层临时座位已经开放，上午人少一些。",
+      "tags": ["background", "campus", "local"],
+      "tick": 0
+    },
+    {
+      "account_id": "acc_food_updates",
+      "post_id": "post_background_007",
+      "text": "便利店冰柜补货了，但收银台排队比较长。",
+      "tags": ["background", "food", "local"],
+      "tick": 0
+    },
+    {
+      "account_id": "acc_club_events",
+      "post_id": "post_background_008",
+      "text": "周末志愿活动报名快截止了，想参加的人记得看通知。",
+      "tags": ["background", "events", "campus"],
+      "tick": 0
+    },
+    {
+      "account_id": "acc_local_transit",
+      "post_id": "post_background_009",
+      "text": "傍晚公交班次可能会比较挤，赶时间的话可以提前出门。",
+      "tags": ["background", "traffic", "local"],
+      "tick": 1
+    },
+    {
+      "account_id": "acc_background",
+      "post_id": "post_background_010",
+      "text": "早上自习室空调温度有点低，久坐的人可以带件薄外套。",
+      "tags": ["background", "campus", "local"],
+      "tick": 0
+    },
+    {
+      "account_id": "acc_health_life",
+      "post_id": "post_background_011",
+      "text": "校医院提醒最近肠胃不适咨询变多，饮食和饮水都注意卫生。",
+      "tags": ["background", "health", "campus"],
+      "tick": 0
+    },
+    {
+      "account_id": "acc_food_updates",
+      "post_id": "post_background_012",
+      "text": "食堂今晚部分窗口提前半小时收档，别太晚过去。",
+      "tags": ["background", "food", "campus"],
+      "tick": 0
+    },
+    {
+      "account_id": "acc_club_events",
+      "post_id": "post_background_013",
+      "text": "社团活动报名表今晚会再开放一次，之前错过的人可以补填。",
+      "tags": ["background", "events", "campus"],
+      "tick": 0
+    },
+    {
+      "account_id": "acc_local_transit",
+      "post_id": "post_background_014",
+      "text": "西门外共享单车数量比平时少，下午可能需要多走几分钟。",
+      "tags": ["background", "traffic", "local"],
+      "tick": 0
+    },
+    {
+      "account_id": "acc_background",
+      "post_id": "post_background_015",
+      "text": "今天楼下公告栏换了新通知，路过可以顺手看一眼。",
+      "tags": ["background", "campus", "notice"],
+      "tick": 0
+    },
+    {
+      "account_id": "acc_health_life",
+      "post_id": "post_background_016",
+      "text": "最近天气闷热，运动前后最好分次补水，不要一次喝太急。",
+      "tags": ["background", "health", "local"],
+      "tick": 0
+    },
+    {
+      "account_id": "acc_food_updates",
+      "post_id": "post_background_017",
+      "text": "便利店今天补了常温瓶装水，靠近门口的货架还有不少。",
+      "tags": ["background", "food", "campus", "health"],
+      "tick": 0
+    },
+    {
+      "account_id": "acc_club_events",
+      "post_id": "post_background_018",
+      "text": "今晚活动日历更新了两个讲座，一个关于公共安全，一个关于校园生活。",
+      "tags": ["background", "events", "campus", "local"],
+      "tick": 0
+    },
     {
       "account_id": "acc_seed",
       "post_id": "post_rumor_seed_001",
@@ -46,31 +245,46 @@
     {
       "account_id": "acc_official",
       "post_id": "post_clarification_001",
-      "text": "关于饮水机安全的传言正在核实，请以官方检测公告为准，不要传播未经确认的信息。",
+      "text": "关于饮水机安全的相关说法正在核实，请以官方检测公告为准，不要传播未经确认的信息。",
       "tags": ["clarification", "health", "campus", "local"],
       "tick": 3
     }
   ],
   "follows": [
-    {
-      "follower_id": "acc_student",
-      "followee_id": "acc_seed",
-      "tick": 1
-    },
-    {
-      "follower_id": "acc_worker",
-      "followee_id": "acc_seed",
-      "tick": 1
-    },
-    {
-      "follower_id": "acc_student",
-      "followee_id": "acc_official",
-      "tick": 1
-    },
-    {
-      "follower_id": "acc_worker",
-      "followee_id": "acc_official",
-      "tick": 1
-    }
+    {"follower_id": "acc_student_high_media", "followee_id": "acc_seed", "tick": 0},
+    {"follower_id": "acc_student_high_media", "followee_id": "acc_official", "tick": 0},
+    {"follower_id": "acc_student_high_media", "followee_id": "acc_background", "tick": 0},
+    {"follower_id": "acc_student_high_media", "followee_id": "acc_food_updates", "tick": 0},
+    {"follower_id": "acc_student_high_media", "followee_id": "acc_local_transit", "tick": 0},
+    {"follower_id": "acc_student_high_media", "followee_id": "acc_club_events", "tick": 0},
+    {"follower_id": "acc_student_high_media", "followee_id": "acc_health_life", "tick": 0},
+    {"follower_id": "acc_worker_low_media", "followee_id": "acc_seed", "tick": 0},
+    {"follower_id": "acc_worker_low_media", "followee_id": "acc_official", "tick": 0},
+    {"follower_id": "acc_worker_low_media", "followee_id": "acc_background", "tick": 0},
+    {"follower_id": "acc_worker_low_media", "followee_id": "acc_food_updates", "tick": 0},
+    {"follower_id": "acc_worker_low_media", "followee_id": "acc_local_transit", "tick": 0},
+    {"follower_id": "acc_worker_low_media", "followee_id": "acc_club_events", "tick": 0},
+    {"follower_id": "acc_worker_low_media", "followee_id": "acc_health_life", "tick": 0},
+    {"follower_id": "acc_extrovert_commenter", "followee_id": "acc_seed", "tick": 0},
+    {"follower_id": "acc_extrovert_commenter", "followee_id": "acc_official", "tick": 0},
+    {"follower_id": "acc_extrovert_commenter", "followee_id": "acc_background", "tick": 0},
+    {"follower_id": "acc_extrovert_commenter", "followee_id": "acc_food_updates", "tick": 0},
+    {"follower_id": "acc_extrovert_commenter", "followee_id": "acc_local_transit", "tick": 0},
+    {"follower_id": "acc_extrovert_commenter", "followee_id": "acc_club_events", "tick": 0},
+    {"follower_id": "acc_extrovert_commenter", "followee_id": "acc_health_life", "tick": 0},
+    {"follower_id": "acc_cautious_parent", "followee_id": "acc_seed", "tick": 0},
+    {"follower_id": "acc_cautious_parent", "followee_id": "acc_official", "tick": 0},
+    {"follower_id": "acc_cautious_parent", "followee_id": "acc_background", "tick": 0},
+    {"follower_id": "acc_cautious_parent", "followee_id": "acc_food_updates", "tick": 0},
+    {"follower_id": "acc_cautious_parent", "followee_id": "acc_local_transit", "tick": 0},
+    {"follower_id": "acc_cautious_parent", "followee_id": "acc_club_events", "tick": 0},
+    {"follower_id": "acc_cautious_parent", "followee_id": "acc_health_life", "tick": 0},
+    {"follower_id": "acc_quiet_observer", "followee_id": "acc_seed", "tick": 0},
+    {"follower_id": "acc_quiet_observer", "followee_id": "acc_official", "tick": 0},
+    {"follower_id": "acc_quiet_observer", "followee_id": "acc_background", "tick": 0},
+    {"follower_id": "acc_quiet_observer", "followee_id": "acc_food_updates", "tick": 0},
+    {"follower_id": "acc_quiet_observer", "followee_id": "acc_local_transit", "tick": 0},
+    {"follower_id": "acc_quiet_observer", "followee_id": "acc_club_events", "tick": 0},
+    {"follower_id": "acc_quiet_observer", "followee_id": "acc_health_life", "tick": 0}
   ]
 }
