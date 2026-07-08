@@ -415,28 +415,31 @@ KERN/agent_workflow/runtime.py
 
 ```python
 run_social_activity_cycle(...)
+run_social_activity_batch(...)
 ```
 
-它复用 `run_workflow_cycle(...)` 的 memory patch、decision contract、command 编译和 operation 执行路径，但通过 `max_commands` 限制一次机会最多执行指定数量的命令。默认 `max_actions=1`。
+单 agent 路径复用 `run_workflow_cycle(...)` 的 memory patch、decision contract、command 编译和 operation 执行路径，并通过 `max_commands` 限制一次机会最多执行指定数量的命令。批量路径由 `run_social_activity_batch(...)` 承接，支持串行模式和 RumorSpread 专用的并行决策、串行提交模式。默认 `max_actions=1`。
 
 当前 binder 支持：
 
 ```text
-provider_id
 max_agents_per_tick
 max_actions_per_agent
 default_screen_context_window_ticks
 base_rate_multiplier
+provider_id
 ```
 
 默认值：
 
 ```text
-provider_id = ""
 max_agents_per_tick = 999999
 max_actions_per_agent = 1
 default_screen_context_window_ticks = 2
 base_rate_multiplier = 1.0
+provider_id = ""
+decision_mode = serial
+max_decision_workers = 1
 ```
 
 候选 agent 要求：
@@ -445,7 +448,7 @@ base_rate_multiplier = 1.0
 - 有 `AgentControlComponent` 且 `enabled=true`。
 - inventory 中存在带 `ScreenComponent` 的 phone。
 - phone screen 有非空 `runtime_id/account_id`。
-- 能找到 workflow provider：优先 effect 参数 `provider_id`，否则使用 agent 的 `AgentControlComponent.provider_id`，再否则使用 default provider。
+- 能找到 workflow provider。当前 RumorSpread 不在 reaction 或 agent 数据里指定 provider，默认使用 runtime config 构建出的 `default_action_provider`。`provider_id` 只作为未来多 provider 路由保留；如果命名 provider 无法在 `action_providers` 中解析，会回退到 default provider。
 
 当前概率公式：
 
@@ -471,6 +474,28 @@ probability =
 - `expression_opportunity`
 
 这只影响 `mode_context` 提示，不直接决定具体动作。具体行为仍由 LLM/provider 决定。
+
+### 并行决策模式
+
+`SocialActivityGateTick` 支持一个 RumorSpread 专用的批量决策模式：
+
+```json
+{
+  "decision_mode": "parallel_decide_serial_commit",
+  "max_decision_workers": 16
+}
+```
+
+这是场景级黑魔法，不是 KERN 通用 tick phase。它的语义是：
+
+```text
+串行筛选候选 agent
+-> 串行准备每个 agent 的 workflow input 和 memory patch
+-> 并行调用 workflow.decide(...)
+-> 按稳定 agent 顺序串行验证、编译 command、执行 effect bundle
+```
+
+worker 线程只执行 LLM/provider 的 `decide(...)`，不写 `WorldState`，也不直接调用 `WorldExecutor`。因此它加速最慢的 LLM 等待，但仍保留 KERN 串行提交、事件顺序和 bundle 回滚语义。默认 `decision_mode=serial`；当前 committed RumorSpread 5-agent smoke 和 generated 100-agent smoke 都已经显式打开 `parallel_decide_serial_commit`。
 
 ### 时间消耗规则
 
@@ -575,7 +600,7 @@ agent 和行为频率：
 
 - 平台账号：`acc_student_high_media`。
 - 性格/背景：时间灵活、频繁查看社交媒体、会快速响应校园健康安全讨论的学生。
-- `AgentControlComponent.provider_id="social_llm"`。
+- `AgentControlComponent` 只表示该 agent 可被工作流驱动；provider 由 runtime config 的 default provider 决定。
 - `SocialBehaviorComponent`：
   - `base_activity_rate=0.95`
   - `active_hours=[]`
@@ -587,7 +612,7 @@ agent 和行为频率：
 
 - 平台账号：`acc_worker_low_media`。
 - 性格/背景：忙碌、浏览较少、对转发未经证实的信息更谨慎的工作者。
-- `AgentControlComponent.provider_id="social_llm"`。
+- `AgentControlComponent` 只表示该 agent 可被工作流驱动；provider 由 runtime config 的 default provider 决定。
 - `SocialBehaviorComponent`：
   - `base_activity_rate=0.55`
   - `active_hours=[]`
@@ -636,14 +661,16 @@ recipes 共 6 个：
 
 RumorSpread 保留更接近传播实验的行为：浏览、打开、点赞、评论、转发、原创发帖。不把 unlike/follow 作为当前正式传播场景动作。
 
-reactions 共 2 个：
+reactions 共 3 个：
 
 - `WorldTickAdvanced -> SocialActivityGateTick`
-  - `provider_id="social_llm"`
   - `max_agents_per_tick=10`
   - `max_actions_per_agent=1`
   - `default_screen_context_window_ticks=2`
+  - `decision_mode=parallel_decide_serial_commit`
+  - `max_decision_workers=30`
 - `WorldTickAdvanced -> EnvironmentConditionTick`
+- `AdvanceTick -> StatusTick`
 
 它不使用默认 `Data/Reactions.json` 的 `AdvanceTick -> AgentControlTick(max_actions_in_tick=50)`。
 
@@ -682,6 +709,7 @@ follow：
 
 - 社交传播场景使用自己的 gate，而不是默认 agent loop。
 - 五个 agent 因为 `SocialBehaviorComponent` 参数不同，获得行动机会的概率、冷却和表达倾向不同。
+- 5-agent smoke 也通过并行 LLM 决策、串行 world commit 运行；并行只覆盖 provider `decide(...)`，不会并行写 `WorldState`。
 - 推荐流只展示 `created_tick <= current_tick` 的帖子，因此 tick 3 的澄清不会提前出现。
 - LLM 每次被 gate 选中后最多执行一个社交 command。
 - `WORKFLOW_VIEW_PROFILE=social_platform` 避免五个同房间 agent 互相污染物理感知和记忆。
@@ -691,7 +719,7 @@ follow：
 - 正式干预策略效果。
 - 谣言/澄清的专门数据模型。
 - 统计 dashboard。
-- 大规模 100-agent 传播曲线。
+- 100-agent 生成数据和 smoke config 已存在，但还没有跑出稳定可复现实验曲线或统计结论。
 - 显著事件 bonus 对行动概率的影响。
 
 ## 临时测试工具：5-agent LLM Smoke
@@ -764,6 +792,33 @@ PHEME 在本项目中的职责是提供外部实验输入：
 输出兼容 `seed_social_platform_runtime_from_file(...)`。
 
 当前第一版只导入 PHEME source tweets。PHEME reactions 后续可以作为预置评论、预置转发或评估对照，但优先级低于让 KERN LLM agents 在运行中产生互动数据。
+
+## 100-agent 生成场景状态
+
+当前已经有 100-agent RumorSpread 数据生成器和生成后的 committed smoke 数据：
+
+```text
+tools/generate_rumor_spread_100.py
+Data/RumorSpread/generated_100/
+runtime_config.rumor_spread.100agent.smoke.json
+```
+
+生成器会基于 `social_profile_seed.generate_social_profiles(...)` 创建：
+
+- 100 个 KERN agent 和对应 phone。
+- 100 个社交平台账号、兴趣权重和 follow graph。
+- 背景帖、多个谣言种子帖和多个澄清帖。
+- generated 版本的 `World.json`、`Entities/generated_agents.json`、`social_seed.json`、`profiles.json` 和 `Reactions.json`。
+
+generated 100-agent reactions 使用：
+
+```text
+max_agents_per_tick = 100
+decision_mode = parallel_decide_serial_commit
+max_decision_workers = 30
+```
+
+这说明“profile -> scenario 生成器”和基础大规模 smoke 数据已经落地。尚未完成的是：用该配置跑出可复现实验结果、沉淀指标导出、比较干预组和 baseline，并证明 100-agent 传播曲线有研究意义。
 
 ## 反应类发帖还缺什么
 
@@ -841,5 +896,5 @@ tests/test_convert_pheme_to_social_seed.py
 3. 把澄清帖、平台标签、降权/限流等干预接入推荐算法和统计表。
 4. 为 `SocialActivityGateTick` 接入显著事件 bonus 和 `salient_context`。
 5. 增加指标导出工具，先输出 CSV/JSON，再做 dashboard。
-6. 扩展 `profile -> scenario` 生成器，支持 100-agent 谣言传播实验。
-7. 运行短程 LLM smoke，验证 agent 能基于新鲜屏幕上下文刷帖、打开、评论或转发，而不是依赖记忆里的裸 `post_id`。
+6. 用现有 100-agent 生成场景跑短程/中程 LLM smoke，沉淀可复现实验曲线。
+7. 验证 agent 能基于新鲜屏幕上下文刷帖、打开、评论或转发，而不是依赖记忆里的裸 `post_id`。

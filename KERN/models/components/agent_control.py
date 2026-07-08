@@ -17,8 +17,9 @@ class AgentControlComponent:
 	# Whether control is enabled (can be used to temporarily "freeze" an agent)
 	enabled: bool = True
 
-	# Control provider identifier (e.g., llm/openai, policy/simple, script/xxx)
-	# Currently not used in the main loop, but the field is reserved for future extension and display.
+	# Optional control provider identifier (e.g., player, logic, scripted).
+	# If it does not resolve in runtime action_providers, callers should fall
+	# back to the runtime default provider.
 	provider_id: str = ""
 
 	def per_tick(self, _ws: Any, _entity_id: str, _ticks_per_minute: int) -> None:

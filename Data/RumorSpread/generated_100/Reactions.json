@@ -7,7 +7,7 @@
         "effects": [
           {
             "effect": "SocialActivityGateTick",
-            "max_agents_per_tick": 10,
+            "max_agents_per_tick": 100,
             "max_actions_per_agent": 1,
             "default_screen_context_window_ticks": 2,
             "decision_mode": "parallel_decide_serial_commit",

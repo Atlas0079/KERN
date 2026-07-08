@@ -45,6 +45,84 @@ def _build_workflow_recipe_db(ws: Any) -> dict[str, Any]:
 	return dict(recipe_db) if isinstance(recipe_db, dict) else {}
 
 
+def prepare_workflow_decision_input(ws: Any, actor_id: str, workflow: Any, reason: str, mode_context: dict[str, Any]) -> dict[str, Any]:
+	ws_view = _build_workflow_ws_view(ws, actor_id, reason, mode_context)
+	recipe_db = _build_workflow_recipe_db(ws)
+	if not hasattr(workflow, "build_memory_patch_data"):
+		_record_workflow_error_event(
+			ws,
+			actor_id,
+			"workflow_missing_memory_patch_data_hook",
+			{"provider": str(type(workflow).__name__)},
+		)
+		return {
+			"status": "error",
+			"outcome": {
+				"type": "error",
+				"error": {
+					"kind": "contract",
+					"code": "WORKFLOW_MISSING_MEMORY_PATCH_HOOK",
+					"message": str(type(workflow).__name__),
+				},
+			},
+		}
+	try:
+		mem_patch = workflow.build_memory_patch_data(ws_view, recipe_db, actor_id)
+	except Exception as e:
+		_record_workflow_error_event(ws, actor_id, "memory_patch_data_build_failed", {"error": str(e)})
+		return {"status": "error", "outcome": {"type": "noop"}}
+	if isinstance(mem_patch, dict) and mem_patch:
+		if not _apply_memory_patch(ws, actor_id, mem_patch):
+			_record_workflow_error_event(ws, actor_id, "memory_patch_apply_failed", {"reason": "executor_failed"})
+			return {"status": "error", "outcome": {"type": "noop"}}
+		ws_view = _build_workflow_ws_view(ws, actor_id, reason, mode_context)
+	return {
+		"status": "ready",
+		"actor_id": str(actor_id),
+		"workflow": workflow,
+		"reason": str(reason or ""),
+		"mode_context": dict(mode_context or {}),
+		"ws_view": ws_view,
+		"recipe_db": recipe_db,
+	}
+
+
+def decide_from_prepared_workflow(prepared: dict[str, Any]) -> dict[str, Any]:
+	workflow = prepared.get("workflow")
+	actor_id = str(prepared.get("actor_id", "") or "")
+	reason = str(prepared.get("reason", "") or "")
+	mode_context = dict(prepared.get("mode_context", {}) or {})
+	ws_view = prepared.get("ws_view", {}) or {}
+	recipe_db = dict(prepared.get("recipe_db", {}) or {})
+	try:
+		decision_raw = workflow.decide(ws_view, recipe_db, actor_id, reason, mode_context)
+	except Exception as e:
+		return {"status": "exception", "actor_id": actor_id, "error": str(e)}
+	return {"status": "ok", "actor_id": actor_id, "decision_raw": decision_raw}
+
+
+def commit_workflow_decision(
+	ws: Any,
+	actor_id: str,
+	reason: str,
+	decision_raw: Any,
+	*,
+	max_commands: int | None = None,
+	decide_error: str = "",
+) -> dict[str, Any]:
+	if decide_error:
+		_record_workflow_error_event(ws, actor_id, "decide_exception", {"error": str(decide_error)})
+		return {"type": "noop"}
+	decision, err = validate_workflow_decision(decision_raw)
+	if decision is None:
+		_record_workflow_error_event(ws, actor_id, "contract_invalid", {"error": str(err), "raw": str(decision_raw)})
+		return {"type": "error", "error": {"kind": "contract", "code": "WORKFLOW_CONTRACT_INVALID_DECISION", "message": str(err)}}
+	if max_commands is not None and str(decision.get("type", "") or "") == "apply_commands":
+		limit = max(0, int(max_commands or 0))
+		decision["commands"] = [dict(x) for x in list(decision.get("commands", []) or [])[:limit] if isinstance(x, dict)]
+	return _decision_to_outcome(ws, actor_id, str(reason or ""), decision)
+
+
 def _current_worker_task_id(ws: Any, actor_id: str) -> str:
 	agent = ws.get_entity_by_id(actor_id) if hasattr(ws, "get_entity_by_id") else None
 	if agent is None:
@@ -333,46 +411,18 @@ def run_workflow_cycle(
 	mode_context: dict[str, Any],
 	max_commands: int | None = None,
 ) -> dict[str, Any]:
-	ws_view = _build_workflow_ws_view(ws, actor_id, reason, mode_context)
-	recipe_db = _build_workflow_recipe_db(ws)
-	if not hasattr(workflow, "build_memory_patch_data"):
-		_record_workflow_error_event(
-			ws,
-			actor_id,
-			"workflow_missing_memory_patch_data_hook",
-			{"provider": str(type(workflow).__name__)},
-		)
-		return {
-			"type": "error",
-			"error": {
-				"kind": "contract",
-				"code": "WORKFLOW_MISSING_MEMORY_PATCH_HOOK",
-				"message": str(type(workflow).__name__),
-			},
-		}
-	try:
-		mem_patch = workflow.build_memory_patch_data(ws_view, recipe_db, actor_id)
-	except Exception as e:
-		_record_workflow_error_event(ws, actor_id, "memory_patch_data_build_failed", {"error": str(e)})
-		return {"type": "noop"}
-	if isinstance(mem_patch, dict) and mem_patch:
-		if not _apply_memory_patch(ws, actor_id, mem_patch):
-			_record_workflow_error_event(ws, actor_id, "memory_patch_apply_failed", {"reason": "executor_failed"})
-			return {"type": "noop"}
-		ws_view = _build_workflow_ws_view(ws, actor_id, reason, mode_context)
-	try:
-		decision_raw = workflow.decide(ws_view, recipe_db, actor_id, reason, mode_context)
-	except Exception as e:
-		_record_workflow_error_event(ws, actor_id, "decide_exception", {"error": str(e)})
-		return {"type": "noop"}
-	decision, err = validate_workflow_decision(decision_raw)
-	if decision is None:
-		_record_workflow_error_event(ws, actor_id, "contract_invalid", {"error": str(err), "raw": str(decision_raw)})
-		return {"type": "error", "error": {"kind": "contract", "code": "WORKFLOW_CONTRACT_INVALID_DECISION", "message": str(err)}}
-	if max_commands is not None and str(decision.get("type", "") or "") == "apply_commands":
-		limit = max(0, int(max_commands or 0))
-		decision["commands"] = [dict(x) for x in list(decision.get("commands", []) or [])[:limit] if isinstance(x, dict)]
-	return _decision_to_outcome(ws, actor_id, str(reason or ""), decision)
+	prepared = prepare_workflow_decision_input(ws, actor_id, workflow, reason, mode_context)
+	if str(prepared.get("status", "") or "") != "ready":
+		return dict(prepared.get("outcome", {"type": "noop"}) or {"type": "noop"})
+	decided = decide_from_prepared_workflow(prepared)
+	return commit_workflow_decision(
+		ws,
+		actor_id,
+		str(reason or ""),
+		decided.get("decision_raw"),
+		max_commands=max_commands,
+		decide_error=str(decided.get("error", "") or "") if str(decided.get("status", "") or "") != "ok" else "",
+	)
 
 
 def run_social_activity_cycle(

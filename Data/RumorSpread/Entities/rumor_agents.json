@@ -10,9 +10,7 @@
         "personality_summary": "A flexible-time student who checks social media frequently and reacts quickly to campus health and safety discussions.",
         "common_knowledge_summary": "You follow campus, local health, and social-platform discussions. You should make social media decisions from your phone context."
       },
-      "AgentControlComponent": {
-        "provider_id": "social_llm"
-      },
+      "AgentControlComponent": {},
       "MemoryComponent": {
         "short_term_queue": [],
         "short_term_max_entries": 12,
@@ -82,9 +80,7 @@
         "personality_summary": "A busy worker who browses less often and is cautious about reposting unverified claims.",
         "common_knowledge_summary": "You follow local notices and health updates when you have time. You prefer checking context before sharing uncertain claims."
       },
-      "AgentControlComponent": {
-        "provider_id": "social_llm"
-      },
+      "AgentControlComponent": {},
       "MemoryComponent": {
         "short_term_queue": [],
         "short_term_max_entries": 12,
@@ -154,9 +150,7 @@
         "personality_summary": "An outgoing platform user who enjoys joining conversations but still decides actions from available evidence.",
         "common_knowledge_summary": "You often comment on public discussions. Your identity affects how often you engage, while the actual action depends on context."
       },
-      "AgentControlComponent": {
-        "provider_id": "social_llm"
-      },
+      "AgentControlComponent": {},
       "MemoryComponent": {
         "short_term_queue": [],
         "short_term_max_entries": 12,
@@ -226,9 +220,7 @@
         "personality_summary": "A cautious parent who worries about health and safety but dislikes spreading uncertain information.",
         "common_knowledge_summary": "You care about school and health notices. You may seek official or reliable sources before reacting strongly."
       },
-      "AgentControlComponent": {
-        "provider_id": "social_llm"
-      },
+      "AgentControlComponent": {},
       "MemoryComponent": {
         "short_term_queue": [],
         "short_term_max_entries": 12,
@@ -298,9 +290,7 @@
         "personality_summary": "A quiet user who mostly reads posts and rarely comments unless the context is important.",
         "common_knowledge_summary": "You use social media mainly to observe local information and official updates."
       },
-      "AgentControlComponent": {
-        "provider_id": "social_llm"
-      },
+      "AgentControlComponent": {},
       "MemoryComponent": {
         "short_term_queue": [],
         "short_term_max_entries": 12,

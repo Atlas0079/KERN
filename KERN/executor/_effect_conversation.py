@@ -91,7 +91,7 @@ def execute_start_conversation(_executor: Any, ws: Any, data: dict[str, Any], co
 		pid = str(getattr(ctrl, "provider_id", "") or "").strip() if ctrl is not None else ""
 		default_action_provider = services.get("default_action_provider")
 		action_providers = services.get("action_providers", {}) or {}
-		provider = default_action_provider if not pid else action_providers.get(pid)
+		provider = action_providers.get(pid) if pid and pid in action_providers else default_action_provider
 		speaker_name = str(getattr(ent, "entity_name", "") or speaker_id) if ent is not None else speaker_id
 		if ent is not None and hasattr(ent, "get_component"):
 			agent_setting = ent.get_component("AgentSetting")

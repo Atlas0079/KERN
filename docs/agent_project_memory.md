@@ -436,9 +436,12 @@ Control components determine which entities enter the decision loop:
 - `PlayerControlComponent`
 - `LogicControlComponent`
 
-Provider routing is based on `provider_id` and runtime `action_providers`. The
-default provider is `SimplePolicyActionProvider` unless `USE_LLM` selects the LLM
-provider.
+The runtime config builds the default workflow provider:
+`SimplePolicyActionProvider` unless `USE_LLM` selects the LLM provider. Optional
+`provider_id` values on control components are only routing hints for
+`action_providers`; unresolved ids should fall back to the runtime default
+provider. RumorSpread currently relies on the runtime default provider and does
+not set provider ids in its agent or reaction data.
 
 ## Perception And Memory
 
@@ -689,6 +692,21 @@ longer reads workflow-internal executed verbs or `SocialBehaviorComponent`
 cooldown fields. `fatigue` on `SocialBehaviorComponent` is a reserved field for
 a future activity-budget model and is not used by the current gate.
 
+For 100-agent RumorSpread runs, `SocialActivityGateTick` can enable a
+scenario-specific batch mode:
+
+```json
+{
+  "decision_mode": "parallel_decide_serial_commit",
+  "max_decision_workers": 16
+}
+```
+
+This mode is implemented by `KERN.agent_workflow.batch_runtime`. It prepares
+workflow inputs serially, calls `workflow.decide(...)` in parallel worker
+threads, then validates/compiles/executes outcomes serially in stable actor
+order. Worker threads must not mutate `WorldState` or call `WorldExecutor`.
+
 Current social documentation:
 
 - `docs/social_platform_runtime_plan.md`: canonical combined note for the
@@ -696,8 +714,9 @@ Current social documentation:
   checkpoint behavior, RumorSpread scenario control flow, prompt/agent flow,
   `SocialActivityGateTick`, PHEME seed conversion, intervention and dashboard
   roadmap.
-- `docs/rumor_spread_runtime_plan.md`: compatibility stub that points to the
-  combined social platform note.
+- `docs/social_activity_parallel_decision_plan.md`: design note for
+  RumorSpread's scenario-specific parallel LLM decision mode with serial world
+  commit.
 
 ## Scenario Data Status
 

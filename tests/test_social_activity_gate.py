@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import tempfile
+import threading
+import time
 import unittest
 from pathlib import Path
 from typing import Any
@@ -27,9 +29,13 @@ from KERN.runtime import KernRuntime
 
 
 class OneCommandSocialProvider:
-	def __init__(self, verb: str = "BrowseSocialFeed") -> None:
+	def __init__(self, verb: str = "BrowseSocialFeed", *, delay_seconds: float = 0.0) -> None:
 		self.calls: list[dict[str, Any]] = []
 		self.verb = str(verb or "BrowseSocialFeed")
+		self.delay_seconds = float(delay_seconds or 0.0)
+		self.active_decisions = 0
+		self.max_active_decisions = 0
+		self._lock = threading.Lock()
 
 	def build_memory_patch_data(self, _ws_view: Any, _recipe_db: dict[str, Any], _actor_id: str) -> dict[str, Any] | None:
 		return None
@@ -42,14 +48,23 @@ class OneCommandSocialProvider:
 		reason: str,
 		mode_context: dict[str, Any] | None = None,
 	) -> dict[str, Any]:
-		self.calls.append(
-			{
-				"actor_id": actor_id,
-				"reason": reason,
-				"mode_context": dict(mode_context or {}),
-				"ws_view": dict(ws_view or {}) if isinstance(ws_view, dict) else {},
-			}
-		)
+		with self._lock:
+			self.active_decisions += 1
+			self.max_active_decisions = max(self.max_active_decisions, self.active_decisions)
+		try:
+			if self.delay_seconds > 0:
+				time.sleep(self.delay_seconds)
+			self.calls.append(
+				{
+					"actor_id": actor_id,
+					"reason": reason,
+					"mode_context": dict(mode_context or {}),
+					"ws_view": dict(ws_view or {}) if isinstance(ws_view, dict) else {},
+				}
+			)
+		finally:
+			with self._lock:
+				self.active_decisions -= 1
 		return {
 			"type": "apply_commands",
 			"commands": [
@@ -80,7 +95,12 @@ def _add_agent_with_phone(ws: WorldState, agent_id: str, account_id: str, *, rat
 	agent.get_component("ContainerComponent").slots["inventory"].items.append(phone_id)
 
 
-def _world_with_two_social_agents(db_path: Path, *, provider_verb: str = "BrowseSocialFeed") -> tuple[WorldState, OneCommandSocialProvider]:
+def _world_with_two_social_agents(
+	db_path: Path,
+	*,
+	provider_verb: str = "BrowseSocialFeed",
+	provider_delay_seconds: float = 0.0,
+) -> tuple[WorldState, OneCommandSocialProvider]:
 	ws = WorldState()
 	ws.register_location(Location(location_id="room", location_name="Room", description=""))
 	_add_agent_with_phone(ws, "agent_a", "acc_a", rate=1.0)
@@ -91,7 +111,7 @@ def _world_with_two_social_agents(db_path: Path, *, provider_verb: str = "Browse
 		rt.upsert_account(aid, display, interests={"rumor": 1.0})
 	rt.invoke("create_post", {"account_id": "acc_seed", "post_id": "post_rumor", "text": "Seed rumor", "tags": ["rumor"], "tick": 0}, {})
 
-	provider = OneCommandSocialProvider(provider_verb)
+	provider = OneCommandSocialProvider(provider_verb, delay_seconds=provider_delay_seconds)
 	from KERN.interaction.engine import InteractionEngine
 
 	ws.services = {
@@ -191,6 +211,59 @@ class SocialActivityGateTests(unittest.TestCase):
 			self.assertFalse([ev for ev in cooldown_events if ev.get("type") == "SocialActivityOpportunityGranted"])
 			self.assertEqual(len(provider.calls), 2)
 
+	def test_parallel_decision_mode_overlaps_decide_but_commits_in_agent_order(self) -> None:
+		with tempfile.TemporaryDirectory() as td:
+			ws, provider = _world_with_two_social_agents(
+				Path(td) / "social.sqlite3",
+				provider_verb="BrowseSocialFeed",
+				provider_delay_seconds=0.05,
+			)
+			ws.game_time.total_ticks = 1
+			events = WorldExecutor().execute(
+				ws,
+				{
+					"effect": "SocialActivityGateTick",
+					"provider_id": "social_llm",
+					"max_agents_per_tick": 10,
+					"max_actions_per_agent": 1,
+					"decision_mode": "parallel_decide_serial_commit",
+					"max_decision_workers": 2,
+				},
+				{},
+			)
+
+			granted = [ev for ev in events if ev.get("type") == "SocialActivityOpportunityGranted"]
+			evaluated = [ev for ev in events if ev.get("type") == "SocialActivityGateEvaluated"]
+			self.assertEqual([ev["entity_id"] for ev in granted], ["agent_a", "agent_b"])
+			self.assertEqual([row["actor_id"] for row in ws.interaction_log], ["agent_a", "agent_b"])
+			self.assertGreaterEqual(provider.max_active_decisions, 2)
+			self.assertEqual(evaluated[-1]["decision_mode"], "parallel_decide_serial_commit")
+			self.assertEqual(evaluated[-1]["max_decision_workers"], 2)
+
+	def test_missing_named_provider_falls_back_to_default_provider(self) -> None:
+		with tempfile.TemporaryDirectory() as td:
+			ws, provider = _world_with_two_social_agents(Path(td) / "social.sqlite3")
+			ws.services["action_providers"] = {}
+			ws.services["default_action_provider"] = provider
+			ws.game_time.total_ticks = 1
+
+			events = WorldExecutor().execute(
+				ws,
+				{
+					"effect": "SocialActivityGateTick",
+					"provider_id": "missing_social_llm",
+					"max_agents_per_tick": 10,
+					"max_actions_per_agent": 1,
+				},
+				{},
+			)
+
+			granted = [ev for ev in events if ev.get("type") == "SocialActivityOpportunityGranted"]
+			gate = [ev for ev in events if ev.get("type") == "SocialActivityGateEvaluated"][-1]
+			self.assertEqual([ev["entity_id"] for ev in granted], ["agent_a", "agent_b"])
+			self.assertEqual(len(provider.calls), 2)
+			self.assertEqual(gate["skipped"]["provider"], 0)
+
 	def test_rumor_spread_config_uses_social_activity_gate_not_default_agent_control(self) -> None:
 		project_root = Path(__file__).resolve().parents[1]
 		with tempfile.TemporaryDirectory() as td:
@@ -213,6 +286,12 @@ class SocialActivityGateTests(unittest.TestCase):
 			self.assertIn("rumor_world_tick_social_activity_gate", rule_ids)
 			self.assertNotIn("advance_tick_agent_control", rule_ids)
 			self.assertIn("SocialActivityGateTick", {effect.get("effect") for rule in runtime.reaction_rules for effect in rule.get("bundle", {}).get("effects", [])})
+			for rule in runtime.reaction_rules:
+				for effect in rule.get("bundle", {}).get("effects", []):
+					if effect.get("effect") == "SocialActivityGateTick":
+						self.assertNotIn("provider_id", effect)
+						self.assertEqual(effect.get("decision_mode"), "parallel_decide_serial_commit")
+						self.assertEqual(effect.get("max_decision_workers"), 30)
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 from typing import Any
 
-from ..agent_workflow.runtime import run_social_activity_cycle
+from ..agent_workflow.batch_runtime import normalize_decision_mode, run_social_activity_batch
 from ..execution_errors import ERROR_KIND_CONTRACT, executor_error
 from ..models.components import AgentControlComponent, ContainerComponent, ScreenComponent, SocialBehaviorComponent, StatusComponent
 from ._effect_binder import _base_bind, _resolve_param_token
@@ -41,6 +41,8 @@ def _bind_social_activity_gate_tick(_ws: Any, effect_data: dict[str, Any], conte
 		"max_actions_per_agent": max(0, _optional_int(params, "max_actions_per_agent", ctx, 1)),
 		"default_screen_context_window_ticks": max(0, _optional_int(params, "default_screen_context_window_ticks", ctx, 2)),
 		"base_rate_multiplier": max(0.0, _optional_float(params, "base_rate_multiplier", ctx, 1.0)),
+		"decision_mode": normalize_decision_mode(_optional_str(params, "decision_mode", ctx, "serial")),
+		"max_decision_workers": max(1, _optional_int(params, "max_decision_workers", ctx, 1)),
 	}
 	return out, ctx
 
@@ -101,9 +103,12 @@ def _workflow_for_agent(ws: Any, ctrl: AgentControlComponent, requested_provider
 	services = getattr(ws, "services", {}) or {}
 	action_providers = services.get("action_providers", {}) or {}
 	default_provider = services.get("default_action_provider")
-	provider_id = str(requested_provider_id or getattr(ctrl, "provider_id", "") or "").strip()
-	if provider_id:
-		return (action_providers or {}).get(provider_id)
+	for provider_id in (
+		str(requested_provider_id or "").strip(),
+		str(getattr(ctrl, "provider_id", "") or "").strip(),
+	):
+		if provider_id and provider_id in action_providers:
+			return (action_providers or {}).get(provider_id)
 	return default_provider
 
 
@@ -128,12 +133,16 @@ def execute_social_activity_gate_tick(_executor: Any, ws: Any, data: dict[str, A
 	max_actions = int(data.get("max_actions_per_agent", 1) or 1)
 	screen_window = int(data.get("default_screen_context_window_ticks", 2) or 2)
 	base_rate_multiplier = float(data.get("base_rate_multiplier", 1.0) or 1.0)
+	decision_mode = normalize_decision_mode(data.get("decision_mode", "serial"))
+	max_decision_workers = max(1, int(data.get("max_decision_workers", 1) or 1))
 
 	events: list[dict[str, Any]] = []
 	skipped = {"cooldown": 0, "missing_phone": 0, "provider": 0, "probability": 0, "disabled": 0}
 	candidates = 0
 	selected = 0
 	selected_ids: list[str] = []
+	batch_items: list[dict[str, Any]] = []
+	granted_meta: list[dict[str, Any]] = []
 
 	for agent_id in sorted(str(x) for x in getattr(ws, "entities", {}).keys()):
 		if selected >= max_agents:
@@ -178,19 +187,17 @@ def execute_social_activity_gate_tick(_executor: Any, ws: Any, data: dict[str, A
 			"salient_context": [],
 			"rumor_experiment": {"enabled": True, "active_rumor_ids": []},
 		}
-		outcome = run_social_activity_cycle(
-			ws,
-			agent_id,
-			workflow,
-			reason=opportunity_type,
-			mode_context=mode_context,
-			max_actions=max_actions,
-		)
-		selected += 1
-		selected_ids.append(agent_id)
-		events.append(
+		batch_items.append(
 			{
-				"type": "SocialActivityOpportunityGranted",
+				"actor_id": agent_id,
+				"workflow": workflow,
+				"reason": opportunity_type,
+				"mode_context": mode_context,
+				"max_actions": int(max_actions),
+			}
+		)
+		granted_meta.append(
+			{
 				"entity_id": agent_id,
 				"phone_id": str(getattr(phone, "entity_id", "") or ""),
 				"account_id": str(getattr(screen, "account_id", "") or ""),
@@ -198,6 +205,21 @@ def execute_social_activity_gate_tick(_executor: Any, ws: Any, data: dict[str, A
 				"probability": probability,
 				"roll": roll,
 				"tick": tick,
+			}
+		)
+		selected += 1
+		selected_ids.append(agent_id)
+	outcomes = run_social_activity_batch(
+		ws,
+		batch_items,
+		decision_mode=decision_mode,
+		max_decision_workers=max_decision_workers,
+	)
+	for meta, outcome in zip(granted_meta, outcomes):
+		events.append(
+			{
+				"type": "SocialActivityOpportunityGranted",
+				**dict(meta),
 				"outcome": dict(outcome or {}),
 			}
 		)
@@ -209,6 +231,8 @@ def execute_social_activity_gate_tick(_executor: Any, ws: Any, data: dict[str, A
 			"selected_count": selected,
 			"selected_agent_ids": selected_ids,
 			"skipped": skipped,
+			"decision_mode": decision_mode,
+			"max_decision_workers": max_decision_workers,
 		}
 	)
 	return events

@@ -69,7 +69,7 @@ def execute_agent_control_tick(_executor: Any, ws: Any, data: dict[str, Any], co
 	default_provider = services.get("default_action_provider")
 	action_providers = services.get("action_providers", {}) or {}
 	provider_id = str(getattr(ctrl, "provider_id", "") or "").strip()
-	workflow = default_provider if not provider_id else action_providers.get(provider_id)
+	workflow = action_providers.get(provider_id) if provider_id and provider_id in action_providers else default_provider
 	if workflow is None or not hasattr(workflow, "decide"):
 		return []
 	max_actions_in_tick = max(1, int(data.get("max_actions_in_tick") or 1))
