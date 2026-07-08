@@ -456,7 +456,10 @@ class SQLiteSocialPlatformRuntime:
 			str(r["followee_id"])
 			for r in conn.execute("SELECT followee_id FROM follows WHERE follower_id=?", (account_id,)).fetchall()
 		}
-		rows = conn.execute("SELECT * FROM posts WHERE status='active' ORDER BY created_tick DESC, post_id").fetchall()
+		rows = conn.execute(
+			"SELECT * FROM posts WHERE status='active' AND created_tick <= ? ORDER BY created_tick DESC, post_id",
+			(int(tick),),
+		).fetchall()
 		out: list[dict[str, Any]] = []
 		for row in rows:
 			post_id = str(row["post_id"])

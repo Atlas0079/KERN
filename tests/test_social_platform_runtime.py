@@ -56,6 +56,27 @@ class SQLiteSocialPlatformRuntimeTests(unittest.TestCase):
 			self.assertFalse(events[0]["memory_hint"]["should_remember_by_default"])
 			self.assertEqual(_count(db_path, "exposures"), 2)
 
+	def test_observe_feed_hides_posts_created_after_current_tick(self) -> None:
+		with tempfile.TemporaryDirectory() as td:
+			db_path = Path(td) / "social.sqlite3"
+			rt = _runtime(db_path)
+			rt.invoke(
+				"create_post",
+				{"account_id": "acc_teacher", "post_id": "post_now", "text": "现在可以看到。", "tags": ["kindergarten"], "tick": 2},
+				{},
+			)
+			rt.invoke(
+				"create_post",
+				{"account_id": "acc_teacher", "post_id": "post_future", "text": "未来才会发布。", "tags": ["kindergarten"], "tick": 20},
+				{},
+			)
+
+			early = rt.invoke("observe_feed", {"account_id": "acc_doudou", "limit": 5, "tick": 5}, {"run_id": "run_01"})
+			late = rt.invoke("observe_feed", {"account_id": "acc_doudou", "limit": 5, "tick": 20}, {"run_id": "run_01"})
+
+			self.assertEqual([x["post_id"] for x in early[0]["items"]], ["post_now"])
+			self.assertIn("post_future", [x["post_id"] for x in late[0]["items"]])
+
 	def test_observe_post_returns_body_and_top_comments(self) -> None:
 		with tempfile.TemporaryDirectory() as td:
 			db_path = Path(td) / "social.sqlite3"

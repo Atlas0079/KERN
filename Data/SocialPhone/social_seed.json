@@ -30,7 +30,7 @@
     {
       "author_id": "acc_teacher",
       "post_id_prefix": "post_teacher_notice",
-      "tick": 1,
+      "tick": 0,
       "tags": ["kindergarten", "outdoor", "notice"],
       "texts": [
         "Bring a water bottle for outdoor play tomorrow.",

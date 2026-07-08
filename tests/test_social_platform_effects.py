@@ -45,7 +45,7 @@ def _world_with_phone(db_path: Path, *, phone_in_inventory: bool = True) -> tupl
 			"post_id": "post_outdoor",
 			"text": "Bring a water bottle for outdoor play tomorrow.",
 			"tags": ["kindergarten", "outdoor"],
-			"tick": 1,
+			"tick": 0,
 		},
 		{},
 	)

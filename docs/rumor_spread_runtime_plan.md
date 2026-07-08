@@ -564,6 +564,111 @@ ApplySocialIntervention
 
 可视化不需要作为 agent UI。它是研究者观察面板。
 
+## PHEME 数据接入约定
+
+当前决定优先使用 PHEME 作为真实社交平台文本来源，而不是让 LLM 凭先验生成“真实谣言”。
+
+PHEME 在本项目中的职责是提供外部实验输入：
+
+- source tweet 文本。
+- rumor / non-rumor 标签。
+- 事件目录名，例如 `charlie-hebdo`、`ferguson` 等。
+- source tweet 的发布时间，用于映射到 KERN tick。
+- source tweet 作者信息可选保留；默认不把 PHEME 作者映射到 KERN agent。
+
+PHEME 不负责提供完整 KERN agent：
+
+- 不要求 PHEME 提供完整 follow graph。
+- 不要求 PHEME 提供 `account_interests`。
+- 不要求 PHEME 提供 KERN agent 身份背景。
+- 不要求把 PHEME 作者和已有 agent 做身份匹配。
+- 不要求第一版完整导入 reaction tree。
+
+这些缺失信息由 KERN 场景生成器补齐：
+
+- 100 个模拟用户仍由 `social_profile_seed` 或后续场景生成脚本产生。
+- 用户兴趣写入 `account_interests`，用于当前推荐算法的 tag 匹配。
+- follow graph 由场景生成器基于兴趣、核心账号和少量随机边构造。
+- PHEME 帖子通过 tags 与用户兴趣和研究统计关联。
+
+当前新增离线转换脚本：
+
+```powershell
+.\.venv\Scripts\python.exe tools\convert_pheme_to_social_seed.py <PHEME解压目录> `
+  --rumor-count 1 `
+  --noise-count 100 `
+  --output Data/RumorSpread/social_seed.pheme.generated.json
+```
+
+脚本识别常见 PHEME 目录形态：
+
+```text
+<event>/rumours/<thread>/source-tweets/*.json
+<event>/non-rumours/<thread>/source-tweets/*.json
+```
+
+输出格式兼容现有 `seed_social_platform_runtime_from_file(...)`：
+
+- `accounts`：默认使用 `external_pheme_rumor_source` 和 `external_pheme_background_source` 等外部来源账号；这些账号不是 KERN agent。
+- `posts`：source tweets 转成 social runtime posts。
+- `follows`：暂为空，后续由 100-agent 场景生成器合并。
+- `metadata`：记录来源、采样 seed、数量和转换说明；当前 seed loader 会忽略它。
+
+转换后的帖子 tags 约定：
+
+```text
+pheme
+<event>
+rumor | non_rumor
+source_post
+background   # 仅 non_rumor/noise 帖子
+```
+
+注意：当前第一版只导入 PHEME source tweets。PHEME reactions 可以后续作为预置评论、预置转发或评估对照，但今晚优先让 KERN LLM agents 在运行中产生互动数据。
+
+如果后续确实需要保留 PHEME 原始作者作为平台账号，转换脚本提供：
+
+```powershell
+--source-accounts tweet_authors
+```
+
+但默认仍使用外部来源账号，避免把真实数据源作者错误解释成 KERN agent。
+
+## 当前推荐算法
+
+当前 social runtime 的 feed 推荐不是复杂机器学习模型，而是轻量可解释排序。`ObserveSocialFeed` 会对当前 tick 已发布的 active posts 打分，取前 N 个展示，并记录 `exposures`。
+
+公式位置：
+
+```text
+KERN/external_runtimes/social_platform.py
+```
+
+当前公式：
+
+```text
+score =
+  2.0 * interest_match
++ 1.5 * follow_boost
++ 1.2 * freshness
++ 1.0 * engagement
++ 0.8 * author_affinity
++ 0.4 * exploration_noise
+- 2.0 * seen_penalty
+```
+
+字段来源：
+
+- `interest_match` 来自 `account_interests` 与 `post_tags`。
+- `follow_boost` 来自 `follows`。
+- `freshness` 来自 `created_tick` 与当前 tick。
+- `engagement` 来自帖子 like/comment/repost 计数。
+- `author_affinity` 来自该账号历史 action traces。
+- `exploration_noise` 是基于 run/account/post/tick/cursor 的稳定随机探索。
+- `seen_penalty` 来自该账号历史 exposures。
+
+已修复一个重要时间问题：feed candidate 现在只包含 `created_tick <= current_tick` 的帖子。否则 scheduled clarification 或后续 PHEME 噪声帖会提前出现在 feed 中。
+
 ## 推荐第一版验收标准
 
 第一版开发完成后，应至少证明：
