@@ -7,6 +7,7 @@
 - `agent_project_memory.md`：给 coding agent 的项目级记忆。记录稳定架构事实、当前约定和常用验证命令。
 - `social_platform_runtime_plan.md`：社交平台 runtime 与 RumorSpread 谣言传播实验的当前说明。社交媒体相关工作优先看这里。
 - `social_activity_parallel_decision_plan.md`：RumorSpread 批量并行 LLM 决策、串行提交的已实现设计说明。
+- `crisis_management_ppt_worklog_20260709.md`：危机管理会议 PPT 的当日叙事工作台，记录主线、取舍、待补场景和验收标准。
 
 ## 通用参考
 

@@ -1,0 +1,53 @@
+\newcommand{\insertimage}[2]{
+    \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.3\textwidth]{#1}
+    \caption{#2}
+    \end{figure}
+}
+
+\newcommand{\insertmultipdf}[2]{
+    \foreach \n in {1,...,#2}{
+        \begin{minipage}[t]{0.24\textwidth}
+            \includegraphics[page=\n, width=\textwidth]{#1}
+        \end{minipage}
+        \ifnum\n=4 \par\fi 
+        \ifnum\n=8 \par\fi
+        \ifnum\n=12 \par\fi
+    }
+}
+\newpage
+\section{The Complete Results for the Repeated Trust Game}
+\label{all_multi_round_result}
+
+\subsection{Human}
+\label{appendix:Repeated Trust Game Results:Person}
+The data is collected from the figures in \citep{cochard2004trusting}. We use our code to redraw the figure.
+\begin{figure}[ht]
+    \centering
+    \insertmultipdf{images/multi_round_img/merge/Human_merge.pdf}{16}
+    \caption{All \textbf{humans'} Repeated Trust Game results. }
+    \label{fig:all_person_multi_round_res}
+\end{figure}
+\clearpage
+\newpage
+\subsection{GPT-4}
+\label{sec:GPT-4_multi_round_result}
+
+\begin{figure}[ht]
+    \centering
+    \insertmultipdf{images/multi_round_img/merge/gpt-4_merge_nips.pdf}{16}
+    \caption{All \textbf{GPT-4 agents'} Repeated Trust Game results. }
+    \label{fig:all_gpt4_multi_round_res}
+\end{figure}
+
+\newpage
+\subsection{GPT-3.5}
+\label{sec:GPT-3.5_multi_round_result}
+\begin{figure}[ht]
+    \centering
+    \insertmultipdf{images/multi_round_img/merge/gpt-3.5-turbo-16k-0613_merge_nips.pdf}{16}
+    \caption{All \textbf{GPT-3.5 agents'} Repeated Trust Game results. }
+    \label{fig:all_gpt3.5_multi_rount_res}
+\end{figure}
+

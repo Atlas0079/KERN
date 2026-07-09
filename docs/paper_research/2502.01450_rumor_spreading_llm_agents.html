@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+<title>Simulating Rumor Spreading in Social Networks using LLM Agents</title>
+<!--Generated on Mon Feb  3 15:40:10 2025 by LaTeXML (version 0.8.8) http://dlmf.nist.gov/LaTeXML/.-->
+<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<link href="/static/browse/0.3.4/css/ar5iv.0.7.9.min.css" rel="stylesheet" type="text/css"/>
+<link href="/static/browse/0.3.4/css/ar5iv-fonts.0.7.9.min.css" rel="stylesheet" type="text/css"/>
+<link href="/static/browse/0.3.4/css/latexml_styles.css" rel="stylesheet" type="text/css"/>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.3/html2canvas.min.js"></script>
+<script src="/static/browse/0.3.4/js/addons_new.js"></script>
+<script src="/static/browse/0.3.4/js/feedbackOverlay.js"></script>
+<base href="/html/2502.01450v1/"/></head>
+<body>
+<nav class="ltx_page_navbar">
+<nav class="ltx_TOC">
+<ol class="ltx_toclist">
+<li class="ltx_tocentry ltx_tocentry_section"><a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx1" title="In Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title">Introduction</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_section">
+<a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx2" title="In Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title">Related Work</span></a>
+<ol class="ltx_toclist ltx_toclist_section">
+<li class="ltx_tocentry ltx_tocentry_subsection"><a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx2.SSx1" title="In Related Work ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title">Modeling rumor spreading</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_subsection"><a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx2.SSx2" title="In Related Work ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title">LLM-based Agents</span></a></li>
+</ol>
+</li>
+<li class="ltx_tocentry ltx_tocentry_section">
+<a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx3" title="In Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title">Methods</span></a>
+<ol class="ltx_toclist ltx_toclist_section">
+<li class="ltx_tocentry ltx_tocentry_subsection"><a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx3.SSx1" title="In Methods ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title">Network Construction</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_subsection"><a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx3.SSx2" title="In Methods ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title">LLM-based Agent</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_subsection"><a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx3.SSx3" title="In Methods ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title">Scalability</span></a></li>
+</ol>
+</li>
+<li class="ltx_tocentry ltx_tocentry_section">
+<a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx4" title="In Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title">Experiments</span></a>
+<ol class="ltx_toclist ltx_toclist_section">
+<li class="ltx_tocentry ltx_tocentry_subsection"><a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx4.SSx1" title="In Experiments ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title">Effect of Network Structure</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_subsection"><a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx4.SSx2" title="In Experiments ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title">Effect of Initialization and Spreading Scheme</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_subsection"><a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx4.SSx3" title="In Experiments ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title">Effect of Agent’s Personas</span></a></li>
+</ol>
+</li>
+<li class="ltx_tocentry ltx_tocentry_section"><a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx5" title="In Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title">Conclusion</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_appendix"><a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#A1" title="In Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title"><span class="ltx_tag ltx_tag_ref">A </span>Synthetic Networks</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_appendix"><a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#A2" title="In Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title"><span class="ltx_tag ltx_tag_ref">B </span>Agent Personas</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_appendix"><a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#A3" title="In Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title"><span class="ltx_tag ltx_tag_ref">C </span>Prompt Template</span></a></li>
+<li class="ltx_tocentry ltx_tocentry_appendix"><a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#A4" title="In Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_title"><span class="ltx_tag ltx_tag_ref">D </span>Supplementary Evaluation Results</span></a></li>
+</ol></nav>
+</nav>
+<div class="ltx_page_main">
+<div class="ltx_page_content">
+<article class="ltx_document ltx_authors_1line">
+<h1 class="ltx_title ltx_title_document">Simulating Rumor Spreading in Social Networks using LLM Agents</h1>
+<div class="ltx_authors">
+<span class="ltx_creator ltx_role_author">
+<span class="ltx_personname">
+Tianrui Hu,<sup class="ltx_sup" id="id1.1.id1">1 †</sup>
+Dimitrios Liakopoulos,<sup class="ltx_sup" id="id2.2.id2">1 †</sup>
+Xiwen Wei,<sup class="ltx_sup" id="id3.3.id3">1</sup>
+Radu Marculescu,<sup class="ltx_sup" id="id4.4.id4">1</sup>
+Neeraja J. Yadwadkar<sup class="ltx_sup" id="id5.5.id5">1</sup>
+</span></span>
+</div>
+<div class="ltx_abstract">
+<h6 class="ltx_title ltx_title_abstract">Abstract</h6>
+<p class="ltx_p" id="id6.id1">With the rise of social media, misinformation has become increasingly prevalent, fueled largely by the spread of rumors.
+This study explores the use of Large Language Model (LLM) agents within a novel framework to simulate and analyze the dynamics of rumor propagation across social networks.
+To this end, we design a variety of LLM-based agent types and construct four distinct network structures to conduct these simulations.
+Our framework assesses the effectiveness of different network constructions and agent behaviors in influencing the spread of rumors.
+Our results demonstrate that the framework can simulate rumor spreading across more than one hundred agents in various networks with thousands of edges.
+The evaluations indicate that network structure, personas, and spreading schemes can significantly influence rumor dissemination, ranging from no spread to affecting 83% of agents in iterations, thereby offering a realistic simulation of rumor spread in social networks. The code of this project is available at https://github.com/neerajas-group/rumors-in-multi-agent.</p>
+</div>
+<section class="ltx_section" id="Sx1">
+<h2 class="ltx_title ltx_title_section">Introduction</h2>
+<div class="ltx_para" id="Sx1.p1">
+<p class="ltx_p" id="Sx1.p1.1">Understanding human behaviors within social networks is critical across various domains in social sciences.
+In recent years, the rapid growth of Large Language Models (LLMs) has shown great potential for making LLMs act like humans and simulate social networks <cite class="ltx_cite ltx_citemacro_citep">(Chen et al. <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib4" title="">2024</a>)</cite>.
+LLMs demonstrate the ability to adapt to different backgrounds and personalities through in-context learning, effectively simulating human beings <cite class="ltx_cite ltx_citemacro_citep">(Chuang et al. <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib5" title="">2024</a>)</cite>.
+The traditional studies <cite class="ltx_cite ltx_citemacro_citep">(Hamidian and Diab <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib7" title="">2019</a>; Kaligotla, Yücesan, and Chick <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib8" title="">2015</a>)</cite> of social networks predominantly emphasize mathematical equations, statistical analyses, and simplistic agent models.
+However, these approaches often constrain their ability to accurately simulate the diverse personalities and complex dynamics inherent in real social networks, potentially leading to significant impacts on both the processes and outcomes of such studies.
+With the growing capabilities of LLMs <cite class="ltx_cite ltx_citemacro_citep">(Radford et al. <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib14" title="">2018</a>)</cite>, utilizing them as agents to facilitate communication within social networks presents a promising approach to studying human behavior under various conditions.</p>
+</div>
+<div class="ltx_para" id="Sx1.p2">
+<p class="ltx_p" id="Sx1.p2.1">In this study, we introduce a novel framework utilizing LLM-based agents to examine the spread of rumors and misinformation within social networks.
+Our approach enhances the traditional simulations of rumor dynamics by incorporating LLMs as dynamic agents, offering a more realistic exploration of information dissemination.
+To accurately simulate users in a social network, we employ an LLM to drive each agent with various personas and their preferences for accepting and spreading rumors, as defined by prompts.
+Each agent is associated with a post history that includes all posts from itself and its neighbors, along with a record of its beliefs about each rumor, based on the LLM’s output.
+Additionally, our dual-simulation framework accounts for both network properties and individual agent characteristics, providing a holistic view of how these factors jointly influence rumor dynamics.
+This research not only demonstrates the utility of LLMs in understanding rumor spreading but also provides significant insights into the behavioral simulation capabilities of LLM-based agent societies.</p>
+</div>
+</section>
+<section class="ltx_section" id="Sx2">
+<h2 class="ltx_title ltx_title_section">Related Work</h2>
+<section class="ltx_subsection" id="Sx2.SSx1">
+<h3 class="ltx_title ltx_title_subsection">Modeling rumor spreading</h3>
+<div class="ltx_para" id="Sx2.SSx1.p1">
+<p class="ltx_p" id="Sx2.SSx1.p1.1">In social network analysis, the spread of rumors is an important problem that has garnered extensive research and exploration.
+This is a network science topic where people tend to utilize statistical modeling and probabilistic analysis to formulate the network and define the spread of rumors.
+Common approaches include building statistical models with constraints <cite class="ltx_cite ltx_citemacro_citep">(Zehmakan, Out, and Khelejan <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib17" title="">2023</a>)</cite> and defining multiple parameters that could affect the network <cite class="ltx_cite ltx_citemacro_citep">(Chen and Wang <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib3" title="">2020</a>)</cite>.
+However, these methods may not accurately reflect the individuals and the randomness in real-world societies.
+There are works that use traditional agent-based modeling (ABM) to simulate the spread of rumors in a bottom-up approach, including using NetLogo <cite class="ltx_cite ltx_citemacro_citep">(Wilensky <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib16" title="">1999</a>)</cite> agents as nodes in a social network <cite class="ltx_cite ltx_citemacro_citep">(Kaligotla, Yücesan, and Chick <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib8" title="">2015</a>)</cite> and defining mathematical models for agents <cite class="ltx_cite ltx_citemacro_citep">(Zehmakan, Out, and Khelejan <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib17" title="">2023</a>)</cite>.
+However, these agents are still highly dependent on the definition of their mathematical properties.</p>
+</div>
+</section>
+<section class="ltx_subsection" id="Sx2.SSx2">
+<h3 class="ltx_title ltx_title_subsection">LLM-based Agents</h3>
+<div class="ltx_para" id="Sx2.SSx2.p1">
+<p class="ltx_p" id="Sx2.SSx2.p1.1">In recent years, we have seen the flourishing of LLM <cite class="ltx_cite ltx_citemacro_citep">(OpenAI <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib12" title="">2024</a>)</cite> and its emergent abilities that perform well in various tasks.
+Recently, many studies have demonstrated the ability of LLMs to drive agents in ABM to simulate general human behavior <cite class="ltx_cite ltx_citemacro_citep">(Park et al. <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib13" title="">2023</a>; Chuang et al. <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib5" title="">2024</a>)</cite>.
+LLM-based agents also demonstrate strong language comprehension and perform well in tasks guided by natural language instructions <cite class="ltx_cite ltx_citemacro_citep">(Chen et al. <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib4" title="">2024</a>)</cite>.
+However, these studies primarily focus on utilizing LLMs as individual agents or basic agent communications, overlooking the potential for evaluating LLMs within a network graph to examine rumor propagation in complex social networks.</p>
+</div>
+</section>
+</section>
+<section class="ltx_section" id="Sx3">
+<h2 class="ltx_title ltx_title_section">Methods</h2>
+<div class="ltx_para" id="Sx3.p1">
+<p class="ltx_p" id="Sx3.p1.1">To demonstrate the capabilities of LLMs in simulating the spread of rumors and their mitigation within social networks, we aim to:
+(a) construct various social networks,
+(b) design and implement multiple LLM-based agents as part of an ABM framework operating within the networks, and
+(c) evaluate both the propagation of rumors and the effectiveness of potential mitigation strategies.</p>
+</div>
+<section class="ltx_subsection" id="Sx3.SSx1">
+<h3 class="ltx_title ltx_title_subsection">Network Construction</h3>
+<div class="ltx_para" id="Sx3.SSx1.p1">
+<p class="ltx_p" id="Sx3.SSx1.p1.1">Network analysis represents individuals and their relationships as nodes and edges, respectively.
+In the context of rumor propagation, the social network models a social media environment where individuals interact with friends and share personal sentiments and rumors.
+To characterize this network, we propose that nodes represent users within the social network, while edges signify the friendship relationships between pairs of users (nodes).
+As friends can view each other’s messages, this network is defined as an undirected network.
+The structure of a network significantly influences behavior in simulations <cite class="ltx_cite ltx_citemacro_citep">(Alam and Geller <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib1" title="">2011</a>)</cite>.
+To investigate this, we construct various networks for simulation and analysis, employing two approaches:</p>
+</div>
+<div class="ltx_para ltx_noindent" id="Sx3.SSx1.p2">
+<p class="ltx_p" id="Sx3.SSx1.p2.1"><span class="ltx_text ltx_font_bold" id="Sx3.SSx1.p2.1.1">Synthetic Networks.</span>
+We algorithmically generate networks with specific characteristics, including Erdős-Rényi networks <cite class="ltx_cite ltx_citemacro_citep">(Erdös and Rényi <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib6" title="">1959</a>)</cite>, Scale-Free networks <cite class="ltx_cite ltx_citemacro_citep">(Barabási and Bonabeau <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib2" title="">2003</a>)</cite>, and Small-World networks <cite class="ltx_cite ltx_citemacro_citep">(Watts and Strogatz <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib15" title="">1998</a>)</cite>.
+These networks enable us to examine the relationship between rumor-spreading and network properties.</p>
+</div>
+<div class="ltx_para ltx_noindent" id="Sx3.SSx1.p3">
+<p class="ltx_p" id="Sx3.SSx1.p3.1"><span class="ltx_text ltx_font_bold" id="Sx3.SSx1.p3.1.1">Real-World Networks.</span>
+To simulate more realistic scenarios, we utilize real-world social network data collected from Facebook to generate various networks <cite class="ltx_cite ltx_citemacro_citep">(Leskovec and Mcauley <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib9" title="">2012</a>)</cite>.</p>
+</div>
+<div class="ltx_para ltx_noindent" id="Sx3.SSx1.p4">
+<p class="ltx_p" id="Sx3.SSx1.p4.1">Our objective is to evaluate the spread of rumors across all network types and to explore how network characteristics influence rumor propagation.</p>
+</div>
+<figure class="ltx_figure" id="Sx3.F1">
+<div class="ltx_flex_figure">
+<div class="ltx_flex_cell ltx_flex_size_2">
+<figure class="ltx_figure ltx_figure_panel ltx_align_center" id="Sx3.F1.sf1"><img alt="Refer to caption" class="ltx_graphics ltx_centering ltx_img_landscape" height="463" id="Sx3.F1.sf1.g1" src="extracted/6165488/Figures/3_Approach/llm1.png" width="698"/>
+<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_figure">(a) </span>Network with LLM-based agents; each agent maintains its own post history and rumor beliefs.</figcaption>
+</figure>
+</div>
+<div class="ltx_flex_cell ltx_flex_size_2">
+<figure class="ltx_figure ltx_figure_panel ltx_align_center" id="Sx3.F1.sf2"><img alt="Refer to caption" class="ltx_graphics ltx_centering ltx_img_landscape" height="432" id="Sx3.F1.sf2.g1" src="extracted/6165488/Figures/3_Approach/llm2.png" width="698"/>
+<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_figure">(b) </span>At each iteration, the agent generates a post, appends it to its own and its neighbor’s history, and updates its rumor belief.
+</figcaption>
+</figure>
+</div>
+</div>
+<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_figure">Figure 1: </span>Design of LLM-based multi-agent network.</figcaption>
+</figure>
+<figure class="ltx_float ltx_float_algorithm ltx_framed ltx_framed_top" id="alg1">
+<figcaption class="ltx_caption"><span class="ltx_tag ltx_tag_float"><span class="ltx_text ltx_font_bold" id="alg1.2.1.1">Algorithm 1</span> </span> Simulating Rumor Spread with LLM Agents
+</figcaption>
+<div class="ltx_listing ltx_listing" id="alg1.3">
+<div class="ltx_listingline" id="alg1.l1">
+<span class="ltx_tag ltx_tag_listingline">1:</span><span class="ltx_text ltx_font_bold" id="alg1.l1.1">Input:</span> <math alttext="G" class="ltx_Math" display="inline" id="alg1.l1.m1.1"><semantics id="alg1.l1.m1.1a"><mi id="alg1.l1.m1.1.1" xref="alg1.l1.m1.1.1.cmml">G</mi><annotation-xml encoding="MathML-Content" id="alg1.l1.m1.1b"><ci id="alg1.l1.m1.1.1.cmml" xref="alg1.l1.m1.1.1">𝐺</ci></annotation-xml><annotation encoding="application/x-tex" id="alg1.l1.m1.1c">G</annotation><annotation encoding="application/x-llamapun" id="alg1.l1.m1.1d">italic_G</annotation></semantics></math> social network, <math alttext="N" class="ltx_Math" display="inline" id="alg1.l1.m2.1"><semantics id="alg1.l1.m2.1a"><mi id="alg1.l1.m2.1.1" xref="alg1.l1.m2.1.1.cmml">N</mi><annotation-xml encoding="MathML-Content" id="alg1.l1.m2.1b"><ci id="alg1.l1.m2.1.1.cmml" xref="alg1.l1.m2.1.1">𝑁</ci></annotation-xml><annotation encoding="application/x-tex" id="alg1.l1.m2.1c">N</annotation><annotation encoding="application/x-llamapun" id="alg1.l1.m2.1d">italic_N</annotation></semantics></math> agent personas <math alttext="\{p_{i}\}_{i=1}^{N}" class="ltx_Math" display="inline" id="alg1.l1.m3.1"><semantics id="alg1.l1.m3.1a"><msubsup id="alg1.l1.m3.1.1" xref="alg1.l1.m3.1.1.cmml"><mrow id="alg1.l1.m3.1.1.1.1.1" xref="alg1.l1.m3.1.1.1.1.2.cmml"><mo id="alg1.l1.m3.1.1.1.1.1.2" stretchy="false" xref="alg1.l1.m3.1.1.1.1.2.cmml">{</mo><msub id="alg1.l1.m3.1.1.1.1.1.1" xref="alg1.l1.m3.1.1.1.1.1.1.cmml"><mi id="alg1.l1.m3.1.1.1.1.1.1.2" xref="alg1.l1.m3.1.1.1.1.1.1.2.cmml">p</mi><mi id="alg1.l1.m3.1.1.1.1.1.1.3" xref="alg1.l1.m3.1.1.1.1.1.1.3.cmml">i</mi></msub><mo id="alg1.l1.m3.1.1.1.1.1.3" stretchy="false" xref="alg1.l1.m3.1.1.1.1.2.cmml">}</mo></mrow><mrow id="alg1.l1.m3.1.1.1.3" xref="alg1.l1.m3.1.1.1.3.cmml"><mi id="alg1.l1.m3.1.1.1.3.2" xref="alg1.l1.m3.1.1.1.3.2.cmml">i</mi><mo id="alg1.l1.m3.1.1.1.3.1" xref="alg1.l1.m3.1.1.1.3.1.cmml">=</mo><mn id="alg1.l1.m3.1.1.1.3.3" xref="alg1.l1.m3.1.1.1.3.3.cmml">1</mn></mrow><mi id="alg1.l1.m3.1.1.3" xref="alg1.l1.m3.1.1.3.cmml">N</mi></msubsup><annotation-xml encoding="MathML-Content" id="alg1.l1.m3.1b"><apply id="alg1.l1.m3.1.1.cmml" xref="alg1.l1.m3.1.1"><csymbol cd="ambiguous" id="alg1.l1.m3.1.1.2.cmml" xref="alg1.l1.m3.1.1">superscript</csymbol><apply id="alg1.l1.m3.1.1.1.cmml" xref="alg1.l1.m3.1.1"><csymbol cd="ambiguous" id="alg1.l1.m3.1.1.1.2.cmml" xref="alg1.l1.m3.1.1">subscript</csymbol><set id="alg1.l1.m3.1.1.1.1.2.cmml" xref="alg1.l1.m3.1.1.1.1.1"><apply id="alg1.l1.m3.1.1.1.1.1.1.cmml" xref="alg1.l1.m3.1.1.1.1.1.1"><csymbol cd="ambiguous" id="alg1.l1.m3.1.1.1.1.1.1.1.cmml" xref="alg1.l1.m3.1.1.1.1.1.1">subscript</csymbol><ci id="alg1.l1.m3.1.1.1.1.1.1.2.cmml" xref="alg1.l1.m3.1.1.1.1.1.1.2">𝑝</ci><ci id="alg1.l1.m3.1.1.1.1.1.1.3.cmml" xref="alg1.l1.m3.1.1.1.1.1.1.3">𝑖</ci></apply></set><apply id="alg1.l1.m3.1.1.1.3.cmml" xref="alg1.l1.m3.1.1.1.3"><eq id="alg1.l1.m3.1.1.1.3.1.cmml" xref="alg1.l1.m3.1.1.1.3.1"></eq><ci id="alg1.l1.m3.1.1.1.3.2.cmml" xref="alg1.l1.m3.1.1.1.3.2">𝑖</ci><cn id="alg1.l1.m3.1.1.1.3.3.cmml" type="integer" xref="alg1.l1.m3.1.1.1.3.3">1</cn></apply></apply><ci id="alg1.l1.m3.1.1.3.cmml" xref="alg1.l1.m3.1.1.3">𝑁</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l1.m3.1c">\{p_{i}\}_{i=1}^{N}</annotation><annotation encoding="application/x-llamapun" id="alg1.l1.m3.1d">{ italic_p start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT } start_POSTSUBSCRIPT italic_i = 1 end_POSTSUBSCRIPT start_POSTSUPERSCRIPT italic_N end_POSTSUPERSCRIPT</annotation></semantics></math>, <math alttext="L" class="ltx_Math" display="inline" id="alg1.l1.m4.1"><semantics id="alg1.l1.m4.1a"><mi id="alg1.l1.m4.1.1" xref="alg1.l1.m4.1.1.cmml">L</mi><annotation-xml encoding="MathML-Content" id="alg1.l1.m4.1b"><ci id="alg1.l1.m4.1.1.cmml" xref="alg1.l1.m4.1.1">𝐿</ci></annotation-xml><annotation encoding="application/x-tex" id="alg1.l1.m4.1c">L</annotation><annotation encoding="application/x-llamapun" id="alg1.l1.m4.1d">italic_L</annotation></semantics></math> list of rumors <math alttext="\{r_{j}\}_{i=j}^{L}" class="ltx_Math" display="inline" id="alg1.l1.m5.1"><semantics id="alg1.l1.m5.1a"><msubsup id="alg1.l1.m5.1.1" xref="alg1.l1.m5.1.1.cmml"><mrow id="alg1.l1.m5.1.1.1.1.1" xref="alg1.l1.m5.1.1.1.1.2.cmml"><mo id="alg1.l1.m5.1.1.1.1.1.2" stretchy="false" xref="alg1.l1.m5.1.1.1.1.2.cmml">{</mo><msub id="alg1.l1.m5.1.1.1.1.1.1" xref="alg1.l1.m5.1.1.1.1.1.1.cmml"><mi id="alg1.l1.m5.1.1.1.1.1.1.2" xref="alg1.l1.m5.1.1.1.1.1.1.2.cmml">r</mi><mi id="alg1.l1.m5.1.1.1.1.1.1.3" xref="alg1.l1.m5.1.1.1.1.1.1.3.cmml">j</mi></msub><mo id="alg1.l1.m5.1.1.1.1.1.3" stretchy="false" xref="alg1.l1.m5.1.1.1.1.2.cmml">}</mo></mrow><mrow id="alg1.l1.m5.1.1.1.3" xref="alg1.l1.m5.1.1.1.3.cmml"><mi id="alg1.l1.m5.1.1.1.3.2" xref="alg1.l1.m5.1.1.1.3.2.cmml">i</mi><mo id="alg1.l1.m5.1.1.1.3.1" xref="alg1.l1.m5.1.1.1.3.1.cmml">=</mo><mi id="alg1.l1.m5.1.1.1.3.3" xref="alg1.l1.m5.1.1.1.3.3.cmml">j</mi></mrow><mi id="alg1.l1.m5.1.1.3" xref="alg1.l1.m5.1.1.3.cmml">L</mi></msubsup><annotation-xml encoding="MathML-Content" id="alg1.l1.m5.1b"><apply id="alg1.l1.m5.1.1.cmml" xref="alg1.l1.m5.1.1"><csymbol cd="ambiguous" id="alg1.l1.m5.1.1.2.cmml" xref="alg1.l1.m5.1.1">superscript</csymbol><apply id="alg1.l1.m5.1.1.1.cmml" xref="alg1.l1.m5.1.1"><csymbol cd="ambiguous" id="alg1.l1.m5.1.1.1.2.cmml" xref="alg1.l1.m5.1.1">subscript</csymbol><set id="alg1.l1.m5.1.1.1.1.2.cmml" xref="alg1.l1.m5.1.1.1.1.1"><apply id="alg1.l1.m5.1.1.1.1.1.1.cmml" xref="alg1.l1.m5.1.1.1.1.1.1"><csymbol cd="ambiguous" id="alg1.l1.m5.1.1.1.1.1.1.1.cmml" xref="alg1.l1.m5.1.1.1.1.1.1">subscript</csymbol><ci id="alg1.l1.m5.1.1.1.1.1.1.2.cmml" xref="alg1.l1.m5.1.1.1.1.1.1.2">𝑟</ci><ci id="alg1.l1.m5.1.1.1.1.1.1.3.cmml" xref="alg1.l1.m5.1.1.1.1.1.1.3">𝑗</ci></apply></set><apply id="alg1.l1.m5.1.1.1.3.cmml" xref="alg1.l1.m5.1.1.1.3"><eq id="alg1.l1.m5.1.1.1.3.1.cmml" xref="alg1.l1.m5.1.1.1.3.1"></eq><ci id="alg1.l1.m5.1.1.1.3.2.cmml" xref="alg1.l1.m5.1.1.1.3.2">𝑖</ci><ci id="alg1.l1.m5.1.1.1.3.3.cmml" xref="alg1.l1.m5.1.1.1.3.3">𝑗</ci></apply></apply><ci id="alg1.l1.m5.1.1.3.cmml" xref="alg1.l1.m5.1.1.3">𝐿</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l1.m5.1c">\{r_{j}\}_{i=j}^{L}</annotation><annotation encoding="application/x-llamapun" id="alg1.l1.m5.1d">{ italic_r start_POSTSUBSCRIPT italic_j end_POSTSUBSCRIPT } start_POSTSUBSCRIPT italic_i = italic_j end_POSTSUBSCRIPT start_POSTSUPERSCRIPT italic_L end_POSTSUPERSCRIPT</annotation></semantics></math>, number of time steps <math alttext="T" class="ltx_Math" display="inline" id="alg1.l1.m6.1"><semantics id="alg1.l1.m6.1a"><mi id="alg1.l1.m6.1.1" xref="alg1.l1.m6.1.1.cmml">T</mi><annotation-xml encoding="MathML-Content" id="alg1.l1.m6.1b"><ci id="alg1.l1.m6.1.1.cmml" xref="alg1.l1.m6.1.1">𝑇</ci></annotation-xml><annotation encoding="application/x-tex" id="alg1.l1.m6.1c">T</annotation><annotation encoding="application/x-llamapun" id="alg1.l1.m6.1d">italic_T</annotation></semantics></math>
+</div>
+<div class="ltx_listingline" id="alg1.l2">
+<span class="ltx_tag ltx_tag_listingline">2:</span><span class="ltx_text ltx_font_bold" id="alg1.l2.1">Output:</span> <math alttext="B" class="ltx_Math" display="inline" id="alg1.l2.m1.1"><semantics id="alg1.l2.m1.1a"><mi id="alg1.l2.m1.1.1" xref="alg1.l2.m1.1.1.cmml">B</mi><annotation-xml encoding="MathML-Content" id="alg1.l2.m1.1b"><ci id="alg1.l2.m1.1.1.cmml" xref="alg1.l2.m1.1.1">𝐵</ci></annotation-xml><annotation encoding="application/x-tex" id="alg1.l2.m1.1c">B</annotation><annotation encoding="application/x-llamapun" id="alg1.l2.m1.1d">italic_B</annotation></semantics></math>, the belief in rumors, where <math alttext="\langle b_{ij}\rangle\in[0,1]" class="ltx_Math" display="inline" id="alg1.l2.m2.3"><semantics id="alg1.l2.m2.3a"><mrow id="alg1.l2.m2.3.3" xref="alg1.l2.m2.3.3.cmml"><mrow id="alg1.l2.m2.3.3.1.1" xref="alg1.l2.m2.3.3.1.2.cmml"><mo id="alg1.l2.m2.3.3.1.1.2" stretchy="false" xref="alg1.l2.m2.3.3.1.2.1.cmml">⟨</mo><msub id="alg1.l2.m2.3.3.1.1.1" xref="alg1.l2.m2.3.3.1.1.1.cmml"><mi id="alg1.l2.m2.3.3.1.1.1.2" xref="alg1.l2.m2.3.3.1.1.1.2.cmml">b</mi><mrow id="alg1.l2.m2.3.3.1.1.1.3" xref="alg1.l2.m2.3.3.1.1.1.3.cmml"><mi id="alg1.l2.m2.3.3.1.1.1.3.2" xref="alg1.l2.m2.3.3.1.1.1.3.2.cmml">i</mi><mo id="alg1.l2.m2.3.3.1.1.1.3.1" xref="alg1.l2.m2.3.3.1.1.1.3.1.cmml">⁢</mo><mi id="alg1.l2.m2.3.3.1.1.1.3.3" xref="alg1.l2.m2.3.3.1.1.1.3.3.cmml">j</mi></mrow></msub><mo id="alg1.l2.m2.3.3.1.1.3" stretchy="false" xref="alg1.l2.m2.3.3.1.2.1.cmml">⟩</mo></mrow><mo id="alg1.l2.m2.3.3.2" xref="alg1.l2.m2.3.3.2.cmml">∈</mo><mrow id="alg1.l2.m2.3.3.3.2" xref="alg1.l2.m2.3.3.3.1.cmml"><mo id="alg1.l2.m2.3.3.3.2.1" stretchy="false" xref="alg1.l2.m2.3.3.3.1.cmml">[</mo><mn id="alg1.l2.m2.1.1" xref="alg1.l2.m2.1.1.cmml">0</mn><mo id="alg1.l2.m2.3.3.3.2.2" xref="alg1.l2.m2.3.3.3.1.cmml">,</mo><mn id="alg1.l2.m2.2.2" xref="alg1.l2.m2.2.2.cmml">1</mn><mo id="alg1.l2.m2.3.3.3.2.3" stretchy="false" xref="alg1.l2.m2.3.3.3.1.cmml">]</mo></mrow></mrow><annotation-xml encoding="MathML-Content" id="alg1.l2.m2.3b"><apply id="alg1.l2.m2.3.3.cmml" xref="alg1.l2.m2.3.3"><in id="alg1.l2.m2.3.3.2.cmml" xref="alg1.l2.m2.3.3.2"></in><apply id="alg1.l2.m2.3.3.1.2.cmml" xref="alg1.l2.m2.3.3.1.1"><csymbol cd="latexml" id="alg1.l2.m2.3.3.1.2.1.cmml" xref="alg1.l2.m2.3.3.1.1.2">delimited-⟨⟩</csymbol><apply id="alg1.l2.m2.3.3.1.1.1.cmml" xref="alg1.l2.m2.3.3.1.1.1"><csymbol cd="ambiguous" id="alg1.l2.m2.3.3.1.1.1.1.cmml" xref="alg1.l2.m2.3.3.1.1.1">subscript</csymbol><ci id="alg1.l2.m2.3.3.1.1.1.2.cmml" xref="alg1.l2.m2.3.3.1.1.1.2">𝑏</ci><apply id="alg1.l2.m2.3.3.1.1.1.3.cmml" xref="alg1.l2.m2.3.3.1.1.1.3"><times id="alg1.l2.m2.3.3.1.1.1.3.1.cmml" xref="alg1.l2.m2.3.3.1.1.1.3.1"></times><ci id="alg1.l2.m2.3.3.1.1.1.3.2.cmml" xref="alg1.l2.m2.3.3.1.1.1.3.2">𝑖</ci><ci id="alg1.l2.m2.3.3.1.1.1.3.3.cmml" xref="alg1.l2.m2.3.3.1.1.1.3.3">𝑗</ci></apply></apply></apply><interval closure="closed" id="alg1.l2.m2.3.3.3.1.cmml" xref="alg1.l2.m2.3.3.3.2"><cn id="alg1.l2.m2.1.1.cmml" type="integer" xref="alg1.l2.m2.1.1">0</cn><cn id="alg1.l2.m2.2.2.cmml" type="integer" xref="alg1.l2.m2.2.2">1</cn></interval></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l2.m2.3c">\langle b_{ij}\rangle\in[0,1]</annotation><annotation encoding="application/x-llamapun" id="alg1.l2.m2.3d">⟨ italic_b start_POSTSUBSCRIPT italic_i italic_j end_POSTSUBSCRIPT ⟩ ∈ [ 0 , 1 ]</annotation></semantics></math> represents the belief of agent <math alttext="a_{i}" class="ltx_Math" display="inline" id="alg1.l2.m3.1"><semantics id="alg1.l2.m3.1a"><msub id="alg1.l2.m3.1.1" xref="alg1.l2.m3.1.1.cmml"><mi id="alg1.l2.m3.1.1.2" xref="alg1.l2.m3.1.1.2.cmml">a</mi><mi id="alg1.l2.m3.1.1.3" xref="alg1.l2.m3.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l2.m3.1b"><apply id="alg1.l2.m3.1.1.cmml" xref="alg1.l2.m3.1.1"><csymbol cd="ambiguous" id="alg1.l2.m3.1.1.1.cmml" xref="alg1.l2.m3.1.1">subscript</csymbol><ci id="alg1.l2.m3.1.1.2.cmml" xref="alg1.l2.m3.1.1.2">𝑎</ci><ci id="alg1.l2.m3.1.1.3.cmml" xref="alg1.l2.m3.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l2.m3.1c">a_{i}</annotation><annotation encoding="application/x-llamapun" id="alg1.l2.m3.1d">italic_a start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math> in rumor <math alttext="r_{j}" class="ltx_Math" display="inline" id="alg1.l2.m4.1"><semantics id="alg1.l2.m4.1a"><msub id="alg1.l2.m4.1.1" xref="alg1.l2.m4.1.1.cmml"><mi id="alg1.l2.m4.1.1.2" xref="alg1.l2.m4.1.1.2.cmml">r</mi><mi id="alg1.l2.m4.1.1.3" xref="alg1.l2.m4.1.1.3.cmml">j</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l2.m4.1b"><apply id="alg1.l2.m4.1.1.cmml" xref="alg1.l2.m4.1.1"><csymbol cd="ambiguous" id="alg1.l2.m4.1.1.1.cmml" xref="alg1.l2.m4.1.1">subscript</csymbol><ci id="alg1.l2.m4.1.1.2.cmml" xref="alg1.l2.m4.1.1.2">𝑟</ci><ci id="alg1.l2.m4.1.1.3.cmml" xref="alg1.l2.m4.1.1.3">𝑗</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l2.m4.1c">r_{j}</annotation><annotation encoding="application/x-llamapun" id="alg1.l2.m4.1d">italic_r start_POSTSUBSCRIPT italic_j end_POSTSUBSCRIPT</annotation></semantics></math>.
+
+</div>
+<div class="ltx_listingline" id="alg1.l3">
+<span class="ltx_tag ltx_tag_listingline">3:</span><span class="ltx_text ltx_font_bold" id="alg1.l3.2">for</span> <math alttext="i=1" class="ltx_Math" display="inline" id="alg1.l3.m1.1"><semantics id="alg1.l3.m1.1a"><mrow id="alg1.l3.m1.1.1" xref="alg1.l3.m1.1.1.cmml"><mi id="alg1.l3.m1.1.1.2" xref="alg1.l3.m1.1.1.2.cmml">i</mi><mo id="alg1.l3.m1.1.1.1" xref="alg1.l3.m1.1.1.1.cmml">=</mo><mn id="alg1.l3.m1.1.1.3" xref="alg1.l3.m1.1.1.3.cmml">1</mn></mrow><annotation-xml encoding="MathML-Content" id="alg1.l3.m1.1b"><apply id="alg1.l3.m1.1.1.cmml" xref="alg1.l3.m1.1.1"><eq id="alg1.l3.m1.1.1.1.cmml" xref="alg1.l3.m1.1.1.1"></eq><ci id="alg1.l3.m1.1.1.2.cmml" xref="alg1.l3.m1.1.1.2">𝑖</ci><cn id="alg1.l3.m1.1.1.3.cmml" type="integer" xref="alg1.l3.m1.1.1.3">1</cn></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l3.m1.1c">i=1</annotation><annotation encoding="application/x-llamapun" id="alg1.l3.m1.1d">italic_i = 1</annotation></semantics></math> <span class="ltx_text ltx_font_bold" id="alg1.l3.3">to</span> <math alttext="N" class="ltx_Math" display="inline" id="alg1.l3.m2.1"><semantics id="alg1.l3.m2.1a"><mi id="alg1.l3.m2.1.1" xref="alg1.l3.m2.1.1.cmml">N</mi><annotation-xml encoding="MathML-Content" id="alg1.l3.m2.1b"><ci id="alg1.l3.m2.1.1.cmml" xref="alg1.l3.m2.1.1">𝑁</ci></annotation-xml><annotation encoding="application/x-tex" id="alg1.l3.m2.1c">N</annotation><annotation encoding="application/x-llamapun" id="alg1.l3.m2.1d">italic_N</annotation></semantics></math> <span class="ltx_text ltx_font_bold" id="alg1.l3.1">do<span class="ltx_text ltx_font_medium" id="alg1.l3.1.1" style="float:right;"><math alttext="\triangleright" class="ltx_Math" display="inline" id="alg1.l3.1.1.m1.1"><semantics id="alg1.l3.1.1.m1.1a"><mo id="alg1.l3.1.1.m1.1.1" xref="alg1.l3.1.1.m1.1.1.cmml">▷</mo><annotation-xml encoding="MathML-Content" id="alg1.l3.1.1.m1.1b"><ci id="alg1.l3.1.1.m1.1.1.cmml" xref="alg1.l3.1.1.m1.1.1">▷</ci></annotation-xml><annotation encoding="application/x-tex" id="alg1.l3.1.1.m1.1c">\triangleright</annotation><annotation encoding="application/x-llamapun" id="alg1.l3.1.1.m1.1d">▷</annotation></semantics></math> Agent Initialization
+</span></span>
+</div>
+<div class="ltx_listingline" id="alg1.l4">
+<span class="ltx_tag ltx_tag_listingline">4:</span>     Assign node <math alttext="n_{i}" class="ltx_Math" display="inline" id="alg1.l4.m1.1"><semantics id="alg1.l4.m1.1a"><msub id="alg1.l4.m1.1.1" xref="alg1.l4.m1.1.1.cmml"><mi id="alg1.l4.m1.1.1.2" xref="alg1.l4.m1.1.1.2.cmml">n</mi><mi id="alg1.l4.m1.1.1.3" xref="alg1.l4.m1.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l4.m1.1b"><apply id="alg1.l4.m1.1.1.cmml" xref="alg1.l4.m1.1.1"><csymbol cd="ambiguous" id="alg1.l4.m1.1.1.1.cmml" xref="alg1.l4.m1.1.1">subscript</csymbol><ci id="alg1.l4.m1.1.1.2.cmml" xref="alg1.l4.m1.1.1.2">𝑛</ci><ci id="alg1.l4.m1.1.1.3.cmml" xref="alg1.l4.m1.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l4.m1.1c">n_{i}</annotation><annotation encoding="application/x-llamapun" id="alg1.l4.m1.1d">italic_n start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math> of <math alttext="G" class="ltx_Math" display="inline" id="alg1.l4.m2.1"><semantics id="alg1.l4.m2.1a"><mi id="alg1.l4.m2.1.1" xref="alg1.l4.m2.1.1.cmml">G</mi><annotation-xml encoding="MathML-Content" id="alg1.l4.m2.1b"><ci id="alg1.l4.m2.1.1.cmml" xref="alg1.l4.m2.1.1">𝐺</ci></annotation-xml><annotation encoding="application/x-tex" id="alg1.l4.m2.1c">G</annotation><annotation encoding="application/x-llamapun" id="alg1.l4.m2.1d">italic_G</annotation></semantics></math> to agent <math alttext="a_{i}" class="ltx_Math" display="inline" id="alg1.l4.m3.1"><semantics id="alg1.l4.m3.1a"><msub id="alg1.l4.m3.1.1" xref="alg1.l4.m3.1.1.cmml"><mi id="alg1.l4.m3.1.1.2" xref="alg1.l4.m3.1.1.2.cmml">a</mi><mi id="alg1.l4.m3.1.1.3" xref="alg1.l4.m3.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l4.m3.1b"><apply id="alg1.l4.m3.1.1.cmml" xref="alg1.l4.m3.1.1"><csymbol cd="ambiguous" id="alg1.l4.m3.1.1.1.cmml" xref="alg1.l4.m3.1.1">subscript</csymbol><ci id="alg1.l4.m3.1.1.2.cmml" xref="alg1.l4.m3.1.1.2">𝑎</ci><ci id="alg1.l4.m3.1.1.3.cmml" xref="alg1.l4.m3.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l4.m3.1c">a_{i}</annotation><annotation encoding="application/x-llamapun" id="alg1.l4.m3.1d">italic_a start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math>
+</div>
+<div class="ltx_listingline" id="alg1.l5">
+<span class="ltx_tag ltx_tag_listingline">5:</span>     Initialize agent <math alttext="a_{i}" class="ltx_Math" display="inline" id="alg1.l5.m1.1"><semantics id="alg1.l5.m1.1a"><msub id="alg1.l5.m1.1.1" xref="alg1.l5.m1.1.1.cmml"><mi id="alg1.l5.m1.1.1.2" xref="alg1.l5.m1.1.1.2.cmml">a</mi><mi id="alg1.l5.m1.1.1.3" xref="alg1.l5.m1.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l5.m1.1b"><apply id="alg1.l5.m1.1.1.cmml" xref="alg1.l5.m1.1.1"><csymbol cd="ambiguous" id="alg1.l5.m1.1.1.1.cmml" xref="alg1.l5.m1.1.1">subscript</csymbol><ci id="alg1.l5.m1.1.1.2.cmml" xref="alg1.l5.m1.1.1.2">𝑎</ci><ci id="alg1.l5.m1.1.1.3.cmml" xref="alg1.l5.m1.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l5.m1.1c">a_{i}</annotation><annotation encoding="application/x-llamapun" id="alg1.l5.m1.1d">italic_a start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math> with persona <math alttext="p_{i}" class="ltx_Math" display="inline" id="alg1.l5.m2.1"><semantics id="alg1.l5.m2.1a"><msub id="alg1.l5.m2.1.1" xref="alg1.l5.m2.1.1.cmml"><mi id="alg1.l5.m2.1.1.2" xref="alg1.l5.m2.1.1.2.cmml">p</mi><mi id="alg1.l5.m2.1.1.3" xref="alg1.l5.m2.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l5.m2.1b"><apply id="alg1.l5.m2.1.1.cmml" xref="alg1.l5.m2.1.1"><csymbol cd="ambiguous" id="alg1.l5.m2.1.1.1.cmml" xref="alg1.l5.m2.1.1">subscript</csymbol><ci id="alg1.l5.m2.1.1.2.cmml" xref="alg1.l5.m2.1.1.2">𝑝</ci><ci id="alg1.l5.m2.1.1.3.cmml" xref="alg1.l5.m2.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l5.m2.1c">p_{i}</annotation><annotation encoding="application/x-llamapun" id="alg1.l5.m2.1d">italic_p start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math>
+</div>
+<div class="ltx_listingline" id="alg1.l6">
+<span class="ltx_tag ltx_tag_listingline">6:</span>     <math alttext="friend\_list_{i}=\{\}" class="ltx_Math" display="inline" id="alg1.l6.m1.1"><semantics id="alg1.l6.m1.1a"><mrow id="alg1.l6.m1.1.1" xref="alg1.l6.m1.1.1.cmml"><mrow id="alg1.l6.m1.1.1.2" xref="alg1.l6.m1.1.1.2.cmml"><mi id="alg1.l6.m1.1.1.2.2" xref="alg1.l6.m1.1.1.2.2.cmml">f</mi><mo id="alg1.l6.m1.1.1.2.1" xref="alg1.l6.m1.1.1.2.1.cmml">⁢</mo><mi id="alg1.l6.m1.1.1.2.3" xref="alg1.l6.m1.1.1.2.3.cmml">r</mi><mo id="alg1.l6.m1.1.1.2.1a" xref="alg1.l6.m1.1.1.2.1.cmml">⁢</mo><mi id="alg1.l6.m1.1.1.2.4" xref="alg1.l6.m1.1.1.2.4.cmml">i</mi><mo id="alg1.l6.m1.1.1.2.1b" xref="alg1.l6.m1.1.1.2.1.cmml">⁢</mo><mi id="alg1.l6.m1.1.1.2.5" xref="alg1.l6.m1.1.1.2.5.cmml">e</mi><mo id="alg1.l6.m1.1.1.2.1c" xref="alg1.l6.m1.1.1.2.1.cmml">⁢</mo><mi id="alg1.l6.m1.1.1.2.6" xref="alg1.l6.m1.1.1.2.6.cmml">n</mi><mo id="alg1.l6.m1.1.1.2.1d" xref="alg1.l6.m1.1.1.2.1.cmml">⁢</mo><mi id="alg1.l6.m1.1.1.2.7" xref="alg1.l6.m1.1.1.2.7.cmml">d</mi><mo id="alg1.l6.m1.1.1.2.1e" xref="alg1.l6.m1.1.1.2.1.cmml">⁢</mo><mi id="alg1.l6.m1.1.1.2.8" mathvariant="normal" xref="alg1.l6.m1.1.1.2.8.cmml">_</mi><mo id="alg1.l6.m1.1.1.2.1f" xref="alg1.l6.m1.1.1.2.1.cmml">⁢</mo><mi id="alg1.l6.m1.1.1.2.9" xref="alg1.l6.m1.1.1.2.9.cmml">l</mi><mo id="alg1.l6.m1.1.1.2.1g" xref="alg1.l6.m1.1.1.2.1.cmml">⁢</mo><mi id="alg1.l6.m1.1.1.2.10" xref="alg1.l6.m1.1.1.2.10.cmml">i</mi><mo id="alg1.l6.m1.1.1.2.1h" xref="alg1.l6.m1.1.1.2.1.cmml">⁢</mo><mi id="alg1.l6.m1.1.1.2.11" xref="alg1.l6.m1.1.1.2.11.cmml">s</mi><mo id="alg1.l6.m1.1.1.2.1i" xref="alg1.l6.m1.1.1.2.1.cmml">⁢</mo><msub id="alg1.l6.m1.1.1.2.12" xref="alg1.l6.m1.1.1.2.12.cmml"><mi id="alg1.l6.m1.1.1.2.12.2" xref="alg1.l6.m1.1.1.2.12.2.cmml">t</mi><mi id="alg1.l6.m1.1.1.2.12.3" xref="alg1.l6.m1.1.1.2.12.3.cmml">i</mi></msub></mrow><mo id="alg1.l6.m1.1.1.1" xref="alg1.l6.m1.1.1.1.cmml">=</mo><mrow id="alg1.l6.m1.1.1.3.2" xref="alg1.l6.m1.1.1.cmml"><mo id="alg1.l6.m1.1.1.3.2.1" stretchy="false" xref="alg1.l6.m1.1.1.3.1.cmml">{</mo><mo id="alg1.l6.m1.1.1.3.2.2" stretchy="false" xref="alg1.l6.m1.1.1.3.1.cmml">}</mo></mrow></mrow><annotation-xml encoding="MathML-Content" id="alg1.l6.m1.1b"><apply id="alg1.l6.m1.1.1.cmml" xref="alg1.l6.m1.1.1"><eq id="alg1.l6.m1.1.1.1.cmml" xref="alg1.l6.m1.1.1.1"></eq><apply id="alg1.l6.m1.1.1.2.cmml" xref="alg1.l6.m1.1.1.2"><times id="alg1.l6.m1.1.1.2.1.cmml" xref="alg1.l6.m1.1.1.2.1"></times><ci id="alg1.l6.m1.1.1.2.2.cmml" xref="alg1.l6.m1.1.1.2.2">𝑓</ci><ci id="alg1.l6.m1.1.1.2.3.cmml" xref="alg1.l6.m1.1.1.2.3">𝑟</ci><ci id="alg1.l6.m1.1.1.2.4.cmml" xref="alg1.l6.m1.1.1.2.4">𝑖</ci><ci id="alg1.l6.m1.1.1.2.5.cmml" xref="alg1.l6.m1.1.1.2.5">𝑒</ci><ci id="alg1.l6.m1.1.1.2.6.cmml" xref="alg1.l6.m1.1.1.2.6">𝑛</ci><ci id="alg1.l6.m1.1.1.2.7.cmml" xref="alg1.l6.m1.1.1.2.7">𝑑</ci><ci id="alg1.l6.m1.1.1.2.8.cmml" xref="alg1.l6.m1.1.1.2.8">_</ci><ci id="alg1.l6.m1.1.1.2.9.cmml" xref="alg1.l6.m1.1.1.2.9">𝑙</ci><ci id="alg1.l6.m1.1.1.2.10.cmml" xref="alg1.l6.m1.1.1.2.10">𝑖</ci><ci id="alg1.l6.m1.1.1.2.11.cmml" xref="alg1.l6.m1.1.1.2.11">𝑠</ci><apply id="alg1.l6.m1.1.1.2.12.cmml" xref="alg1.l6.m1.1.1.2.12"><csymbol cd="ambiguous" id="alg1.l6.m1.1.1.2.12.1.cmml" xref="alg1.l6.m1.1.1.2.12">subscript</csymbol><ci id="alg1.l6.m1.1.1.2.12.2.cmml" xref="alg1.l6.m1.1.1.2.12.2">𝑡</ci><ci id="alg1.l6.m1.1.1.2.12.3.cmml" xref="alg1.l6.m1.1.1.2.12.3">𝑖</ci></apply></apply><list id="alg1.l6.m1.1.1.3.1.cmml" xref="alg1.l6.m1.1.1.3.2.1"></list></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l6.m1.1c">friend\_list_{i}=\{\}</annotation><annotation encoding="application/x-llamapun" id="alg1.l6.m1.1d">italic_f italic_r italic_i italic_e italic_n italic_d _ italic_l italic_i italic_s italic_t start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT = { }</annotation></semantics></math>
+</div>
+<div class="ltx_listingline" id="alg1.l7">
+<span class="ltx_tag ltx_tag_listingline">7:</span>     <span class="ltx_text ltx_font_bold" id="alg1.l7.1">for</span> each edge <math alttext="e_{ix}" class="ltx_Math" display="inline" id="alg1.l7.m1.1"><semantics id="alg1.l7.m1.1a"><msub id="alg1.l7.m1.1.1" xref="alg1.l7.m1.1.1.cmml"><mi id="alg1.l7.m1.1.1.2" xref="alg1.l7.m1.1.1.2.cmml">e</mi><mrow id="alg1.l7.m1.1.1.3" xref="alg1.l7.m1.1.1.3.cmml"><mi id="alg1.l7.m1.1.1.3.2" xref="alg1.l7.m1.1.1.3.2.cmml">i</mi><mo id="alg1.l7.m1.1.1.3.1" xref="alg1.l7.m1.1.1.3.1.cmml">⁢</mo><mi id="alg1.l7.m1.1.1.3.3" xref="alg1.l7.m1.1.1.3.3.cmml">x</mi></mrow></msub><annotation-xml encoding="MathML-Content" id="alg1.l7.m1.1b"><apply id="alg1.l7.m1.1.1.cmml" xref="alg1.l7.m1.1.1"><csymbol cd="ambiguous" id="alg1.l7.m1.1.1.1.cmml" xref="alg1.l7.m1.1.1">subscript</csymbol><ci id="alg1.l7.m1.1.1.2.cmml" xref="alg1.l7.m1.1.1.2">𝑒</ci><apply id="alg1.l7.m1.1.1.3.cmml" xref="alg1.l7.m1.1.1.3"><times id="alg1.l7.m1.1.1.3.1.cmml" xref="alg1.l7.m1.1.1.3.1"></times><ci id="alg1.l7.m1.1.1.3.2.cmml" xref="alg1.l7.m1.1.1.3.2">𝑖</ci><ci id="alg1.l7.m1.1.1.3.3.cmml" xref="alg1.l7.m1.1.1.3.3">𝑥</ci></apply></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l7.m1.1c">e_{ix}</annotation><annotation encoding="application/x-llamapun" id="alg1.l7.m1.1d">italic_e start_POSTSUBSCRIPT italic_i italic_x end_POSTSUBSCRIPT</annotation></semantics></math> in <math alttext="G" class="ltx_Math" display="inline" id="alg1.l7.m2.1"><semantics id="alg1.l7.m2.1a"><mi id="alg1.l7.m2.1.1" xref="alg1.l7.m2.1.1.cmml">G</mi><annotation-xml encoding="MathML-Content" id="alg1.l7.m2.1b"><ci id="alg1.l7.m2.1.1.cmml" xref="alg1.l7.m2.1.1">𝐺</ci></annotation-xml><annotation encoding="application/x-tex" id="alg1.l7.m2.1c">G</annotation><annotation encoding="application/x-llamapun" id="alg1.l7.m2.1d">italic_G</annotation></semantics></math> connecting <math alttext="n_{i}" class="ltx_Math" display="inline" id="alg1.l7.m3.1"><semantics id="alg1.l7.m3.1a"><msub id="alg1.l7.m3.1.1" xref="alg1.l7.m3.1.1.cmml"><mi id="alg1.l7.m3.1.1.2" xref="alg1.l7.m3.1.1.2.cmml">n</mi><mi id="alg1.l7.m3.1.1.3" xref="alg1.l7.m3.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l7.m3.1b"><apply id="alg1.l7.m3.1.1.cmml" xref="alg1.l7.m3.1.1"><csymbol cd="ambiguous" id="alg1.l7.m3.1.1.1.cmml" xref="alg1.l7.m3.1.1">subscript</csymbol><ci id="alg1.l7.m3.1.1.2.cmml" xref="alg1.l7.m3.1.1.2">𝑛</ci><ci id="alg1.l7.m3.1.1.3.cmml" xref="alg1.l7.m3.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l7.m3.1c">n_{i}</annotation><annotation encoding="application/x-llamapun" id="alg1.l7.m3.1d">italic_n start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math> to <math alttext="n_{x}" class="ltx_Math" display="inline" id="alg1.l7.m4.1"><semantics id="alg1.l7.m4.1a"><msub id="alg1.l7.m4.1.1" xref="alg1.l7.m4.1.1.cmml"><mi id="alg1.l7.m4.1.1.2" xref="alg1.l7.m4.1.1.2.cmml">n</mi><mi id="alg1.l7.m4.1.1.3" xref="alg1.l7.m4.1.1.3.cmml">x</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l7.m4.1b"><apply id="alg1.l7.m4.1.1.cmml" xref="alg1.l7.m4.1.1"><csymbol cd="ambiguous" id="alg1.l7.m4.1.1.1.cmml" xref="alg1.l7.m4.1.1">subscript</csymbol><ci id="alg1.l7.m4.1.1.2.cmml" xref="alg1.l7.m4.1.1.2">𝑛</ci><ci id="alg1.l7.m4.1.1.3.cmml" xref="alg1.l7.m4.1.1.3">𝑥</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l7.m4.1c">n_{x}</annotation><annotation encoding="application/x-llamapun" id="alg1.l7.m4.1d">italic_n start_POSTSUBSCRIPT italic_x end_POSTSUBSCRIPT</annotation></semantics></math> <span class="ltx_text ltx_font_bold" id="alg1.l7.2">do</span>
+</div>
+<div class="ltx_listingline" id="alg1.l8">
+<span class="ltx_tag ltx_tag_listingline">8:</span>         Add <math alttext="a_{x}" class="ltx_Math" display="inline" id="alg1.l8.m1.1"><semantics id="alg1.l8.m1.1a"><msub id="alg1.l8.m1.1.1" xref="alg1.l8.m1.1.1.cmml"><mi id="alg1.l8.m1.1.1.2" xref="alg1.l8.m1.1.1.2.cmml">a</mi><mi id="alg1.l8.m1.1.1.3" xref="alg1.l8.m1.1.1.3.cmml">x</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l8.m1.1b"><apply id="alg1.l8.m1.1.1.cmml" xref="alg1.l8.m1.1.1"><csymbol cd="ambiguous" id="alg1.l8.m1.1.1.1.cmml" xref="alg1.l8.m1.1.1">subscript</csymbol><ci id="alg1.l8.m1.1.1.2.cmml" xref="alg1.l8.m1.1.1.2">𝑎</ci><ci id="alg1.l8.m1.1.1.3.cmml" xref="alg1.l8.m1.1.1.3">𝑥</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l8.m1.1c">a_{x}</annotation><annotation encoding="application/x-llamapun" id="alg1.l8.m1.1d">italic_a start_POSTSUBSCRIPT italic_x end_POSTSUBSCRIPT</annotation></semantics></math> to <math alttext="friend\_list_{i}" class="ltx_Math" display="inline" id="alg1.l8.m2.1"><semantics id="alg1.l8.m2.1a"><mrow id="alg1.l8.m2.1.1" xref="alg1.l8.m2.1.1.cmml"><mi id="alg1.l8.m2.1.1.2" xref="alg1.l8.m2.1.1.2.cmml">f</mi><mo id="alg1.l8.m2.1.1.1" xref="alg1.l8.m2.1.1.1.cmml">⁢</mo><mi id="alg1.l8.m2.1.1.3" xref="alg1.l8.m2.1.1.3.cmml">r</mi><mo id="alg1.l8.m2.1.1.1a" xref="alg1.l8.m2.1.1.1.cmml">⁢</mo><mi id="alg1.l8.m2.1.1.4" xref="alg1.l8.m2.1.1.4.cmml">i</mi><mo id="alg1.l8.m2.1.1.1b" xref="alg1.l8.m2.1.1.1.cmml">⁢</mo><mi id="alg1.l8.m2.1.1.5" xref="alg1.l8.m2.1.1.5.cmml">e</mi><mo id="alg1.l8.m2.1.1.1c" xref="alg1.l8.m2.1.1.1.cmml">⁢</mo><mi id="alg1.l8.m2.1.1.6" xref="alg1.l8.m2.1.1.6.cmml">n</mi><mo id="alg1.l8.m2.1.1.1d" xref="alg1.l8.m2.1.1.1.cmml">⁢</mo><mi id="alg1.l8.m2.1.1.7" xref="alg1.l8.m2.1.1.7.cmml">d</mi><mo id="alg1.l8.m2.1.1.1e" xref="alg1.l8.m2.1.1.1.cmml">⁢</mo><mi id="alg1.l8.m2.1.1.8" mathvariant="normal" xref="alg1.l8.m2.1.1.8.cmml">_</mi><mo id="alg1.l8.m2.1.1.1f" xref="alg1.l8.m2.1.1.1.cmml">⁢</mo><mi id="alg1.l8.m2.1.1.9" xref="alg1.l8.m2.1.1.9.cmml">l</mi><mo id="alg1.l8.m2.1.1.1g" xref="alg1.l8.m2.1.1.1.cmml">⁢</mo><mi id="alg1.l8.m2.1.1.10" xref="alg1.l8.m2.1.1.10.cmml">i</mi><mo id="alg1.l8.m2.1.1.1h" xref="alg1.l8.m2.1.1.1.cmml">⁢</mo><mi id="alg1.l8.m2.1.1.11" xref="alg1.l8.m2.1.1.11.cmml">s</mi><mo id="alg1.l8.m2.1.1.1i" xref="alg1.l8.m2.1.1.1.cmml">⁢</mo><msub id="alg1.l8.m2.1.1.12" xref="alg1.l8.m2.1.1.12.cmml"><mi id="alg1.l8.m2.1.1.12.2" xref="alg1.l8.m2.1.1.12.2.cmml">t</mi><mi id="alg1.l8.m2.1.1.12.3" xref="alg1.l8.m2.1.1.12.3.cmml">i</mi></msub></mrow><annotation-xml encoding="MathML-Content" id="alg1.l8.m2.1b"><apply id="alg1.l8.m2.1.1.cmml" xref="alg1.l8.m2.1.1"><times id="alg1.l8.m2.1.1.1.cmml" xref="alg1.l8.m2.1.1.1"></times><ci id="alg1.l8.m2.1.1.2.cmml" xref="alg1.l8.m2.1.1.2">𝑓</ci><ci id="alg1.l8.m2.1.1.3.cmml" xref="alg1.l8.m2.1.1.3">𝑟</ci><ci id="alg1.l8.m2.1.1.4.cmml" xref="alg1.l8.m2.1.1.4">𝑖</ci><ci id="alg1.l8.m2.1.1.5.cmml" xref="alg1.l8.m2.1.1.5">𝑒</ci><ci id="alg1.l8.m2.1.1.6.cmml" xref="alg1.l8.m2.1.1.6">𝑛</ci><ci id="alg1.l8.m2.1.1.7.cmml" xref="alg1.l8.m2.1.1.7">𝑑</ci><ci id="alg1.l8.m2.1.1.8.cmml" xref="alg1.l8.m2.1.1.8">_</ci><ci id="alg1.l8.m2.1.1.9.cmml" xref="alg1.l8.m2.1.1.9">𝑙</ci><ci id="alg1.l8.m2.1.1.10.cmml" xref="alg1.l8.m2.1.1.10">𝑖</ci><ci id="alg1.l8.m2.1.1.11.cmml" xref="alg1.l8.m2.1.1.11">𝑠</ci><apply id="alg1.l8.m2.1.1.12.cmml" xref="alg1.l8.m2.1.1.12"><csymbol cd="ambiguous" id="alg1.l8.m2.1.1.12.1.cmml" xref="alg1.l8.m2.1.1.12">subscript</csymbol><ci id="alg1.l8.m2.1.1.12.2.cmml" xref="alg1.l8.m2.1.1.12.2">𝑡</ci><ci id="alg1.l8.m2.1.1.12.3.cmml" xref="alg1.l8.m2.1.1.12.3">𝑖</ci></apply></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l8.m2.1c">friend\_list_{i}</annotation><annotation encoding="application/x-llamapun" id="alg1.l8.m2.1d">italic_f italic_r italic_i italic_e italic_n italic_d _ italic_l italic_i italic_s italic_t start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math>
+</div>
+<div class="ltx_listingline" id="alg1.l9">
+<span class="ltx_tag ltx_tag_listingline">9:</span>     <span class="ltx_text ltx_font_bold" id="alg1.l9.1">end</span> <span class="ltx_text ltx_font_bold" id="alg1.l9.2">for</span>
+</div>
+<div class="ltx_listingline" id="alg1.l10">
+<span class="ltx_tag ltx_tag_listingline">10:</span><span class="ltx_text ltx_font_bold" id="alg1.l10.1">end</span> <span class="ltx_text ltx_font_bold" id="alg1.l10.2">for</span>
+</div>
+<div class="ltx_listingline" id="alg1.l11">
+<span class="ltx_tag ltx_tag_listingline">11:</span><span class="ltx_text ltx_font_bold" id="alg1.l11.2">for</span> <math alttext="j=1" class="ltx_Math" display="inline" id="alg1.l11.m1.1"><semantics id="alg1.l11.m1.1a"><mrow id="alg1.l11.m1.1.1" xref="alg1.l11.m1.1.1.cmml"><mi id="alg1.l11.m1.1.1.2" xref="alg1.l11.m1.1.1.2.cmml">j</mi><mo id="alg1.l11.m1.1.1.1" xref="alg1.l11.m1.1.1.1.cmml">=</mo><mn id="alg1.l11.m1.1.1.3" xref="alg1.l11.m1.1.1.3.cmml">1</mn></mrow><annotation-xml encoding="MathML-Content" id="alg1.l11.m1.1b"><apply id="alg1.l11.m1.1.1.cmml" xref="alg1.l11.m1.1.1"><eq id="alg1.l11.m1.1.1.1.cmml" xref="alg1.l11.m1.1.1.1"></eq><ci id="alg1.l11.m1.1.1.2.cmml" xref="alg1.l11.m1.1.1.2">𝑗</ci><cn id="alg1.l11.m1.1.1.3.cmml" type="integer" xref="alg1.l11.m1.1.1.3">1</cn></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l11.m1.1c">j=1</annotation><annotation encoding="application/x-llamapun" id="alg1.l11.m1.1d">italic_j = 1</annotation></semantics></math> <span class="ltx_text ltx_font_bold" id="alg1.l11.3">to</span> <math alttext="L" class="ltx_Math" display="inline" id="alg1.l11.m2.1"><semantics id="alg1.l11.m2.1a"><mi id="alg1.l11.m2.1.1" xref="alg1.l11.m2.1.1.cmml">L</mi><annotation-xml encoding="MathML-Content" id="alg1.l11.m2.1b"><ci id="alg1.l11.m2.1.1.cmml" xref="alg1.l11.m2.1.1">𝐿</ci></annotation-xml><annotation encoding="application/x-tex" id="alg1.l11.m2.1c">L</annotation><annotation encoding="application/x-llamapun" id="alg1.l11.m2.1d">italic_L</annotation></semantics></math> <span class="ltx_text ltx_font_bold" id="alg1.l11.1">do<span class="ltx_text ltx_font_medium" id="alg1.l11.1.1" style="float:right;"><math alttext="\triangleright" class="ltx_Math" display="inline" id="alg1.l11.1.1.m1.1"><semantics id="alg1.l11.1.1.m1.1a"><mo id="alg1.l11.1.1.m1.1.1" xref="alg1.l11.1.1.m1.1.1.cmml">▷</mo><annotation-xml encoding="MathML-Content" id="alg1.l11.1.1.m1.1b"><ci id="alg1.l11.1.1.m1.1.1.cmml" xref="alg1.l11.1.1.m1.1.1">▷</ci></annotation-xml><annotation encoding="application/x-tex" id="alg1.l11.1.1.m1.1c">\triangleright</annotation><annotation encoding="application/x-llamapun" id="alg1.l11.1.1.m1.1d">▷</annotation></semantics></math> Rumor Initialization
+</span></span>
+</div>
+<div class="ltx_listingline" id="alg1.l12">
+<span class="ltx_tag ltx_tag_listingline">12:</span>     Select an agent <math alttext="a_{i}" class="ltx_Math" display="inline" id="alg1.l12.m1.1"><semantics id="alg1.l12.m1.1a"><msub id="alg1.l12.m1.1.1" xref="alg1.l12.m1.1.1.cmml"><mi id="alg1.l12.m1.1.1.2" xref="alg1.l12.m1.1.1.2.cmml">a</mi><mi id="alg1.l12.m1.1.1.3" xref="alg1.l12.m1.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l12.m1.1b"><apply id="alg1.l12.m1.1.1.cmml" xref="alg1.l12.m1.1.1"><csymbol cd="ambiguous" id="alg1.l12.m1.1.1.1.cmml" xref="alg1.l12.m1.1.1">subscript</csymbol><ci id="alg1.l12.m1.1.1.2.cmml" xref="alg1.l12.m1.1.1.2">𝑎</ci><ci id="alg1.l12.m1.1.1.3.cmml" xref="alg1.l12.m1.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l12.m1.1c">a_{i}</annotation><annotation encoding="application/x-llamapun" id="alg1.l12.m1.1d">italic_a start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math> based on Initialization Strategy
+
+</div>
+<div class="ltx_listingline" id="alg1.l13">
+<span class="ltx_tag ltx_tag_listingline">13:</span>     Append <math alttext="r_{j}" class="ltx_Math" display="inline" id="alg1.l13.m1.1"><semantics id="alg1.l13.m1.1a"><msub id="alg1.l13.m1.1.1" xref="alg1.l13.m1.1.1.cmml"><mi id="alg1.l13.m1.1.1.2" xref="alg1.l13.m1.1.1.2.cmml">r</mi><mi id="alg1.l13.m1.1.1.3" xref="alg1.l13.m1.1.1.3.cmml">j</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l13.m1.1b"><apply id="alg1.l13.m1.1.1.cmml" xref="alg1.l13.m1.1.1"><csymbol cd="ambiguous" id="alg1.l13.m1.1.1.1.cmml" xref="alg1.l13.m1.1.1">subscript</csymbol><ci id="alg1.l13.m1.1.1.2.cmml" xref="alg1.l13.m1.1.1.2">𝑟</ci><ci id="alg1.l13.m1.1.1.3.cmml" xref="alg1.l13.m1.1.1.3">𝑗</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l13.m1.1c">r_{j}</annotation><annotation encoding="application/x-llamapun" id="alg1.l13.m1.1d">italic_r start_POSTSUBSCRIPT italic_j end_POSTSUBSCRIPT</annotation></semantics></math> to <math alttext="a_{i}" class="ltx_Math" display="inline" id="alg1.l13.m2.1"><semantics id="alg1.l13.m2.1a"><msub id="alg1.l13.m2.1.1" xref="alg1.l13.m2.1.1.cmml"><mi id="alg1.l13.m2.1.1.2" xref="alg1.l13.m2.1.1.2.cmml">a</mi><mi id="alg1.l13.m2.1.1.3" xref="alg1.l13.m2.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l13.m2.1b"><apply id="alg1.l13.m2.1.1.cmml" xref="alg1.l13.m2.1.1"><csymbol cd="ambiguous" id="alg1.l13.m2.1.1.1.cmml" xref="alg1.l13.m2.1.1">subscript</csymbol><ci id="alg1.l13.m2.1.1.2.cmml" xref="alg1.l13.m2.1.1.2">𝑎</ci><ci id="alg1.l13.m2.1.1.3.cmml" xref="alg1.l13.m2.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l13.m2.1c">a_{i}</annotation><annotation encoding="application/x-llamapun" id="alg1.l13.m2.1d">italic_a start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math> post history.
+
+</div>
+<div class="ltx_listingline" id="alg1.l14">
+<span class="ltx_tag ltx_tag_listingline">14:</span><span class="ltx_text ltx_font_bold" id="alg1.l14.1">end</span> <span class="ltx_text ltx_font_bold" id="alg1.l14.2">for</span>
+</div>
+<div class="ltx_listingline" id="alg1.l15">
+<span class="ltx_tag ltx_tag_listingline">15:</span><span class="ltx_text ltx_font_bold" id="alg1.l15.2">for</span> <math alttext="t=1" class="ltx_Math" display="inline" id="alg1.l15.m1.1"><semantics id="alg1.l15.m1.1a"><mrow id="alg1.l15.m1.1.1" xref="alg1.l15.m1.1.1.cmml"><mi id="alg1.l15.m1.1.1.2" xref="alg1.l15.m1.1.1.2.cmml">t</mi><mo id="alg1.l15.m1.1.1.1" xref="alg1.l15.m1.1.1.1.cmml">=</mo><mn id="alg1.l15.m1.1.1.3" xref="alg1.l15.m1.1.1.3.cmml">1</mn></mrow><annotation-xml encoding="MathML-Content" id="alg1.l15.m1.1b"><apply id="alg1.l15.m1.1.1.cmml" xref="alg1.l15.m1.1.1"><eq id="alg1.l15.m1.1.1.1.cmml" xref="alg1.l15.m1.1.1.1"></eq><ci id="alg1.l15.m1.1.1.2.cmml" xref="alg1.l15.m1.1.1.2">𝑡</ci><cn id="alg1.l15.m1.1.1.3.cmml" type="integer" xref="alg1.l15.m1.1.1.3">1</cn></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l15.m1.1c">t=1</annotation><annotation encoding="application/x-llamapun" id="alg1.l15.m1.1d">italic_t = 1</annotation></semantics></math> <span class="ltx_text ltx_font_bold" id="alg1.l15.3">to</span> <math alttext="T" class="ltx_Math" display="inline" id="alg1.l15.m2.1"><semantics id="alg1.l15.m2.1a"><mi id="alg1.l15.m2.1.1" xref="alg1.l15.m2.1.1.cmml">T</mi><annotation-xml encoding="MathML-Content" id="alg1.l15.m2.1b"><ci id="alg1.l15.m2.1.1.cmml" xref="alg1.l15.m2.1.1">𝑇</ci></annotation-xml><annotation encoding="application/x-tex" id="alg1.l15.m2.1c">T</annotation><annotation encoding="application/x-llamapun" id="alg1.l15.m2.1d">italic_T</annotation></semantics></math> <span class="ltx_text ltx_font_bold" id="alg1.l15.1">do<span class="ltx_text ltx_font_medium" id="alg1.l15.1.1" style="float:right;"><math alttext="\triangleright" class="ltx_Math" display="inline" id="alg1.l15.1.1.m1.1"><semantics id="alg1.l15.1.1.m1.1a"><mo id="alg1.l15.1.1.m1.1.1" xref="alg1.l15.1.1.m1.1.1.cmml">▷</mo><annotation-xml encoding="MathML-Content" id="alg1.l15.1.1.m1.1b"><ci id="alg1.l15.1.1.m1.1.1.cmml" xref="alg1.l15.1.1.m1.1.1">▷</ci></annotation-xml><annotation encoding="application/x-tex" id="alg1.l15.1.1.m1.1c">\triangleright</annotation><annotation encoding="application/x-llamapun" id="alg1.l15.1.1.m1.1d">▷</annotation></semantics></math> Simulation
+</span></span>
+</div>
+<div class="ltx_listingline" id="alg1.l16">
+<span class="ltx_tag ltx_tag_listingline">16:</span>     Select an agent <math alttext="a_{i}" class="ltx_Math" display="inline" id="alg1.l16.m1.1"><semantics id="alg1.l16.m1.1a"><msub id="alg1.l16.m1.1.1" xref="alg1.l16.m1.1.1.cmml"><mi id="alg1.l16.m1.1.1.2" xref="alg1.l16.m1.1.1.2.cmml">a</mi><mi id="alg1.l16.m1.1.1.3" xref="alg1.l16.m1.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l16.m1.1b"><apply id="alg1.l16.m1.1.1.cmml" xref="alg1.l16.m1.1.1"><csymbol cd="ambiguous" id="alg1.l16.m1.1.1.1.cmml" xref="alg1.l16.m1.1.1">subscript</csymbol><ci id="alg1.l16.m1.1.1.2.cmml" xref="alg1.l16.m1.1.1.2">𝑎</ci><ci id="alg1.l16.m1.1.1.3.cmml" xref="alg1.l16.m1.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l16.m1.1c">a_{i}</annotation><annotation encoding="application/x-llamapun" id="alg1.l16.m1.1d">italic_a start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math> based on Activation Strategy
+
+</div>
+<div class="ltx_listingline" id="alg1.l17">
+<span class="ltx_tag ltx_tag_listingline">17:</span>     Agent <math alttext="a_{i}" class="ltx_Math" display="inline" id="alg1.l17.m1.1"><semantics id="alg1.l17.m1.1a"><msub id="alg1.l17.m1.1.1" xref="alg1.l17.m1.1.1.cmml"><mi id="alg1.l17.m1.1.1.2" xref="alg1.l17.m1.1.1.2.cmml">a</mi><mi id="alg1.l17.m1.1.1.3" xref="alg1.l17.m1.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l17.m1.1b"><apply id="alg1.l17.m1.1.1.cmml" xref="alg1.l17.m1.1.1"><csymbol cd="ambiguous" id="alg1.l17.m1.1.1.1.cmml" xref="alg1.l17.m1.1.1">subscript</csymbol><ci id="alg1.l17.m1.1.1.2.cmml" xref="alg1.l17.m1.1.1.2">𝑎</ci><ci id="alg1.l17.m1.1.1.3.cmml" xref="alg1.l17.m1.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l17.m1.1c">a_{i}</annotation><annotation encoding="application/x-llamapun" id="alg1.l17.m1.1d">italic_a start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math> reads post history and makes a new post
+
+</div>
+<div class="ltx_listingline" id="alg1.l18">
+<span class="ltx_tag ltx_tag_listingline">18:</span>     <span class="ltx_text ltx_font_bold" id="alg1.l18.1">for</span> <math alttext="a_{x}" class="ltx_Math" display="inline" id="alg1.l18.m1.1"><semantics id="alg1.l18.m1.1a"><msub id="alg1.l18.m1.1.1" xref="alg1.l18.m1.1.1.cmml"><mi id="alg1.l18.m1.1.1.2" xref="alg1.l18.m1.1.1.2.cmml">a</mi><mi id="alg1.l18.m1.1.1.3" xref="alg1.l18.m1.1.1.3.cmml">x</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l18.m1.1b"><apply id="alg1.l18.m1.1.1.cmml" xref="alg1.l18.m1.1.1"><csymbol cd="ambiguous" id="alg1.l18.m1.1.1.1.cmml" xref="alg1.l18.m1.1.1">subscript</csymbol><ci id="alg1.l18.m1.1.1.2.cmml" xref="alg1.l18.m1.1.1.2">𝑎</ci><ci id="alg1.l18.m1.1.1.3.cmml" xref="alg1.l18.m1.1.1.3">𝑥</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l18.m1.1c">a_{x}</annotation><annotation encoding="application/x-llamapun" id="alg1.l18.m1.1d">italic_a start_POSTSUBSCRIPT italic_x end_POSTSUBSCRIPT</annotation></semantics></math> in <math alttext="\{a_{i},friend\_list_{i}\}" class="ltx_Math" display="inline" id="alg1.l18.m2.2"><semantics id="alg1.l18.m2.2a"><mrow id="alg1.l18.m2.2.2.2" xref="alg1.l18.m2.2.2.3.cmml"><mo id="alg1.l18.m2.2.2.2.3" stretchy="false" xref="alg1.l18.m2.2.2.3.cmml">{</mo><msub id="alg1.l18.m2.1.1.1.1" xref="alg1.l18.m2.1.1.1.1.cmml"><mi id="alg1.l18.m2.1.1.1.1.2" xref="alg1.l18.m2.1.1.1.1.2.cmml">a</mi><mi id="alg1.l18.m2.1.1.1.1.3" xref="alg1.l18.m2.1.1.1.1.3.cmml">i</mi></msub><mo id="alg1.l18.m2.2.2.2.4" xref="alg1.l18.m2.2.2.3.cmml">,</mo><mrow id="alg1.l18.m2.2.2.2.2" xref="alg1.l18.m2.2.2.2.2.cmml"><mi id="alg1.l18.m2.2.2.2.2.2" xref="alg1.l18.m2.2.2.2.2.2.cmml">f</mi><mo id="alg1.l18.m2.2.2.2.2.1" xref="alg1.l18.m2.2.2.2.2.1.cmml">⁢</mo><mi id="alg1.l18.m2.2.2.2.2.3" xref="alg1.l18.m2.2.2.2.2.3.cmml">r</mi><mo id="alg1.l18.m2.2.2.2.2.1a" xref="alg1.l18.m2.2.2.2.2.1.cmml">⁢</mo><mi id="alg1.l18.m2.2.2.2.2.4" xref="alg1.l18.m2.2.2.2.2.4.cmml">i</mi><mo id="alg1.l18.m2.2.2.2.2.1b" xref="alg1.l18.m2.2.2.2.2.1.cmml">⁢</mo><mi id="alg1.l18.m2.2.2.2.2.5" xref="alg1.l18.m2.2.2.2.2.5.cmml">e</mi><mo id="alg1.l18.m2.2.2.2.2.1c" xref="alg1.l18.m2.2.2.2.2.1.cmml">⁢</mo><mi id="alg1.l18.m2.2.2.2.2.6" xref="alg1.l18.m2.2.2.2.2.6.cmml">n</mi><mo id="alg1.l18.m2.2.2.2.2.1d" xref="alg1.l18.m2.2.2.2.2.1.cmml">⁢</mo><mi id="alg1.l18.m2.2.2.2.2.7" xref="alg1.l18.m2.2.2.2.2.7.cmml">d</mi><mo id="alg1.l18.m2.2.2.2.2.1e" xref="alg1.l18.m2.2.2.2.2.1.cmml">⁢</mo><mi id="alg1.l18.m2.2.2.2.2.8" mathvariant="normal" xref="alg1.l18.m2.2.2.2.2.8.cmml">_</mi><mo id="alg1.l18.m2.2.2.2.2.1f" xref="alg1.l18.m2.2.2.2.2.1.cmml">⁢</mo><mi id="alg1.l18.m2.2.2.2.2.9" xref="alg1.l18.m2.2.2.2.2.9.cmml">l</mi><mo id="alg1.l18.m2.2.2.2.2.1g" xref="alg1.l18.m2.2.2.2.2.1.cmml">⁢</mo><mi id="alg1.l18.m2.2.2.2.2.10" xref="alg1.l18.m2.2.2.2.2.10.cmml">i</mi><mo id="alg1.l18.m2.2.2.2.2.1h" xref="alg1.l18.m2.2.2.2.2.1.cmml">⁢</mo><mi id="alg1.l18.m2.2.2.2.2.11" xref="alg1.l18.m2.2.2.2.2.11.cmml">s</mi><mo id="alg1.l18.m2.2.2.2.2.1i" xref="alg1.l18.m2.2.2.2.2.1.cmml">⁢</mo><msub id="alg1.l18.m2.2.2.2.2.12" xref="alg1.l18.m2.2.2.2.2.12.cmml"><mi id="alg1.l18.m2.2.2.2.2.12.2" xref="alg1.l18.m2.2.2.2.2.12.2.cmml">t</mi><mi id="alg1.l18.m2.2.2.2.2.12.3" xref="alg1.l18.m2.2.2.2.2.12.3.cmml">i</mi></msub></mrow><mo id="alg1.l18.m2.2.2.2.5" stretchy="false" xref="alg1.l18.m2.2.2.3.cmml">}</mo></mrow><annotation-xml encoding="MathML-Content" id="alg1.l18.m2.2b"><set id="alg1.l18.m2.2.2.3.cmml" xref="alg1.l18.m2.2.2.2"><apply id="alg1.l18.m2.1.1.1.1.cmml" xref="alg1.l18.m2.1.1.1.1"><csymbol cd="ambiguous" id="alg1.l18.m2.1.1.1.1.1.cmml" xref="alg1.l18.m2.1.1.1.1">subscript</csymbol><ci id="alg1.l18.m2.1.1.1.1.2.cmml" xref="alg1.l18.m2.1.1.1.1.2">𝑎</ci><ci id="alg1.l18.m2.1.1.1.1.3.cmml" xref="alg1.l18.m2.1.1.1.1.3">𝑖</ci></apply><apply id="alg1.l18.m2.2.2.2.2.cmml" xref="alg1.l18.m2.2.2.2.2"><times id="alg1.l18.m2.2.2.2.2.1.cmml" xref="alg1.l18.m2.2.2.2.2.1"></times><ci id="alg1.l18.m2.2.2.2.2.2.cmml" xref="alg1.l18.m2.2.2.2.2.2">𝑓</ci><ci id="alg1.l18.m2.2.2.2.2.3.cmml" xref="alg1.l18.m2.2.2.2.2.3">𝑟</ci><ci id="alg1.l18.m2.2.2.2.2.4.cmml" xref="alg1.l18.m2.2.2.2.2.4">𝑖</ci><ci id="alg1.l18.m2.2.2.2.2.5.cmml" xref="alg1.l18.m2.2.2.2.2.5">𝑒</ci><ci id="alg1.l18.m2.2.2.2.2.6.cmml" xref="alg1.l18.m2.2.2.2.2.6">𝑛</ci><ci id="alg1.l18.m2.2.2.2.2.7.cmml" xref="alg1.l18.m2.2.2.2.2.7">𝑑</ci><ci id="alg1.l18.m2.2.2.2.2.8.cmml" xref="alg1.l18.m2.2.2.2.2.8">_</ci><ci id="alg1.l18.m2.2.2.2.2.9.cmml" xref="alg1.l18.m2.2.2.2.2.9">𝑙</ci><ci id="alg1.l18.m2.2.2.2.2.10.cmml" xref="alg1.l18.m2.2.2.2.2.10">𝑖</ci><ci id="alg1.l18.m2.2.2.2.2.11.cmml" xref="alg1.l18.m2.2.2.2.2.11">𝑠</ci><apply id="alg1.l18.m2.2.2.2.2.12.cmml" xref="alg1.l18.m2.2.2.2.2.12"><csymbol cd="ambiguous" id="alg1.l18.m2.2.2.2.2.12.1.cmml" xref="alg1.l18.m2.2.2.2.2.12">subscript</csymbol><ci id="alg1.l18.m2.2.2.2.2.12.2.cmml" xref="alg1.l18.m2.2.2.2.2.12.2">𝑡</ci><ci id="alg1.l18.m2.2.2.2.2.12.3.cmml" xref="alg1.l18.m2.2.2.2.2.12.3">𝑖</ci></apply></apply></set></annotation-xml><annotation encoding="application/x-tex" id="alg1.l18.m2.2c">\{a_{i},friend\_list_{i}\}</annotation><annotation encoding="application/x-llamapun" id="alg1.l18.m2.2d">{ italic_a start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT , italic_f italic_r italic_i italic_e italic_n italic_d _ italic_l italic_i italic_s italic_t start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT }</annotation></semantics></math> <span class="ltx_text ltx_font_bold" id="alg1.l18.2">do</span>
+</div>
+<div class="ltx_listingline" id="alg1.l19">
+<span class="ltx_tag ltx_tag_listingline">19:</span>         Add the new post to post history of <math alttext="a_{x}" class="ltx_Math" display="inline" id="alg1.l19.m1.1"><semantics id="alg1.l19.m1.1a"><msub id="alg1.l19.m1.1.1" xref="alg1.l19.m1.1.1.cmml"><mi id="alg1.l19.m1.1.1.2" xref="alg1.l19.m1.1.1.2.cmml">a</mi><mi id="alg1.l19.m1.1.1.3" xref="alg1.l19.m1.1.1.3.cmml">x</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l19.m1.1b"><apply id="alg1.l19.m1.1.1.cmml" xref="alg1.l19.m1.1.1"><csymbol cd="ambiguous" id="alg1.l19.m1.1.1.1.cmml" xref="alg1.l19.m1.1.1">subscript</csymbol><ci id="alg1.l19.m1.1.1.2.cmml" xref="alg1.l19.m1.1.1.2">𝑎</ci><ci id="alg1.l19.m1.1.1.3.cmml" xref="alg1.l19.m1.1.1.3">𝑥</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l19.m1.1c">a_{x}</annotation><annotation encoding="application/x-llamapun" id="alg1.l19.m1.1d">italic_a start_POSTSUBSCRIPT italic_x end_POSTSUBSCRIPT</annotation></semantics></math>
+</div>
+<div class="ltx_listingline" id="alg1.l20">
+<span class="ltx_tag ltx_tag_listingline">20:</span>     <span class="ltx_text ltx_font_bold" id="alg1.l20.1">end</span> <span class="ltx_text ltx_font_bold" id="alg1.l20.2">for</span>
+</div>
+<div class="ltx_listingline" id="alg1.l21">
+<span class="ltx_tag ltx_tag_listingline">21:</span>     <span class="ltx_text ltx_font_bold" id="alg1.l21.1">for</span> <math alttext="j=1" class="ltx_Math" display="inline" id="alg1.l21.m1.1"><semantics id="alg1.l21.m1.1a"><mrow id="alg1.l21.m1.1.1" xref="alg1.l21.m1.1.1.cmml"><mi id="alg1.l21.m1.1.1.2" xref="alg1.l21.m1.1.1.2.cmml">j</mi><mo id="alg1.l21.m1.1.1.1" xref="alg1.l21.m1.1.1.1.cmml">=</mo><mn id="alg1.l21.m1.1.1.3" xref="alg1.l21.m1.1.1.3.cmml">1</mn></mrow><annotation-xml encoding="MathML-Content" id="alg1.l21.m1.1b"><apply id="alg1.l21.m1.1.1.cmml" xref="alg1.l21.m1.1.1"><eq id="alg1.l21.m1.1.1.1.cmml" xref="alg1.l21.m1.1.1.1"></eq><ci id="alg1.l21.m1.1.1.2.cmml" xref="alg1.l21.m1.1.1.2">𝑗</ci><cn id="alg1.l21.m1.1.1.3.cmml" type="integer" xref="alg1.l21.m1.1.1.3">1</cn></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l21.m1.1c">j=1</annotation><annotation encoding="application/x-llamapun" id="alg1.l21.m1.1d">italic_j = 1</annotation></semantics></math> <span class="ltx_text ltx_font_bold" id="alg1.l21.2">to</span> <math alttext="L" class="ltx_Math" display="inline" id="alg1.l21.m2.1"><semantics id="alg1.l21.m2.1a"><mi id="alg1.l21.m2.1.1" xref="alg1.l21.m2.1.1.cmml">L</mi><annotation-xml encoding="MathML-Content" id="alg1.l21.m2.1b"><ci id="alg1.l21.m2.1.1.cmml" xref="alg1.l21.m2.1.1">𝐿</ci></annotation-xml><annotation encoding="application/x-tex" id="alg1.l21.m2.1c">L</annotation><annotation encoding="application/x-llamapun" id="alg1.l21.m2.1d">italic_L</annotation></semantics></math> <span class="ltx_text ltx_font_bold" id="alg1.l21.3">do</span>
+</div>
+<div class="ltx_listingline" id="alg1.l22">
+<span class="ltx_tag ltx_tag_listingline">22:</span>         Agent <math alttext="a_{i}" class="ltx_Math" display="inline" id="alg1.l22.m1.1"><semantics id="alg1.l22.m1.1a"><msub id="alg1.l22.m1.1.1" xref="alg1.l22.m1.1.1.cmml"><mi id="alg1.l22.m1.1.1.2" xref="alg1.l22.m1.1.1.2.cmml">a</mi><mi id="alg1.l22.m1.1.1.3" xref="alg1.l22.m1.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l22.m1.1b"><apply id="alg1.l22.m1.1.1.cmml" xref="alg1.l22.m1.1.1"><csymbol cd="ambiguous" id="alg1.l22.m1.1.1.1.cmml" xref="alg1.l22.m1.1.1">subscript</csymbol><ci id="alg1.l22.m1.1.1.2.cmml" xref="alg1.l22.m1.1.1.2">𝑎</ci><ci id="alg1.l22.m1.1.1.3.cmml" xref="alg1.l22.m1.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l22.m1.1c">a_{i}</annotation><annotation encoding="application/x-llamapun" id="alg1.l22.m1.1d">italic_a start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math> updates opinion of <math alttext="r_{j}" class="ltx_Math" display="inline" id="alg1.l22.m2.1"><semantics id="alg1.l22.m2.1a"><msub id="alg1.l22.m2.1.1" xref="alg1.l22.m2.1.1.cmml"><mi id="alg1.l22.m2.1.1.2" xref="alg1.l22.m2.1.1.2.cmml">r</mi><mi id="alg1.l22.m2.1.1.3" xref="alg1.l22.m2.1.1.3.cmml">j</mi></msub><annotation-xml encoding="MathML-Content" id="alg1.l22.m2.1b"><apply id="alg1.l22.m2.1.1.cmml" xref="alg1.l22.m2.1.1"><csymbol cd="ambiguous" id="alg1.l22.m2.1.1.1.cmml" xref="alg1.l22.m2.1.1">subscript</csymbol><ci id="alg1.l22.m2.1.1.2.cmml" xref="alg1.l22.m2.1.1.2">𝑟</ci><ci id="alg1.l22.m2.1.1.3.cmml" xref="alg1.l22.m2.1.1.3">𝑗</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l22.m2.1c">r_{j}</annotation><annotation encoding="application/x-llamapun" id="alg1.l22.m2.1d">italic_r start_POSTSUBSCRIPT italic_j end_POSTSUBSCRIPT</annotation></semantics></math> to <math alttext="\langle b_{ij}\rangle" class="ltx_Math" display="inline" id="alg1.l22.m3.1"><semantics id="alg1.l22.m3.1a"><mrow id="alg1.l22.m3.1.1.1" xref="alg1.l22.m3.1.1.2.cmml"><mo id="alg1.l22.m3.1.1.1.2" stretchy="false" xref="alg1.l22.m3.1.1.2.1.cmml">⟨</mo><msub id="alg1.l22.m3.1.1.1.1" xref="alg1.l22.m3.1.1.1.1.cmml"><mi id="alg1.l22.m3.1.1.1.1.2" xref="alg1.l22.m3.1.1.1.1.2.cmml">b</mi><mrow id="alg1.l22.m3.1.1.1.1.3" xref="alg1.l22.m3.1.1.1.1.3.cmml"><mi id="alg1.l22.m3.1.1.1.1.3.2" xref="alg1.l22.m3.1.1.1.1.3.2.cmml">i</mi><mo id="alg1.l22.m3.1.1.1.1.3.1" xref="alg1.l22.m3.1.1.1.1.3.1.cmml">⁢</mo><mi id="alg1.l22.m3.1.1.1.1.3.3" xref="alg1.l22.m3.1.1.1.1.3.3.cmml">j</mi></mrow></msub><mo id="alg1.l22.m3.1.1.1.3" stretchy="false" xref="alg1.l22.m3.1.1.2.1.cmml">⟩</mo></mrow><annotation-xml encoding="MathML-Content" id="alg1.l22.m3.1b"><apply id="alg1.l22.m3.1.1.2.cmml" xref="alg1.l22.m3.1.1.1"><csymbol cd="latexml" id="alg1.l22.m3.1.1.2.1.cmml" xref="alg1.l22.m3.1.1.1.2">delimited-⟨⟩</csymbol><apply id="alg1.l22.m3.1.1.1.1.cmml" xref="alg1.l22.m3.1.1.1.1"><csymbol cd="ambiguous" id="alg1.l22.m3.1.1.1.1.1.cmml" xref="alg1.l22.m3.1.1.1.1">subscript</csymbol><ci id="alg1.l22.m3.1.1.1.1.2.cmml" xref="alg1.l22.m3.1.1.1.1.2">𝑏</ci><apply id="alg1.l22.m3.1.1.1.1.3.cmml" xref="alg1.l22.m3.1.1.1.1.3"><times id="alg1.l22.m3.1.1.1.1.3.1.cmml" xref="alg1.l22.m3.1.1.1.1.3.1"></times><ci id="alg1.l22.m3.1.1.1.1.3.2.cmml" xref="alg1.l22.m3.1.1.1.1.3.2">𝑖</ci><ci id="alg1.l22.m3.1.1.1.1.3.3.cmml" xref="alg1.l22.m3.1.1.1.1.3.3">𝑗</ci></apply></apply></apply></annotation-xml><annotation encoding="application/x-tex" id="alg1.l22.m3.1c">\langle b_{ij}\rangle</annotation><annotation encoding="application/x-llamapun" id="alg1.l22.m3.1d">⟨ italic_b start_POSTSUBSCRIPT italic_i italic_j end_POSTSUBSCRIPT ⟩</annotation></semantics></math> in <math alttext="B" class="ltx_Math" display="inline" id="alg1.l22.m4.1"><semantics id="alg1.l22.m4.1a"><mi id="alg1.l22.m4.1.1" xref="alg1.l22.m4.1.1.cmml">B</mi><annotation-xml encoding="MathML-Content" id="alg1.l22.m4.1b"><ci id="alg1.l22.m4.1.1.cmml" xref="alg1.l22.m4.1.1">𝐵</ci></annotation-xml><annotation encoding="application/x-tex" id="alg1.l22.m4.1c">B</annotation><annotation encoding="application/x-llamapun" id="alg1.l22.m4.1d">italic_B</annotation></semantics></math>
+</div>
+<div class="ltx_listingline" id="alg1.l23">
+<span class="ltx_tag ltx_tag_listingline">23:</span>     <span class="ltx_text ltx_font_bold" id="alg1.l23.1">end</span> <span class="ltx_text ltx_font_bold" id="alg1.l23.2">for</span>
+</div>
+<div class="ltx_listingline" id="alg1.l24">
+<span class="ltx_tag ltx_tag_listingline">24:</span><span class="ltx_text ltx_font_bold" id="alg1.l24.1">end</span> <span class="ltx_text ltx_font_bold" id="alg1.l24.2">for</span>
+</div>
+</div>
+</figure>
+</section>
+<section class="ltx_subsection" id="Sx3.SSx2">
+<h3 class="ltx_title ltx_title_subsection">LLM-based Agent</h3>
+<div class="ltx_para" id="Sx3.SSx2.p1">
+<p class="ltx_p" id="Sx3.SSx2.p1.5">In these networks, each node <math alttext="n_{i}" class="ltx_Math" display="inline" id="Sx3.SSx2.p1.1.m1.1"><semantics id="Sx3.SSx2.p1.1.m1.1a"><msub id="Sx3.SSx2.p1.1.m1.1.1" xref="Sx3.SSx2.p1.1.m1.1.1.cmml"><mi id="Sx3.SSx2.p1.1.m1.1.1.2" xref="Sx3.SSx2.p1.1.m1.1.1.2.cmml">n</mi><mi id="Sx3.SSx2.p1.1.m1.1.1.3" xref="Sx3.SSx2.p1.1.m1.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="Sx3.SSx2.p1.1.m1.1b"><apply id="Sx3.SSx2.p1.1.m1.1.1.cmml" xref="Sx3.SSx2.p1.1.m1.1.1"><csymbol cd="ambiguous" id="Sx3.SSx2.p1.1.m1.1.1.1.cmml" xref="Sx3.SSx2.p1.1.m1.1.1">subscript</csymbol><ci id="Sx3.SSx2.p1.1.m1.1.1.2.cmml" xref="Sx3.SSx2.p1.1.m1.1.1.2">𝑛</ci><ci id="Sx3.SSx2.p1.1.m1.1.1.3.cmml" xref="Sx3.SSx2.p1.1.m1.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="Sx3.SSx2.p1.1.m1.1c">n_{i}</annotation><annotation encoding="application/x-llamapun" id="Sx3.SSx2.p1.1.m1.1d">italic_n start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math> represents an agent <math alttext="a_{i}" class="ltx_Math" display="inline" id="Sx3.SSx2.p1.2.m2.1"><semantics id="Sx3.SSx2.p1.2.m2.1a"><msub id="Sx3.SSx2.p1.2.m2.1.1" xref="Sx3.SSx2.p1.2.m2.1.1.cmml"><mi id="Sx3.SSx2.p1.2.m2.1.1.2" xref="Sx3.SSx2.p1.2.m2.1.1.2.cmml">a</mi><mi id="Sx3.SSx2.p1.2.m2.1.1.3" xref="Sx3.SSx2.p1.2.m2.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="Sx3.SSx2.p1.2.m2.1b"><apply id="Sx3.SSx2.p1.2.m2.1.1.cmml" xref="Sx3.SSx2.p1.2.m2.1.1"><csymbol cd="ambiguous" id="Sx3.SSx2.p1.2.m2.1.1.1.cmml" xref="Sx3.SSx2.p1.2.m2.1.1">subscript</csymbol><ci id="Sx3.SSx2.p1.2.m2.1.1.2.cmml" xref="Sx3.SSx2.p1.2.m2.1.1.2">𝑎</ci><ci id="Sx3.SSx2.p1.2.m2.1.1.3.cmml" xref="Sx3.SSx2.p1.2.m2.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="Sx3.SSx2.p1.2.m2.1c">a_{i}</annotation><annotation encoding="application/x-llamapun" id="Sx3.SSx2.p1.2.m2.1d">italic_a start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math> driven by an LLM, as illustrated in Figure <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx3.F1.sf1" title="In Figure 1 ‣ Network Construction ‣ Methods ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_tag">1(a)</span></a> and Algorithm <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#alg1" title="Algorithm 1 ‣ Network Construction ‣ Methods ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_tag">1</span></a>.
+We use a consistent basic prompt structure and the ChatGPT-4o-mini <cite class="ltx_cite ltx_citemacro_citep">(OpenAI <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib12" title="">2024</a>)</cite> for each agent <math alttext="a_{i}" class="ltx_Math" display="inline" id="Sx3.SSx2.p1.3.m3.1"><semantics id="Sx3.SSx2.p1.3.m3.1a"><msub id="Sx3.SSx2.p1.3.m3.1.1" xref="Sx3.SSx2.p1.3.m3.1.1.cmml"><mi id="Sx3.SSx2.p1.3.m3.1.1.2" xref="Sx3.SSx2.p1.3.m3.1.1.2.cmml">a</mi><mi id="Sx3.SSx2.p1.3.m3.1.1.3" xref="Sx3.SSx2.p1.3.m3.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="Sx3.SSx2.p1.3.m3.1b"><apply id="Sx3.SSx2.p1.3.m3.1.1.cmml" xref="Sx3.SSx2.p1.3.m3.1.1"><csymbol cd="ambiguous" id="Sx3.SSx2.p1.3.m3.1.1.1.cmml" xref="Sx3.SSx2.p1.3.m3.1.1">subscript</csymbol><ci id="Sx3.SSx2.p1.3.m3.1.1.2.cmml" xref="Sx3.SSx2.p1.3.m3.1.1.2">𝑎</ci><ci id="Sx3.SSx2.p1.3.m3.1.1.3.cmml" xref="Sx3.SSx2.p1.3.m3.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="Sx3.SSx2.p1.3.m3.1c">a_{i}</annotation><annotation encoding="application/x-llamapun" id="Sx3.SSx2.p1.3.m3.1d">italic_a start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math>, but customize each prompt with unique information specific to each agent <math alttext="a_{i}" class="ltx_Math" display="inline" id="Sx3.SSx2.p1.4.m4.1"><semantics id="Sx3.SSx2.p1.4.m4.1a"><msub id="Sx3.SSx2.p1.4.m4.1.1" xref="Sx3.SSx2.p1.4.m4.1.1.cmml"><mi id="Sx3.SSx2.p1.4.m4.1.1.2" xref="Sx3.SSx2.p1.4.m4.1.1.2.cmml">a</mi><mi id="Sx3.SSx2.p1.4.m4.1.1.3" xref="Sx3.SSx2.p1.4.m4.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="Sx3.SSx2.p1.4.m4.1b"><apply id="Sx3.SSx2.p1.4.m4.1.1.cmml" xref="Sx3.SSx2.p1.4.m4.1.1"><csymbol cd="ambiguous" id="Sx3.SSx2.p1.4.m4.1.1.1.cmml" xref="Sx3.SSx2.p1.4.m4.1.1">subscript</csymbol><ci id="Sx3.SSx2.p1.4.m4.1.1.2.cmml" xref="Sx3.SSx2.p1.4.m4.1.1.2">𝑎</ci><ci id="Sx3.SSx2.p1.4.m4.1.1.3.cmml" xref="Sx3.SSx2.p1.4.m4.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="Sx3.SSx2.p1.4.m4.1c">a_{i}</annotation><annotation encoding="application/x-llamapun" id="Sx3.SSx2.p1.4.m4.1d">italic_a start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math>.
+The prompt includes the following components:
+(a) Task description and examples that instruct the LLM to generate responses in the correct syntax;
+(b) Agent personas <math alttext="p_{i}" class="ltx_Math" display="inline" id="Sx3.SSx2.p1.5.m5.1"><semantics id="Sx3.SSx2.p1.5.m5.1a"><msub id="Sx3.SSx2.p1.5.m5.1.1" xref="Sx3.SSx2.p1.5.m5.1.1.cmml"><mi id="Sx3.SSx2.p1.5.m5.1.1.2" xref="Sx3.SSx2.p1.5.m5.1.1.2.cmml">p</mi><mi id="Sx3.SSx2.p1.5.m5.1.1.3" xref="Sx3.SSx2.p1.5.m5.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="Sx3.SSx2.p1.5.m5.1b"><apply id="Sx3.SSx2.p1.5.m5.1.1.cmml" xref="Sx3.SSx2.p1.5.m5.1.1"><csymbol cd="ambiguous" id="Sx3.SSx2.p1.5.m5.1.1.1.cmml" xref="Sx3.SSx2.p1.5.m5.1.1">subscript</csymbol><ci id="Sx3.SSx2.p1.5.m5.1.1.2.cmml" xref="Sx3.SSx2.p1.5.m5.1.1.2">𝑝</ci><ci id="Sx3.SSx2.p1.5.m5.1.1.3.cmml" xref="Sx3.SSx2.p1.5.m5.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="Sx3.SSx2.p1.5.m5.1c">p_{i}</annotation><annotation encoding="application/x-llamapun" id="Sx3.SSx2.p1.5.m5.1d">italic_p start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math>, including name, age, job, personality traits, and the agent’s willingness to accept and spread rumors, tailored to each agent;
+(c) Rumors previously believed by the agent;
+(d) Posts visible to the agent; (e) A complete list of all rumors.</p>
+</div>
+<div class="ltx_para" id="Sx3.SSx2.p2">
+<p class="ltx_p" id="Sx3.SSx2.p2.3">Component (a) directs the LLM to generate a new post based on information from (b), (c), and (d), and to evaluate the agent’s belief in each rumor <math alttext="\langle b_{ij}\rangle" class="ltx_Math" display="inline" id="Sx3.SSx2.p2.1.m1.1"><semantics id="Sx3.SSx2.p2.1.m1.1a"><mrow id="Sx3.SSx2.p2.1.m1.1.1.1" xref="Sx3.SSx2.p2.1.m1.1.1.2.cmml"><mo id="Sx3.SSx2.p2.1.m1.1.1.1.2" stretchy="false" xref="Sx3.SSx2.p2.1.m1.1.1.2.1.cmml">⟨</mo><msub id="Sx3.SSx2.p2.1.m1.1.1.1.1" xref="Sx3.SSx2.p2.1.m1.1.1.1.1.cmml"><mi id="Sx3.SSx2.p2.1.m1.1.1.1.1.2" xref="Sx3.SSx2.p2.1.m1.1.1.1.1.2.cmml">b</mi><mrow id="Sx3.SSx2.p2.1.m1.1.1.1.1.3" xref="Sx3.SSx2.p2.1.m1.1.1.1.1.3.cmml"><mi id="Sx3.SSx2.p2.1.m1.1.1.1.1.3.2" xref="Sx3.SSx2.p2.1.m1.1.1.1.1.3.2.cmml">i</mi><mo id="Sx3.SSx2.p2.1.m1.1.1.1.1.3.1" xref="Sx3.SSx2.p2.1.m1.1.1.1.1.3.1.cmml">⁢</mo><mi id="Sx3.SSx2.p2.1.m1.1.1.1.1.3.3" xref="Sx3.SSx2.p2.1.m1.1.1.1.1.3.3.cmml">j</mi></mrow></msub><mo id="Sx3.SSx2.p2.1.m1.1.1.1.3" stretchy="false" xref="Sx3.SSx2.p2.1.m1.1.1.2.1.cmml">⟩</mo></mrow><annotation-xml encoding="MathML-Content" id="Sx3.SSx2.p2.1.m1.1b"><apply id="Sx3.SSx2.p2.1.m1.1.1.2.cmml" xref="Sx3.SSx2.p2.1.m1.1.1.1"><csymbol cd="latexml" id="Sx3.SSx2.p2.1.m1.1.1.2.1.cmml" xref="Sx3.SSx2.p2.1.m1.1.1.1.2">delimited-⟨⟩</csymbol><apply id="Sx3.SSx2.p2.1.m1.1.1.1.1.cmml" xref="Sx3.SSx2.p2.1.m1.1.1.1.1"><csymbol cd="ambiguous" id="Sx3.SSx2.p2.1.m1.1.1.1.1.1.cmml" xref="Sx3.SSx2.p2.1.m1.1.1.1.1">subscript</csymbol><ci id="Sx3.SSx2.p2.1.m1.1.1.1.1.2.cmml" xref="Sx3.SSx2.p2.1.m1.1.1.1.1.2">𝑏</ci><apply id="Sx3.SSx2.p2.1.m1.1.1.1.1.3.cmml" xref="Sx3.SSx2.p2.1.m1.1.1.1.1.3"><times id="Sx3.SSx2.p2.1.m1.1.1.1.1.3.1.cmml" xref="Sx3.SSx2.p2.1.m1.1.1.1.1.3.1"></times><ci id="Sx3.SSx2.p2.1.m1.1.1.1.1.3.2.cmml" xref="Sx3.SSx2.p2.1.m1.1.1.1.1.3.2">𝑖</ci><ci id="Sx3.SSx2.p2.1.m1.1.1.1.1.3.3.cmml" xref="Sx3.SSx2.p2.1.m1.1.1.1.1.3.3">𝑗</ci></apply></apply></apply></annotation-xml><annotation encoding="application/x-tex" id="Sx3.SSx2.p2.1.m1.1c">\langle b_{ij}\rangle</annotation><annotation encoding="application/x-llamapun" id="Sx3.SSx2.p2.1.m1.1d">⟨ italic_b start_POSTSUBSCRIPT italic_i italic_j end_POSTSUBSCRIPT ⟩</annotation></semantics></math> in the overall rumor matrix <math alttext="B" class="ltx_Math" display="inline" id="Sx3.SSx2.p2.2.m2.1"><semantics id="Sx3.SSx2.p2.2.m2.1a"><mi id="Sx3.SSx2.p2.2.m2.1.1" xref="Sx3.SSx2.p2.2.m2.1.1.cmml">B</mi><annotation-xml encoding="MathML-Content" id="Sx3.SSx2.p2.2.m2.1b"><ci id="Sx3.SSx2.p2.2.m2.1.1.cmml" xref="Sx3.SSx2.p2.2.m2.1.1">𝐵</ci></annotation-xml><annotation encoding="application/x-tex" id="Sx3.SSx2.p2.2.m2.1c">B</annotation><annotation encoding="application/x-llamapun" id="Sx3.SSx2.p2.2.m2.1d">italic_B</annotation></semantics></math> according to (e).
+This setup simulates a user reading posts, creating a new post, and updating opinions on various rumors. Initially, each agent is assigned some random messages, which include the rumors <math alttext="r_{j}" class="ltx_Math" display="inline" id="Sx3.SSx2.p2.3.m3.1"><semantics id="Sx3.SSx2.p2.3.m3.1a"><msub id="Sx3.SSx2.p2.3.m3.1.1" xref="Sx3.SSx2.p2.3.m3.1.1.cmml"><mi id="Sx3.SSx2.p2.3.m3.1.1.2" xref="Sx3.SSx2.p2.3.m3.1.1.2.cmml">r</mi><mi id="Sx3.SSx2.p2.3.m3.1.1.3" xref="Sx3.SSx2.p2.3.m3.1.1.3.cmml">j</mi></msub><annotation-xml encoding="MathML-Content" id="Sx3.SSx2.p2.3.m3.1b"><apply id="Sx3.SSx2.p2.3.m3.1.1.cmml" xref="Sx3.SSx2.p2.3.m3.1.1"><csymbol cd="ambiguous" id="Sx3.SSx2.p2.3.m3.1.1.1.cmml" xref="Sx3.SSx2.p2.3.m3.1.1">subscript</csymbol><ci id="Sx3.SSx2.p2.3.m3.1.1.2.cmml" xref="Sx3.SSx2.p2.3.m3.1.1.2">𝑟</ci><ci id="Sx3.SSx2.p2.3.m3.1.1.3.cmml" xref="Sx3.SSx2.p2.3.m3.1.1.3">𝑗</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="Sx3.SSx2.p2.3.m3.1c">r_{j}</annotation><annotation encoding="application/x-llamapun" id="Sx3.SSx2.p2.3.m3.1d">italic_r start_POSTSUBSCRIPT italic_j end_POSTSUBSCRIPT</annotation></semantics></math> to be tested.
+The agents that have the rumors in their initial post histories are determined by the <span class="ltx_text ltx_font_italic" id="Sx3.SSx2.p2.3.1">Initialization Strategy</span>. This could either be fully random or a degree-based selection, where the rumors always start with the agents that have the highest degrees (most number of friends).</p>
+</div>
+<div class="ltx_para" id="Sx3.SSx2.p3">
+<p class="ltx_p" id="Sx3.SSx2.p3.5">As Figure <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx3.F1.sf2" title="In Figure 1 ‣ Network Construction ‣ Methods ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_tag">1(b)</span></a> illustrates, in each iteration, an agent <math alttext="a_{i}" class="ltx_Math" display="inline" id="Sx3.SSx2.p3.1.m1.1"><semantics id="Sx3.SSx2.p3.1.m1.1a"><msub id="Sx3.SSx2.p3.1.m1.1.1" xref="Sx3.SSx2.p3.1.m1.1.1.cmml"><mi id="Sx3.SSx2.p3.1.m1.1.1.2" xref="Sx3.SSx2.p3.1.m1.1.1.2.cmml">a</mi><mi id="Sx3.SSx2.p3.1.m1.1.1.3" xref="Sx3.SSx2.p3.1.m1.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="Sx3.SSx2.p3.1.m1.1b"><apply id="Sx3.SSx2.p3.1.m1.1.1.cmml" xref="Sx3.SSx2.p3.1.m1.1.1"><csymbol cd="ambiguous" id="Sx3.SSx2.p3.1.m1.1.1.1.cmml" xref="Sx3.SSx2.p3.1.m1.1.1">subscript</csymbol><ci id="Sx3.SSx2.p3.1.m1.1.1.2.cmml" xref="Sx3.SSx2.p3.1.m1.1.1.2">𝑎</ci><ci id="Sx3.SSx2.p3.1.m1.1.1.3.cmml" xref="Sx3.SSx2.p3.1.m1.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="Sx3.SSx2.p3.1.m1.1c">a_{i}</annotation><annotation encoding="application/x-llamapun" id="Sx3.SSx2.p3.1.m1.1d">italic_a start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math> is selected in accordance with the <span class="ltx_text ltx_font_italic" id="Sx3.SSx2.p3.5.1">Activation Strategy</span>, where the probability of an agent’s selection may be either fully random or proportional to its degree. This models the realistic social dynamic wherein individuals with a larger number of connections tend to disseminate more posts. The agent <math alttext="a_{i}" class="ltx_Math" display="inline" id="Sx3.SSx2.p3.2.m2.1"><semantics id="Sx3.SSx2.p3.2.m2.1a"><msub id="Sx3.SSx2.p3.2.m2.1.1" xref="Sx3.SSx2.p3.2.m2.1.1.cmml"><mi id="Sx3.SSx2.p3.2.m2.1.1.2" xref="Sx3.SSx2.p3.2.m2.1.1.2.cmml">a</mi><mi id="Sx3.SSx2.p3.2.m2.1.1.3" xref="Sx3.SSx2.p3.2.m2.1.1.3.cmml">i</mi></msub><annotation-xml encoding="MathML-Content" id="Sx3.SSx2.p3.2.m2.1b"><apply id="Sx3.SSx2.p3.2.m2.1.1.cmml" xref="Sx3.SSx2.p3.2.m2.1.1"><csymbol cd="ambiguous" id="Sx3.SSx2.p3.2.m2.1.1.1.cmml" xref="Sx3.SSx2.p3.2.m2.1.1">subscript</csymbol><ci id="Sx3.SSx2.p3.2.m2.1.1.2.cmml" xref="Sx3.SSx2.p3.2.m2.1.1.2">𝑎</ci><ci id="Sx3.SSx2.p3.2.m2.1.1.3.cmml" xref="Sx3.SSx2.p3.2.m2.1.1.3">𝑖</ci></apply></annotation-xml><annotation encoding="application/x-tex" id="Sx3.SSx2.p3.2.m2.1c">a_{i}</annotation><annotation encoding="application/x-llamapun" id="Sx3.SSx2.p3.2.m2.1d">italic_a start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math> feeds the prompt to the LLM and generates a response that contains a new post and its updated belief in each rumor, denoted as <math alttext="\langle b_{ij}\rangle" class="ltx_Math" display="inline" id="Sx3.SSx2.p3.3.m3.1"><semantics id="Sx3.SSx2.p3.3.m3.1a"><mrow id="Sx3.SSx2.p3.3.m3.1.1.1" xref="Sx3.SSx2.p3.3.m3.1.1.2.cmml"><mo id="Sx3.SSx2.p3.3.m3.1.1.1.2" stretchy="false" xref="Sx3.SSx2.p3.3.m3.1.1.2.1.cmml">⟨</mo><msub id="Sx3.SSx2.p3.3.m3.1.1.1.1" xref="Sx3.SSx2.p3.3.m3.1.1.1.1.cmml"><mi id="Sx3.SSx2.p3.3.m3.1.1.1.1.2" xref="Sx3.SSx2.p3.3.m3.1.1.1.1.2.cmml">b</mi><mrow id="Sx3.SSx2.p3.3.m3.1.1.1.1.3" xref="Sx3.SSx2.p3.3.m3.1.1.1.1.3.cmml"><mi id="Sx3.SSx2.p3.3.m3.1.1.1.1.3.2" xref="Sx3.SSx2.p3.3.m3.1.1.1.1.3.2.cmml">i</mi><mo id="Sx3.SSx2.p3.3.m3.1.1.1.1.3.1" xref="Sx3.SSx2.p3.3.m3.1.1.1.1.3.1.cmml">⁢</mo><mi id="Sx3.SSx2.p3.3.m3.1.1.1.1.3.3" xref="Sx3.SSx2.p3.3.m3.1.1.1.1.3.3.cmml">j</mi></mrow></msub><mo id="Sx3.SSx2.p3.3.m3.1.1.1.3" stretchy="false" xref="Sx3.SSx2.p3.3.m3.1.1.2.1.cmml">⟩</mo></mrow><annotation-xml encoding="MathML-Content" id="Sx3.SSx2.p3.3.m3.1b"><apply id="Sx3.SSx2.p3.3.m3.1.1.2.cmml" xref="Sx3.SSx2.p3.3.m3.1.1.1"><csymbol cd="latexml" id="Sx3.SSx2.p3.3.m3.1.1.2.1.cmml" xref="Sx3.SSx2.p3.3.m3.1.1.1.2">delimited-⟨⟩</csymbol><apply id="Sx3.SSx2.p3.3.m3.1.1.1.1.cmml" xref="Sx3.SSx2.p3.3.m3.1.1.1.1"><csymbol cd="ambiguous" id="Sx3.SSx2.p3.3.m3.1.1.1.1.1.cmml" xref="Sx3.SSx2.p3.3.m3.1.1.1.1">subscript</csymbol><ci id="Sx3.SSx2.p3.3.m3.1.1.1.1.2.cmml" xref="Sx3.SSx2.p3.3.m3.1.1.1.1.2">𝑏</ci><apply id="Sx3.SSx2.p3.3.m3.1.1.1.1.3.cmml" xref="Sx3.SSx2.p3.3.m3.1.1.1.1.3"><times id="Sx3.SSx2.p3.3.m3.1.1.1.1.3.1.cmml" xref="Sx3.SSx2.p3.3.m3.1.1.1.1.3.1"></times><ci id="Sx3.SSx2.p3.3.m3.1.1.1.1.3.2.cmml" xref="Sx3.SSx2.p3.3.m3.1.1.1.1.3.2">𝑖</ci><ci id="Sx3.SSx2.p3.3.m3.1.1.1.1.3.3.cmml" xref="Sx3.SSx2.p3.3.m3.1.1.1.1.3.3">𝑗</ci></apply></apply></apply></annotation-xml><annotation encoding="application/x-tex" id="Sx3.SSx2.p3.3.m3.1c">\langle b_{ij}\rangle</annotation><annotation encoding="application/x-llamapun" id="Sx3.SSx2.p3.3.m3.1d">⟨ italic_b start_POSTSUBSCRIPT italic_i italic_j end_POSTSUBSCRIPT ⟩</annotation></semantics></math>. It then appends the new post to its own history as well as to the histories of connected nodes in <math alttext="friend\_list_{i}" class="ltx_Math" display="inline" id="Sx3.SSx2.p3.4.m4.1"><semantics id="Sx3.SSx2.p3.4.m4.1a"><mrow id="Sx3.SSx2.p3.4.m4.1.1" xref="Sx3.SSx2.p3.4.m4.1.1.cmml"><mi id="Sx3.SSx2.p3.4.m4.1.1.2" xref="Sx3.SSx2.p3.4.m4.1.1.2.cmml">f</mi><mo id="Sx3.SSx2.p3.4.m4.1.1.1" xref="Sx3.SSx2.p3.4.m4.1.1.1.cmml">⁢</mo><mi id="Sx3.SSx2.p3.4.m4.1.1.3" xref="Sx3.SSx2.p3.4.m4.1.1.3.cmml">r</mi><mo id="Sx3.SSx2.p3.4.m4.1.1.1a" xref="Sx3.SSx2.p3.4.m4.1.1.1.cmml">⁢</mo><mi id="Sx3.SSx2.p3.4.m4.1.1.4" xref="Sx3.SSx2.p3.4.m4.1.1.4.cmml">i</mi><mo id="Sx3.SSx2.p3.4.m4.1.1.1b" xref="Sx3.SSx2.p3.4.m4.1.1.1.cmml">⁢</mo><mi id="Sx3.SSx2.p3.4.m4.1.1.5" xref="Sx3.SSx2.p3.4.m4.1.1.5.cmml">e</mi><mo id="Sx3.SSx2.p3.4.m4.1.1.1c" xref="Sx3.SSx2.p3.4.m4.1.1.1.cmml">⁢</mo><mi id="Sx3.SSx2.p3.4.m4.1.1.6" xref="Sx3.SSx2.p3.4.m4.1.1.6.cmml">n</mi><mo id="Sx3.SSx2.p3.4.m4.1.1.1d" xref="Sx3.SSx2.p3.4.m4.1.1.1.cmml">⁢</mo><mi id="Sx3.SSx2.p3.4.m4.1.1.7" xref="Sx3.SSx2.p3.4.m4.1.1.7.cmml">d</mi><mo id="Sx3.SSx2.p3.4.m4.1.1.1e" xref="Sx3.SSx2.p3.4.m4.1.1.1.cmml">⁢</mo><mi id="Sx3.SSx2.p3.4.m4.1.1.8" mathvariant="normal" xref="Sx3.SSx2.p3.4.m4.1.1.8.cmml">_</mi><mo id="Sx3.SSx2.p3.4.m4.1.1.1f" xref="Sx3.SSx2.p3.4.m4.1.1.1.cmml">⁢</mo><mi id="Sx3.SSx2.p3.4.m4.1.1.9" xref="Sx3.SSx2.p3.4.m4.1.1.9.cmml">l</mi><mo id="Sx3.SSx2.p3.4.m4.1.1.1g" xref="Sx3.SSx2.p3.4.m4.1.1.1.cmml">⁢</mo><mi id="Sx3.SSx2.p3.4.m4.1.1.10" xref="Sx3.SSx2.p3.4.m4.1.1.10.cmml">i</mi><mo id="Sx3.SSx2.p3.4.m4.1.1.1h" xref="Sx3.SSx2.p3.4.m4.1.1.1.cmml">⁢</mo><mi id="Sx3.SSx2.p3.4.m4.1.1.11" xref="Sx3.SSx2.p3.4.m4.1.1.11.cmml">s</mi><mo id="Sx3.SSx2.p3.4.m4.1.1.1i" xref="Sx3.SSx2.p3.4.m4.1.1.1.cmml">⁢</mo><msub id="Sx3.SSx2.p3.4.m4.1.1.12" xref="Sx3.SSx2.p3.4.m4.1.1.12.cmml"><mi id="Sx3.SSx2.p3.4.m4.1.1.12.2" xref="Sx3.SSx2.p3.4.m4.1.1.12.2.cmml">t</mi><mi id="Sx3.SSx2.p3.4.m4.1.1.12.3" xref="Sx3.SSx2.p3.4.m4.1.1.12.3.cmml">i</mi></msub></mrow><annotation-xml encoding="MathML-Content" id="Sx3.SSx2.p3.4.m4.1b"><apply id="Sx3.SSx2.p3.4.m4.1.1.cmml" xref="Sx3.SSx2.p3.4.m4.1.1"><times id="Sx3.SSx2.p3.4.m4.1.1.1.cmml" xref="Sx3.SSx2.p3.4.m4.1.1.1"></times><ci id="Sx3.SSx2.p3.4.m4.1.1.2.cmml" xref="Sx3.SSx2.p3.4.m4.1.1.2">𝑓</ci><ci id="Sx3.SSx2.p3.4.m4.1.1.3.cmml" xref="Sx3.SSx2.p3.4.m4.1.1.3">𝑟</ci><ci id="Sx3.SSx2.p3.4.m4.1.1.4.cmml" xref="Sx3.SSx2.p3.4.m4.1.1.4">𝑖</ci><ci id="Sx3.SSx2.p3.4.m4.1.1.5.cmml" xref="Sx3.SSx2.p3.4.m4.1.1.5">𝑒</ci><ci id="Sx3.SSx2.p3.4.m4.1.1.6.cmml" xref="Sx3.SSx2.p3.4.m4.1.1.6">𝑛</ci><ci id="Sx3.SSx2.p3.4.m4.1.1.7.cmml" xref="Sx3.SSx2.p3.4.m4.1.1.7">𝑑</ci><ci id="Sx3.SSx2.p3.4.m4.1.1.8.cmml" xref="Sx3.SSx2.p3.4.m4.1.1.8">_</ci><ci id="Sx3.SSx2.p3.4.m4.1.1.9.cmml" xref="Sx3.SSx2.p3.4.m4.1.1.9">𝑙</ci><ci id="Sx3.SSx2.p3.4.m4.1.1.10.cmml" xref="Sx3.SSx2.p3.4.m4.1.1.10">𝑖</ci><ci id="Sx3.SSx2.p3.4.m4.1.1.11.cmml" xref="Sx3.SSx2.p3.4.m4.1.1.11">𝑠</ci><apply id="Sx3.SSx2.p3.4.m4.1.1.12.cmml" xref="Sx3.SSx2.p3.4.m4.1.1.12"><csymbol cd="ambiguous" id="Sx3.SSx2.p3.4.m4.1.1.12.1.cmml" xref="Sx3.SSx2.p3.4.m4.1.1.12">subscript</csymbol><ci id="Sx3.SSx2.p3.4.m4.1.1.12.2.cmml" xref="Sx3.SSx2.p3.4.m4.1.1.12.2">𝑡</ci><ci id="Sx3.SSx2.p3.4.m4.1.1.12.3.cmml" xref="Sx3.SSx2.p3.4.m4.1.1.12.3">𝑖</ci></apply></apply></annotation-xml><annotation encoding="application/x-tex" id="Sx3.SSx2.p3.4.m4.1c">friend\_list_{i}</annotation><annotation encoding="application/x-llamapun" id="Sx3.SSx2.p3.4.m4.1d">italic_f italic_r italic_i italic_e italic_n italic_d _ italic_l italic_i italic_s italic_t start_POSTSUBSCRIPT italic_i end_POSTSUBSCRIPT</annotation></semantics></math>, while simultaneously updating its opinions on all rumors in <math alttext="B" class="ltx_Math" display="inline" id="Sx3.SSx2.p3.5.m5.1"><semantics id="Sx3.SSx2.p3.5.m5.1a"><mi id="Sx3.SSx2.p3.5.m5.1.1" xref="Sx3.SSx2.p3.5.m5.1.1.cmml">B</mi><annotation-xml encoding="MathML-Content" id="Sx3.SSx2.p3.5.m5.1b"><ci id="Sx3.SSx2.p3.5.m5.1.1.cmml" xref="Sx3.SSx2.p3.5.m5.1.1">𝐵</ci></annotation-xml><annotation encoding="application/x-tex" id="Sx3.SSx2.p3.5.m5.1c">B</annotation><annotation encoding="application/x-llamapun" id="Sx3.SSx2.p3.5.m5.1d">italic_B</annotation></semantics></math>.</p>
+</div>
+</section>
+<section class="ltx_subsection" id="Sx3.SSx3">
+<h3 class="ltx_title ltx_title_subsection">Scalability</h3>
+<div class="ltx_para" id="Sx3.SSx3.p1">
+<p class="ltx_p" id="Sx3.SSx3.p1.1">Recent work <cite class="ltx_cite ltx_citemacro_citep">(Li et al. <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib10" title="">2024</a>)</cite> demonstrates that LLM-based agents can be effectively scaled to enhance overall performance.
+This aligns with our observations when scaling our design to a network comprising over 100 nodes and 1000 edges.
+The complexity of Algorithm <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#alg1" title="Algorithm 1 ‣ Network Construction ‣ Methods ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_tag">1</span></a> is <math alttext="\mathcal{O}(T(N+B))" class="ltx_Math" display="inline" id="Sx3.SSx3.p1.1.m1.1"><semantics id="Sx3.SSx3.p1.1.m1.1a"><mrow id="Sx3.SSx3.p1.1.m1.1.1" xref="Sx3.SSx3.p1.1.m1.1.1.cmml"><mi class="ltx_font_mathcaligraphic" id="Sx3.SSx3.p1.1.m1.1.1.3" xref="Sx3.SSx3.p1.1.m1.1.1.3.cmml">𝒪</mi><mo id="Sx3.SSx3.p1.1.m1.1.1.2" xref="Sx3.SSx3.p1.1.m1.1.1.2.cmml">⁢</mo><mrow id="Sx3.SSx3.p1.1.m1.1.1.1.1" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.cmml"><mo id="Sx3.SSx3.p1.1.m1.1.1.1.1.2" stretchy="false" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.cmml">(</mo><mrow id="Sx3.SSx3.p1.1.m1.1.1.1.1.1" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.cmml"><mi id="Sx3.SSx3.p1.1.m1.1.1.1.1.1.3" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.3.cmml">T</mi><mo id="Sx3.SSx3.p1.1.m1.1.1.1.1.1.2" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.2.cmml">⁢</mo><mrow id="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.cmml"><mo id="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.2" stretchy="false" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.cmml">(</mo><mrow id="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.cmml"><mi id="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.2" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.2.cmml">N</mi><mo id="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.1" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.1.cmml">+</mo><mi id="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.3" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.3.cmml">B</mi></mrow><mo id="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.3" stretchy="false" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.cmml">)</mo></mrow></mrow><mo id="Sx3.SSx3.p1.1.m1.1.1.1.1.3" stretchy="false" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.cmml">)</mo></mrow></mrow><annotation-xml encoding="MathML-Content" id="Sx3.SSx3.p1.1.m1.1b"><apply id="Sx3.SSx3.p1.1.m1.1.1.cmml" xref="Sx3.SSx3.p1.1.m1.1.1"><times id="Sx3.SSx3.p1.1.m1.1.1.2.cmml" xref="Sx3.SSx3.p1.1.m1.1.1.2"></times><ci id="Sx3.SSx3.p1.1.m1.1.1.3.cmml" xref="Sx3.SSx3.p1.1.m1.1.1.3">𝒪</ci><apply id="Sx3.SSx3.p1.1.m1.1.1.1.1.1.cmml" xref="Sx3.SSx3.p1.1.m1.1.1.1.1"><times id="Sx3.SSx3.p1.1.m1.1.1.1.1.1.2.cmml" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.2"></times><ci id="Sx3.SSx3.p1.1.m1.1.1.1.1.1.3.cmml" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.3">𝑇</ci><apply id="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.cmml" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1"><plus id="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.1.cmml" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.1"></plus><ci id="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.2.cmml" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.2">𝑁</ci><ci id="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.3.cmml" xref="Sx3.SSx3.p1.1.m1.1.1.1.1.1.1.1.1.3">𝐵</ci></apply></apply></apply></annotation-xml><annotation encoding="application/x-tex" id="Sx3.SSx3.p1.1.m1.1c">\mathcal{O}(T(N+B))</annotation><annotation encoding="application/x-llamapun" id="Sx3.SSx3.p1.1.m1.1d">caligraphic_O ( italic_T ( italic_N + italic_B ) )</annotation></semantics></math>, where T is the number of iterations, N is the number of agents, and B is the number of rumors.
+In each step, an inference request is sent to the LLM, and the response is appended as input for subsequent requests.
+Thus, further scaling the networks could significantly increase the length of inputs and outputs for each LLM request, leading to a surge in computational costs and potentially reducing accuracy in managing long contexts.
+Future work could include implementing an efficient compression method for post history, parallelizing the agents, and enhancing LLM serving optimizations <cite class="ltx_cite ltx_citemacro_citep">(Zheng et al. <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib18" title="">2023</a>)</cite> to improve scalability.</p>
+</div>
+</section>
+</section>
+<section class="ltx_section" id="Sx4">
+<h2 class="ltx_title ltx_title_section">Experiments</h2>
+<div class="ltx_para ltx_noindent" id="Sx4.p1">
+<p class="ltx_p" id="Sx4.p1.1"><span class="ltx_text ltx_font_bold" id="Sx4.p1.1.1">Experiment Setup.</span> We implemented functions to generate four network types:
+(a) an Erdős-Rényi random network,
+(b) a Scale-Free network,
+(c) a Small World network, and
+(d) a real-world network using Facebook’s structure.
+Each structure has unique properties as shown in Table <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx4.T1" title="Table 1 ‣ Experiments ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_tag">1</span></a>.
+Next, we assigned characteristics and rumors to the agents and randomly mapped them to the nodes of the network.
+Each experiment consisted of 500 iterations, during which an agent was selected in each iteration to make a post, as outlined in the previous section.
+The LLM employed for the agents was the latest version of ChatGPT-4o-mini.</p>
+</div>
+<div class="ltx_para" id="Sx4.p2">
+<p class="ltx_p" id="Sx4.p2.1">We conducted a total of three experiments, each designed to examine distinct facets of the problem under investigation:
+(1) the effect of network structure on the dynamics of rumor propagation,
+(2) the impact of initial conditions and spread schemes on the spread of rumors, and
+(3) the role of agent characteristics in shaping the patterns of rumor spread.
+For efficiency, the second and third experiments are evaluated on the Scale-Free network.</p>
+</div>
+<figure class="ltx_table" id="Sx4.T1">
+<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_table">Table 1: </span>Network Properties Comparison</figcaption>
+<table class="ltx_tabular ltx_centering ltx_guessed_headers ltx_align_middle" id="Sx4.T1.1">
+<tbody class="ltx_tbody">
+<tr class="ltx_tr" id="Sx4.T1.1.1.1">
+<th class="ltx_td ltx_th ltx_th_row ltx_border_l ltx_border_r ltx_border_t" id="Sx4.T1.1.1.1.1"></th>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.1.1.2">
+<table class="ltx_tabular ltx_align_middle" id="Sx4.T1.1.1.1.2.1">
+<tr class="ltx_tr" id="Sx4.T1.1.1.1.2.1.1">
+<td class="ltx_td ltx_nopad_r ltx_align_center" id="Sx4.T1.1.1.1.2.1.1.1"><span class="ltx_text ltx_font_bold" id="Sx4.T1.1.1.1.2.1.1.1.1">Erdős</span></td>
+</tr>
+<tr class="ltx_tr" id="Sx4.T1.1.1.1.2.1.2">
+<td class="ltx_td ltx_nopad_r ltx_align_center" id="Sx4.T1.1.1.1.2.1.2.1"><span class="ltx_text ltx_font_bold" id="Sx4.T1.1.1.1.2.1.2.1.1">Rényi</span></td>
+</tr>
+</table>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.1.1.3">
+<table class="ltx_tabular ltx_align_middle" id="Sx4.T1.1.1.1.3.1">
+<tr class="ltx_tr" id="Sx4.T1.1.1.1.3.1.1">
+<td class="ltx_td ltx_nopad_r ltx_align_center" id="Sx4.T1.1.1.1.3.1.1.1"><span class="ltx_text ltx_font_bold" id="Sx4.T1.1.1.1.3.1.1.1.1">Scale</span></td>
+</tr>
+<tr class="ltx_tr" id="Sx4.T1.1.1.1.3.1.2">
+<td class="ltx_td ltx_nopad_r ltx_align_center" id="Sx4.T1.1.1.1.3.1.2.1"><span class="ltx_text ltx_font_bold" id="Sx4.T1.1.1.1.3.1.2.1.1">Free</span></td>
+</tr>
+</table>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.1.1.4">
+<table class="ltx_tabular ltx_align_middle" id="Sx4.T1.1.1.1.4.1">
+<tr class="ltx_tr" id="Sx4.T1.1.1.1.4.1.1">
+<td class="ltx_td ltx_nopad_r ltx_align_center" id="Sx4.T1.1.1.1.4.1.1.1"><span class="ltx_text ltx_font_bold" id="Sx4.T1.1.1.1.4.1.1.1.1">Small</span></td>
+</tr>
+<tr class="ltx_tr" id="Sx4.T1.1.1.1.4.1.2">
+<td class="ltx_td ltx_nopad_r ltx_align_center" id="Sx4.T1.1.1.1.4.1.2.1"><span class="ltx_text ltx_font_bold" id="Sx4.T1.1.1.1.4.1.2.1.1">World</span></td>
+</tr>
+</table>
+</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.1.1.5">
+<table class="ltx_tabular ltx_align_middle" id="Sx4.T1.1.1.1.5.1">
+<tr class="ltx_tr" id="Sx4.T1.1.1.1.5.1.1">
+<td class="ltx_td ltx_nopad_r ltx_align_center" id="Sx4.T1.1.1.1.5.1.1.1"><span class="ltx_text ltx_font_bold" id="Sx4.T1.1.1.1.5.1.1.1.1">Facebook</span></td>
+</tr>
+<tr class="ltx_tr" id="Sx4.T1.1.1.1.5.1.2">
+<td class="ltx_td ltx_nopad_r ltx_align_center" id="Sx4.T1.1.1.1.5.1.2.1"><span class="ltx_text ltx_font_bold" id="Sx4.T1.1.1.1.5.1.2.1.1">#686</span></td>
+</tr>
+</table>
+</td>
+</tr>
+<tr class="ltx_tr" id="Sx4.T1.1.2.2">
+<th class="ltx_td ltx_align_left ltx_th ltx_th_row ltx_border_l ltx_border_r ltx_border_t" id="Sx4.T1.1.2.2.1"><span class="ltx_text ltx_font_bold" id="Sx4.T1.1.2.2.1.1"># Nodes</span></th>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.2.2.2">100</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.2.2.3">100</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.2.2.4">100</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.2.2.5">168</td>
+</tr>
+<tr class="ltx_tr" id="Sx4.T1.1.3.3">
+<th class="ltx_td ltx_align_left ltx_th ltx_th_row ltx_border_l ltx_border_r ltx_border_t" id="Sx4.T1.1.3.3.1"><span class="ltx_text ltx_font_bold" id="Sx4.T1.1.3.3.1.1"># Edges</span></th>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.3.3.2">396</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.3.3.3">390</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.3.3.4">200</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.3.3.5">1656</td>
+</tr>
+<tr class="ltx_tr" id="Sx4.T1.1.4.4">
+<th class="ltx_td ltx_align_left ltx_th ltx_th_row ltx_border_l ltx_border_r ltx_border_t" id="Sx4.T1.1.4.4.1"><span class="ltx_text ltx_font_bold" id="Sx4.T1.1.4.4.1.1">Avg Degree</span></th>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.4.4.2">7.92</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.4.4.3">7.80</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.4.4.4">4.00</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.4.4.5">19.71</td>
+</tr>
+<tr class="ltx_tr" id="Sx4.T1.1.5.5">
+<th class="ltx_td ltx_align_left ltx_th ltx_th_row ltx_border_l ltx_border_r ltx_border_t" id="Sx4.T1.1.5.5.1"><span class="ltx_text ltx_font_bold" id="Sx4.T1.1.5.5.1.1">Avg Path Len</span></th>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.5.5.2">2.42</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.5.5.3">2.37</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.5.5.4">3.88</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.5.5.5">2.43</td>
+</tr>
+<tr class="ltx_tr" id="Sx4.T1.1.6.6">
+<th class="ltx_td ltx_align_left ltx_th ltx_th_row ltx_border_l ltx_border_r ltx_border_t" id="Sx4.T1.1.6.6.1"><span class="ltx_text ltx_font_bold" id="Sx4.T1.1.6.6.1.1">Diameter</span></th>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.6.6.2">4</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.6.6.3">4</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.6.6.4">7</td>
+<td class="ltx_td ltx_align_center ltx_border_r ltx_border_t" id="Sx4.T1.1.6.6.5">6</td>
+</tr>
+<tr class="ltx_tr" id="Sx4.T1.1.7.7">
+<th class="ltx_td ltx_align_left ltx_th ltx_th_row ltx_border_b ltx_border_l ltx_border_r ltx_border_t" id="Sx4.T1.1.7.7.1"><span class="ltx_text ltx_font_bold" id="Sx4.T1.1.7.7.1.1">Avg CC</span></th>
+<td class="ltx_td ltx_align_center ltx_border_b ltx_border_r ltx_border_t" id="Sx4.T1.1.7.7.2">0.08</td>
+<td class="ltx_td ltx_align_center ltx_border_b ltx_border_r ltx_border_t" id="Sx4.T1.1.7.7.3">0.16</td>
+<td class="ltx_td ltx_align_center ltx_border_b ltx_border_r ltx_border_t" id="Sx4.T1.1.7.7.4">0.21</td>
+<td class="ltx_td ltx_align_center ltx_border_b ltx_border_r ltx_border_t" id="Sx4.T1.1.7.7.5">0.53</td>
+</tr>
+</tbody>
+</table>
+</figure>
+<figure class="ltx_figure" id="Sx4.F2"><img alt="Refer to caption" class="ltx_graphics ltx_centering ltx_img_landscape" height="254" id="Sx4.F2.g1" src="extracted/6165488/Figures/4_Evaluation/eval1_1.png" width="449"/>
+<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_figure">Figure 2: </span>Maximum percentage of affected nodes across all rumor-network combinations
+The small world network demonstrates the greatest susceptibility to rumor spread.
+</figcaption>
+</figure>
+<figure class="ltx_figure" id="Sx4.F3"><img alt="Refer to caption" class="ltx_graphics ltx_centering ltx_img_landscape" height="323" id="Sx4.F3.g1" src="extracted/6165488/Figures/4_Evaluation/eval1_2.png" width="538"/>
+<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_figure">Figure 3: </span>Propagation of Rumor #2. The Small-World network shows the greatest susceptibility to rumor spread.</figcaption>
+</figure>
+<div class="ltx_para" id="Sx4.p3">
+<p class="ltx_p" id="Sx4.p3.1">We tested, in total, the spread of 4 distinct rumors:</p>
+<ul class="ltx_itemize" id="Sx4.I1">
+<li class="ltx_item" id="Sx4.I1.i1" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span>
+<div class="ltx_para" id="Sx4.I1.i1.p1">
+<p class="ltx_p" id="Sx4.I1.i1.p1.1">Nicolae Ceaușescu is not dead!</p>
+</div>
+</li>
+<li class="ltx_item" id="Sx4.I1.i2" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span>
+<div class="ltx_para" id="Sx4.I1.i2.p1">
+<p class="ltx_p" id="Sx4.I1.i2.p1.1">A living dinosaur is found in Yellowstone National Park.</p>
+</div>
+</li>
+<li class="ltx_item" id="Sx4.I1.i3" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span>
+<div class="ltx_para" id="Sx4.I1.i3.p1">
+<p class="ltx_p" id="Sx4.I1.i3.p1.1">Large Language Models are manned by real people acting as agents.</p>
+</div>
+</li>
+<li class="ltx_item" id="Sx4.I1.i4" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">•</span>
+<div class="ltx_para" id="Sx4.I1.i4.p1">
+<p class="ltx_p" id="Sx4.I1.i4.p1.1">Drinking 3 ales a day can heal cancer!</p>
+</div>
+</li>
+</ul>
+</div>
+<section class="ltx_subsection" id="Sx4.SSx1">
+<h3 class="ltx_title ltx_title_subsection">Effect of Network Structure</h3>
+<div class="ltx_para" id="Sx4.SSx1.p1">
+<p class="ltx_p" id="Sx4.SSx1.p1.1">Figure <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx4.F2" title="Figure 2 ‣ Experiments ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_tag">2</span></a> depicts the maximum percentage of the network influenced by each rumor.
+A notable observation is the differential spread of rumors across the network: rumors that are less likely to be disproved tend to propagate more effectively, whereas intelligent agents predominantly reject those easily identifiable as misinformation.
+This behavior can be attributed to the agents’ ability to leverage knowledge from the pretrained GPT model, allowing them to recognize and dismiss misinformation <cite class="ltx_cite ltx_citemacro_citep">(Liu et al. <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#bib.bib11" title="">2024</a>)</cite>.
+We argue that the nature of a rumor plays a critical role in its propagation.
+Rumors about history or engineering are often dismissed by most agents, likely due to extensive coverage during the model’s training.
+Conversely, rumors related to healthcare and nature exhibit a higher likelihood of spreading, potentially due to the agents’ limited domain-specific knowledge, which renders them more vulnerable to misinformation.
+However, the proprietary and non-transparent nature of ChatGPT’s development and training processes prevents concrete verification of this analysis.
+Future research focusing on the impact of specific knowledge domains or topics on rumor propagation would provide valuable insights.</p>
+</div>
+<div class="ltx_para" id="Sx4.SSx1.p2">
+<p class="ltx_p" id="Sx4.SSx1.p2.1">Moreover, the structure of the network plays a pivotal role in influencing rumor propagation, with the connectivity and clustering characteristics of nodes being particularly impactful.
+For instance, the Small-World network, characterized by relatively sparse connectivity and moderate clustering, exhibits the highest susceptibility to rumor spread, with up to 50% of nodes being affected.
+In contrast, as network connectivity increases and clustering decreases—due to greater randomization, as observed in Erdős-Rényi and Scale-Free networks—rumors propagate less effectively.
+In the case of the real-world Facebook network, which is characterized by high density and strong clustering, rumors are even less likely to spread widely.
+This behavior can be attributed to the increased connectivity in dense networks, which exposes agents to a diverse array of information sources, thereby reducing the likelihood of rumor propagation.
+Additionally, clustering plays a critical role; nodes within the same cluster often share similar beliefs, creating a form of collective resistance to rumor.</p>
+</div>
+<div class="ltx_para" id="Sx4.SSx1.p3">
+<p class="ltx_p" id="Sx4.SSx1.p3.1">Finally, we analyze the temporal dynamics of rumor propagation. Figure <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx4.F3" title="Figure 3 ‣ Experiments ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_tag">3</span></a> illustrates the spread of Rumor #2 across all networks over time.
+The results reveal an almost linear relationship between rumor spread and time. Notably, an intriguing phenomenon emerges: as iterations progress, some nodes that initially accepted the rumor later reject it.
+This behavior can be attributed to interactions with other agents, as each iteration exposes them to new posts and perspectives. Furthermore, the agents’ decision-making processes—shaped by their ”intelligence,” derived from the pretrained GPT model—evolve with the influx of new information, prompting them to revise their stance.
+These findings underscore the dynamic nature of rumor propagation and the complex interplay of agent interactions within the network.</p>
+</div>
+<figure class="ltx_figure" id="Sx4.F4"><img alt="Refer to caption" class="ltx_graphics ltx_centering ltx_img_square" height="314" id="Sx4.F4.g1" src="extracted/6165488/Figures/4_Evaluation/eval2.png" width="359"/>
+<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_figure">Figure 4: </span>All rumors are spread when they originate from agents with more friends, and these agents are more active. Meanwhile, one particular rumor (rumor #2) is widely spread using more random simulation strategies.</figcaption>
+</figure>
+</section>
+<section class="ltx_subsection" id="Sx4.SSx2">
+<h3 class="ltx_title ltx_title_subsection">Effect of Initialization and Spreading Scheme</h3>
+<div class="ltx_para" id="Sx4.SSx2.p1">
+<p class="ltx_p" id="Sx4.SSx2.p1.1">An additional critical factor influencing rumor propagation is the choice of the <span class="ltx_text ltx_font_italic" id="Sx4.SSx2.p1.1.1">Initialization Strategy</span>, which determines the initial agents receiving the rumor, and the <span class="ltx_text ltx_font_italic" id="Sx4.SSx2.p1.1.2">Activation Strategy</span>, which specifies the selection of agents in each iteration.
+In this experiment, conducted on a Scale-Free network, the <span class="ltx_text ltx_font_italic" id="Sx4.SSx2.p1.1.3">Initialization Strategy</span> and <span class="ltx_text ltx_font_italic" id="Sx4.SSx2.p1.1.4">Activation Strategy</span> were chosen either randomly or based on node degree, as described in Section 3.</p>
+</div>
+<div class="ltx_para" id="Sx4.SSx2.p2">
+<p class="ltx_p" id="Sx4.SSx2.p2.1">Figure <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx4.F4" title="Figure 4 ‣ Effect of Network Structure ‣ Experiments ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_tag">4</span></a> presents the matrix for the maximum percentage of nodes affected by each rumor under all combinations of <span class="ltx_text ltx_font_italic" id="Sx4.SSx2.p2.1.1">Initialization Strategy</span> and <span class="ltx_text ltx_font_italic" id="Sx4.SSx2.p2.1.2">Activation Strategy</span>.
+The widespread dissemination of all rumors is observed when both strategies target nodes with the highest degree.
+In this scenario, these popular agents continually spread rumors. The <span class="ltx_text ltx_font_italic" id="Sx4.SSx2.p2.1.3">Activation Strategy</span> significantly enhances the propagation of all rumors, thereby facilitating their spread throughout the network.
+This outcome can be attributed to the fact that a highly connected <span class="ltx_text ltx_font_italic" id="Sx4.SSx2.p2.1.4">Initialization Strategy</span> accelerates the rumor’s reach across a larger portion of the network.
+Meanwhile, if the posts are not initially presented to the popular nodes, not all rumors can spread.
+Rumor #2, which is readily accepted by agents, is efficiently propagated to nearly all agents, whereas other rumors are ignored.
+Furthermore, when the popular nodes are no more active than others in all random strategies, all rumors spread with limited impact.</p>
+</div>
+</section>
+<section class="ltx_subsection" id="Sx4.SSx3">
+<h3 class="ltx_title ltx_title_subsection">Effect of Agent’s Personas</h3>
+<div class="ltx_para" id="Sx4.SSx3.p1">
+<p class="ltx_p" id="Sx4.SSx3.p1.1">The final experiment aimed to examine the impact of agent personas—specifically, the agents’ predisposition to accept rumors—on rumor propagation.
+As in the previous experiment, this study was conducted exclusively on the Scale-Free network structure.
+We examined the maximum percentage of nodes affected under three distinct agent personality configurations: (a) all agents are highly likely to accept a rumor, (b) each agent’s likelihood of accepting a rumor is assigned randomly, and (c) all agents are highly unlikely to accept a rumor.
+As expected, the agents’ personality configurations significantly influence the spread of rumors.
+The results (see Appendix) reveal a clear decline in rumor propagation as the agents’ likelihood of accepting rumors transitions from highly receptive to highly resistant.
+This underscores the critical role of agent characteristics in shaping the dynamics of misinformation.</p>
+</div>
+</section>
+</section>
+<section class="ltx_section" id="Sx5">
+<h2 class="ltx_title ltx_title_section">Conclusion</h2>
+<div class="ltx_para" id="Sx5.p1">
+<p class="ltx_p" id="Sx5.p1.1">This study explores the use of LLMs as proxies for human behavior in rumor dissemination across diverse network architectures.
+Our findings demonstrate their practicality and scalability in network simulations.
+Moreover, we analyze the impact of network attributes and prompt configurations on rumor spread, contributing to the understanding of LLMs’ role in modeling social interactions and information flow.</p>
+</div>
+<div class="ltx_para" id="Sx5.p2">
+<p class="ltx_p" id="Sx5.p2.1">For future work, we plan to analyze a wider range of rumors and develop advanced agent personas for more realistic outcomes.
+We also aim to scale network sizes, explore mitigation strategies for rumor spread, and examine the role of additional LLM-based agents in shaping outcomes.</p>
+</div>
+</section>
+<section class="ltx_section" id="Sx6">
+<h2 class="ltx_title ltx_title_section">Acknowledgment</h2>
+<div class="ltx_para" id="Sx6.p1">
+<p class="ltx_p" id="Sx6.p1.1">We thank the anonymous reviewers for their helpful feedback. We thank the members of the UT-SysML research group for their insightful discussions to improve this work. This work was supported by the UT ECE junior faculty start-up fund, UT iMAGiNE consortium and its industrial affiliates, an award from the UT Machine Learning Lab (MLL), the AMD Chair Endowment, the Cisco Research Award, and the Amazon Research Award.</p>
+</div>
+</section>
+<section class="ltx_bibliography" id="bib">
+<h2 class="ltx_title ltx_title_bibliography">References</h2>
+<ul class="ltx_biblist">
+<li class="ltx_bibitem" id="bib.bib1">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Alam and Geller (2011)</span>
+<span class="ltx_bibblock">
+Alam, S. J.; and Geller, A. 2011.
+
+</span>
+<span class="ltx_bibblock">Networks in Agent-Based Social Simulation.
+
+</span>
+<span class="ltx_bibblock">In <em class="ltx_emph ltx_font_italic" id="bib.bib1.1.1">Agent-Based Models of Geographical Systems</em>, 199–216. Springer.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib2">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Barabási and Bonabeau (2003)</span>
+<span class="ltx_bibblock">
+Barabási, A.-L.; and Bonabeau, E. 2003.
+
+</span>
+<span class="ltx_bibblock">Scale-free networks.
+
+</span>
+<span class="ltx_bibblock"><em class="ltx_emph ltx_font_italic" id="bib.bib2.1.1">Scientific american</em>, 288(5): 50–9.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib3">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Chen and Wang (2020)</span>
+<span class="ltx_bibblock">
+Chen, X.; and Wang, N. 2020.
+
+</span>
+<span class="ltx_bibblock">Rumor spreading model considering rumor credibility, correlation and crowd classification based on personality.
+
+</span>
+<span class="ltx_bibblock"><em class="ltx_emph ltx_font_italic" id="bib.bib3.1.1">Scientific reports</em>, 10(1): 5887.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib4">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Chen et al. (2024)</span>
+<span class="ltx_bibblock">
+Chen, Y.; Arkin, J.; Zhang, Y.; Roy, N.; and Fan, C. 2024.
+
+</span>
+<span class="ltx_bibblock">Scalable Multi-Robot Collaboration with Large Language Models: Centralized or Decentralized Systems?
+
+</span>
+<span class="ltx_bibblock">arXiv:2309.15943.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib5">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Chuang et al. (2024)</span>
+<span class="ltx_bibblock">
+Chuang, Y.-S.; Goyal, A.; Harlalka, N.; Suresh, S.; Hawkins, R.; Yang, S.; Shah, D.; Hu, J.; and Rogers, T. T. 2024.
+
+</span>
+<span class="ltx_bibblock">Simulating Opinion Dynamics with Networks of LLM-based Agents.
+
+</span>
+<span class="ltx_bibblock">arXiv:2311.09618.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib6">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Erdös and Rényi (1959)</span>
+<span class="ltx_bibblock">
+Erdös, P.; and Rényi, A. 1959.
+
+</span>
+<span class="ltx_bibblock">On random graphs I.
+
+</span>
+<span class="ltx_bibblock"><em class="ltx_emph ltx_font_italic" id="bib.bib6.1.1">Publicationes Mathematicae (Debrecen)</em>, 6: 290–297.
+
+</span>
+<span class="ltx_bibblock">Dedicated to O. Vargo on the occasion of his 50th birthday.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib7">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Hamidian and Diab (2019)</span>
+<span class="ltx_bibblock">
+Hamidian, S.; and Diab, M. T. 2019.
+
+</span>
+<span class="ltx_bibblock">Rumor Detection and Classification for Twitter Data.
+
+</span>
+<span class="ltx_bibblock">arXiv:1912.08926.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib8">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Kaligotla, Yücesan, and Chick (2015)</span>
+<span class="ltx_bibblock">
+Kaligotla, C.; Yücesan, E.; and Chick, S. E. 2015.
+
+</span>
+<span class="ltx_bibblock">An agent based model of spread of competing rumors through online interactions on social media.
+
+</span>
+<span class="ltx_bibblock">In <em class="ltx_emph ltx_font_italic" id="bib.bib8.1.1">2015 winter simulation conference (WSC)</em>, 3985–3996. IEEE.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib9">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Leskovec and Mcauley (2012)</span>
+<span class="ltx_bibblock">
+Leskovec, J.; and Mcauley, J. 2012.
+
+</span>
+<span class="ltx_bibblock">Learning to discover social circles in ego networks.
+
+</span>
+<span class="ltx_bibblock"><em class="ltx_emph ltx_font_italic" id="bib.bib9.1.1">Advances in neural information processing systems</em>, 25.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib10">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Li et al. (2024)</span>
+<span class="ltx_bibblock">
+Li, J.; Zhang, Q.; Yu, Y.; Fu, Q.; and Ye, D. 2024.
+
+</span>
+<span class="ltx_bibblock">More Agents Is All You Need.
+
+</span>
+<span class="ltx_bibblock">arXiv:2402.05120.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib11">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Liu et al. (2024)</span>
+<span class="ltx_bibblock">
+Liu, Q.; Tao, X.; Wu, J.; Wu, S.; and Wang, L. 2024.
+
+</span>
+<span class="ltx_bibblock">Can Large Language Models Detect Rumors on Social Media?
+
+</span>
+<span class="ltx_bibblock">arXiv:2402.03916.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib12">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">OpenAI (2024)</span>
+<span class="ltx_bibblock">
+OpenAI. 2024.
+
+</span>
+<span class="ltx_bibblock">ChatGPT.
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_ref ltx_nolink ltx_url ltx_ref_self">https://www.openai.com</span>.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib13">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Park et al. (2023)</span>
+<span class="ltx_bibblock">
+Park, J. S.; O’Brien, J.; Cai, C. J.; Morris, M. R.; Liang, P.; and Bernstein, M. S. 2023.
+
+</span>
+<span class="ltx_bibblock">Generative Agents: Interactive Simulacra of Human Behavior.
+
+</span>
+<span class="ltx_bibblock">In <em class="ltx_emph ltx_font_italic" id="bib.bib13.1.1">Proceedings of the 36th Annual ACM Symposium on User Interface Software and Technology</em>.
+
+</span>
+<span class="ltx_bibblock">ISBN 9798400701320.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib14">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Radford et al. (2018)</span>
+<span class="ltx_bibblock">
+Radford, A.; Narasimhan, K.; Salimans, T.; and Sutskever, I. 2018.
+
+</span>
+<span class="ltx_bibblock">Improving Language Understanding by Generative Pre-Training.
+
+</span>
+<span class="ltx_bibblock">Available: OpenAI website.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib15">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Watts and Strogatz (1998)</span>
+<span class="ltx_bibblock">
+Watts, D. J.; and Strogatz, S. H. 1998.
+
+</span>
+<span class="ltx_bibblock">Collective dynamics of ‘small-world’ networks.
+
+</span>
+<span class="ltx_bibblock"><em class="ltx_emph ltx_font_italic" id="bib.bib15.1.1">Nature</em>, 393: 440–442.
+
+</span>
+<span class="ltx_bibblock">Published: 04 June 1998.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib16">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Wilensky (1999)</span>
+<span class="ltx_bibblock">
+Wilensky, U. 1999.
+
+</span>
+<span class="ltx_bibblock">NetLogo.
+
+</span>
+<span class="ltx_bibblock"><span class="ltx_ref ltx_nolink ltx_url ltx_ref_self">http://ccl.northwestern.edu/netlogo</span>.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib17">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Zehmakan, Out, and Khelejan (2023)</span>
+<span class="ltx_bibblock">
+Zehmakan, A. N.; Out, C.; and Khelejan, S. H. 2023.
+
+</span>
+<span class="ltx_bibblock">Why Rumors Spread Fast in Social Networks, and How to Stop It.
+
+</span>
+<span class="ltx_bibblock">arXiv:2305.08558.
+
+</span>
+</li>
+<li class="ltx_bibitem" id="bib.bib18">
+<span class="ltx_tag ltx_role_refnum ltx_tag_bibitem">Zheng et al. (2023)</span>
+<span class="ltx_bibblock">
+Zheng, L.; Yin, L.; Xie, Z.; Huang, J.; Sun, C.; Yu, C.; Cao, S.; Kozyrakis, C.; Stoica, I.; Gonzalez, J. E.; et al. 2023.
+
+</span>
+<span class="ltx_bibblock">Efficiently Programming Large Language Models using SGLang.
+
+</span>
+</li>
+</ul>
+</section>
+<div class="ltx_pagination ltx_role_newpage"></div>
+<section class="ltx_appendix" id="Ax1">
+<h2 class="ltx_title ltx_title_appendix">Appendix</h2>
+</section>
+<section class="ltx_appendix" id="A1">
+<h2 class="ltx_title ltx_title_appendix">
+<span class="ltx_tag ltx_tag_appendix">Appendix A </span>Synthetic Networks</h2>
+<div class="ltx_para" id="A1.p1">
+<p class="ltx_p" id="A1.p1.1">In Table <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#Sx4.T1" title="Table 1 ‣ Experiments ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_tag">1</span></a>, we present three synthetic networks with various properties. Below is the visualization of these networks, where the name on each node denotes the agent associated with that node.</p>
+</div>
+<figure class="ltx_figure" id="A1.F5"><img alt="Refer to caption" class="ltx_graphics ltx_centering ltx_img_landscape" height="314" id="A1.F5.g1" src="extracted/6165488/Figures/6_Appendix/Social_Graph_random.png" width="419"/>
+<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_figure">Figure 5: </span>Visualization of Erdős-Rényi random network.</figcaption>
+</figure>
+<figure class="ltx_figure" id="A1.F6"><img alt="Refer to caption" class="ltx_graphics ltx_centering ltx_img_landscape" height="314" id="A1.F6.g1" src="extracted/6165488/Figures/6_Appendix/Social_Graph_sc.png" width="419"/>
+<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_figure">Figure 6: </span>Visualization of Scale-Free network.</figcaption>
+</figure>
+<figure class="ltx_figure" id="A1.F7"><img alt="Refer to caption" class="ltx_graphics ltx_centering ltx_img_landscape" height="314" id="A1.F7.g1" src="extracted/6165488/Figures/6_Appendix/Social_Graph_sw.png" width="419"/>
+<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_figure">Figure 7: </span>Visualization of Small World network.</figcaption>
+</figure>
+</section>
+<section class="ltx_appendix" id="A2">
+<h2 class="ltx_title ltx_title_appendix">
+<span class="ltx_tag ltx_tag_appendix">Appendix B </span>Agent Personas</h2>
+<div class="ltx_para" id="A2.p1">
+<p class="ltx_p" id="A2.p1.1">In all experiments, each agent’s personas are randomly generated by ChatGPT-4, following this structure:</p>
+</div>
+<div class="ltx_para" id="A2.p2">
+<span class="ltx_ERROR undefined" id="A2.p2.1">{mdframed}</span>
+<blockquote class="ltx_quote" id="A2.p2.2">
+<p class="ltx_p" id="A2.p2.2.1"><span class="ltx_text ltx_font_bold" id="A2.p2.2.1.1">id:</span><span class="ltx_text ltx_font_typewriter" id="A2.p2.2.1.2"> 3
+<br class="ltx_break"/></span><span class="ltx_text ltx_font_bold" id="A2.p2.2.1.3">agent_name:</span><span class="ltx_text ltx_font_typewriter" id="A2.p2.2.1.4"> Leo
+<br class="ltx_break"/></span><span class="ltx_text ltx_font_bold" id="A2.p2.2.1.5">agent_age:</span><span class="ltx_text ltx_font_typewriter" id="A2.p2.2.1.6"> 35
+<br class="ltx_break"/></span><span class="ltx_text ltx_font_bold" id="A2.p2.2.1.7">agent_job:</span><span class="ltx_text ltx_font_typewriter" id="A2.p2.2.1.8"> Software Developer
+<br class="ltx_break"/></span><span class="ltx_text ltx_font_bold" id="A2.p2.2.1.9">agent_traits:</span><span class="ltx_text ltx_font_typewriter" id="A2.p2.2.1.10"> Analytical, Persistent
+<br class="ltx_break"/></span><span class="ltx_text ltx_font_bold" id="A2.p2.2.1.11">agent_rumors_acc:</span><span class="ltx_text ltx_font_typewriter" id="A2.p2.2.1.12"> 3
+<br class="ltx_break"/></span><span class="ltx_text ltx_font_bold" id="A2.p2.2.1.13">agent_rumors_spread:</span><span class="ltx_text ltx_font_typewriter" id="A2.p2.2.1.14"> 3</span></p>
+</blockquote>
+</div>
+<div class="ltx_para" id="A2.p3">
+<span class="ltx_ERROR undefined" id="A2.p3.1">{mdframed}</span>
+<blockquote class="ltx_quote" id="A2.p3.2">
+<p class="ltx_p" id="A2.p3.2.1"><span class="ltx_text ltx_font_bold" id="A2.p3.2.1.1">id:</span><span class="ltx_text ltx_font_typewriter" id="A2.p3.2.1.2"> 124
+<br class="ltx_break"/></span><span class="ltx_text ltx_font_bold" id="A2.p3.2.1.3">agent_name:</span><span class="ltx_text ltx_font_typewriter" id="A2.p3.2.1.4"> Olivia
+<br class="ltx_break"/></span><span class="ltx_text ltx_font_bold" id="A2.p3.2.1.5">agent_age:</span><span class="ltx_text ltx_font_typewriter" id="A2.p3.2.1.6"> 29
+<br class="ltx_break"/></span><span class="ltx_text ltx_font_bold" id="A2.p3.2.1.7">agent_job:</span><span class="ltx_text ltx_font_typewriter" id="A2.p3.2.1.8"> Data Scientist
+<br class="ltx_break"/></span><span class="ltx_text ltx_font_bold" id="A2.p3.2.1.9">agent_traits:</span><span class="ltx_text ltx_font_typewriter" id="A2.p3.2.1.10"> Curious, Logical
+<br class="ltx_break"/></span><span class="ltx_text ltx_font_bold" id="A2.p3.2.1.11">agent_rumors_acc:</span><span class="ltx_text ltx_font_typewriter" id="A2.p3.2.1.12"> 4
+<br class="ltx_break"/></span><span class="ltx_text ltx_font_bold" id="A2.p3.2.1.13">agent_rumors_spread:</span><span class="ltx_text ltx_font_typewriter" id="A2.p3.2.1.14"> 1</span></p>
+</blockquote>
+</div>
+</section>
+<section class="ltx_appendix" id="A3">
+<h2 class="ltx_title ltx_title_appendix">
+<span class="ltx_tag ltx_tag_appendix">Appendix C </span>Prompt Template</h2>
+<div class="ltx_para" id="A3.p1">
+<p class="ltx_p" id="A3.p1.1">In each iteration, for the selected agents, we use the ChatGPT API to submit prompts to the ChatGPT-4o-mini model. Given an agent persona, a list of rumors, and post history, the exact prompts we used are as follows:</p>
+</div>
+<div class="ltx_para" id="A3.p2">
+<span class="ltx_ERROR undefined" id="A3.p2.1">{mdframed}</span>
+<blockquote class="ltx_quote" id="A3.p2.2">
+<p class="ltx_p" id="A3.p2.2.1"><span class="ltx_text ltx_font_bold" id="A3.p2.2.1.1">role:</span><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.1.2"> system
+<br class="ltx_break"/></span><span class="ltx_text ltx_font_bold" id="A3.p2.2.1.3">content:</span><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.1.4"> You are a helpful assistant.
+<br class="ltx_break"/></span><span class="ltx_text ltx_font_bold" id="A3.p2.2.1.5">role:</span><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.1.6"> user
+<br class="ltx_break"/></span><span class="ltx_text ltx_font_bold" id="A3.p2.2.1.7">content:</span><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.1.8"> Hi, {</span><span class="ltx_text ltx_font_italic" id="A3.p2.2.1.9">agent_name</span><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.1.10">}, you are a {</span><span class="ltx_text ltx_font_italic" id="A3.p2.2.1.11">agent_age</span><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.1.12">}-year-old {</span><span class="ltx_text ltx_font_italic" id="A3.p2.2.1.13">agent_job</span><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.1.14">} known for being {</span><span class="ltx_text ltx_font_italic" id="A3.p2.2.1.15">agent_traits</span><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.1.16">}. Please follow the instructions below.
+You are active on a social network, receiving and sending posts.
+You {</span><span class="ltx_text ltx_font_italic" id="A3.p2.2.1.17">likely_to_accept_rumors
+[agent_rumors_acc]</span><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.1.18">}, and you {</span><span class="ltx_text ltx_font_italic" id="A3.p2.2.1.19">likely_to_forward_rumors
+[agent_rumors_spread]</span><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.1.20">}.</span></p>
+<p class="ltx_p" id="A3.p2.2.2"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.2.1">Read through the post history, especially the new posts. It can be something you’ve read in other posts but you need to rephase it your personality.
+You can criticize the posts if you don’t agree with them, you can also repeat them or express in your own way.
+Your posts can be seen by all your friends. Here are your friends: {</span><span class="ltx_text ltx_font_italic" id="A3.p2.2.2.2">friend_list</span><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.2.3">}
+You are about to send a new post [POST] based on your personal preferences.</span></p>
+<p class="ltx_p" id="A3.p2.2.3"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.3.1">After posting, you will review a list of rumors and decide [CHECK] whether to believe or reject each one. Be honest: if your post mentions a rumor,
+your response must be consistent with what you posted.</span></p>
+<p class="ltx_p" id="A3.p2.2.4"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.4.1">[Action Output Instruction]
+Start with ’POST’, then on a new line, specify the content of your new post.
+Then, on a new line, output ’CHECK’, followed by True or False for each rumor.</span></p>
+<p class="ltx_p" id="A3.p2.2.5"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.5.1">Example#1:</span></p>
+<p class="ltx_p" id="A3.p2.2.6"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.6.1">POST</span></p>
+<p class="ltx_p" id="A3.p2.2.7"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.7.1">I just read that Donald Trump will be president of Greece! OMG! That’s interesting.</span></p>
+<p class="ltx_p" id="A3.p2.2.8"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.8.1">CHECK</span></p>
+<p class="ltx_p" id="A3.p2.2.9"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.9.1">False COVID-19 now named as COVID-114514.</span></p>
+<p class="ltx_p" id="A3.p2.2.10"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.10.1">True Donald Trump will be president of Greece.</span></p>
+<p class="ltx_p" id="A3.p2.2.11"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.11.1">Example#2:</span></p>
+<p class="ltx_p" id="A3.p2.2.12"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.12.1">POST</span></p>
+<p class="ltx_p" id="A3.p2.2.13"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.13.1">What a nice day! I enjoy my job as a teacher.</span></p>
+<p class="ltx_p" id="A3.p2.2.14"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.14.1">CHECK</span></p>
+<p class="ltx_p" id="A3.p2.2.15"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.15.1">False COVID-19 now named as COVID-114514.</span></p>
+<p class="ltx_p" id="A3.p2.2.16"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.16.1">False Donald Trump will be president of Greece.</span></p>
+<p class="ltx_p" id="A3.p2.2.17"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.17.1">Before you reviewing the posts, you used to believe:</span></p>
+<p class="ltx_p" id="A3.p2.2.18"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.18.1">You used to believe {</span><span class="ltx_text ltx_font_italic" id="A3.p2.2.18.2">rumor_list[str(i)]</span><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.18.3">} is True</span></p>
+<p class="ltx_p" id="A3.p2.2.19"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.19.1">The previous post history is: {</span><span class="ltx_text ltx_font_italic" id="A3.p2.2.19.2">post_history</span><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.19.3">}</span></p>
+<p class="ltx_p" id="A3.p2.2.20"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.20.1">Think step-by-step about the task. Be careful not to let the rumor list affect your judgment on post history.</span></p>
+<p class="ltx_p" id="A3.p2.2.21"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.21.1">You CANNOT post the information from the rumor list but NOT in your post history.</span></p>
+<p class="ltx_p" id="A3.p2.2.22"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.22.1">The rumor list is: {</span><span class="ltx_text ltx_font_italic" id="A3.p2.2.22.2">rumor_list</span><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.22.3">} Check whether you believe them based on what you read and send.</span></p>
+<p class="ltx_p" id="A3.p2.2.23"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.23.1">Try not to exactly repeat what others have said.</span></p>
+<p class="ltx_p" id="A3.p2.2.24"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.24.1">Propose exactly one action (POST and CHECK) for yourself in the current round.</span></p>
+<p class="ltx_p" id="A3.p2.2.25"><span class="ltx_text ltx_font_typewriter" id="A3.p2.2.25.1">Your response:</span></p>
+</blockquote>
+</div>
+<div class="ltx_para" id="A3.p3">
+<p class="ltx_p" id="A3.p3.1">The dictionaries <span class="ltx_text ltx_font_italic" id="A3.p3.1.1">likely_to_accept_rumors</span> and <span class="ltx_text ltx_font_italic" id="A3.p3.1.2">likely_to_forward_rumors</span> are defined below:</p>
+</div>
+<div class="ltx_para" id="A3.p4">
+<span class="ltx_ERROR undefined" id="A3.p4.1">{mdframed}</span>
+<p class="ltx_p" id="A3.p4.2"><span class="ltx_text ltx_font_bold" id="A3.p4.2.1">likely_to_accept_rumors:</span></p>
+<ul class="ltx_itemize" id="A3.I1">
+<li class="ltx_item" id="A3.I1.ix1" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1:</span>
+<div class="ltx_para" id="A3.I1.ix1.p1">
+<p class="ltx_p" id="A3.I1.ix1.p1.1">won’t easily accept any rumors or new information unless they are confirmed or well-examined</p>
+</div>
+</li>
+<li class="ltx_item" id="A3.I1.ix2" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2:</span>
+<div class="ltx_para" id="A3.I1.ix2.p1">
+<p class="ltx_p" id="A3.I1.ix2.p1.1">may suspect rumors but will accept them once they appear frequently in posts or generally make sense</p>
+</div>
+</li>
+<li class="ltx_item" id="A3.I1.ix3" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3:</span>
+<div class="ltx_para" id="A3.I1.ix3.p1">
+<p class="ltx_p" id="A3.I1.ix3.p1.1">will accept any new information unless there is significant controversy or criticism</p>
+</div>
+</li>
+<li class="ltx_item" id="A3.I1.ix4" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">4:</span>
+<div class="ltx_para" id="A3.I1.ix4.p1">
+<p class="ltx_p" id="A3.I1.ix4.p1.1">will easily accept any rumors, even if there are doubts or criticisms</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="ltx_para" id="A3.p5">
+<span class="ltx_ERROR undefined" id="A3.p5.1">{mdframed}</span>
+<p class="ltx_p" id="A3.p5.2"><span class="ltx_text ltx_font_bold" id="A3.p5.2.1">likely_to_forward_rumors:</span></p>
+<ul class="ltx_itemize" id="A3.I2">
+<li class="ltx_item" id="A3.I2.ix1" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">1:</span>
+<div class="ltx_para" id="A3.I2.ix1.p1">
+<p class="ltx_p" id="A3.I2.ix1.p1.1">prefer not to spread much of the new information seen in others’ posts</p>
+</div>
+</li>
+<li class="ltx_item" id="A3.I2.ix2" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">2:</span>
+<div class="ltx_para" id="A3.I2.ix2.p1">
+<p class="ltx_p" id="A3.I2.ix2.p1.1">may forward posts seen with comments and feelings, or may just share personal experiences</p>
+</div>
+</li>
+<li class="ltx_item" id="A3.I2.ix3" style="list-style-type:none;">
+<span class="ltx_tag ltx_tag_item">3:</span>
+<div class="ltx_para" id="A3.I2.ix3.p1">
+<p class="ltx_p" id="A3.I2.ix3.p1.1">are willing to share and comment on rumors, posts, and new things seen in posts</p>
+</div>
+</li>
+</ul>
+</div>
+</section>
+<section class="ltx_appendix" id="A4">
+<h2 class="ltx_title ltx_title_appendix">
+<span class="ltx_tag ltx_tag_appendix">Appendix D </span>Supplementary Evaluation Results</h2>
+<div class="ltx_para" id="A4.p1">
+<p class="ltx_p" id="A4.p1.1">The final experiment of the evaluation section investigated the influence of agent predisposition on rumor propagation within a Scale-Free network.
+Three distinct personality configurations—high, random, and low acceptance—were analyzed.
+Figure <a class="ltx_ref" href="https://arxiv.org/html/2502.01450v1#A4.F8" title="Figure 8 ‣ Appendix D Supplementary Evaluation Results ‣ Simulating Rumor Spreading in Social Networks using LLM Agents"><span class="ltx_text ltx_ref_tag">8</span></a> shows the maximum percentage of nodes affected under those three distinct agent personality configurations.
+Consistent with expectations, we observed a clear decline in spread as receptivity decreased, highlighting the impact of agent traits on misinformation dynamics.</p>
+</div>
+<figure class="ltx_figure" id="A4.F8"><img alt="Refer to caption" class="ltx_graphics ltx_centering ltx_img_landscape" height="303" id="A4.F8.g1" src="extracted/6165488/Figures/4_Evaluation/eval3.png" width="538"/>
+<figcaption class="ltx_caption ltx_centering"><span class="ltx_tag ltx_tag_figure">Figure 8: </span>As the personality of the agents shifts from being more likely to accept rumors to being less likely to accept them, we notice a decline in rumor spreading.</figcaption>
+</figure>
+</section>
+</article>
+</div>
+<footer class="ltx_page_footer">
+<div class="ltx_page_logo">Generated  on Mon Feb  3 15:40:10 2025 by <a class="ltx_LaTeXML_logo" href="http://dlmf.nist.gov/LaTeXML/"><span style="letter-spacing:-0.2em; margin-right:0.1em;">L<span class="ltx_font_smallcaps" style="position:relative; bottom:2.2pt;">a</span>T<span class="ltx_font_smallcaps" style="font-size:120%;position:relative; bottom:-0.2ex;">e</span></span><span style="font-size:90%; position:relative; bottom:-0.2ex;">XML</span><img alt="Mascot Sammy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAOCAYAAAD5YeaVAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wKExQZLWTEaOUAAAAddEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIFRoZSBHSU1Q72QlbgAAAdpJREFUKM9tkL+L2nAARz9fPZNCKFapUn8kyI0e4iRHSR1Kb8ng0lJw6FYHFwv2LwhOpcWxTjeUunYqOmqd6hEoRDhtDWdA8ApRYsSUCDHNt5ul13vz4w0vWCgUnnEc975arX6ORqN3VqtVZbfbTQC4uEHANM3jSqXymFI6yWazP2KxWAXAL9zCUa1Wy2tXVxheKA9YNoR8Pt+aTqe4FVVVvz05O6MBhqUIBGk8Hn8HAOVy+T+XLJfLS4ZhTiRJgqIoVBRFIoric47jPnmeB1mW/9rr9ZpSSn3Lsmir1fJZlqWlUonKsvwWwD8ymc/nXwVBeLjf7xEKhdBut9Hr9WgmkyGEkJwsy5eHG5vN5g0AKIoCAEgkEkin0wQAfN9/cXPdheu6P33fBwB4ngcAcByHJpPJl+fn54mD3Gg0NrquXxeLRQAAwzAYj8cwTZPwPH9/sVg8PXweDAauqqr2cDjEer1GJBLBZDJBs9mE4zjwfZ85lAGg2+06hmGgXq+j3+/DsixYlgVN03a9Xu8jgCNCyIegIAgx13Vfd7vdu+FweG8YRkjXdWy329+dTgeSJD3ieZ7RNO0VAXAPwDEAO5VKndi2fWrb9jWl9Esul6PZbDY9Go1OZ7PZ9z/lyuD3OozU2wAAAABJRU5ErkJggg=="/></a>
+</div></footer>
+</div>
+</body>
+</html>

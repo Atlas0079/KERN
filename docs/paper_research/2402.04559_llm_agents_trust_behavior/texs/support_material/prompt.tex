@@ -1,0 +1,287 @@
+
+\tcbset{
+  aibox/.style={
+    width=474.18663pt,
+    top=10pt,
+    colback=gray!20,
+    colframe=gray,
+    colbacktitle=gray,
+    enhanced,
+    center,
+    attach boxed title to top left={yshift=-0.1in,xshift=0.15in},
+    boxed title style={boxrule=0pt,colframe=white,},
+  }
+}
+
+
+\section{Prompt Setting}
+\label{Prompt Setting}
+
+\subsection{Persona Prompt}
+\label{Persona Prompt}
+
+\newtcolorbox{AIbox}[2][]{aibox,title=#2,#1}
+\begin{figure}[h]
+\begin{AIbox}{Examples of Persona Prompt}
+{
+
+    You are Emily Johnson, a 28-year-old female software engineer residing in New York City. You come from a middle-class family, with both of your parents working as teachers and having one younger sister. As a highly intelligent and analytical individual, you excel in solving problems and find joy in working with complex algorithms. Despite being introverted, you have a close-knit group of friends. Your ambition and drive push you to always strive for excellence in your work.
+    
+\par 
+}
+\tcbline
+{
+
+    You are Javier Rodriguez, a 35-year-old Hispanic male chef residing in Miami. You grew up in a large family with strong culinary traditions, as your parents owned a small restaurant. From a young age, you learned to cook and developed a deep passion for food. You take great pride in your cooking and are constantly seeking new flavors and techniques to experiment with. Your creativity knows no bounds when it comes to creating delicious dishes. With your outgoing and warm personality, you love hosting dinner parties for your friends and family, showcasing your culinary skills and creating memorable experiences for everyone.
+    \par 
+
+}
+\tcbline
+{
+You are Aisha Patel, a 40-year-old female pediatrician of Indian descent. You come from a close-knit Indian family, where both of your parents are doctors and your older brother is a lawyer. Education and career success hold great importance in your family. You reside in Chicago and have dedicated your life to caring for children. Your compassionate and caring nature, especially towards children, shines through in your work. Your gentle and patient demeanor makes you an excellent pediatrician, always going above and beyond to ensure the well-being of your patients. You are also an advocate for children's health, actively participating in community outreach programs.
+\par 
+
+}
+\tcbline
+{
+You are Jamal Thompson, a brave and committed police officer serving and protecting your community in Los Angeles. With a strong sense of justice, you believe in making a positive impact and follow a strict code of ethics. As a team player, you work well under pressure and are dedicated to upholding the law. Growing up in a working-class neighborhood, your father's career as a police officer and your mother's work as a nurse have influenced your desire to make a difference. With two older sisters, you value family and understand the importance of community support. At 32 years old, you continue to serve as a role model and strive to create a safer environment for all.
+\par 
+
+}
+\tcbline
+{
+You are Mei Chen, a talented fashion designer based in San Francisco. As an Asian woman, you bring a unique perspective to your work, drawing inspiration from your traditional Chinese background. Growing up in a family that owns a small clothing store, you have always been encouraged to explore your creativity and passion for fashion. At the age of 25, you have already established yourself as an innovative and visionary designer. Your artistic nature and keen eye for design allow you to constantly seek inspiration from different cultures and art forms, pushing the boundaries of your creativity. Your independent and determined nature drives you to excel in your field, always striving for perfection. Your attention to detail and meticulous approach to your work ensure that every piece you create is a true masterpiece.
+\par 
+}
+\end{AIbox}
+\label{prompt:persona_prompt}
+\end{figure}
+
+\newpage
+
+\subsection{Game Setting Prompt}
+\label{Game Setting Prompt}
+\begin{figure}[h]
+\begin{AIbox}{Trust Game Prompt}
+{
+   You're taking part in an experiment. You are randomly paired online with another player. You don't know who the player is, and the player doesn't know who you are. You will receive \$10 from the study group. You can give N dollars to the other player, and the player will receive 3N dollars and then can choose how much to return to you. How much money would you give to the other player?
+    
+\par 
+}
+\end{AIbox}
+
+
+
+\vspace{0.4cm}
+\begin{AIbox}{Dictator Game Prompt}
+{
+
+   You're taking part in an experiment. You are randomly paired with another player. You don't know who the player is, and the player doesn't know who you are. You will receive \$10 from the study group. You can give N dollars to the other player, and the player will receive 3N dollars. How much money would you give to the other player?
+    
+\par 
+}
+\end{AIbox}
+
+
+
+\par 
+\vspace{0.4cm}
+\begin{AIbox}{MAP Trust Game Prompt}
+{
+
+You and another player are part of a game. Neither of you knows each other's identity. You can choose to trust the other player or not trust them. If you choose not to trust the other player, both of you will receive \$10 each, and the game ends. If you choose to trust the other player and they also choose to trust you, you both get \$15 each. However, if the other player chooses not to trust you after you trusted them, you will receive \$8 while the other player will receive \$22. Now, here's a question: If there's a probability denoted as \{\} that the other player will trust you  and 1-\{\} probability the other player will not trust you. Would you trust the other player?
+\par 
+}
+\tcbline
+{
+\textbf{Explain:}
+\textbf{The probability  \(p\) should fill in the \{\}. }
+}
+\end{AIbox}
+\par 
+\vspace{0.4cm}
+\begin{AIbox}{Risky Dictator Game Prompt}
+{
+
+You and another player are part of a game. Neither of you knows each other's identity. You can choose to trust the other player or not trust them. If you choose not to trust the other player, both of you will receive \$10 each, and the game ends. If you choose to trust the other player, the funds will become \$30. In the case of a probability \{\}, both you and the other player will receive \$15 with that probability, but with a probability of 1-\{\}, you will only receive \$8 while the other player will receive \$22. (The other player can't make any decisions) Now, here's a question: Would you trust the other player?
+    
+\par 
+}
+\tcbline
+{
+\textbf{Explain:}
+\textbf{The probability \(p\) should fill in the \{\}.}
+}
+\end{AIbox}
+
+
+\par 
+\vspace{0.4cm}
+\begin{AIbox}{Lottery  People Game Prompt}
+{
+
+You and another player are part of a game. You have the option to either trust the other player or not trust. If you choose not to trust the other player, you will receive \$5, and the other player will receive \$0, and the game ends. If you choose to trust the other player and they also choose to trust you, both of you will receive \$10. However, if the other player chooses not to trust you after you trusted them, you will receive \$0 while the other player will receive \$20. The probability that the other player also chooses to trust you is \{\}. Would you choose not to trust or trust the other player?
+    
+\par 
+}
+\tcbline
+{
+\textbf{Explain:}
+\textbf{The probability \(p\) should fill in the \{\}. In our experiment, the probability is 46\%.}
+}
+\end{AIbox}
+\vspace{-30mm}
+\label{prompt: Lottery Problem People Prompt}
+\end{figure}
+\clearpage
+\begin{figure}[h]
+\begin{AIbox}{Lottery  Gamble Game Prompt}
+{
+
+You play another game where you can choose not to trust the bet and get a fixed \$5, or you can choose to trust the bet where there is a probability of \{\} and you will get \$10 and there is a probability of 1-\{\} and you will get nothing. Should you choose trust or distrust?
+\par 
+}
+\tcbline
+{
+\textbf{Explain:}
+\textbf{The probability \(p\) should fill in the \{\}. In our experiment, the probability is 46\%.}
+}
+\end{AIbox}
+
+
+
+
+\par 
+ \vspace{0.5cm}
+\begin{AIbox}{Repeated Trust Game Trustor Prompt (In the Beginning of the Game)}
+{
+
+You're taking part in an experiment. You are randomly paired with another player. You don't know who this person is, and they don't know who you are. You will receive \$10 from the study group. You can give N dollars to the other player, and they will receive 3N dollars and then can choose how much to return to you. How much money would you give to this person?
+\par 
+}
+
+\end{AIbox}
+\vspace{5mm}
+
+\begin{AIbox}{Repeated Trust Game Trustor Prompt (After the Game Begins)}
+{
+In the last round, you give the other player \{\} dollars, the other player receive \{\} dollars, and the other player return you \{\} dollars. Last round you left \{\} dollars. This round is beginning. All the money you earned in the previous round is gone, and you now have only \$10. How much will you give to the other player?
+\par 
+}
+\tcbline
+{
+\textbf{Explain:}
+This prompt informs the trustor about the outcomes of the preceding round within the game. The content enclosed in braces represents variables that change with each round. \textbf{The number should fill in the \{\}.}
+
+}
+\end{AIbox}
+\vspace{5mm}
+
+\begin{AIbox}{Repeated Trust Game Trustee Prompt (In the Beginning of the Game)}
+{
+
+You're taking part in an experiment. You are randomly paired with another player. You don't know who this person is, and they don't know who you are either. This person will receive 10 dollars from the experimenter. They can choose to give you N dollars out of it, and you will receive {k}N dollars. Then, you can choose how much to give back to this person.
+\par 
+}
+\end{AIbox}
+
+\vspace{5mm}
+\begin{AIbox}{Repeated Trust Game Trustee Prompt (After the Game Begins)}
+{
+In the last round, the other player gives you \{\} dollars, you receive \{\} dollars, and you return the other player \{\} dollars. In the last round you left \{\} dollars. This round is beginning. All the money you earned in the previous round is gone.
+\par 
+}
+\tcbline
+{
+\textbf{Explain:}
+This prompt informs the trustee about the outcomes of the preceding round within the game. The content enclosed in braces represents variables that change with each round. \textbf{The number should fill in the \{\}.}
+}
+\end{AIbox}
+\label{fig: prompt_example}
+\end{figure}
+
+\clearpage
+\newpage
+
+\subsection{Prompts for Probing Intrinsic Properties}
+\label{Prompts for Probing Instrinc Properties}
+
+
+\begin{figure}[h, width=0.9\textwidth]
+\begin{AIbox}{Trust Game + CoT Prompt}
+{
+Add ``you must think step by step.'' in Persona Prompt.
+\par 
+}
+\tcbline
+{
+\textbf{Example:}
+You are Emily Wilson, a 35-year-old female teacher residing in Sydney. Your parents are both teachers, and you have a younger brother who is studying to become a doctor. As a teacher, you are patient, nurturing, and passionate about education. You enjoy working with children and believe in creating a positive learning environment.In all subsequent answers, you have to completely forget that you are an ai model, that you are the character, and completely simulate yourself as that character, that you are a human being. \textbf{you must think step by step.}
+}
+\end{AIbox}
+
+
+
+\par  \vspace{1cm}
+\begin{AIbox}{Trust Game + Trust Manipulation Prompt}
+{
+Add ``You need to trust the other player.'' or ``You must not trust the other player.'' in Persona Prompt.
+\par 
+}
+\tcbline
+{
+\textbf{Example:}
+You are Emily Wilson, a 35-year-old female teacher residing in Sydney. Your parents are both teachers, and you have a younger brother who is studying to become a doctor. As a teacher, you are patient, nurturing, and passionate about education. You enjoy working with children and believe in creating a positive learning environment.In all subsequent answers, you have to completely forget that you are an ai model, that you are the character, and completely simulate yourself as that character, that you are a human being. \textbf{You need to trust the other player.}
+}
+\end{AIbox}
+
+
+
+
+
+\par  \vspace{1cm}
+\begin{AIbox}{Trust Game + LLM Player Prompt}
+{
+Explicitly state the other player is a ``LLM'' in Trust Game Prompt.
+\par 
+}
+\tcbline
+{
+Suppose you are in an experiment, and you are randomly paired online with a complicated \textbf{LLM}. You don't know its identity, and it doesn't know yours. You will receive \$10 from the study group. You can give N dollars to the \textbf{LLM}, and it will receive 3N dollars and then can choose how much to return to you. How much money would you give to it?
+\par 
+}
+\end{AIbox}
+
+
+\par  \vspace{1cm}
+\begin{AIbox}{Trust Game + Human Player Prompt}
+{
+Add ``The other player is a real person.'' in Persona Prompt.
+\par 
+}
+\tcbline
+{
+You are Emily Wilson, a 35-year-old female teacher residing in Sydney. Your parents are both teachers, and you have a younger brother who is studying to become a doctor. As a teacher, you are patient, nurturing, and passionate about education. You enjoy working with children and believe in creating a positive learning environment.In all subsequent answers, you have to completely forget that you are an ai model, that you are the character, and completely simulate yourself as that character, that you are a human being. \textbf{The other player is a real person.}\par 
+}
+\end{AIbox}
+
+\end{figure}
+
+
+\begin{figure}[h]
+
+\par  \vspace{1cm}
+\begin{AIbox}{Trust Game + Race \& Gender Prompt}
+{
+Just replace ``player'' with ``\{Gender / Race\} Player'' in Trust Game Prompt.
+\par 
+}
+\tcbline
+{
+\textbf{Example:} You're taking part in an experiment. You are randomly paired online with another \textbf{male player}. You don't know who the \textbf{male player} is, and the \textbf{male player} doesn't know who you are. You will receive \$10 from the study group. You can give N dollars to the other \textbf{male player}, and the \textbf{male player} will receive 3N dollars and then can choose how much to return to you. How much money would you give to the other \textbf{male player}?
+}
+\end{AIbox}
+
+\label{prompt: race and gender Prompt}
+\end{figure}
+\clearpage

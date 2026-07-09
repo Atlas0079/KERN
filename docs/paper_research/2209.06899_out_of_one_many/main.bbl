@@ -1,0 +1,270 @@
+\begin{thebibliography}{41}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Rodriguez and Spirling(2021)]{rodriguez2021word}
+Pedro Rodriguez and Arthur Spirling.
+\newblock Word embeddings: What works, what doesn't, and how to tell the
+  difference for applied research.
+\newblock 2021.
+
+\bibitem[Benoit et~al.(2019)Benoit, Munger, and Spirling]{benoit2019measuring}
+Kenneth Benoit, Kevin Munger, and Arthur Spirling.
+\newblock Measuring and explaining political sophistication through textual
+  complexity.
+\newblock \emph{American Journal of Political Science}, 63\penalty0
+  (2):\penalty0 491--508, 2019.
+
+\bibitem[Barber{\'a} et~al.(2021)Barber{\'a}, Boydstun, Linn, McMahon, and
+  Nagler]{barbera2021automated}
+Pablo Barber{\'a}, Amber~E Boydstun, Suzanna Linn, Ryan McMahon, and Jonathan
+  Nagler.
+\newblock Automated text classification of news articles: A practical guide.
+\newblock \emph{Political Analysis}, 29\penalty0 (1):\penalty0 19--42, 2021.
+
+\bibitem[Rheault and Cochrane(2020)]{rheault2020word}
+Ludovic Rheault and Christopher Cochrane.
+\newblock Word embeddings for the analysis of ideological placement in
+  parliamentary corpora.
+\newblock \emph{Political Analysis}, 28\penalty0 (1):\penalty0 112--133, 2020.
+
+\bibitem[Grimmer et~al.(2021)Grimmer, Roberts, and Stewart]{grimmer2021machine}
+Justin Grimmer, Margaret~E Roberts, and Brandon~M Stewart.
+\newblock Machine learning for social science: An agnostic approach.
+\newblock \emph{Annual Review of Political Science}, 24:\penalty0 395--419,
+  2021.
+
+\bibitem[Greene et~al.(2019)Greene, Park, and Colaresi]{greene2019machine}
+Kevin~T Greene, Baekkwan Park, and Michael Colaresi.
+\newblock Machine learning human rights and wrongs: How the successes and
+  failures of supervised learning algorithms can inform the debate about
+  information effects.
+\newblock \emph{Political Analysis}, 27\penalty0 (2):\penalty0 223--230, 2019.
+
+\bibitem[Radford et~al.(2019{\natexlab{a}})Radford, Wu, Child, Luan, Amodei,
+  and Sutskever]{radford2019language}
+Alec Radford, Jeffrey Wu, Rewon Child, David Luan, Dario Amodei, and Ilya
+  Sutskever.
+\newblock Language models are unsupervised multitask learners.
+\newblock \emph{OpenAI Blog}, 1\penalty0 (8):\penalty0 9, 2019{\natexlab{a}}.
+
+\bibitem[Raffel et~al.(2020)Raffel, Shazeer, Roberts, Lee, Narang, Matena,
+  Zhou, Li, and Liu]{2020t5}
+Colin Raffel, Noam Shazeer, Adam Roberts, Katherine Lee, Sharan Narang, Michael
+  Matena, Yanqi Zhou, Wei Li, and Peter~J. Liu.
+\newblock Exploring the limits of transfer learning with a unified text-to-text
+  transformer.
+\newblock \emph{Journal of Machine Learning Research}, 21\penalty0
+  (140):\penalty0 1--67, 2020.
+\newblock URL \url{http://jmlr.org/papers/v21/20-074.html}.
+
+\bibitem[Brown et~al.(2020)Brown, Mann, Ryder, Subbiah, Kaplan, Dhariwal,
+  Neelakantan, Shyam, Sastry, Askell, et~al.]{brown2020language}
+Tom~B Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared Kaplan, Prafulla
+  Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell,
+  et~al.
+\newblock Language models are few-shot learners.
+\newblock \emph{arXiv:2005.14165}, 2020.
+
+\bibitem[Adiwardana et~al.(2020)Adiwardana, Luong, So, Hall, Fiedel, Thoppilan,
+  Yang, Kulshreshtha, Nemade, Lu, et~al.]{Meena}
+Daniel Adiwardana, Minh-Thang Luong, David~R So, Jamie Hall, Noah Fiedel, Romal
+  Thoppilan, Zi~Yang, Apoorv Kulshreshtha, Gaurav Nemade, Yifeng Lu, et~al.
+\newblock Towards a human-like open-domain chatbot.
+\newblock \emph{arXiv preprint arXiv:2001.09977}, 2020.
+
+\bibitem[Radford et~al.(2019{\natexlab{b}})Radford, Wu, Child, Luan, Amodei,
+  and Sutskever]{openaiGPT2}
+Alec Radford, Jeffrey Wu, Rewon Child, David Luan, Dario Amodei, and Ilya
+  Sutskever.
+\newblock Language models are unsupervised multitask learners.
+\newblock \emph{OpenAI Blog}, 1\penalty0 (8):\penalty0 9, 2019{\natexlab{b}}.
+
+\bibitem[Dai et~al.(2019)Dai, Yang, Yang, Carbonell, Le, and
+  Salakhutdinov]{dai2019transformerxl}
+Zihang Dai, Zhilin Yang, Yiming Yang, Jaime Carbonell, Quoc~V Le, and Ruslan
+  Salakhutdinov.
+\newblock Transformer-xl: Attentive language models beyond a fixed-length
+  context.
+\newblock \emph{arXiv preprint arXiv:1901.02860}, 2019.
+
+\bibitem[Panch et~al.(2019)Panch, Mattie, and
+  Atun]{panchArtificialIntelligenceAlgorithmic2019}
+Trishan Panch, Heather Mattie, and Rifat Atun.
+\newblock Artificial intelligence and algorithmic bias: Implications for health
+  systems.
+\newblock \emph{Journal of Global Health}, 9\penalty0 (2):\penalty0 010318,
+  December 2019.
+\newblock ISSN 2047-2978, 2047-2986.
+\newblock \doi{10.7189/jogh.09.020318}.
+
+\bibitem[Mayson(2018)]{maysonBiasBiasOut2018}
+Sandra~G. Mayson.
+\newblock Bias in, {{Bias}} out.
+\newblock \emph{Yale Law Journal}, 128:\penalty0 2218, 2018.
+
+\bibitem[Barocas and Selbst(2016)]{barocasBigDataDisparate2016}
+Solon Barocas and Andrew~D. Selbst.
+\newblock Big {{Data}}'s {{Disparate Impact}}.
+\newblock \emph{California Law Review}, 104:\penalty0 671, 2016.
+
+\bibitem[ane()]{anes}
+See https://electionstudies.org/about-us/.
+
+\bibitem[Rothschild et~al.(2019)Rothschild, Howat, Shafranek, and
+  Busby]{busby2019}
+Jacob~E. Rothschild, Adam~J. Howat, Richard~M. Shafranek, and Ethan~C. Busby.
+\newblock Pigeonholing partisans: Stereotypes of party supporters and partisan
+  polarization.
+\newblock \emph{Political Behavior}, 41\penalty0 (2):\penalty0 423--443, 2019.
+
+\bibitem[Bender et~al.(2021)Bender, Gebru, McMillan-Major, and
+  Shmitchell]{bender2021dangers}
+Emily~M Bender, Timnit Gebru, Angelina McMillan-Major, and Shmargaret
+  Shmitchell.
+\newblock On the dangers of stochastic parrots: Can language models be too big?
+\newblock In \emph{Proceedings of the 2021 ACM Conference on Fairness,
+  Accountability, and Transparency}, pages 610--623, 2021.
+
+\bibitem[Marcus(2020)]{marcus2020next}
+Gary Marcus.
+\newblock The next decade in ai: four steps towards robust artificial
+  intelligence.
+\newblock \emph{arXiv preprint arXiv:2002.06177}, 2020.
+
+\bibitem[Garg et~al.(2018)Garg, Schiebinger, Jurafsky, and Zou]{garg2018word}
+Nikhil Garg, Londa Schiebinger, Dan Jurafsky, and James Zou.
+\newblock Word embeddings quantify 100 years of gender and ethnic stereotypes.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 115\penalty0
+  (16):\penalty0 E3635--E3644, 2018.
+
+\bibitem[Caliskan et~al.(2017)Caliskan, Bryson, and
+  Narayanan]{caliskan2017semantics}
+Aylin Caliskan, Joanna~J Bryson, and Arvind Narayanan.
+\newblock Semantics derived automatically from language corpora contain
+  human-like biases.
+\newblock \emph{Science}, 356\penalty0 (6334):\penalty0 183--186, 2017.
+
+\bibitem[Berelson et~al.(1954)Berelson, Lazarsfeld, and McPhee]{Berelson1954}
+Bernard Berelson, Paul~F. Lazarsfeld, and William~N. McPhee.
+\newblock \emph{Voting: a study of opinion formation in a presidential
+  campaign}.
+\newblock University of Chicago Press, 1954.
+
+\bibitem[Campbell et~al.(1960)Campbell, Converse, Miller, and
+  Stokes]{Campbell1960}
+Angus Campbell, Philip~E. Converse, Warren~E. Miller, and Donald~E. Stokes.
+\newblock \emph{The American Voter}.
+\newblock University of Chicago Press, 1960.
+
+\bibitem[Hutchings and Valentino(2004)]{HutchingsValentino2004}
+Vincent~L. Hutchings and Nicholas~A. Valentino.
+\newblock The centrality of race in american politics.
+\newblock \emph{Annual Review of Political Science}, 7\penalty0 (1):\penalty0
+  383--408, 2004.
+
+\bibitem[Burns and Gallagher(2010)]{BurnsGallagher2010}
+Nancy Burns and Katherine Gallagher.
+\newblock Public opinion on gender issues: The politics of equity and roles.
+\newblock \emph{Annual Review of Political Science}, 13\penalty0 (1):\penalty0
+  425--443, 2010.
+
+\bibitem[Druckman and Lupia(2016)]{DruckmanLupia2016}
+James~N. Druckman and Arthur Lupia.
+\newblock Preference change in competitive political environments.
+\newblock \emph{Annual Review of Political Science}, 19\penalty0 (1):\penalty0
+  13--31, 2016.
+
+\bibitem[Cramer(2020)]{Cramer2020}
+Katherine Cramer.
+\newblock Understanding the role of racism in contemporary us public opinion.
+\newblock \emph{Annual Review of Political Science}, 23\penalty0 (1):\penalty0
+  153--169, 2020.
+
+\bibitem[Simpson(1951)]{Simpson1951}
+Edward~H. Simpson.
+\newblock The interpretation of interaction in contingency tables.
+\newblock \emph{Journal of the Royal Statistical Society, Ser. B}, 13:\penalty0
+  238--241, 1951.
+
+\bibitem[Iyengar et~al.(2012)Iyengar, Sood, and Lelkes]{Iyengar2012}
+Shanto Iyengar, Gaurav Sood, and Yphtach Lelkes.
+\newblock Affect, not ideology a social identity perspective on polarization.
+\newblock \emph{Public Opinion Quarterly}, 76\penalty0 (3):\penalty0 405--431,
+  2012.
+
+\bibitem[Mason(2018)]{Mason2018}
+Lilliana Mason.
+\newblock \emph{Uncivil Agreement}.
+\newblock University of Chicago Press, 2018.
+
+\bibitem[Coppock and McClellan(2019)]{coppock2019}
+Alexander Coppock and Oliver~A. McClellan.
+\newblock Validating the demographic, political, psychological, and
+  experimental results obtained from a new source of online survey respondents.
+\newblock \emph{Research \& Politics}, 6\penalty0 (1):\penalty0 1--14, 2019.
+
+\bibitem[Box-Steffensmeier et~al.(2004)Box-Steffensmeier, Boef, and min
+  Lin]{boxsteffensmeier2004}
+Janet~M. Box-Steffensmeier, Suzanna~De Boef, and Tse min Lin.
+\newblock The dynamics of the partisan gender gap.
+\newblock \emph{American Political Science Review}, 98\penalty0 (3):\penalty0
+  515--528, 2004.
+
+\bibitem[Tate(1994)]{Tate1994}
+Katherine Tate.
+\newblock \emph{From Protest to Politics: The New Black Voters in American
+  Elections}.
+\newblock Harvard University Press, 1994.
+
+\bibitem[Cramer(2016)]{Cramer2016}
+Katherine~J. Cramer.
+\newblock \emph{The politics of resentment: Rural consciousness in Wisconsin
+  and the rise of Scott Walker}.
+\newblock University of Chicago Press, 2016.
+
+\bibitem[Jardina(2019)]{Jardina2019}
+Ashley Jardina.
+\newblock \emph{White Identity Politics}.
+\newblock Cambridge University Press, 2019.
+
+\bibitem[Keith et~al.(1992)Keith, Magleby, Nelson, Orr, and Westyle]{Keith1992}
+Bruce~E. Keith, David~B. Magleby, Candice~J. Nelson, Elizabeth Orr, and Mark~C.
+  Westyle.
+\newblock \emph{The myth of the independent voter}.
+\newblock University of California Press, 1992.
+
+\bibitem[Magleby et~al.(2011)Magleby, Nelson, and Westlye]{magleby2011}
+David~B. Magleby, Candice~J. Nelson, and Mark~C. Westlye.
+\newblock The myth of the independent voter revisited.
+\newblock In Paul~M. Sniderman and Benjamin Highton, editors, \emph{Facing the
+  challenge of democracy: {Explorations} in the analysis of public opinion and
+  political participation}, pages 238--266. Princeton University Press, 2011.
+
+\bibitem[Klar and Krupnikov(2016)]{klar2016}
+Samara Klar and Yanna Krupnikov.
+\newblock \emph{Independent Politics: How American Disdain for Parties Leads to
+  Political Inaction}.
+\newblock Cambridge University Press, 2016.
+
+\bibitem[Cramér(1946)]{Cramer1946}
+Harald Cramér.
+\newblock \emph{Mathematical Methods of Statistics}.
+\newblock Princeton University Press, 1946.
+
+\bibitem[Ross(2012)]{ross2012guide}
+Ronald~S Ross.
+\newblock Guide for conducting risk assessments (nist sp-800-30rev1).
+\newblock \emph{The National Institute of Standards and Technology (NIST),
+  Gaithersburg}, 2012.
+
+\bibitem[Salganik(2017)]{salganik_bit_2017}
+Matthew~J. Salganik.
+\newblock \emph{Bit by {Bit}: {Social} {Research} in the {Digital} {Age}}.
+\newblock Princeton University Press, Princeton, NJ, open review edition
+  edition, 2017.
+
+\end{thebibliography}

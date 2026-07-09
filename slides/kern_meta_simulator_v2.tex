@@ -147,101 +147,117 @@
 \end{frame}
 
 \begin{frame}{迁移}
-    \small
-    MetaSim 的核心不是某个具体场景，而是一套连接 agent、环境规则、外部 runtime 和过程记录的仿真框架。
-
-    \vspace{0.22cm}
     \begin{columns}[T,totalwidth=0.92\paperwidth]
-      \begin{column}{0.30\paperwidth}
-        {\color{Sage}\footnotesize\bfseries 可感知的入口}\par
-        {\scriptsize agent 通过手机屏幕进入社交平台。}
+      \begin{column}{0.34\paperwidth}
+        \small
+        MetaSim 可以扩展到社交平台中的风险内容传播模拟。
 
-        \vspace{0.26cm}
-        {\color{Sage}\footnotesize\bfseries 可执行的动作}\par
-        {\scriptsize 浏览、评论、转发和发帖由规则结算。}
+        \vspace{0.22cm}
+        独立 runtime 接入后，社交平台成为 agent 可进入的外部环境。
 
-        \vspace{0.26cm}
-        {\color{Sage}\footnotesize\bfseries 可复盘的过程}\par
-        {\scriptsize 事件、记忆和 checkpoint 进入 MetaSim 记录。}
+        \vspace{0.28cm}
+        {\color{Sage}\footnotesize\bfseries 手机屏幕}\par
+        {\footnotesize feed、post、操作反馈}
+
+        \vspace{0.18cm}
+        {\color{Sage}\footnotesize\bfseries 平台 runtime}\par
+        {\footnotesize 账号、帖子、推荐、互动}
+
+        \vspace{0.18cm}
+        {\color{Sage}\footnotesize\bfseries MetaSim 记录}\par
+        {\footnotesize 事件、记忆、指标}
       \end{column}
-      \begin{column}{0.58\paperwidth}
+      \begin{column}{0.54\paperwidth}
         \centering
-        \includegraphics[width=\linewidth,height=4.72cm,keepaspectratio]{slides/迁移.png}
+        \vspace{0.08cm}
+        \includegraphics[width=\linewidth,height=5.02cm,keepaspectratio]{slides/迁移.png}
       \end{column}
     \end{columns}
 \end{frame}
 
 \begin{frame}{社交平台}
-    \small
-    在风险传播场景中，关键问题是内容如何被看到、被理解、被互动，并继续影响后续行为。
-
-    \vspace{0.22cm}
     \begin{columns}[T,totalwidth=0.92\paperwidth]
-      \begin{column}{0.30\paperwidth}
-        {\color{Sage}\footnotesize\bfseries 曝光路径}\par
-        {\scriptsize 谁看到了风险内容，何时打开。}
+      \begin{column}{0.34\paperwidth}
+        \small
+        社交平台页展示 agent 与平台 runtime 的具体交互方式。
 
-        \vspace{0.26cm}
-        {\color{Sage}\footnotesize\bfseries 互动路径}\par
-        {\scriptsize 评论、转发和发帖如何改变平台状态。}
+        \vspace{0.22cm}
+        agent 只通过手机屏幕看到平台内容，并通过结构化动作影响平台状态。
 
-        \vspace{0.26cm}
-        {\color{Sage}\footnotesize\bfseries 复盘路径}\par
-        {\scriptsize 澄清何时触达，记忆如何影响后续行动。}
+        \vspace{0.28cm}
+        {\color{Sage}\footnotesize\bfseries 可见内容}\par
+        {\footnotesize 推荐流、帖子详情}
+
+        \vspace{0.18cm}
+        {\color{Sage}\footnotesize\bfseries 可执行动作}\par
+        {\footnotesize 浏览、评论、转发、发帖}
+
+        \vspace{0.18cm}
+        {\color{Sage}\footnotesize\bfseries 可复盘结果}\par
+        {\footnotesize 曝光、互动、记忆线索}
       \end{column}
-      \begin{column}{0.58\paperwidth}
+      \begin{column}{0.54\paperwidth}
         \centering
-        \includegraphics[width=\linewidth,height=4.72cm,keepaspectratio]{slides/社交平台.png}
+        \vspace{0.08cm}
+        \includegraphics[width=\linewidth,height=5.02cm,keepaspectratio]{slides/社交平台.png}
       \end{column}
     \end{columns}
 \end{frame}
 
 \begin{frame}{野营场景}
-    \small
-    MetaSim 还有以下场景验证能力：野营场景用于观察多个 agent 如何在连续环境压力下形成长期策略。
-
-    \vspace{0.22cm}
     \begin{columns}[T,totalwidth=0.92\paperwidth]
-      \begin{column}{0.30\paperwidth}
+      \begin{column}{0.34\paperwidth}
+        \small
+        MetaSim 还有以下场景验证能力。
+
+        \vspace{0.22cm}
+        野营场景用于验证长期生存行为模拟。
+
+        \vspace{0.28cm}
         {\color{Sage}\footnotesize\bfseries 环境压力}\par
-        {\scriptsize 资源、体力、天气持续变化。}
+        {\footnotesize 资源、体力、天气}
 
-        \vspace{0.26cm}
-        {\color{Sage}\footnotesize\bfseries 自然行为}\par
-        {\scriptsize 分工、互助、冲突从行动中出现。}
+        \vspace{0.18cm}
+        {\color{Sage}\footnotesize\bfseries 行为选择}\par
+        {\footnotesize 采集、取水、修缮、休息}
 
-        \vspace{0.26cm}
-        {\color{Sage}\footnotesize\bfseries 长期回放}\par
-        {\scriptsize 位置、任务、背包和记忆形成轨迹。}
+        \vspace{0.18cm}
+        {\color{Sage}\footnotesize\bfseries 长期轨迹}\par
+        {\footnotesize 状态、背包、任务、记忆}
       \end{column}
-      \begin{column}{0.58\paperwidth}
+      \begin{column}{0.54\paperwidth}
         \centering
-        \includegraphics[width=\linewidth,height=4.55cm,keepaspectratio]{slides/野营_compressed.png}
+        \vspace{0.08cm}
+        \includegraphics[width=\linewidth,height=5.02cm,keepaspectratio]{slides/野营_compressed.png}
       \end{column}
     \end{columns}
 \end{frame}
 
 \begin{frame}{幼儿园陪伴场景}
-    \small
-    幼儿园场景用于验证虚拟生活与现实陪伴的闭环：虚拟事件会触发现实交流，现实回应会回到虚拟世界。
-
-    \vspace{0.22cm}
     \begin{columns}[T,totalwidth=0.92\paperwidth]
-      \begin{column}{0.30\paperwidth}
-        {\color{Sage}\footnotesize\bfseries 虚拟事件}\par
-        {\scriptsize 日程、通知、同伴邀请和家长消息。}
+      \begin{column}{0.34\paperwidth}
+        \small
+        MetaSim 还有以下场景验证能力。
 
-        \vspace{0.26cm}
-        {\color{Sage}\footnotesize\bfseries 现实交流}\par
-        {\scriptsize 豆豆通过机器人自然联系用户。}
+        \vspace{0.22cm}
+        幼儿园场景用于验证虚拟生活与现实陪伴的闭环。
 
-        \vspace{0.26cm}
+        \vspace{0.28cm}
+        {\color{Sage}\footnotesize\bfseries 虚拟生活}\par
+        {\footnotesize 日程、通知、邀请、消息}
+
+        \vspace{0.18cm}
+        {\color{Sage}\footnotesize\bfseries 现实交互}\par
+        {\footnotesize 机器人承载自然对话}
+
+        \vspace{0.18cm}
         {\color{Sage}\footnotesize\bfseries 记忆回流}\par
-        {\scriptsize 用户建议影响之后的理解和行动。}
+        {\footnotesize 用户回应影响后续行动}
       \end{column}
-      \begin{column}{0.58\paperwidth}
+      \begin{column}{0.54\paperwidth}
         \centering
-        \includegraphics[width=\linewidth,height=4.55cm,keepaspectratio]{slides/幼儿园_compressed.png}
+        \vspace{0.08cm}
+        \includegraphics[width=\linewidth,height=5.02cm,keepaspectratio]{slides/幼儿园_compressed.png}
       \end{column}
     \end{columns}
 \end{frame}

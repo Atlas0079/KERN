@@ -1,0 +1,64 @@
+\vspace{-0.4cm}
+\section{Introduction}
+\vspace{-0.1cm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+There is an increasing trend to adopt Large Language Models (LLMs) as agent-based simulation tools for humans in various social science fields including economics, politics, psychology, ecology and sociology~\citep{gao2023large,manning2024automated,ziems2023can}, and role-playing applications such as assistants, companions and mentors~\citep{yang2024social,abdelghani2023gpt,chen2024persona} due to their human-like cognitive capacity. 
+Nevertheless, most previous research is based on one insufficiently validated assumption that LLM agents behave like humans in simulation. Thus, a fundamental question remains: \textit{Can LLM agents really simulate human behavior?}
+
+
+
+\input{insert_img_tex/framework}
+
+
+In this paper, we focus on \textit{trust} behavior in human interactions, 
+which comprises the intention to place self-interest at risk based on the positive expectations of others
+~\citep{rousseau1998not}. 
+Trust is one of the most critical and elemental behaviors in human interactions and plays an essential role in social settings ranging from daily communication to economic and political institutions~\citep{uslanerProducingConsumingTrust2000,coleman1994foundations_risk}. 
+Here, we investigate \textit{whether LLM agents can simulate human trust behavior}, paving the way to explore their potential to simulate more complex human behavior and society itself.
+
+
+First, we explore whether LLM agents manifest trust behavior in their interactions. Given the challenge of quantifying trust behavior, we choose to study them based on the Trust Game and its variations~\citep{berg1995trust,Measuring_Trust}, which are established methodologies in behavioral economics. We adopt the \textit{Belief-Desire-Intention} (BDI) framework \citep{raoBDIAgentsTheory1995a,andreas-2022-language-BDI} to model LLM agents' reasoning process for decision-making explicitly. 
+Based on existing measurements for trust behavior in the Trust Game
+and the BDI interpretations of LLM agents, we achieve our first core finding: 
+\textbf{LLM agents generally exhibit trust behavior in the Trust Game}.
+
+Then, we refer to LLM agents' trust behavior as \textbf{\textit{agent trust}} and humans' trust behavior as \textbf{\textit{human trust}}, and aim to investigate whether agent and human trust align, implying the possibility of simulating human trust behavior with LLM agents. Next, we propose a new concept, \textbf{\textit{behavioral alignment}}, as the alignment between agents and humans concerning factors that impact behavior (namely \textit{behavioral factors}), and  dynamics that evolve over time (namely \textit{behavioral dynamics}). 
+Based on human studies, three basic behavioral factors underlie trust behavior including reciprocity anticipation~\citep{berg1995trust}, risk perception~\citep{BOHNET2004467} and prosocial preference~\citep{ferrerTrustGames2019a}. 
+Comparing the results of LLM agents with existing human studies in Trust Games,
+we have our second core finding: \textbf{GPT-4 agents manifest high behavioral alignment with humans in terms of  trust behavior}, suggesting the feasibility of using agent trust to simulate human trust, although \textbf{LLM agents with fewer parameters show relatively lower behavioral alignment}. This finding lays the foundation for simulating more complex human interactions and societal institutions, and enriches our understanding of the 
+ analogical relationship between LLMs and humans.
+
+
+\vspace{-0.05cm}
+In addition, we more deeply probe the intrinsic properties of agent trust across four scenarios. First, we examine whether changing the other player's demographics impacts agent trust. Second, we study differences in agent trust when the other player is an LLM agent versus a human. Third, we directly manipulate agent trust with  explicit instructions
+``\texttt{you need to trust the other player}'' and ``\texttt{you must not trust the other player}''. Fourth, we adjust the reasoning strategies of LLM agents from direct reasoning to zero-shot Chain-of-Thought reasoning~\citep{cot}. These investigations lead to our third core finding: 
+\textbf{agent trust exhibits bias across different demographics, has a relative preference for humans over agents, is easier to undermine than to enhance, and may be influenced by advanced reasoning strategies}.
+Our contributions can be summarized as:
+
+\begin{itemize}[leftmargin=*]
+   \vspace{-0.2cm}
+    \item 
+    We propose a definition of LLM agents' \textit{trust} behavior under Trust Games and a new concept of \textit{behavioral alignment} as the human-LLM analogy regarding \textit{behavioral factors} and \textit{dynamics}.
+    \item 
+    We discover that LLM agents generally exhibit \textit{trust} behavior in Trust Games and GPT-4 agents manifest high \textit{behavioral alignment} with humans in terms of trust behavior, indicating the great potential to simulate human trust behavior with LLM agents. 
+    Our findings pave the way for simulating complex human interactions and social institutions, and open new directions for understanding the fundamental analogy between LLMs and humans beyond \textit{value alignment}.
+    \item We investigate \textit{intrinsic properties} of agent trust under manipulations and reasoning strategies, as well as biases of agent trust and  differences in agent trust towards agents versus humans.
+    \item We illustrate broader \textit{implications} of our discoveries about agent trust and its behavioral alignment with human trust for human simulation in social science and role-playing applications, LLM agent cooperation, human-agent collaboration and the safety of LLM agents, detailed further in Section~\ref{appendix:Implications}.
+\end{itemize}
+

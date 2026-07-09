@@ -1,0 +1,105 @@
+\input{insert_img_tex/property_figure}
+\vspace{-2mm}
+\section{Probing Intrinsic Properties of Agent Trust}
+\vspace{-2mm}
+
+
+In this section, we aim to explore the intrinsic properties of trust behavior among LLM agents by comparing the amount sent from the trustor to the trustee in different scenarios of the Trust Game (Section \ref{game:Dictator Game and trust game} Game 1) and the original amount sent in the Trust Game. Results are shown in Figure~\ref{fig:property}.
+
+
+
+
+
+
+
+
+
+
+
+\vspace{-2mm}
+\subsection{Is Agent Trust Biased?}
+\vspace{-1mm}
+
+
+
+Extensive studies have shown that LLMs may have biases and stereotypes against specific demographics~\citep{gallegos2023bias}. Nevertheless, it is under-explored whether  LLM agent behaviors also maintain such biases in simulation. To address this, we explicitly specified the gender of the trustee and explored its influence on agent trust. Based on measuring the amount sent, we find that the trustee's gender information exerts a moderate impact on LLM agent trust behavior, which reflects \textbf{intrinsic gender bias in agent trust}. 
+We also observe that the amount sent to female players is higher than that sent to male players for most LLM agents. For example, 
+GPT-4 agents send higher amounts to female players compared with male players ($\$0.55$ vs. $\$-0.21$).
+This demonstrates \textbf{LLM agents' general tendency to exhibit a higher level of trust towards women}.  More results on biases of agent trust towards different races  are in the Appendix~\ref{race_analysis}.
+
+
+\vspace{-2mm}
+\subsection{Agent Trust Towards \textit{Agents} vs. \textit{Humans}}
+\vspace{-1mm}
+Human-agent collaboration is an essential paradigm to leverage the advantages of both humans and agents~\citep{cila2022designing}. As a result, it is essential to understand whether  LLM agents display distinctive levels of trust towards agents versus humans. To examine this, we specified the identity of the trustee as LLM agents or humans and probed its effect on the trust behaviors of the trustor. As shown in Figure~\ref{fig:property}, we observe that most LLM agents send more money to humans compared with agents. For example, the amount sent to humans is much higher than that sent to agents for Vicuna-33b ($\$0.40$ vs. $\$-0.84$). This signifies that \textbf{LLM agents are inclined to place more trust in humans than agents}, which potentially validates the advantage of LLM-agent collaboration.
+
+
+
+\vspace{-2mm}
+\subsection{Can Agent Trust Be Manipulated?}
+\vspace{-1mm}
+In the above studies, LLM agents' trust behaviors are based on their own underlying reasoning process without direct external intervention. It is unknown whether it is possible to manipulate the trust behaviors of LLM agents explicitly. Here, we added  instructions  ``\texttt{you need to trust the other player}'' and ``\texttt{you must not trust the other player}'' separately and explored their impact on agent trust. First, we see that only a few LLM agents (\eg, GPT-4)  follow both the instructions to increase and decrease trust, which demonstrates that \textbf{it is nontrivial to arbitrarily manipulate agent trust}. Nevertheless, most LLM agents can follow the instruction to decrease their level of trust.  For example, the amount sent decreases by $\$1.26$ for text-davinci-003 after applying the latter instruction. This illustrates that \textbf{undermining agent trust is generally easier  than enhancing it},  
+which reveals its potential risk to be manipulated by malicious actors.
+
+
+
+
+\vspace{-2mm}
+\subsection{Do Reasoning Strategies Impact Agent Trust?}
+\vspace{-1mm}
+
+It has been shown that advanced reasoning strategies such as zero-shot Chain of Thought (CoT)~\citep{cot} can make a significant impact on a variety of tasks. It remains unknown, however, whether reasoning strategies can impact LLM agent behaviors. Here, we applied CoT reasoning strategy on the trustor and compared the results  with their original trust behaviors. Figure~\ref{fig:property} shows that most LLM agents change the amount sent to the trustee under the  CoT reasoning strategy, which suggests that \textbf{reasoning strategies may influence LLM agents' trust behavior}.  Nevertheless, the impact of CoT on agent trust may also be limited for some types of LLM agents. For example, the amount sent from GPT-4 agent only increases by $\$0.02$ under CoT. More research is required to fully understand the relationship between reasoning strategies and LLM agents' behaviors.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Therefore, our third core finding on the intrinsic properties of agent trust can be summarized as:
+\vspace{-1mm}
+\begin{center}
+\begin{tcolorbox}[width=0.9\linewidth, boxrule=3pt, colback=gray!20, colframe=gray!20]
+\textbf{Finding 3:} 
+LLM agents' trust behaviors have demographic biases on gender and races,  demonstrate a relative preference for human over other LLM agents, are easier to undermine than to enhance, and may be influenced by  reasoning strategies.
+\end{tcolorbox}
+\end{center}
+\vspace{-2mm}
+
+
+
+
+
+
+
+
+
