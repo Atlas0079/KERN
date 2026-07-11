@@ -13,6 +13,8 @@
 
 - `开发者快速上手.md`：第一次运行 KERN 的最短路径。
 - `配置详解.md`：runtime config 字段说明。
+- `effect_capability_inventory.md`：当前 43 个 Effect 的能力目录、分层和 DSL 边界审查。
+- `scenario_package_migration_plan.md`：将场景数据、场景 Effect 和纯数据组件收敛为可独立加载场景包的分阶段实施计划。
 - `Bundle结构查询与编辑辅助方案.md`：bundle 查询与编辑辅助方案。
 - `动态文本一次性渲染设计.md`：动态文本渲染设计。
 
