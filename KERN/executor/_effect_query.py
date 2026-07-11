@@ -80,7 +80,7 @@ def execute_apply_to_query(executor: Any, ws: Any, data: dict[str, Any], context
 		child_context["query_target_id"] = entity_id
 		child_context["query_index"] = index
 		child_context["query_row"] = dict(row)
-		result = run_child_bundle(ws, bundle, child_context, "ApplyToQuery")
+		result = run_child_bundle(executor, ws, bundle, child_context)
 		applied += 1
 		if result.failed:
 			events.append(
@@ -95,5 +95,6 @@ def execute_apply_to_query(executor: Any, ws: Any, data: dict[str, Any], context
 			)
 			events.extend(executor_error(child_bundle_error_message(result, "ApplyToQuery")))
 			return events
+		events.extend(result.events)
 	events.append({"type": "QueryApplied", "matched": matched, "applied": applied})
 	return events

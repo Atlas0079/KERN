@@ -3,6 +3,7 @@ from __future__ import annotations
 import unittest
 
 from KERN.executor.executor import WorldExecutor
+from KERN.executor._effect_child_bundle import EVENT_CONTEXT_KEY
 from KERN.models.entity import Entity
 from KERN.models.components import TagComponent
 from KERN.models.world_state import WorldState
@@ -33,6 +34,46 @@ class NestedRecordingExecutor(RecordingExecutor):
 
 
 class WorldSettlementTests(unittest.TestCase):
+	def test_query_child_events_keep_their_own_context_for_reactions(self) -> None:
+		ws = WorldState()
+		for entity_id in ("outer", "first", "second"):
+			ws.register_entity(Entity(entity_id=entity_id, template_id="Thing", entity_name=entity_id))
+		trigger = TriggerSystem(
+			rules=[
+				{
+					"id": "mark_selected",
+					"on_event": "TagAdded",
+					"condition": {"type": "event_field_eq", "field": "tag", "value": "selected"},
+					"bundle": {"effects": [{"effect": "AddTag", "target": "target", "tag": "reacted"}]},
+				}
+			]
+		)
+		settlement = WorldSettlement(ws=ws, executor=WorldExecutor(), trigger_system=trigger, max_reaction_depth=4)
+
+		result = settlement.execute_bundle(
+			{
+				"effects": [
+					{
+						"effect": "ApplyToQuery",
+						"query": {"from": "entities"},
+						"bundle": {"effects": [{"effect": "AddTag", "target": "target", "tag": "selected"}]},
+					}
+				]
+			},
+			{"target_id": "outer"},
+		)
+
+		for entity_id in ("outer", "first", "second"):
+			self.assertIn("reacted", ws.get_entity_by_id(entity_id).get_all_tags())
+		applied_targets = {
+			entry["target_id"]
+			for entry in ws.interaction_log
+			if entry.get("verb") == "ReactionApplied:mark_selected"
+		}
+		self.assertEqual(applied_targets, {"outer", "first", "second"})
+		self.assertTrue(all(EVENT_CONTEXT_KEY not in event for event in result.events))
+		self.assertTrue(all(EVENT_CONTEXT_KEY not in record["event"] for record in ws.event_log))
+
 	def test_reaction_events_wait_until_current_event_reactions_finish(self) -> None:
 		ws = WorldState()
 		executor = RecordingExecutor()

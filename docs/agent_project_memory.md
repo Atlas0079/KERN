@@ -122,6 +122,9 @@ Important config keys:
 - `ENTITIES_DIRS`: comma-separated entity template directories.
 - `BUNDLES_JSONS`: comma-separated named-bundle files.
 - `USE_LLM`: selects LLM workflow provider when truthy, otherwise simple policy.
+- `LLM_PROFILES_JSON`: optional JSON object of named LLM profile overrides.
+  Each profile uses the existing LLM config keys and becomes an entry in
+  `action_providers` under its profile ID.
 - `MAX_TICKS`: explicit configured run length.
 - `CHECKPOINT_DIR`: archive output directory.
 - `CHECKPOINT_EVERY_TICK`: enables checkpoint/archive output when truthy.
@@ -321,6 +324,15 @@ Transaction contract:
   before that effect.
 - A bundle is atomic. If any effect fails, the world snapshot from before the
   bundle is restored.
+- Referenced child bundles used by `InvokeBundle`, `RandomBundle`,
+  `ApplyToQuery`, task lifecycle effects, and `WorkerTick` are part of their
+  containing bundle transaction. They execute through the current
+  `WorldExecutor`, return their events to the parent handler, and do not publish
+  events independently. A child failure fails and rolls back the containing
+  bundle.
+- Child events retain their own execution context while travelling through a
+  parent bundle. `WorldSettlement` consumes that private transport context when
+  publishing the event, before it records the event or evaluates reactions.
 - On failure, the returned error event is kept; successful pre-failure events in
   the same bundle are not published as committed world events.
 
@@ -433,6 +445,15 @@ Workflow decisions are dictionaries with types such as:
 
 `WORKFLOW_CONTRACT_ON_ERROR` defaults to `fail_fast`. `degrade_to_noop` must be
 configured explicitly if contract errors should become noops.
+
+LLM workflow selection is split into two small modules:
+
+- `provider_catalog.build_workflow_provider_catalog(...)` builds the default
+  LLM workflow and named workflows from `LLM_PROFILES_JSON`.
+- `provider_routing.resolve_workflow_provider(...)` selects an explicit request,
+  then an entity's `provider_id`, then the runtime default. A missing explicit
+  ID therefore still permits the entity ID to resolve; a registered ID mapped
+  to `None` intentionally disables that route.
 
 Control components determine which entities enter the decision loop:
 
@@ -743,6 +764,74 @@ levels:
 
 Do not assume a scenario's design document and JSON data are in perfect sync.
 Validate against the actual JSON and runtime behavior.
+
+## Architecture Follow-up Register
+
+This register records architectural findings from the 2026-07 review. Treat the
+entries as investigation targets, not permission to refactor them opportunistically.
+Read the current implementation and add behavior tests before changing a seam.
+
+### Verified in commit `39a820d` (2026-07-11)
+
+The items in this subsection are part of the `laptop` branch baseline as of
+commit `39a820d` (`Unify nested bundle execution and provider routing`). The
+focused verification run used the bundled Python runtime:
+
+```powershell
+& 'C:\Users\atlas\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -m unittest tests.test_executor_transactions tests.test_world_settlement tests.test_task_lifecycle tests.test_provider_catalog
+```
+
+It passed 27 tests. The normal `python` command was unavailable in this shell
+(the Windows App Execution Alias was present without an interpreter).
+
+- **Reaction settlement**: `WorldSettlement` now owns FIFO event processing,
+  reaction depth, and fatal reaction failure handling. `KernRuntime.step()` no
+  longer contains the recursive execution closure. Coverage:
+  `tests.test_world_settlement`.
+- **Bundle transaction ownership**: referenced child bundles now execute through
+  the current `WorldExecutor`, so their `WorldState` writes belong to the
+  containing bundle transaction. This removes the child bundle's dependency on
+  the runtime `execute` service. Coverage: `tests.test_executor_transactions`
+  and `tests.test_task_lifecycle`.
+- **Child event contexts**: child-bundle events retain their individual context
+  until `WorldSettlement` publishes them. `ApplyToQuery` reactions therefore
+  receive the matched target, query index, and query row for the event that
+  caused them; the private transport field is removed before logging or reaction
+  matching. Coverage: `tests.test_world_settlement`.
+- **Duration demo bypass**: the production entry point no longer contains the
+  `DEMO_DURATION_TEST` path. Duration-task behavior is covered through the
+  normal executor and task-lifecycle tests. Static check on 2026-07-11 found no
+  remaining `DEMO_DURATION_TEST` reference under the executable source tree.
+
+The same worktree also adds configuration-based named LLM workflow profiles and
+provider routing. `KernRuntime.from_config()` builds named providers from
+`LLM_PROFILES_JSON`; explicit request IDs take precedence over an entity's
+`provider_id`, then fall back to the default provider. A present provider ID
+mapped to `None` intentionally disables that route. Coverage:
+`tests.test_provider_catalog`.
+
+### Open, important cleanup
+
+- **Typed runtime context**: `WorldState.services` is a string-keyed dependency
+  bag for execution, providers, view profiles, external runtimes, and stopping.
+  Replace it in one migration with an explicit runtime-context interface; do not
+  add more keys in the meantime.
+- **Scenario validation location**: `KernRuntime.from_config()` imports
+  `tools.scenario_lint`. Move reusable validation into `KERN.data` so the CLI is
+  only an adapter.
+
+### Open, investigate before designing
+
+- **Component codecs**: component construction, override restoration, and
+  checkpoint serialization each know component-specific fields. Evaluate a
+  unified codec module with round-trip tests before adding more component types.
+- **External runtime factory**: `KernRuntime` currently knows the SQLite social
+  runtime and seed behavior. Introduce a registry/factory only when a second
+  genuinely different external adapter exists; one adapter alone does not justify
+  a new seam.
+- **General batch decision pipeline**: parallel decide / serial commit is named
+  and shaped around social activity. Generalize only when a second scenario needs
+  the same deterministic batch-decision behavior.
 
 ## Validation Commands
 

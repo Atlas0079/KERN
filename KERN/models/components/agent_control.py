@@ -18,8 +18,8 @@ class AgentControlComponent:
 	enabled: bool = True
 
 	# Optional control provider identifier (e.g., player, logic, scripted).
-	# If it does not resolve in runtime action_providers, callers should fall
-	# back to the runtime default provider.
+	# Runtime routing checks an explicit request first, then this ID, then falls
+	# back to the runtime default provider when no named workflow resolves.
 	provider_id: str = ""
 
 	def per_tick(self, _ws: Any, _entity_id: str, _ticks_per_minute: int) -> None:

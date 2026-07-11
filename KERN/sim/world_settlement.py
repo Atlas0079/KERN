@@ -6,6 +6,7 @@ from typing import Any, Callable
 
 from ..effect_bundle import effect_bundle_from_raw
 from ..execution_errors import executor_error, is_execution_error_event
+from ..executor._effect_child_bundle import EVENT_CONTEXT_KEY
 
 
 @dataclass
@@ -120,7 +121,8 @@ class WorldSettlement:
 		reaction_depth: int,
 	) -> None:
 		clean = dict(event)
-		clean_context = dict(context or {})
+		child_context = clean.pop(EVENT_CONTEXT_KEY, None)
+		clean_context = dict(child_context) if isinstance(child_context, dict) else dict(context or {})
 		self._record_event(clean, clean_context, result)
 		queue.append(_QueuedEvent(clean, clean_context, int(reaction_depth)))
 

@@ -41,7 +41,7 @@ def _bind_random_bundle(_ws: Any, effect_data: dict[str, Any], context: dict[str
 	return {"effect": effect_type, "table_id": str(params.get("table_id", "") or ""), "entries": entries}, ctx
 
 
-def execute_random_bundle(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+def execute_random_bundle(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	entries = [dict(x) for x in list(data.get("entries", []) or []) if isinstance(x, dict)]
 	weighted = [x for x in entries if float(x.get("weight", 0.0) or 0.0) > 0]
 	if not weighted:
@@ -70,7 +70,7 @@ def execute_random_bundle(_executor: Any, ws: Any, data: dict[str, Any], context
 	}
 	if bundle.is_empty():
 		return [resolved_event]
-	result = run_child_bundle(ws, bundle.to_dict(), dict(context or {}), "RandomBundle")
+	result = run_child_bundle(executor, ws, bundle.to_dict(), dict(context or {}))
 	if result.failed:
 		return [resolved_event, *executor_error(child_bundle_error_message(result, "RandomBundle", "selected"))]
-	return [resolved_event]
+	return [resolved_event, *result.events]

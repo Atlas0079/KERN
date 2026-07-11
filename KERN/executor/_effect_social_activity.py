@@ -4,6 +4,7 @@ import hashlib
 from typing import Any
 
 from ..agent_workflow.batch_runtime import normalize_decision_mode, run_social_activity_batch
+from ..agent_workflow.provider_routing import resolve_workflow_provider
 from ..execution_errors import ERROR_KIND_CONTRACT, executor_error
 from ..models.components import AgentControlComponent, ContainerComponent, ScreenComponent, SocialBehaviorComponent, StatusComponent
 from ._effect_binder import _base_bind, _resolve_param_token
@@ -100,16 +101,7 @@ def _probability(ws: Any, behavior: SocialBehaviorComponent, base_rate_multiplie
 
 
 def _workflow_for_agent(ws: Any, ctrl: AgentControlComponent, requested_provider_id: str) -> Any | None:
-	services = getattr(ws, "services", {}) or {}
-	action_providers = services.get("action_providers", {}) or {}
-	default_provider = services.get("default_action_provider")
-	for provider_id in (
-		str(requested_provider_id or "").strip(),
-		str(getattr(ctrl, "provider_id", "") or "").strip(),
-	):
-		if provider_id and provider_id in action_providers:
-			return (action_providers or {}).get(provider_id)
-	return default_provider
+	return resolve_workflow_provider(getattr(ws, "services", {}) or {}, ctrl, requested_provider_id)
 
 
 def _has_status(entity: Any, status_id: str) -> bool:

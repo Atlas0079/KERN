@@ -7,6 +7,7 @@ from ..log_manager import get_logger
 from ..entity_ref_resolver import resolve_entity
 from ..models.components import DecisionArbiterComponent, WorkerComponent
 from ..agent_workflow.runtime import run_agent_control_tick
+from ..agent_workflow.provider_routing import resolve_workflow_provider
 from ._effect_binder import BindError, _base_bind, _require_dict, _require_int, _require_str, _resolve_param_token
 
 
@@ -65,11 +66,7 @@ def execute_agent_control_tick(_executor: Any, ws: Any, data: dict[str, Any], co
 	ctrl = agent.get_component("AgentControlComponent")
 	if ctrl is None or not bool(getattr(ctrl, "enabled", True)):
 		return []
-	services = getattr(ws, "services", {}) or {}
-	default_provider = services.get("default_action_provider")
-	action_providers = services.get("action_providers", {}) or {}
-	provider_id = str(getattr(ctrl, "provider_id", "") or "").strip()
-	workflow = action_providers.get(provider_id) if provider_id and provider_id in action_providers else default_provider
+	workflow = resolve_workflow_provider(getattr(ws, "services", {}) or {}, ctrl)
 	if workflow is None or not hasattr(workflow, "decide"):
 		return []
 	max_actions_in_tick = max(1, int(data.get("max_actions_in_tick") or 1))
@@ -77,7 +74,7 @@ def execute_agent_control_tick(_executor: Any, ws: Any, data: dict[str, Any], co
 	return []
 
 
-def execute_worker_tick(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+def execute_worker_tick(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	logger = get_logger()
 	self_id = str(
 		data.get("entity_id")
@@ -104,8 +101,8 @@ def execute_worker_tick(_executor: Any, ws: Any, data: dict[str, Any], context: 
 	pid = str(getattr(task, "progressor_id", "") or "Linear")
 	progressor = get_progressor(pid)
 	delta = float(progressor.compute_progress_delta(ws, self_id, task, ticks))
-	execute = (getattr(ws, "services", {}) or {}).get("execute")
-	execute(
+	events = executor.execute_bundle(
+		ws,
 		{
 			"effects": [
 				{
@@ -117,6 +114,8 @@ def execute_worker_tick(_executor: Any, ws: Any, data: dict[str, Any], context: 
 		},
 		{"self_id": self_id, "task_id": task.task_id},
 	)
+	if any(is_execution_error_event(event) for event in events):
+		return events
 	logger.debug(
 		"task",
 		"progress",
@@ -132,15 +131,21 @@ def execute_worker_tick(_executor: Any, ws: Any, data: dict[str, Any], context: 
 	)
 	tick_bundle = getattr(task, "tick_bundle", None)
 	if tick_bundle is not None:
-		execute(
+		tick_events = executor.execute_bundle(
+			ws,
 			tick_bundle.to_dict(),
 			{"self_id": self_id, "task_id": task.task_id, "target_id": task.target_entity_id},
 		)
+		events.extend(tick_events)
+		if any(is_execution_error_event(event) for event in tick_events):
+			return events
 	if task.is_complete():
-		finish_events = execute(
+		finish_events = executor.execute_bundle(
+			ws,
 			{"effects": [{"effect": "FinishTask"}]},
 			{"self_id": self_id, "task_id": task.task_id, "target_id": task.target_entity_id},
 		)
+		events.extend(finish_events)
 		for ev in list(finish_events or []):
 			if is_execution_error_event(ev):
 				logger.warn(
@@ -150,7 +155,7 @@ def execute_worker_tick(_executor: Any, ws: Any, data: dict[str, Any], context: 
 				)
 				break
 		worker.stop_task()
-	return []
+	return events
 
 
 def execute_apply_meta_action(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:

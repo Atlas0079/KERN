@@ -24,19 +24,19 @@ def execute_invoke_bundle(executor: Any, ws: Any, data: dict[str, Any], context:
 			bundle = effect_bundle_from_raw(bundle_raw)
 		except Exception as exc:
 			return executor_error(f"InvokeBundle: invalid named bundle {ref_id!r} ({exc})")
-		result = run_child_bundle(ws, bundle.to_dict(), context, "InvokeBundle")
+		result = run_child_bundle(executor, ws, bundle.to_dict(), context)
 		if result.failed:
 			return executor_error(child_bundle_error_message(result, "InvokeBundle", f"ref:{ref_id}"))
-		return []
+		return result.events
 	if isinstance(data.get("bundle"), dict):
 		try:
 			bundle = effect_bundle_from_raw(data.get("bundle", {}) or {})
 		except Exception as exc:
 			return executor_error(f"InvokeBundle: invalid bundle ({exc})")
-		result = run_child_bundle(ws, bundle.to_dict(), context, "InvokeBundle")
+		result = run_child_bundle(executor, ws, bundle.to_dict(), context)
 		if result.failed:
 			return executor_error(child_bundle_error_message(result, "InvokeBundle", "inline"))
-		return []
+		return result.events
 	target_key = str(data.get("target", "target") or "target")
 	target, err = executor.require_entity(ws, context, target_key, "InvokeBundle", "target")
 	if err is not None:
@@ -57,7 +57,7 @@ def execute_invoke_bundle(executor: Any, ws: Any, data: dict[str, Any], context:
 		bundle = effect_bundle_from_raw(bundle_raw)
 	except Exception as exc:
 		return executor_error(f"InvokeBundle: invalid component bundle ({exc})")
-	result = run_child_bundle(ws, bundle.to_dict(), context, "InvokeBundle")
+	result = run_child_bundle(executor, ws, bundle.to_dict(), context)
 	if result.failed:
 		return executor_error(child_bundle_error_message(result, "InvokeBundle", f"{component_name}.{property_name}"))
-	return []
+	return result.events

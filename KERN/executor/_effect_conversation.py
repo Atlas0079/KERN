@@ -6,6 +6,7 @@ from typing import Any
 
 from ..dynamic_text import DynamicTextError, render_dynamic_text
 from ..log_manager import get_logger
+from ..agent_workflow.provider_routing import resolve_workflow_provider
 from ._effect_binder import _base_bind, _require_int, _require_param, _resolve_param_token
 
 
@@ -88,10 +89,7 @@ def execute_start_conversation(_executor: Any, ws: Any, data: dict[str, Any], co
 	def _resolve_provider_and_name(speaker_id: str) -> tuple[Any, str]:
 		ent = ws.get_entity_by_id(speaker_id)
 		ctrl = ent.get_component("AgentControlComponent") if ent is not None else None
-		pid = str(getattr(ctrl, "provider_id", "") or "").strip() if ctrl is not None else ""
-		default_action_provider = services.get("default_action_provider")
-		action_providers = services.get("action_providers", {}) or {}
-		provider = action_providers.get(pid) if pid and pid in action_providers else default_action_provider
+		provider = resolve_workflow_provider(services, ctrl)
 		speaker_name = str(getattr(ent, "entity_name", "") or speaker_id) if ent is not None else speaker_id
 		if ent is not None and hasattr(ent, "get_component"):
 			agent_setting = ent.get_component("AgentSetting")

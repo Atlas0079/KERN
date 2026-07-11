@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import unittest
 
+from KERN.effect_bundle import effect_bundle_from_raw
 from KERN.executor.executor import WorldExecutor
 from KERN.models.components import StatusComponent, WorkerComponent
 from KERN.models.entity import Entity
@@ -70,6 +71,42 @@ class TaskLifecycleTests(unittest.TestCase):
 		self.assertIsNotNone(task)
 		self.assertEqual(task.task_status, "InProgress")
 		self.assertTrue(_has_status(self.station, "is_in_use"))
+
+	def test_start_bundle_is_inside_executor_transaction_without_runtime_service(self) -> None:
+		self.ws.services.clear()
+
+		task_id = self._create_processing_task()
+
+		self.assertIsNotNone(self.ws.get_task_by_id(task_id))
+		self.assertTrue(_has_status(self.ws.get_entity_by_id("station_01"), "is_in_use"))
+
+	def test_worker_tick_executes_task_children_without_runtime_service(self) -> None:
+		self.ws.services.clear()
+		task_id = self._create_processing_task()
+
+		events = self.executor.execute(
+			self.ws,
+			{"effect": "WorkerTick", "ticks": 1},
+			{"entity_id": "agent_01", "self_id": "agent_01", "task_id": task_id},
+		)
+
+		self.assertFalse([event for event in events if event.get("type") == "ExecutorError"])
+		self.assertIn("TaskProgressed", [event["type"] for event in events])
+		self.assertEqual(self.ws.get_task_by_id(task_id).progress, 1.0)
+
+	def test_worker_tick_child_failure_rolls_back_progress(self) -> None:
+		self.ws.services.clear()
+		task_id = self._create_processing_task()
+		self.ws.get_task_by_id(task_id).tick_bundle = effect_bundle_from_raw({"effects": [{"effect": "MissingEffect"}]})
+
+		events = self.executor.execute(
+			self.ws,
+			{"effect": "WorkerTick", "ticks": 1},
+			{"entity_id": "agent_01", "self_id": "agent_01", "task_id": task_id},
+		)
+
+		self.assertEqual(events[0]["type"], "ExecutorError")
+		self.assertEqual(self.ws.get_task_by_id(task_id).progress, 0.0)
 
 	def test_cleanup_bundle_runs_after_successful_finish(self) -> None:
 		task_id = self._create_processing_task()

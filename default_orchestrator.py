@@ -5,8 +5,6 @@ from pathlib import Path
 
 from KERN.agent_workflow.full_ws_view_builder import build_full_ws_view
 from KERN.agent_workflow.observer import build_agent_perception
-from KERN.interaction.engine import InteractionEngine
-from KERN.executor.executor import WorldExecutor
 from KERN.log_manager import get_logger
 from KERN.runtime import KernRuntime
 
@@ -73,34 +71,6 @@ def _log_initial_runtime_state(runtime: KernRuntime) -> str:
 	return agent_id
 
 
-def _run_duration_demo_if_enabled(runtime: KernRuntime, agent_id: str) -> None:
-	cfg = runtime.runtime_config
-	if str(cfg.get("DEMO_DURATION_TEST", "") or "").strip().lower() not in {"1", "true", "yes", "on"}:
-		return
-	logger = get_logger()
-	ws = runtime.world_state
-	bundle = runtime.data_bundle
-	agent = ws.get_entity_by_id(agent_id)
-	worker = agent.get_component("WorkerComponent") if agent else None
-	if worker is not None:
-		worker.stop_task()
-	logger.info("task", "task_stopped_for_demo", context={"current_task_id": getattr(worker, "current_task_id", "") if worker else ""})
-	sleep_result = InteractionEngine(recipe_db=bundle.recipes).process_command(
-		ws,
-		agent_id,
-		{"verb": "Wait", "target_id": agent_id, "parameters": {"wait_ticks": 6}},
-	)
-	logger.info(
-		"interaction",
-		"sleep_command_result",
-		context={"status": sleep_result.get("status"), "reason": sleep_result.get("reason"), "message": sleep_result.get("message")},
-	)
-	if sleep_result.get("status") == "success":
-		executor = WorldExecutor(entity_templates=bundle.entity_templates)
-		executor.execute_bundle(ws, sleep_result.get("bundle", {}) or {}, sleep_result.get("context", {}) or {})
-	logger.info("task", "task_after_sleep", context={"current_task_id": getattr(worker, "current_task_id", "") if worker else ""})
-
-
 def main(argv: list[str] | None = None) -> None:
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--config", dest="config_path", default="", help="runtime config file path")
@@ -113,7 +83,6 @@ def main(argv: list[str] | None = None) -> None:
 	logger.info("system", "runtime_config_loaded", context={"path": str(runtime.config_path)})
 
 	agent_id = _log_initial_runtime_state(runtime)
-	_run_duration_demo_if_enabled(runtime, agent_id)
 
 	events = runtime.run_configured()
 	logger.info("system", "run_finished", context={"event_count": len(events), "ticks": int(runtime.world_state.game_time.total_ticks)})

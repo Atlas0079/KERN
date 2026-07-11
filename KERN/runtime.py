@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-from .agent_workflow.llm_action_provider import build_default_llm_provider
+from .agent_workflow.provider_catalog import build_workflow_provider_catalog
 from .agent_workflow.simple_policy import SimplePolicyActionProvider
 from .agent_workflow.view_profile import normalize_workflow_view_profile
 from .data.archive import ArchiveRecorder
@@ -175,8 +175,8 @@ class KernRuntime:
 	ticks_per_step: int = 1
 	max_trigger_depth: int = 4
 
-	# Optional: Route different action providers by provider_id (Player/LLM/Script/Replay, etc.)
-	# If an entity's controller provider_id is not in this table, the entity will not produce actions in the decision loop (Safe default).
+	# Named workflows are selected by provider_id; unresolved IDs fall back to
+	# action_provider so existing single-provider scenarios keep working.
 	action_providers: dict[str, Any] = field(default_factory=dict)
 	external_runtimes: dict[str, Any] = field(default_factory=dict)
 	reaction_rules: list[dict[str, Any]] = field(default_factory=list)
@@ -312,7 +312,10 @@ class KernRuntime:
 			ws = result.world_state
 
 		use_llm = _cfg_bool(cfg, "USE_LLM", False)
-		action_provider = build_default_llm_provider(cfg) if use_llm else SimplePolicyActionProvider()
+		if use_llm:
+			action_provider, action_providers = build_workflow_provider_catalog(cfg)
+		else:
+			action_provider, action_providers = SimplePolicyActionProvider(), {}
 		max_ticks_env = _cfg_get(cfg, "MAX_TICKS", "")
 		default_max_ticks_llm = _cfg_int(cfg, "MAX_TICKS_DEFAULT_LLM", 15)
 		default_max_ticks_no_llm = _cfg_int(cfg, "MAX_TICKS_DEFAULT_NO_LLM", 65)
@@ -325,6 +328,7 @@ class KernRuntime:
 			interaction_engine=InteractionEngine(recipe_db=bundle.recipes),
 			executor=WorldExecutor(entity_templates=bundle.entity_templates),
 			action_provider=action_provider,
+			action_providers=action_providers,
 			external_runtimes=external_runtime_map,
 			reaction_rules=list((bundle.reactions or {}).get("rules", []) or []),
 			max_trigger_depth=_cfg_int(cfg, "MAX_TRIGGER_DEPTH", 4),
