@@ -819,12 +819,22 @@ mapped to `None` intentionally disables that route. Coverage:
 - **Scenario validation location**: `KernRuntime.from_config()` imports
   `tools.scenario_lint`. Move reusable validation into `KERN.data` so the CLI is
   only an adapter.
+- **Component codecs**: component data crosses three representations: template
+  JSON, live component objects, and checkpoint overrides. The 2026-07-11 audit
+  found 21 explicit component constructors in `KERN.data.builder`, five
+  component-specific override paths, and three checkpoint serializers. A
+  build/snapshot/rebuild check passed for Camping, RumorSpread, and Example, so
+  there is no known data-loss defect; the risk is that a future stateful
+  component requires coordinated edits at several sites. Promote this to a
+  planned cleanup. First add characterization tests for every special component
+  and `CustomComponent`, then introduce a codec registry with a generic
+  dataclass fallback and specialized codecs only where conversion semantics
+  require them. The registry interface should own construction, snapshot
+  application, and serialization; callers should not know component-specific
+  fields.
 
 ### Open, investigate before designing
 
-- **Component codecs**: component construction, override restoration, and
-  checkpoint serialization each know component-specific fields. Evaluate a
-  unified codec module with round-trip tests before adding more component types.
 - **External runtime factory**: `KernRuntime` currently knows the SQLite social
   runtime and seed behavior. Introduce a registry/factory only when a second
   genuinely different external adapter exists; one adapter alone does not justify
