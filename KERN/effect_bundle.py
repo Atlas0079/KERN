@@ -7,9 +7,6 @@ from typing import Any
 @dataclass
 class EffectBundle:
 	effects: list[dict[str, Any]] = field(default_factory=list)
-	# Deprecated: bundles are now the transaction boundary, so intermediate
-	# effect events are published only after the whole bundle commits.
-	react_per_effect: bool = False
 
 	def is_empty(self) -> bool:
 		return not bool(self.effects)
@@ -21,13 +18,10 @@ class EffectBundle:
 
 def effect_bundle_from_raw(raw: Any) -> EffectBundle:
 	if isinstance(raw, EffectBundle):
-		return EffectBundle(effects=[dict(x) for x in list(raw.effects or []) if isinstance(x, dict)], react_per_effect=bool(raw.react_per_effect))
+		return EffectBundle(effects=[dict(x) for x in list(raw.effects or []) if isinstance(x, dict)])
 	if not isinstance(raw, dict):
 		raise ValueError("effect bundle must be an object")
 	effects = raw.get("effects", []) or []
 	if not isinstance(effects, list):
 		raise ValueError("effect bundle.effects must be list")
-	react_per_effect = raw.get("react_per_effect", False)
-	if not isinstance(react_per_effect, bool):
-		raise ValueError("effect bundle.react_per_effect must be bool")
-	return EffectBundle(effects=[dict(x) for x in effects if isinstance(x, dict)], react_per_effect=bool(react_per_effect))
+	return EffectBundle(effects=[dict(x) for x in effects if isinstance(x, dict)])

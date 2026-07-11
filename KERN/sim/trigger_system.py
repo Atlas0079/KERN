@@ -43,30 +43,11 @@ class TriggerSystem:
 				continue
 			if not self.evaluator.evaluate(ws, condition if isinstance(condition, dict) else {}, base_ctx):
 				continue
-			if hasattr(ws, "record_interaction_attempt"):
-				actor_id = str(base_ctx.get("self_id", "") or "")
-				target_id = str(base_ctx.get("target_id", "") or "")
-				verb = str(rule.get("reaction_verb", "") or "").strip()
-				if not verb:
-					verb = f"ReactionTriggered:{rule_id}" if rule_id else "ReactionTriggered"
-				ws.record_interaction_attempt(
-					actor_id=actor_id,
-					verb=verb,
-					target_id=target_id,
-					status="success",
-					reason="",
-					recipe_id=f"reaction_triggered:{rule_id}" if rule_id else "reaction_triggered",
-					extra={
-						"is_reaction": True,
-						"reaction_phase": "triggered",
-						"reaction_rule_id": rule_id,
-						"trigger_event": event_type,
-					},
-				)
 			bundle = rule.get("bundle", {}) or {}
 			req_ctx = dict(base_ctx)
 			req_ctx["reaction_rule_id"] = rule_id
 			req_ctx["reaction_trigger_event_type"] = event_type
+			req_ctx["reaction_verb"] = str(rule.get("reaction_verb", "") or "").strip()
 			requests.append(
 				{
 					"bundle": dict(bundle) if isinstance(bundle, dict) else {},

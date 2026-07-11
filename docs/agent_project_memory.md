@@ -44,18 +44,11 @@ git status --short --branch
 rg --files
 ```
 
-Use the repository virtual environment on this machine when available:
+Use a Python 3.10+ interpreter provided by the user. Prefer an activated virtual
+environment; commands in project documentation use the generic `python` name:
 
 ```powershell
-.\.venv\Scripts\python.exe
-```
-
-The plain `python` command may not be available in PATH in this workspace. On
-this machine it may resolve to the WindowsApps placeholder instead of a real
-interpreter. The local `.venv` was created from the Codex bundled Python:
-
-```powershell
-C:\Users\atlas\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe
+python --version
 ```
 
 Before changing an API or relying on an interface name, inspect the concrete
@@ -94,7 +87,7 @@ not be treated as source changes unless the task explicitly targets them.
 Primary CLI pattern:
 
 ```powershell
-.\venv\Scripts\python.exe default_orchestrator.py --config runtime_config.camping.smoke.json
+python default_orchestrator.py --config runtime_config.camping.smoke.json
 ```
 
 Preferred SDK pattern:
@@ -232,10 +225,11 @@ resolution, for example `target.SomeCustomComponent.some_field`.
 3. Advances game time.
 4. Records and dispatches `WorldTickAdvanced`.
 5. Records and dispatches `AdvanceTick` once per entity.
-6. Uses `TriggerSystem` to compile matching reactions into effect bundles.
-7. Executes bundles through `WorldExecutor`.
-8. Recursively runs chained reactions up to `max_trigger_depth`.
-9. Returns event-log records generated during the tick.
+6. Sends tick events through `WorldSettlement`.
+7. Uses `TriggerSystem` to compile matching reactions into effect bundles.
+8. Executes bundles through `WorldExecutor` and processes resulting events in a FIFO queue.
+9. Stops the simulation if a reaction fails or exceeds `max_trigger_depth`.
+10. Returns event-log records generated during the tick.
 
 Runtime services currently include:
 
@@ -316,9 +310,10 @@ and have this active shape:
 }
 ```
 
-`react_per_effect` is deprecated and ignored. Bundles are the transaction
-boundary. Successful events are published only after the whole bundle commits, so
-reactions observe committed post-bundle state rather than intermediate state.
+Bundles are the transaction boundary. Successful events are published only after
+the whole bundle commits, so reactions observe committed post-bundle state rather
+than intermediate state. The removed legacy `react_per_effect` field is not part
+of the bundle format.
 
 Transaction contract:
 
@@ -386,6 +381,15 @@ Supported dynamic text references include:
 
 `TriggerSystem` matches reaction rules against committed event dictionaries.
 Reaction rules may use `on_event`, `selector`, `condition`, and `bundle`.
+
+`KERN.sim.world_settlement.WorldSettlement` owns event publication and reaction
+execution. Events are processed FIFO; reactions matching one event execute in
+reaction-file order, and their emitted events join the tail of the queue. The
+original event has reaction depth 0 and directly triggered reactions have depth
+1. Any reaction `BindError`/`ExecutorError`, or an attempt beyond
+`max_trigger_depth`, is fatal and stops the simulation. Successful earlier
+reaction bundles remain committed; the failing bundle rolls back its own
+`WorldState` writes. External runtime writes remain outside this transaction.
 
 Keep raw mechanical events out of agent-facing semantics when possible. If a
 low-level state change has narrative meaning, prefer a reaction that emits a
@@ -628,8 +632,8 @@ Structured social-account profile generation lives in
 profile samples plus LLM background prompts through:
 
 ```powershell
-.\.venv\Scripts\python.exe tools\generate_social_profiles.py --count 100 --seed kern-social-profiles-v1
-.\.venv\Scripts\python.exe tools\social_profile_report.py
+python tools\generate_social_profiles.py --count 100 --seed kern-social-profiles-v1
+python tools\social_profile_report.py
 ```
 
 Generated profile outputs are ignored under
@@ -745,25 +749,25 @@ Validate against the actual JSON and runtime behavior.
 Fast local checks:
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest
-.\.venv\Scripts\python.exe -m compileall KERN tools default_orchestrator.py tests
-.\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.camping.smoke.json
-.\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.rumor_spread.smoke.json
-.\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.example.json
-.\.venv\Scripts\python.exe default_orchestrator.py --config runtime_config.camping.smoke.json
+python -m unittest discover -s tests -p "test_*.py"
+python -m compileall KERN tools default_orchestrator.py tests
+python tools\scenario_lint.py --config runtime_config.camping.smoke.json
+python tools\scenario_lint.py --config runtime_config.rumor_spread.smoke.json
+python tools\scenario_lint.py --config runtime_config.example.json
+python default_orchestrator.py --config runtime_config.camping.smoke.json
 ```
 
 Targeted tests that often matter for architecture work:
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest tests.test_executor_transactions
-.\.venv\Scripts\python.exe -m unittest tests.test_external_runtime_bridge
-.\.venv\Scripts\python.exe -m unittest tests.test_social_platform_runtime
-.\.venv\Scripts\python.exe -m unittest tests.test_rumor_spread_config_runtime
-.\.venv\Scripts\python.exe -m unittest tests.test_archive
-.\.venv\Scripts\python.exe -m unittest tests.test_environment_scopes
-.\.venv\Scripts\python.exe -m unittest tests.test_dynamic_text
-.\.venv\Scripts\python.exe -m unittest tests.test_task_lifecycle
+python -m unittest tests.test_executor_transactions
+python -m unittest tests.test_external_runtime_bridge
+python -m unittest tests.test_social_platform_runtime
+python -m unittest tests.test_rumor_spread_config_runtime
+python -m unittest tests.test_archive
+python -m unittest tests.test_environment_scopes
+python -m unittest tests.test_dynamic_text
+python -m unittest tests.test_task_lifecycle
 ```
 
 ## Bounded LLM Smoke Tests
@@ -796,7 +800,7 @@ for example:
 
 ```powershell
 $env:PYTHONIOENCODING='utf-8'
-.\.venv\Scripts\python.exe -c "from pathlib import Path; print(Path('docs/social_platform_runtime_plan.md').read_text(encoding='utf-8')[:200])"
+python -c "from pathlib import Path; print(Path('docs/social_platform_runtime_plan.md').read_text(encoding='utf-8')[:200])"
 ```
 
 This workspace is commonly launched from Windows PowerShell 5.1 with code page

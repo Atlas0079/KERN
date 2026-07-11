@@ -776,7 +776,7 @@ PHEME 在本项目中的职责是提供外部实验输入：
 转换脚本：
 
 ```powershell
-.\.venv\Scripts\python.exe tools\convert_pheme_to_social_seed.py <PHEME解压目录> `
+python tools\convert_pheme_to_social_seed.py <PHEME解压目录> `
   --rumor-count 1 `
   --noise-count 100 `
   --output Data/RumorSpread/social_seed.pheme.generated.json
@@ -883,8 +883,8 @@ tests/test_convert_pheme_to_social_seed.py
 常用验证：
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest tests.test_social_activity_gate tests.test_social_platform_runtime tests.test_social_platform_effects tests.test_rumor_spread_config_runtime
-.\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.rumor_spread.smoke.json
+python -m unittest tests.test_social_activity_gate tests.test_social_platform_runtime tests.test_social_platform_effects tests.test_rumor_spread_config_runtime
+python tools\scenario_lint.py --config runtime_config.rumor_spread.smoke.json
 ```
 
 ## 下一阶段建议

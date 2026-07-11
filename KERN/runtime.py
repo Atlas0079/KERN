@@ -18,8 +18,7 @@ from .data.checkpoint import (
 	restore_world_state_from_checkpoint,
 )
 from .data.loader import load_data_bundle
-from .effect_bundle import effect_bundle_from_raw
-from .execution_errors import executor_error, is_execution_error_event
+from .execution_errors import is_execution_error_event
 from .executor.executor import WorldExecutor
 from .external_runtime import ExternalRuntimeBridge
 from .external_runtimes import SQLiteSocialPlatformRuntime
@@ -28,6 +27,7 @@ from .interaction.engine import InteractionEngine
 from .log_manager import configure_logger, get_logger
 from .models.world_state import WorldState
 from .sim.trigger_system import TriggerSystem
+from .sim.world_settlement import WorldSettlement
 
 
 def _resolve_runtime_config_path(project_root: Path, config_path: str = "") -> Path:
@@ -390,6 +390,9 @@ class KernRuntime:
 				tick_events = self.step_and_record()
 				all_events.extend(tick_events)
 				completed += 1
+				if not bool(self.is_running):
+					stopped_early = True
+					break
 		finally:
 			stopped_early = stopped_early or completed < requested
 			if not was_running:
@@ -576,7 +579,6 @@ class KernRuntime:
 		"""
 		Advance one simulation tick (Turn-based).
 		"""
-		events: list[dict[str, Any]] = []
 		logger = get_logger()
 		ws = self.world_state
 		start_event_seq = int(getattr(ws, "_event_seq", 0) or 0)
@@ -608,118 +610,23 @@ class KernRuntime:
 			abort_actor_id="",
 		)
 
-		# Runtime execution entrypoint used by effects/workflow.
-		# It executes a bundle, records emitted events, and recursively runs reactions
-		# triggered by those events until no more reactions match or max depth is reached.
-		def execute_with_reactions(bundle_data: Any, context: dict[str, Any]) -> list[dict[str, Any]]:
-			collected_events: list[dict[str, Any]] = []
+		def stop_for_settlement_failure(fatal: dict[str, Any]) -> None:
+			fatal_type = str(fatal.get("type", "") or "")
+			reason = "reaction_depth_exceeded" if fatal_type == "ReactionDepthExceeded" else "reaction_failed"
+			ws.runtime_state.abort_requested = True
+			ws.runtime_state.abort_reason = reason
+			ws.runtime_state.abort_detail = str(fatal)
+			ws.runtime_state.abort_severity = "fatal"
+			self.request_stop({"reason": reason, **dict(fatal)})
 
-			def _record_reaction_attempt(ctx: dict[str, Any], reaction_failed: bool, reaction_fail_reason: str, effect_type: str) -> None:
-				reaction_rule_id = str((ctx or {}).get("reaction_rule_id", "") or "")
-				if not reaction_rule_id or not hasattr(ws, "record_interaction_attempt"):
-					return
-				actor_id = str((ctx or {}).get("self_id", "") or "")
-				target_id = str((ctx or {}).get("target_id", "") or "")
-				ws.record_interaction_attempt(
-					actor_id=actor_id,
-					verb=f"ReactionApplied:{reaction_rule_id}",
-					target_id=target_id,
-					status="failed" if reaction_failed else "success",
-					reason=reaction_fail_reason if reaction_failed else "",
-					recipe_id=f"reaction_applied:{reaction_rule_id}",
-					extra={
-						"is_reaction": True,
-						"reaction_phase": "failed" if reaction_failed else "applied",
-						"reaction_rule_id": reaction_rule_id,
-						"trigger_event": str((ctx or {}).get("reaction_trigger_event_type", "") or ""),
-						"effect_type": str(effect_type or ""),
-					},
-				)
-
-			def _record_events_and_run_reactions(result_events: list[dict[str, Any]], ctx: dict[str, Any], depth: int, effect_type: str) -> None:
-				reaction_failed = False
-				reaction_fail_reason = ""
-				for _ev in list(result_events or []):
-					if is_execution_error_event(_ev):
-						reaction_failed = True
-						reaction_fail_reason = str(_ev.get("message", "") or _ev.get("type", "") or "")
-						logger.warn(
-							"executor",
-							"effect_failed",
-							context={
-								"effect_type": str(effect_type or ""),
-								"context": dict(ctx or {}),
-								"error_event": dict(_ev),
-								"depth": int(depth),
-							},
-						)
-						break
-				_record_reaction_attempt(ctx, reaction_failed, reaction_fail_reason, effect_type)
-				for ev in list(result_events or []):
-					if not isinstance(ev, dict):
-						continue
-					clean_ev = dict(ev)
-					collected_events.append(dict(clean_ev))
-					ws.record_event(clean_ev, ctx)
-					events.append(clean_ev)
-					logger.trace("event", "record", context={"event": dict(clean_ev), "context": dict(ctx or {}), "depth": int(depth)})
-					if ws.runtime_state.abort_requested:
-						return
-					if depth >= int(self.max_trigger_depth):
-						limit_event = {
-							"type": "ReactionDepthExceeded",
-							"depth": int(depth),
-							"max_trigger_depth": int(self.max_trigger_depth),
-							"source_event_type": str(clean_ev.get("type", "") or ""),
-							"source_event_entity_id": str(clean_ev.get("entity_id", "") or ""),
-						}
-						ws.record_event(limit_event, ctx)
-						events.append(limit_event)
-						continue
-					if self.trigger_system is None:
-						continue
-					reqs = self.trigger_system.build_reaction_effects(ws, clean_ev, ctx)
-					for req in list(reqs or []):
-						rbundle = req.get("bundle", {}) or {}
-						rctx = req.get("context", {}) or {}
-						if isinstance(rctx, dict):
-							_execute_bundle_with_reactions(rbundle, rctx, depth + 1)
-							if ws.runtime_state.abort_requested:
-								return
-
-			def _execute_effect_with_reactions(eff: dict[str, Any], ctx: dict[str, Any], depth: int) -> None:
-				if not bool(self.is_running):
-					return
-				logger.debug("effect", "execute", context={"effect": dict(eff or {}), "context": dict(ctx or {}), "depth": int(depth)})
-				result_events = self.executor.execute(ws, eff, ctx)
-				_record_events_and_run_reactions(result_events, ctx, depth, str((eff or {}).get("effect", "") or ""))
-
-			def _execute_bundle_with_reactions(raw_bundle: Any, ctx: dict[str, Any], depth: int) -> None:
-				if not bool(self.is_running):
-					return
-				try:
-					bundle = effect_bundle_from_raw(raw_bundle)
-				except Exception as exc:
-					result_events = executor_error(f"invalid bundle ({exc})")
-					_record_events_and_run_reactions(result_events, ctx, depth, "Bundle")
-					return
-				logger.debug("bundle", "execute", context={"bundle": bundle.to_dict(), "context": dict(ctx or {}), "depth": int(depth)})
-				result_events = self.executor.execute_bundle(ws, bundle, ctx)
-				_record_events_and_run_reactions(result_events, ctx, depth, "Bundle")
-
-			_execute_bundle_with_reactions(bundle_data, context, 0)
-			if ws.runtime_state.abort_requested:
-				self.request_stop(
-					{
-						"reason": ws.runtime_state.abort_reason,
-						"detail": ws.runtime_state.abort_detail,
-						"severity": ws.runtime_state.abort_severity,
-						"actor_id": ws.runtime_state.abort_actor_id,
-					}
-				)
-			return collected_events
-
-		ws.services["execute"] = execute_with_reactions
+		settlement = WorldSettlement(
+			ws=ws,
+			executor=self.executor,
+			trigger_system=self.trigger_system,
+			max_reaction_depth=self.max_trigger_depth,
+			on_fatal=stop_for_settlement_failure,
+		)
+		ws.services["execute"] = settlement.execute_bundle
 
 		# 2) Advance time and dispatch the world-level tick through reactions.
 		self.world_state.game_time.advance_ticks(self.ticks_per_step)
@@ -730,17 +637,9 @@ class KernRuntime:
 		}
 		world_tick_ctx = {"actor_id": ""}
 		logger.debug("tick", "tick_advanced", context=dict(world_tick_event))
-		ws.record_event(world_tick_event, world_tick_ctx)
-		events.append(dict(world_tick_event))
-		if self.trigger_system is not None:
-			reqs = self.trigger_system.build_reaction_effects(ws, world_tick_event, world_tick_ctx)
-			for req in list(reqs or []):
-				rbundle = req.get("bundle", {}) or {}
-				rctx = req.get("context", {}) or {}
-				if isinstance(rctx, dict):
-					execute_with_reactions(rbundle, rctx)
-					if ws.runtime_state.abort_requested or not bool(self.is_running):
-						break
+		world_result = settlement.publish_event(world_tick_event, world_tick_ctx)
+		if world_result.fatal_error is not None:
+			logger.error("reaction", "settlement_failed", context=dict(world_result.fatal_error))
 
 		# 3) Dispatch AdvanceTick events per entity, then let Reactions decide which effects to run.
 		for ent_id in list(ws.entities.keys()):
@@ -752,16 +651,9 @@ class KernRuntime:
 				"ticks": int(self.ticks_per_step),
 			}
 			tick_ctx = {"entity_id": ent_id, "event_entity_id": ent_id, "self_id": ent_id}
-			ws.record_event(tick_event, tick_ctx)
-			events.append(dict(tick_event))
-			if self.trigger_system is None:
-				continue
-			reqs = self.trigger_system.build_reaction_effects(ws, tick_event, tick_ctx)
-			for req in list(reqs or []):
-				rbundle = req.get("bundle", {}) or {}
-				rctx = req.get("context", {}) or {}
-				if isinstance(rctx, dict):
-					execute_with_reactions(rbundle, rctx)
+			tick_result = settlement.publish_event(tick_event, tick_ctx)
+			if tick_result.fatal_error is not None:
+				logger.error("reaction", "settlement_failed", context=dict(tick_result.fatal_error))
 
 		events_in_tick_records: list[dict[str, Any]] = []
 		for rec in list(getattr(ws, "event_log", []) or []):
