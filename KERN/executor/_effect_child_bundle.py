@@ -18,9 +18,10 @@ def run_child_bundle(ws: Any, bundle: Any, context: dict[str, Any], owner: str) 
 	"""
 	Execute a nested bundle through the manager service.
 
-	The returned events are for container-effect decision making only. They have
-	already been published by the nested manager execution path and must not be
-	returned by the container effect as its own events.
+	The returned events are for container-effect decision making only. The active
+	world-settlement session defers their publication until the containing bundle
+	commits, so they must not be returned by the container effect as its own
+	events.
 	"""
 	execute = (getattr(ws, "services", {}) or {}).get("execute")
 	if not callable(execute):

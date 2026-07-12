@@ -73,6 +73,25 @@ class KernRuntimeTests(unittest.TestCase):
 		self.assertEqual([x["tick"] for x in runtime.snapshots], [1, 2])
 		self.assertGreaterEqual(result["event_count"], 2)
 
+	def test_reaction_failure_stops_runtime_with_structured_reason(self) -> None:
+		runtime = KernRuntime(
+			world_state=_world(),
+			interaction_engine=InteractionEngine(recipe_db={}),
+			executor=WorldExecutor(),
+			action_provider=SimplePolicyActionProvider(),
+			reaction_rules=[
+				{"id": "broken_tick_rule", "on_event": "AdvanceTick", "bundle": {"effects": [{"effect": "UnknownEffect"}]}},
+			],
+			checkpoint_enabled=False,
+		)
+
+		result = runtime.advance_ticks(1)
+
+		self.assertTrue(result["stopped"])
+		self.assertEqual(runtime.last_stop_info["reason"], "reaction_failed")
+		self.assertEqual(runtime.last_stop_info["reaction_rule_id"], "broken_tick_rule")
+		self.assertEqual(runtime.last_stop_info["reaction_depth"], 1)
+
 
 if __name__ == "__main__":
 	unittest.main()
