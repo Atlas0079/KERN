@@ -34,6 +34,18 @@ checkpoints/
 Saves/
 video/
 
+# Generated scenario data and build artifacts
+Data/**/generated_*/
+Data/**/llm_smoke_*/
+runtime_config.*.100agent.smoke.json
+slides/outputs/
+tmp/
+tools/scratch/
+
+# Local archives and external research copies
+backups/
+docs/paper_research/
+
 # Personal and scratch Markdown documents in repository root
 /*.md
 !/readme.md
