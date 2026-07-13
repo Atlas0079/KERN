@@ -36,9 +36,7 @@ if str(ROOT) not in sys.path:
 
 from KERN.data.builder import build_world_state
 from KERN.data.loader import DataBundle, load_data_bundle
-from KERN.effect_contract import EFFECT_TYPES
-from KERN.executor._effect_binder import get_binder_effect_types
-from KERN.executor.executor import get_executor_effect_types
+from KERN.effects import EffectCatalog, EffectResolutionError, build_core_effect_catalog
 from KERN.models.components import __all__ as COMPONENT_EXPORTS
 
 # Import package side effects so built-in progressors are registered.
@@ -132,6 +130,7 @@ class LintContext:
 	reactions_jsons: list[str]
 	entities_dirs: list[str]
 	bundles_jsons: list[str]
+	effect_catalog: EffectCatalog
 	issues: list[Issue] = field(default_factory=list)
 
 	def error(self, where: str, message: str) -> None:
@@ -659,12 +658,22 @@ def _validate_effect(ctx: LintContext, effect: Any, where: str) -> None:
 	if not eff:
 		ctx.error(where, "missing effect")
 		return
-	if eff not in EFFECT_TYPES:
+	if not ctx.effect_catalog.contains(eff):
 		ctx.error(where, f"unknown effect: {eff}")
 		return
-	if eff not in get_binder_effect_types():
+	try:
+		binder = ctx.effect_catalog.resolve_binder(eff)
+	except EffectResolutionError as exc:
+		ctx.error(where, str(exc))
+		return
+	if not callable(binder):
 		ctx.error(where, f"effect binder missing: {eff}")
-	if eff not in get_executor_effect_types():
+	try:
+		handler = ctx.effect_catalog.resolve_handler(eff)
+	except EffectResolutionError as exc:
+		ctx.error(where, str(exc))
+		return
+	if not callable(handler):
 		ctx.error(where, f"effect executor missing: {eff}")
 	_validate_effect_required_fields(ctx, eff, effect, where)
 	_validate_deprecated_refs(ctx, effect, where)
@@ -1087,7 +1096,9 @@ def lint_bundle(
 	reactions_jsons: list[str],
 	entities_dirs: list[str],
 	bundles_jsons: list[str],
+	effect_catalog: EffectCatalog | None = None,
 ) -> LintContext:
+	catalog = effect_catalog or build_core_effect_catalog()
 	ctx = LintContext(
 		project_root=project_root,
 		config_path=config_path,
@@ -1098,6 +1109,7 @@ def lint_bundle(
 		reactions_jsons=reactions_jsons,
 		entities_dirs=entities_dirs,
 		bundles_jsons=bundles_jsons,
+		effect_catalog=catalog,
 	)
 	ctx.info("config", f"loaded {config_path.name}")
 	ctx.info("data", f"world={world_json}, recipes={len(bundle.recipes or {})}, reactions={len((bundle.reactions or {}).get('rules', []) or [])}, templates={len(bundle.entity_templates or {})}, named_bundles={len(bundle.named_bundles or {})}")
@@ -1113,7 +1125,7 @@ def lint_bundle(
 	return ctx
 
 
-def lint_config(project_root: Path, config_path: str) -> LintContext:
+def lint_config(project_root: Path, config_path: str, effect_catalog: EffectCatalog | None = None) -> LintContext:
 	env, resolved_config = _load_env_config(project_root, config_path)
 	world_json = _cfg_get(env, "WORLD_JSON", "World.json")
 	recipes_jsons = _split_csv(_cfg_get(env, "RECIPES_JSONS", "Recipes.json"), ["Recipes.json"])
@@ -1138,6 +1150,7 @@ def lint_config(project_root: Path, config_path: str) -> LintContext:
 		reactions_jsons=reactions_jsons,
 		entities_dirs=entities_dirs,
 		bundles_jsons=bundles_jsons,
+		effect_catalog=effect_catalog,
 	)
 
 

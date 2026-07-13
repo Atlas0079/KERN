@@ -1,21 +1,22 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from ._effect_binder import BindError, bind_effect_input
 from ..effect_bundle import effect_bundle_from_raw
+from ..effects import EffectCatalog, EffectResolutionError, build_core_effect_catalog
 from ..execution_errors import ERROR_KIND_CONTRACT, ERROR_KIND_ENGINE, executor_error, is_execution_error_event
 from ..entity_ref_resolver import resolve_entity
-from ..effect_contract import EFFECT_TYPES, resolve_effect_handler_callable
 from ..models.components import ContainerComponent
 
 
-def get_executor_effect_types() -> set[str]:
+def get_executor_effect_types(effect_catalog: EffectCatalog | None = None) -> set[str]:
+	catalog = effect_catalog or build_core_effect_catalog()
 	ok: set[str] = set()
-	for effect_name in EFFECT_TYPES:
-		handler = resolve_effect_handler_callable(str(effect_name))
+	for effect_name in catalog.effect_ids():
+		handler = catalog.resolve_handler(str(effect_name))
 		if callable(handler):
 			ok.add(str(effect_name))
 	return ok
@@ -36,10 +37,14 @@ class WorldExecutor:
 
 	# Template required when creating entity at runtime; if not provided, CreateEntity will report error event
 	entity_templates: dict[str, Any] | None = None
+	effect_catalog: EffectCatalog = field(default_factory=build_core_effect_catalog)
+
+	def __post_init__(self) -> None:
+		self.effect_catalog.freeze()
 
 	def execute(self, ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 		try:
-			normalized_data, merged_ctx = bind_effect_input(ws, effect_data, context)
+			normalized_data, merged_ctx = bind_effect_input(ws, effect_data, context, self.effect_catalog)
 		except BindError as e:
 			return [
 				{
@@ -51,13 +56,28 @@ class WorldExecutor:
 					"recoverable": False,
 				}
 			]
+		except EffectResolutionError as exc:
+			return executor_error(
+				str(exc),
+				kind=ERROR_KIND_CONTRACT,
+				code="EFFECT_BINDER_RESOLUTION_FAILED",
+				effect=exc.effect_id,
+			)
 		effect_type = normalized_data.get("effect")
 		if not effect_type:
 			return executor_error("missing effect type", kind=ERROR_KIND_CONTRACT, code="MISSING_EFFECT_TYPE")
 		effect_name = str(effect_type)
-		if effect_name not in EFFECT_TYPES:
+		if not self.effect_catalog.contains(effect_name):
 			return executor_error(f"unknown effect type: {effect_type}", kind=ERROR_KIND_CONTRACT, code="UNKNOWN_EFFECT_TYPE", effect=effect_name)
-		handler = resolve_effect_handler_callable(effect_name)
+		try:
+			handler = self.effect_catalog.resolve_handler(effect_name)
+		except EffectResolutionError as exc:
+			return executor_error(
+				str(exc),
+				kind=ERROR_KIND_CONTRACT,
+				code="EFFECT_HANDLER_RESOLUTION_FAILED",
+				effect=exc.effect_id,
+			)
 		if not callable(handler):
 			return executor_error(f"effect handler missing: {effect_name}", kind=ERROR_KIND_CONTRACT, code="EFFECT_HANDLER_MISSING", effect=effect_name)
 		snapshot = self._snapshot_world(ws)

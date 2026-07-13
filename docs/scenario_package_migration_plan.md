@@ -1,6 +1,6 @@
 # KERN ScenarioPackage 迁移实施计划
 
-> 状态：待实施
+> 状态：实施中（阶段 0 + 阶段 1 已于 2026-07-13 落地）
 >
 > 编写日期：2026-07-11
 >
@@ -9,8 +9,8 @@
 ## 1. 背景与决策
 
 KERN 当前把场景数据放在仓库级 `Data/` 中，通过 runtime config 分别指定 world、
-recipes、reactions、entity template 目录和 named bundles。所有正式 Effect 由全局
-`KERN.effect_contract.EFFECT_SPECS` 注册，所有建模组件由
+recipes、reactions、entity template 目录和 named bundles。迁移前所有正式 Effect
+由全局 `KERN.effect_contract.EFFECT_SPECS` 注册，所有建模组件由
 `KERN.data.builder._build_component(...)` 识别。
 
 这种结构适合只有内置能力的数据场景，但无法让一个场景完整携带自己的额外行为：

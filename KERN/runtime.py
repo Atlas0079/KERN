@@ -19,6 +19,7 @@ from .data.checkpoint import (
 )
 from .data.loader import load_data_bundle
 from .execution_errors import is_execution_error_event
+from .effects import build_core_effect_catalog
 from .executor.executor import WorldExecutor
 from .external_runtime import ExternalRuntimeBridge
 from .external_runtimes import SQLiteSocialPlatformRuntime
@@ -273,6 +274,7 @@ class KernRuntime:
 			world_json=world_json_name,
 			bundles_jsons=bundles_jsons,
 		)
+		effect_catalog = build_core_effect_catalog()
 		restore_path = resolve_checkpoint_file(_cfg_get(cfg, "CHECKPOINT_RESTORE_FILE", ""), _cfg_get(cfg, "CHECKPOINT_RESTORE_DIR", ""))
 		external_runtime_map = _build_configured_external_runtimes(root, resolved_config_path, cfg)
 		external_runtime_map.update(dict(external_runtimes or {}))
@@ -304,6 +306,7 @@ class KernRuntime:
 					reactions_jsons=reactions_jsons,
 					entities_dirs=entities_dirs,
 					bundles_jsons=bundles_jsons,
+					effect_catalog=effect_catalog,
 				)
 				errors = [x for x in lint.issues if x.severity == "ERROR"]
 				if errors:
@@ -326,7 +329,7 @@ class KernRuntime:
 		return cls(
 			world_state=ws,
 			interaction_engine=InteractionEngine(recipe_db=bundle.recipes),
-			executor=WorldExecutor(entity_templates=bundle.entity_templates),
+			executor=WorldExecutor(entity_templates=bundle.entity_templates, effect_catalog=effect_catalog),
 			action_provider=action_provider,
 			action_providers=action_providers,
 			external_runtimes=external_runtime_map,

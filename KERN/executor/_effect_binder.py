@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from ..entity_ref_resolver import resolve_entity_id
-from ..effect_contract import EFFECT_TYPES, resolve_effect_binder_callable
+from ..effects import EffectCatalog, build_core_effect_catalog
 
 
 class BindError(RuntimeError):
@@ -84,16 +84,23 @@ def _base_bind(effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[st
 	return effect_type, params, ctx
 
 
-def get_binder_effect_types() -> set[str]:
+def get_binder_effect_types(effect_catalog: EffectCatalog | None = None) -> set[str]:
+	catalog = effect_catalog or build_core_effect_catalog()
 	ok: set[str] = set()
-	for effect_name in EFFECT_TYPES:
-		binder = resolve_effect_binder_callable(str(effect_name))
+	for effect_name in catalog.effect_ids():
+		binder = catalog.resolve_binder(str(effect_name))
 		if callable(binder):
 			ok.add(str(effect_name))
 	return ok
 
 
-def bind_effect_input(ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+def bind_effect_input(
+	ws: Any,
+	effect_data: dict[str, Any],
+	context: dict[str, Any],
+	effect_catalog: EffectCatalog | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+	catalog = effect_catalog or build_core_effect_catalog()
 	base_data = _as_dict(effect_data)
 	if "context" in base_data:
 		eff = str(base_data.get("effect", "") or "")
@@ -101,9 +108,9 @@ def bind_effect_input(ws: Any, effect_data: dict[str, Any], context: dict[str, A
 	effect_type = str(base_data.get("effect", "") or "")
 	if not effect_type:
 		return {}, _as_dict(context)
-	binder = resolve_effect_binder_callable(effect_type)
+	binder = catalog.resolve_binder(effect_type)
 	if binder is None:
-		if effect_type in EFFECT_TYPES:
+		if catalog.contains(effect_type):
 			raise BindError(effect_type, ["binder_missing"])
 		_, _, ctx = _base_bind(base_data, context)
 		return base_data, ctx

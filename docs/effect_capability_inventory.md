@@ -37,7 +37,8 @@ raw effect data
 - Effect 是否调用 LLM、外部 runtime 或不可回滚副作用。
 - Effect 是否允许执行子 Bundle。
 - Effect 的稳定性和版本。
-- 第三方注册方式。新增 Effect 目前仍需修改中央 `EFFECT_SPECS`。
+- 场景代码的自动发现方式。core Effect 已迁移到 runtime-scoped
+  `EffectCatalog`，场景扩展的发现和加载仍待实现。
 
 ## 2. 能力目录
 

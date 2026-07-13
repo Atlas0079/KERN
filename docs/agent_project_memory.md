@@ -290,9 +290,16 @@ Duration recipe contract:
 
 ## Effects And Transactions
 
-Known effect types are declared in `KERN.effect_contract.EFFECT_SPECS`. Adding an
-effect means updating the contract and providing a binder/handler module path.
-Do not add an effect only by creating a handler file.
+Each `WorldExecutor` owns a runtime-scoped `EffectCatalog`. Core effect specs are
+built by `KERN.effects.build_core_effect_catalog()`; the executor freezes its
+catalog at construction so capabilities cannot change during execution. Runtime
+assembly and scenario lint pass the same catalog instance to keep validation and
+execution aligned. `KERN.effect_contract.EFFECT_TYPES` and `EFFECT_SPECS` remain
+read-only compatibility views and are not execution-path registries.
+
+Adding a core effect means adding an `EffectSpec` in `KERN.effects.core` and
+providing a binder/handler module path. Scenario-owned effect discovery is not
+implemented yet.
 
 Effect input flow:
 
@@ -924,7 +931,8 @@ When editing Chinese text, read and write files as UTF-8.
   architectural reason to add new ones.
 - Keep writes through `WorldExecutor` effects rather than direct decision-layer
   mutation.
-- Update `EFFECT_SPECS` and validation paths when adding effect types.
+- Update the core `EffectCatalog` definitions and validation paths when adding a
+  core effect type.
 - Keep stable architecture facts in this document; keep task history elsewhere.
 - Do not revert user changes in a dirty worktree.
 - Treat generated checkpoints and archive outputs as runtime artifacts unless the
