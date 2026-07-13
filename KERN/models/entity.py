@@ -4,41 +4,13 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .components import (
-	AgentSetting,
-	AgentControlComponent,
 	ContainerComponent,
 	CreatureComponent,
-	CustomComponent,
-	DecisionArbiterComponent,
-	LogicControlComponent,
-	MemoryComponent,
-	PlayerControlComponent,
-	ScreenComponent,
-	SocialBehaviorComponent,
 	TagComponent,
-	TaskHostComponent,
-	WorldStateEntityComponent,
-	WorkerComponent,
 )
 
 
-ComponentValue = (
-	TagComponent
-	| ContainerComponent
-	| CreatureComponent
-	| AgentSetting
-	| AgentControlComponent
-	| PlayerControlComponent
-	| LogicControlComponent
-	| MemoryComponent
-	| ScreenComponent
-	| SocialBehaviorComponent
-	| DecisionArbiterComponent
-	| TaskHostComponent
-	| CustomComponent
-	| WorldStateEntityComponent
-	| WorkerComponent
-)
+ComponentValue = Any
 
 
 @dataclass

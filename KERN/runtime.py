@@ -9,6 +9,7 @@ from uuid import uuid4
 from .agent_workflow.provider_catalog import build_workflow_provider_catalog
 from .agent_workflow.simple_policy import SimplePolicyActionProvider
 from .agent_workflow.view_profile import normalize_workflow_view_profile
+from .component_catalog import ComponentCatalog, build_core_component_catalog
 from .data.archive import ArchiveRecorder
 from .data.builder import build_world_state
 from .data.checkpoint import (
@@ -171,6 +172,7 @@ class KernRuntime:
 	interaction_engine: Any
 	executor: Any
 	action_provider: Any
+	component_catalog: ComponentCatalog | None = None
 
 	is_running: bool = False
 	ticks_per_step: int = 1
@@ -205,6 +207,11 @@ class KernRuntime:
 	workflow_view_profile: dict[str, Any] = field(default_factory=dict)
 
 	def __post_init__(self) -> None:
+		catalog = self.component_catalog or getattr(self.executor, "component_catalog", None) or build_core_component_catalog()
+		catalog.freeze()
+		self.component_catalog = catalog
+		if hasattr(self.executor, "component_catalog"):
+			self.executor.component_catalog = catalog
 		if self.trigger_system is None:
 			self.trigger_system = TriggerSystem(rules=list(self.reaction_rules or []))
 		if self.checkpoint_enabled:
@@ -225,6 +232,7 @@ class KernRuntime:
 				run_id=str(self.run_id or ""),
 				snapshot_interval_ticks=int(self.checkpoint_snapshot_interval_ticks or 60),
 				include_logs=bool(self.checkpoint_include_logs),
+				component_catalog=catalog,
 			)
 
 	@classmethod
@@ -275,13 +283,19 @@ class KernRuntime:
 			bundles_jsons=bundles_jsons,
 		)
 		effect_catalog = build_core_effect_catalog()
+		component_catalog = build_core_component_catalog()
 		restore_path = resolve_checkpoint_file(_cfg_get(cfg, "CHECKPOINT_RESTORE_FILE", ""), _cfg_get(cfg, "CHECKPOINT_RESTORE_DIR", ""))
 		external_runtime_map = _build_configured_external_runtimes(root, resolved_config_path, cfg)
 		external_runtime_map.update(dict(external_runtimes or {}))
 		external_runtime_bridge = ExternalRuntimeBridge(external_runtime_map)
 		workflow_view_profile = _build_workflow_view_profile(root, resolved_config_path, cfg)
 		if restore_path is not None:
-			ws = restore_world_state_from_checkpoint(restore_path, bundle.entity_templates, bundle.named_bundles)
+			ws = restore_world_state_from_checkpoint(
+				restore_path,
+				bundle.entity_templates,
+				bundle.named_bundles,
+				component_catalog=component_catalog,
+			)
 			if not ws.entities or not ws.locations:
 				raise ValueError(f"Invalid checkpoint format or empty world state: {restore_path}")
 			restore_events = external_runtime_bridge.restore_checkpoint(
@@ -307,11 +321,18 @@ class KernRuntime:
 					entities_dirs=entities_dirs,
 					bundles_jsons=bundles_jsons,
 					effect_catalog=effect_catalog,
+					component_catalog=component_catalog,
 				)
 				errors = [x for x in lint.issues if x.severity == "ERROR"]
 				if errors:
 					raise ValueError("Data validation failed:\n" + "\n".join(f"{x.where}: {x.message}" for x in errors))
-			result = build_world_state(bundle.world, bundle.entity_templates, bundle.recipes, named_bundles=bundle.named_bundles)
+			result = build_world_state(
+				bundle.world,
+				bundle.entity_templates,
+				bundle.recipes,
+				named_bundles=bundle.named_bundles,
+				component_catalog=component_catalog,
+			)
 			ws = result.world_state
 
 		use_llm = _cfg_bool(cfg, "USE_LLM", False)
@@ -329,8 +350,13 @@ class KernRuntime:
 		return cls(
 			world_state=ws,
 			interaction_engine=InteractionEngine(recipe_db=bundle.recipes),
-			executor=WorldExecutor(entity_templates=bundle.entity_templates, effect_catalog=effect_catalog),
+			executor=WorldExecutor(
+				entity_templates=bundle.entity_templates,
+				effect_catalog=effect_catalog,
+				component_catalog=component_catalog,
+			),
 			action_provider=action_provider,
+			component_catalog=component_catalog,
 			action_providers=action_providers,
 			external_runtimes=external_runtime_map,
 			reaction_rules=list((bundle.reactions or {}).get("rules", []) or []),

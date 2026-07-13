@@ -36,8 +36,8 @@ if str(ROOT) not in sys.path:
 
 from KERN.data.builder import build_world_state
 from KERN.data.loader import DataBundle, load_data_bundle
+from KERN.component_catalog import ComponentCatalog, build_core_component_catalog
 from KERN.effects import EffectCatalog, EffectResolutionError, build_core_effect_catalog
-from KERN.models.components import __all__ as COMPONENT_EXPORTS
 
 # Import package side effects so built-in progressors are registered.
 import KERN.progressors  # noqa: F401
@@ -131,6 +131,7 @@ class LintContext:
 	entities_dirs: list[str]
 	bundles_jsons: list[str]
 	effect_catalog: EffectCatalog
+	component_catalog: ComponentCatalog
 	issues: list[Issue] = field(default_factory=list)
 
 	def error(self, where: str, message: str) -> None:
@@ -171,9 +172,9 @@ def _load_env_config(project_root: Path, config_arg: str) -> tuple[dict[str, str
 	return env, config_path
 
 
-def _known_component_names() -> set[str]:
-	names = {str(x) for x in COMPONENT_EXPORTS if str(x).endswith("Component")}
-	names.update({"AgentSetting"})
+def _known_component_names(component_catalog: ComponentCatalog) -> set[str]:
+	names = set(component_catalog.component_ids())
+	names.add("CustomComponent")
 	return names
 
 
@@ -357,7 +358,7 @@ def _validate_world_entity_snapshot(ctx: LintContext, ent: Any, where: str, enti
 		ctx.error(where, "component_overrides must be object")
 		return
 	for comp_name in dict(overrides).keys():
-		if str(comp_name) not in _known_component_names():
+		if str(comp_name) not in _known_component_names(ctx.component_catalog):
 			ctx.warn(f"{where}.component_overrides", f"custom component override name: {comp_name}")
 
 
@@ -420,7 +421,7 @@ def _validate_component_templates(ctx: LintContext) -> None:
 			continue
 		for comp_name, comp_data in components.items():
 			cname = str(comp_name)
-			if cname not in _known_component_names():
+			if cname not in _known_component_names(ctx.component_catalog):
 				ctx.warn(where, f"custom component name will be loaded as CustomComponent: {cname}")
 				continue
 			if comp_data is not None and not isinstance(comp_data, dict):
@@ -518,14 +519,14 @@ def _validate_condition(ctx: LintContext, condition: Any, where: str, known_even
 		comp = str(condition.get("component", "") or "").strip()
 		if not comp:
 			ctx.error(where, "has_component missing component")
-		elif comp not in _known_component_names():
+		elif comp not in _known_component_names(ctx.component_catalog):
 			ctx.warn(where, f"has_component references custom component: {comp}")
 	if c_type == "compare_property":
 		comp = str(condition.get("component", "") or "").strip()
 		prop = str(condition.get("property", "") or "").strip()
 		if not comp:
 			ctx.error(where, "compare_property missing component")
-		elif comp not in _known_component_names():
+		elif comp not in _known_component_names(ctx.component_catalog):
 			ctx.warn(where, f"compare_property references custom component: {comp}")
 		if not prop:
 			ctx.error(where, "compare_property missing property")
@@ -854,7 +855,7 @@ def _validate_effect_specific_refs(ctx: LintContext, eff: str, effect: dict[str,
 			_validate_entity_ref(ctx, effect.get(key), where, key)
 	if eff == "ModifyProperty":
 		comp = str(effect.get("component", "") or "").strip()
-		if comp and comp not in _known_component_names():
+		if comp and comp not in _known_component_names(ctx.component_catalog):
 			ctx.warn(where, f"ModifyProperty references custom component: {comp}")
 	if eff == "CreateEntity":
 		template = str(effect.get("template", "") or "").strip()
@@ -1038,7 +1039,7 @@ def _validate_linear_progression_params(ctx: LintContext, params: Any, where: st
 					prop = str(read.get("property", "") or "").strip()
 					if not component:
 						ctx.error(twhere, "read.component is required")
-					elif component not in _known_component_names():
+					elif component not in _known_component_names(ctx.component_catalog):
 						ctx.warn(twhere, f"read.component references custom component: {component}")
 					if not prop:
 						ctx.error(twhere, "read.property is required")
@@ -1097,8 +1098,10 @@ def lint_bundle(
 	entities_dirs: list[str],
 	bundles_jsons: list[str],
 	effect_catalog: EffectCatalog | None = None,
+	component_catalog: ComponentCatalog | None = None,
 ) -> LintContext:
 	catalog = effect_catalog or build_core_effect_catalog()
+	components = component_catalog or build_core_component_catalog()
 	ctx = LintContext(
 		project_root=project_root,
 		config_path=config_path,
@@ -1110,6 +1113,7 @@ def lint_bundle(
 		entities_dirs=entities_dirs,
 		bundles_jsons=bundles_jsons,
 		effect_catalog=catalog,
+		component_catalog=components,
 	)
 	ctx.info("config", f"loaded {config_path.name}")
 	ctx.info("data", f"world={world_json}, recipes={len(bundle.recipes or {})}, reactions={len((bundle.reactions or {}).get('rules', []) or [])}, templates={len(bundle.entity_templates or {})}, named_bundles={len(bundle.named_bundles or {})}")
@@ -1119,13 +1123,24 @@ def lint_bundle(
 	_validate_reactions(ctx)
 	_validate_named_bundles(ctx)
 	try:
-		build_world_state(bundle.world, bundle.entity_templates, bundle.recipes, named_bundles=bundle.named_bundles)
+		build_world_state(
+			bundle.world,
+			bundle.entity_templates,
+			bundle.recipes,
+			named_bundles=bundle.named_bundles,
+			component_catalog=components,
+		)
 	except Exception as e:
 		ctx.error("build_world_state", str(e))
 	return ctx
 
 
-def lint_config(project_root: Path, config_path: str, effect_catalog: EffectCatalog | None = None) -> LintContext:
+def lint_config(
+	project_root: Path,
+	config_path: str,
+	effect_catalog: EffectCatalog | None = None,
+	component_catalog: ComponentCatalog | None = None,
+) -> LintContext:
 	env, resolved_config = _load_env_config(project_root, config_path)
 	world_json = _cfg_get(env, "WORLD_JSON", "World.json")
 	recipes_jsons = _split_csv(_cfg_get(env, "RECIPES_JSONS", "Recipes.json"), ["Recipes.json"])
@@ -1151,6 +1166,7 @@ def lint_config(project_root: Path, config_path: str, effect_catalog: EffectCata
 		entities_dirs=entities_dirs,
 		bundles_jsons=bundles_jsons,
 		effect_catalog=effect_catalog,
+		component_catalog=component_catalog,
 	)
 
 

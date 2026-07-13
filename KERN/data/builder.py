@@ -3,31 +3,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from ..component_catalog import ComponentCatalog, build_core_component_catalog
 from ..effect_bundle import effect_bundle_from_raw
 from ..log_manager import get_logger
 from ..models.components import (
-	AgentSetting,
-	AgentControlComponent,
 	ContainerComponent,
-	ContainerSlot,
-	CreatureComponent,
-	CustomComponent,
-	DecisionArbiterComponent,
-	DescriptionComponent,
-	EdibleComponent,
-	EquipmentComponent,
-	LogicControlComponent,
-	MemoryComponent,
-	PerceptionComponent,
-	PlayerControlComponent,
-	ScreenComponent,
-	SocialBehaviorComponent,
-	StatusComponent,
-	TagComponent,
 	TaskHostComponent,
-	ValuableComponent,
 	WorkerComponent,
-	WorldStateEntityComponent,
 )
 from ..models.entity import Entity
 from ..models.environment import EnvironmentScope
@@ -43,31 +25,6 @@ class BuildResult:
 	world_state: WorldState
 
 
-def _task_from_dict(raw: dict[str, Any]) -> Task:
-	task = Task(task_id=str(raw.get("task_id", "") or ""), task_type=str(raw.get("task_type", "") or ""))
-	task.action_type = str(raw.get("action_type", task.action_type) or task.action_type)
-	task.target_entity_id = str(raw.get("target_entity_id", "") or "")
-	task.progress = float(raw.get("progress", 0.0) or 0.0)
-	task.required_progress = float(raw.get("required_progress", task.required_progress) or task.required_progress)
-	task.multiple_entity = bool(raw.get("multiple_entity", False))
-	assigned = raw.get("assigned_agent_ids", []) or []
-	if isinstance(assigned, list):
-		task.assigned_agent_ids = [str(x) for x in assigned]
-	task.task_status = str(raw.get("task_status", task.task_status) or task.task_status)
-	params = raw.get("parameters", {}) or {}
-	if isinstance(params, dict):
-		task.parameters = dict(params)
-	task.progressor_id = str(raw.get("progressor_id", "") or "")
-	pp = raw.get("progressor_params", {}) or {}
-	if isinstance(pp, dict):
-		if "progress_contributors" in pp:
-			raise ValueError("task progressor_params.progress_contributors is removed; use add_terms/mul_terms")
-		task.progressor_params = dict(pp)
-	task.start_bundle = effect_bundle_from_raw(raw.get("start_bundle", {}) or {"effects": []})
-	task.tick_bundle = effect_bundle_from_raw(raw.get("tick_bundle", {}) or {"effects": []})
-	task.cleanup_bundle = effect_bundle_from_raw(raw.get("cleanup_bundle", {}) or {"effects": []})
-	task.completion_bundle = effect_bundle_from_raw(raw.get("completion_bundle", {}) or {"effects": []})
-	return task
 
 
 def _int_or_default(value: Any, default: int) -> int:
@@ -77,7 +34,12 @@ def _int_or_default(value: Any, default: int) -> int:
 		return int(default)
 
 
-def _attach_tasks_from_snapshot(ws: WorldState, host_entity: Entity, snapshot: dict[str, Any]) -> None:
+def _attach_tasks_from_snapshot(
+	ws: WorldState,
+	host_entity: Entity,
+	snapshot: dict[str, Any],
+	component_catalog: ComponentCatalog,
+) -> None:
 	overrides = snapshot.get("component_overrides", {}) or {}
 	if not isinstance(overrides, dict):
 		return
@@ -89,21 +51,11 @@ def _attach_tasks_from_snapshot(ws: WorldState, host_entity: Entity, snapshot: d
 		return
 	host = host_entity.get_component("TaskHostComponent")
 	if not isinstance(host, TaskHostComponent):
-		host = TaskHostComponent()
+		host = component_catalog.build("TaskHostComponent", host_patch)
 		host_entity.add_component("TaskHostComponent", host)
-	for task_id, traw in tasks_raw.items():
-		tid = str(task_id or "")
-		if not tid:
-			continue
-		payload = dict(traw) if isinstance(traw, dict) else {}
-		payload.setdefault("task_id", tid)
-		task = _task_from_dict(payload)
-		if not task.task_id:
-			continue
+	for task in host.get_all_tasks():
 		if ws.get_task_by_id(task.task_id) is None:
 			ws.register_task(task)
-		if host.get_task(task.task_id) is None:
-			host.add_task(task)
 
 
 def build_world_state(
@@ -112,7 +64,9 @@ def build_world_state(
 	_recipe_db: dict[str, Any],
 	check_container_snapshot_consistency: bool = False,
 	named_bundles: dict[str, Any] | None = None,
+	component_catalog: ComponentCatalog | None = None,
 ) -> BuildResult:
+	catalog = component_catalog or build_core_component_catalog()
 	ws = WorldState()
 	ws.named_bundles = named_bundles or {}
 	world_state_data = bundle_world.get("world_state", {})
@@ -207,13 +161,14 @@ def build_world_state(
 				template_id=str(template_id),
 				instance_id=str(instance_id),
 				entity_templates=entity_templates,
+				component_catalog=catalog,
 			)
 			ws.register_entity(ent)
 			loc.add_entity_id(ent.entity_id)
 
 			overrides = snapshot.get("component_overrides", {}) or {}
-			apply_component_overrides(ent, overrides, restore_container_items=False)
-			_attach_tasks_from_snapshot(ws, ent, snapshot)
+			apply_component_overrides(ent, overrides, restore_container_items=False, component_catalog=catalog)
+			_attach_tasks_from_snapshot(ws, ent, snapshot, catalog)
 
 	for snapshot in list(bundle_world.get("entities", []) or []):
 		if not isinstance(snapshot, dict):
@@ -226,12 +181,13 @@ def build_world_state(
 			template_id=str(template_id),
 			instance_id=str(instance_id),
 			entity_templates=entity_templates,
+			component_catalog=catalog,
 		)
 		ws.register_entity(ent)
 		nested_snapshots_by_entity_id[str(ent.entity_id)] = snapshot
 		overrides = snapshot.get("component_overrides", {}) or {}
-		apply_component_overrides(ent, overrides, restore_container_items=False)
-		_attach_tasks_from_snapshot(ws, ent, snapshot)
+		apply_component_overrides(ent, overrides, restore_container_items=False, component_catalog=catalog)
+		_attach_tasks_from_snapshot(ws, ent, snapshot, catalog)
 
 	for entity_id, snapshot in nested_snapshots_by_entity_id.items():
 		parent_id = str(snapshot.get("parent_container", "") or "").strip()
@@ -373,7 +329,13 @@ def build_world_state(
 	return BuildResult(world_state=ws)
 
 
-def create_entity_from_template(template_id: str, instance_id: str, entity_templates: dict[str, Any]) -> Entity:
+def create_entity_from_template(
+	template_id: str,
+	instance_id: str,
+	entity_templates: dict[str, Any],
+	component_catalog: ComponentCatalog | None = None,
+) -> Entity:
+	catalog = component_catalog or build_core_component_catalog()
 	template = entity_templates.get(template_id, {})
 	if not isinstance(template, dict) or not template:
 		raise ValueError(f"template not found: {template_id}")
@@ -389,349 +351,44 @@ def create_entity_from_template(template_id: str, instance_id: str, entity_templ
 		components_data = {}
 
 	for comp_name, comp_data in components_data.items():
-		ent.add_component(comp_name, _build_component(comp_name, comp_data))
+		ent.add_component(comp_name, catalog.build(comp_name, comp_data))
 
 	return ent
 
 
-def _build_component(component_name: str, comp_data: Any):
-	"""
-	Convert modeled components to dataclass; others remain CustomComponent(dict).
-	"""
-
-	if component_name == "TagComponent":
-		tags = list((comp_data or {}).get("tags", []))
-		return TagComponent(tags=[str(x) for x in tags])
-
-	if component_name == "CreatureComponent":
-		d = comp_data or {}
-		current_hp = d.get("current_hp", None)
-		max_energy = d.get("max_energy", 100.0)
-		current_energy = d.get("current_energy", None)
-		max_nutrition = d.get("max_nutrition", 100.0)
-		current_nutrition = d.get("current_nutrition", None)
-		max_stress = d.get("max_stress", None)
-		current_stress = d.get("current_stress", None)
-		return CreatureComponent(
-			max_hp=float(d.get("max_hp", 100.0)),
-			max_energy=float(max_energy),
-			max_nutrition=float(max_nutrition),
-			max_stress=float(max_stress) if max_stress is not None else None,
-			current_hp=float(current_hp) if current_hp is not None else None,
-			current_energy=float(current_energy) if current_energy is not None else None,
-			current_nutrition=float(current_nutrition) if current_nutrition is not None else None,
-			current_stress=float(current_stress) if current_stress is not None else None,
-		)
-
-	if component_name == "AgentSetting":
-		d = comp_data or {}
-		if not isinstance(d, dict):
-			d = {}
-		return AgentSetting(
-			agent_name=str(d.get("agent_name", "")),
-			personality_summary=str(d.get("personality_summary", "")),
-			common_knowledge_summary=str(d.get("common_knowledge_summary", "")),
-			money=float(d.get("money", 0.0) or 0.0),
-		)
-
-	if component_name == "AgentControlComponent":
-		d = comp_data or {}
-		if not isinstance(d, dict):
-			d = {}
-		return AgentControlComponent(
-			enabled=bool(d.get("enabled", True)),
-			provider_id=str(d.get("provider_id", "") or ""),
-		)
-
-	if component_name == "PlayerControlComponent":
-		d = comp_data or {}
-		if not isinstance(d, dict):
-			d = {}
-		return PlayerControlComponent(
-			enabled=bool(d.get("enabled", True)),
-			provider_id=str(d.get("provider_id", "player") or "player"),
-		)
-
-	if component_name == "LogicControlComponent":
-		d = comp_data or {}
-		if not isinstance(d, dict):
-			d = {}
-		return LogicControlComponent(
-			enabled=bool(d.get("enabled", True)),
-			provider_id=str(d.get("provider_id", "logic") or "logic"),
-		)
-
-	if component_name == "MemoryComponent":
-		d = comp_data or {}
-		if not isinstance(d, dict):
-			d = {}
-		return MemoryComponent(
-			short_term_queue=[dict(x) for x in list(d.get("short_term_queue", []) or []) if isinstance(x, dict)],
-			short_term_max_entries=int(d.get("short_term_max_entries", 25) or 25),
-			mid_term_prep_queue=[dict(x) for x in list(d.get("mid_term_prep_queue", []) or []) if isinstance(x, dict)],
-			mid_term_prep_max_entries=int(d.get("mid_term_prep_max_entries", 50) or 50),
-			mid_term_queue=[dict(x) for x in list(d.get("mid_term_queue", []) or []) if isinstance(x, dict)],
-			mid_term_max_entries=int(d.get("mid_term_max_entries", 20) or 20),
-			last_mid_term_summary_tick=int(d.get("last_mid_term_summary_tick", -1) or -1),
-			mid_term_summary_cooldown_ticks=int(d.get("mid_term_summary_cooldown_ticks", 15) or 15),
-			last_event_seq_seen=int(d.get("last_event_seq_seen", 0) or 0),
-			last_interaction_seq_seen=int(d.get("last_interaction_seq_seen", 0) or 0),
-		)
-
-	if component_name == "ContainerComponent":
-		d = comp_data or {}
-		slots_data = d.get("slots", {}) or {}
-		slots: dict[str, ContainerSlot] = {}
-		for slot_id, slot_tpl in slots_data.items():
-			cfg = dict(slot_tpl or {})
-			cfg.setdefault("capacity_volume", 999.0)
-			cfg.setdefault("capacity_count", 999)
-			cfg.setdefault("accepted_tags", [])
-			cfg.setdefault("transparent", False)
-			slots[str(slot_id)] = ContainerSlot(config=cfg, items=[])
-		return ContainerComponent(slots=slots)
-
-	if component_name == "DecisionArbiterComponent":
-		d = comp_data or {}
-		if isinstance(d, dict):
-			return DecisionArbiterComponent.from_template_data(d)
-		return DecisionArbiterComponent.from_template_data({})
-
-	if component_name == "DescriptionComponent":
-		d = comp_data or {}
-		if not isinstance(d, dict):
-			d = {}
-		description = str(d.get("description", "") or "")
-		return DescriptionComponent(
-			description=description,
-			base_description=str(d.get("base_description", description) or ""),
-			observed_description=str(d.get("observed_description", description) or ""),
-			recipe_description=str(d.get("recipe_description", "") or ""),
-		)
-
-	if component_name == "EdibleComponent":
-		d = comp_data or {}
-		if not isinstance(d, dict):
-			d = {}
-		return EdibleComponent(
-			on_consume_bundle=effect_bundle_from_raw(d.get("on_consume_bundle", {}) or {"effects": []}),
-		)
-
-	if component_name == "PerceptionComponent":
-		d = comp_data or {}
-		if not isinstance(d, dict):
-			d = {}
-		return PerceptionComponent(
-			enabled=bool(d.get("enabled", True)),
-		)
-
-	if component_name == "ScreenComponent":
-		d = comp_data or {}
-		if not isinstance(d, dict):
-			d = {}
-		current_post = d.get("current_post", None)
-		return ScreenComponent(
-			runtime_id=str(d.get("runtime_id", "weibo") or "weibo"),
-			account_id=str(d.get("account_id", "") or ""),
-			app=str(d.get("app", "") or ""),
-			view=str(d.get("view", "blank") or "blank"),
-			title=str(d.get("title", "") or ""),
-			feed_items=[dict(x) for x in list(d.get("feed_items", []) or []) if isinstance(x, dict)],
-			current_post=dict(current_post) if isinstance(current_post, dict) else None,
-			selected_post_id=str(d.get("selected_post_id", "") or ""),
-			cursor=int(d.get("cursor", 0) or 0),
-			updated_tick=int(d.get("updated_tick", 0) or 0),
-			status_text=str(d.get("status_text", "") or ""),
-			last_event_type=str(d.get("last_event_type", "") or ""),
-			last_error=str(d.get("last_error", "") or ""),
-		)
-
-	if component_name == "SocialBehaviorComponent":
-		d = comp_data or {}
-		if not isinstance(d, dict):
-			d = {}
-		return SocialBehaviorComponent(
-			base_activity_rate=float(d.get("base_activity_rate", 0.2) or 0.0),
-			active_hours=[int(x) for x in list(d.get("active_hours", []) or [])],
-			cooldown_ticks=int(d.get("cooldown_ticks", 3) or 0),
-			last_social_opportunity_tick=int(d.get("last_social_opportunity_tick", -10**9) or -10**9),
-			event_reaction_sensitivity=float(d.get("event_reaction_sensitivity", 0.5) or 0.0),
-			expression_opportunity_rate=float(d.get("expression_opportunity_rate", 0.2) or 0.0),
-			routine_browse_rate=float(d.get("routine_browse_rate", 0.8) or 0.0),
-			fatigue=float(d.get("fatigue", 0.0) or 0.0),
-		)
-
-	if component_name == "EquipmentComponent":
-		d = comp_data or {}
-		if not isinstance(d, dict):
-			d = {}
-		slots_raw = d.get("slots", {}) or {}
-		return EquipmentComponent(
-			slots=dict(slots_raw) if isinstance(slots_raw, dict) else {},
-		)
-
-	if component_name == "StatusComponent":
-		d = comp_data or {}
-		if not isinstance(d, dict):
-			d = {}
-		raw_statuses = list(d.get("statuses", []) or [])
-		expire_raw = d.get("expire_at_tick", {}) or {}
-		expire_map: dict[str, int] = {}
-		if isinstance(expire_raw, dict):
-			for k, v in expire_raw.items():
-				key = str(k or "").strip()
-				if not key:
-					continue
-				try:
-					expire_map[key] = int(v)
-				except Exception:
-					continue
-		return StatusComponent(
-			statuses=[str(x) for x in raw_statuses],
-			expire_at_tick=expire_map,
-		)
-
-	if component_name == "ValuableComponent":
-		d = comp_data or {}
-		if not isinstance(d, dict):
-			d = {}
-		return ValuableComponent(
-			price=float(d.get("price", 0.0) or 0.0),
-		)
-
-	if component_name == "TaskHostComponent":
-		return TaskHostComponent()
-
-	if component_name == "WorkerComponent":
-		d = comp_data or {}
-		if not isinstance(d, dict):
-			d = {}
-		return WorkerComponent(
-			current_task_id=str(d.get("current_task_id", "") or ""),
-		)
-
-	if component_name == "WorldStateEntityComponent":
-		d = comp_data or {}
-		if not isinstance(d, dict):
-			d = {}
-		return WorldStateEntityComponent(
-			debug_visible=bool(d.get("debug_visible", True)),
-			visible_to_agents=bool(d.get("visible_to_agents", False)),
-			note=str(d.get("note", "") or ""),
-		)
-
-	# Scenario-defined components
-	raw = comp_data if isinstance(comp_data, dict) else {"value": comp_data}
-	return CustomComponent(data=raw)
+def _build_component(
+	component_name: str,
+	comp_data: Any,
+	component_catalog: ComponentCatalog | None = None,
+):
+	catalog = component_catalog or build_core_component_catalog()
+	return catalog.build(component_name, comp_data)
 
 
-def apply_component_overrides(entity: Entity, overrides: dict[str, Any], restore_container_items: bool = True) -> None:
-	"""
-	MVP Override Strategy: If component is CustomComponent, shallow merge dict directly;
-	modeled components (Tag/Creature/Agent/Container) do not do complex override first, avoid semantic inconsistency.
-
-	Assume existence: Component level apply_snapshot()
-	Intent: Consistent with Godot WorldBuilder convention, let component handle override itself;
-	Necessity: Avoid builder coupling component internal fields, need to add this interface later.
-	"""
-
-	for comp_name, comp_patch in (overrides or {}).items():
-		if not isinstance(comp_patch, dict):
+def apply_component_overrides(
+	entity: Entity,
+	overrides: dict[str, Any],
+	restore_container_items: bool = True,
+	component_catalog: ComponentCatalog | None = None,
+) -> None:
+	catalog = component_catalog or build_core_component_catalog()
+	for component_name, patch in dict(overrides or {}).items():
+		if not isinstance(patch, dict):
 			continue
-
-		comp = entity.get_component(comp_name)
-		if comp is None:
+		component = entity.get_component(component_name)
+		if component is None:
 			continue
-
-		# 1) CustomComponent: Shallow merge data
-		if isinstance(comp, CustomComponent):
-			comp.data.update(comp_patch)
-			continue
-
-		# 2) ContainerComponent: Support overriding slot config / items (For restoring container content from archive)
-		if isinstance(comp, ContainerComponent):
-			slots_patch = comp_patch.get("slots", None)
-			if isinstance(slots_patch, dict):
-				for slot_id, slot_p in slots_patch.items():
-					if not isinstance(slot_p, dict):
-						continue
-					sid = str(slot_id)
-					if sid not in comp.slots:
-						comp.slots[sid] = ContainerSlot(config={}, items=[])
-					if "config" in slot_p and isinstance(slot_p["config"], dict):
-						comp.slots[sid].config.update(dict(slot_p["config"]))
-					if restore_container_items and "items" in slot_p and isinstance(slot_p["items"], list):
-						comp.slots[sid].items = [str(x) for x in slot_p["items"]]
-			continue
-
-		# 3) WorkerComponent: Override current_task_id (For restoring action rights / what is being done)
-		if isinstance(comp, WorkerComponent):
-			if "current_task_id" in comp_patch:
-				comp.current_task_id = str(comp_patch.get("current_task_id", "") or "")
-			continue
-
-		if isinstance(comp, TaskHostComponent):
-			for k, v in comp_patch.items():
-				if k == "tasks":
-					continue
-				if hasattr(comp, k):
-					try:
-						setattr(comp, k, v)
-					except Exception as e:
-						raise RuntimeError(
-							f"component override failed: entity_id={str(getattr(entity, 'entity_id', '') or '')} "
-							f"component={str(comp_name)} field={str(k)} value_type={str(type(v).__name__)}"
-						) from e
-			continue
-
-		if isinstance(comp, DecisionArbiterComponent):
-			base_data = {
-				"active_interrupt_preset_id": str(getattr(comp, "active_interrupt_preset_id", "") or ""),
-				"interrupt_presets": dict(getattr(comp, "interrupt_presets", {}) or {}),
-				"interrupt_preset_descriptions": dict(getattr(comp, "interrupt_preset_descriptions", {}) or {}),
-				"rules": [],
-			}
-			ruleset = list(getattr(comp, "ruleset", []) or [])
-			for r in ruleset:
-				if isinstance(r, dict) and "type" in r:
-					base_data["rules"].append(dict(r))
-				else:
-					rule_type = str(getattr(r, "__class__", type("x", (), {})).__name__ or "")
-					priority = int(getattr(r, "priority", 999) or 999)
-					if rule_type == "LowNutritionRule":
-						base_data["rules"].append({"type": "LowNutrition", "priority": priority, "threshold": float(getattr(r, "threshold", 50.0) or 50.0)})
-					elif rule_type == "PerceptionChangeRule":
-						base_data["rules"].append({"type": "PerceptionChange", "priority": priority, "trigger_on_agent_sighted": bool(getattr(r, "trigger_on_agent_sighted", True))})
-					elif rule_type == "CorpseSightedRule":
-						base_data["rules"].append({"type": "CorpseSighted", "priority": priority, "trigger_on_new_corpse": bool(getattr(r, "trigger_on_new_corpse", True))})
-					elif rule_type == "NoActiveTaskRule":
-						base_data["rules"].append({"type": "NoActiveTask", "priority": priority})
-			rules_patch = comp_patch.get("rules", comp_patch.get("ruleset", None))
-			if isinstance(rules_patch, list):
-				base_data["rules"] = [dict(x) for x in rules_patch if isinstance(x, dict)]
-			if "active_interrupt_preset_id" in comp_patch:
-				base_data["active_interrupt_preset_id"] = str(comp_patch.get("active_interrupt_preset_id", "") or "")
-			if isinstance(comp_patch.get("interrupt_presets", None), dict):
-				base_data["interrupt_presets"] = dict(comp_patch.get("interrupt_presets", {}) or {})
-			if isinstance(comp_patch.get("interrupt_preset_descriptions", None), dict):
-				base_data["interrupt_preset_descriptions"] = {
-					str(k): str(v or "") for k, v in dict(comp_patch.get("interrupt_preset_descriptions", {}) or {}).items()
-				}
-			rebuilt = DecisionArbiterComponent.from_template_data(base_data)
-			if isinstance(comp_patch.get("interrupt_runtime_state", None), dict):
-				rebuilt.interrupt_runtime_state = dict(comp_patch.get("interrupt_runtime_state", {}) or {})
-			if "_runtime_preset_id" in comp_patch:
-				rebuilt._runtime_preset_id = str(comp_patch.get("_runtime_preset_id", "") or "")
-			entity.components[comp_name] = rebuilt
-			continue
-
-		# 5) Other migrated components: Shallow assignment to same-name fields (No deep semantics)
-		for k, v in comp_patch.items():
-			if hasattr(comp, k):
-				try:
-					setattr(comp, k, v)
-				except Exception as e:
-					raise RuntimeError(
-						f"component override failed: entity_id={str(getattr(entity, 'entity_id', '') or '')} "
-						f"component={str(comp_name)} field={str(k)} value_type={str(type(v).__name__)}"
-					) from e
+		try:
+			updated = catalog.apply_snapshot(
+				component_name,
+				component,
+				patch,
+				restore_container_items=restore_container_items,
+			)
+		except Exception as exc:
+			raise RuntimeError(
+				f"component override failed: entity_id={str(getattr(entity, 'entity_id', '') or '')} "
+				f"component={str(component_name)}"
+			) from exc
+		if updated is not component:
+			entity.components[component_name] = updated

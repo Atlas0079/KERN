@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from ..component_catalog import ComponentCatalog, build_core_component_catalog
 from ..models.world_state import WorldState
 from .checkpoint import _build_combined_log_rows, _world_dict_from_world_state
 
@@ -38,8 +39,11 @@ def _read_json_gz(path: Path) -> dict[str, Any]:
 	return payload
 
 
-def archive_state_from_world_state(ws: WorldState) -> dict[str, Any]:
-	return _world_dict_from_world_state(ws)
+def archive_state_from_world_state(
+	ws: WorldState,
+	component_catalog: ComponentCatalog | None = None,
+) -> dict[str, Any]:
+	return _world_dict_from_world_state(ws, component_catalog=component_catalog)
 
 
 def _path_sort_key(path: list[str]) -> tuple[int, str]:
@@ -133,6 +137,7 @@ class ArchiveRecorder:
 	run_id: str
 	snapshot_interval_ticks: int = 60
 	include_logs: bool = True
+	component_catalog: ComponentCatalog = field(default_factory=build_core_component_catalog)
 	last_state: dict[str, Any] | None = None
 	last_hash: str = ""
 	snapshots: list[dict[str, Any]] = field(default_factory=list)
@@ -160,7 +165,7 @@ class ArchiveRecorder:
 
 	def record_tick(self, ws: WorldState) -> None:
 		tick = int(getattr(ws.game_time, "total_ticks", 0) or 0)
-		state = archive_state_from_world_state(ws)
+		state = archive_state_from_world_state(ws, component_catalog=self.component_catalog)
 		cur_hash = state_hash(state)
 		if self.last_state is None or tick % self.snapshot_interval_ticks == 0:
 			self._write_snapshot(ws, state, cur_hash)

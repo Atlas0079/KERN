@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from ._effect_binder import BindError, bind_effect_input
+from ..component_catalog import ComponentCatalog, build_core_component_catalog
 from ..effect_bundle import effect_bundle_from_raw
 from ..effects import EffectCatalog, EffectResolutionError, build_core_effect_catalog
 from ..execution_errors import ERROR_KIND_CONTRACT, ERROR_KIND_ENGINE, executor_error, is_execution_error_event
@@ -38,9 +39,11 @@ class WorldExecutor:
 	# Template required when creating entity at runtime; if not provided, CreateEntity will report error event
 	entity_templates: dict[str, Any] | None = None
 	effect_catalog: EffectCatalog = field(default_factory=build_core_effect_catalog)
+	component_catalog: ComponentCatalog = field(default_factory=build_core_component_catalog)
 
 	def __post_init__(self) -> None:
 		self.effect_catalog.freeze()
+		self.component_catalog.freeze()
 
 	def execute(self, ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 		try:

@@ -73,7 +73,12 @@ def execute_create_entity(executor: Any, ws: Any, data: dict[str, Any], context:
 		return [{"type": "ExecutorError", "message": f"CreateEntity: template not found: {template_id}"}]
 	from ..data.builder import create_entity_from_template
 	new_id = str(data.get("instance_id") or f"{template_id}_{uuid4().hex[:8]}")
-	new_entity = create_entity_from_template(str(template_id), new_id, executor.entity_templates)
+	new_entity = create_entity_from_template(
+		str(template_id),
+		new_id,
+		executor.entity_templates,
+		component_catalog=executor.component_catalog,
+	)
 	overrides = data.get("spawn_patch")
 	if isinstance(overrides, dict):
 		if "name" in overrides:

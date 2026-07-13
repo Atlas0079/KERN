@@ -2,12 +2,11 @@ from __future__ import annotations
 
 import json
 import gzip
-from dataclasses import asdict, is_dataclass
 from pathlib import Path
 from typing import Any
 
-from ..models.components import ContainerComponent, DecisionArbiterComponent, TaskHostComponent
-from ..models.task import Task
+from ..component_catalog import ComponentCatalog, build_core_component_catalog
+from ..models.components import ContainerComponent
 from ..models.world_state import WorldState
 from .builder import build_world_state
 
@@ -43,20 +42,6 @@ def resolve_global_log_file(checkpoint_dir: str | Path) -> Path:
 	return base_dir / GLOBAL_LOG_FILE_NAME
 
 
-def _serialize_any(value: Any) -> Any:
-	if value is None or isinstance(value, (str, int, float, bool)):
-		return value
-	if isinstance(value, dict):
-		return {str(k): _serialize_any(v) for k, v in value.items()}
-	if isinstance(value, (list, tuple, set)):
-		return [_serialize_any(v) for v in value]
-	if is_dataclass(value):
-		return _serialize_any(asdict(value))
-	if hasattr(value, "__dict__"):
-		return _serialize_any(dict(vars(value)))
-	return str(value)
-
-
 def _int_or_default(value: Any, default: int) -> int:
 	try:
 		return int(value)
@@ -64,92 +49,12 @@ def _int_or_default(value: Any, default: int) -> int:
 		return int(default)
 
 
-def _serialize_task(task: Task) -> dict[str, Any]:
-	return {
-		"task_id": str(getattr(task, "task_id", "") or ""),
-		"task_type": str(getattr(task, "task_type", "") or ""),
-		"action_type": str(getattr(task, "action_type", "Action") or "Action"),
-		"target_entity_id": str(getattr(task, "target_entity_id", "") or ""),
-		"progress": float(getattr(task, "progress", 0.0) or 0.0),
-		"required_progress": float(getattr(task, "required_progress", 0.0) or 0.0),
-		"multiple_entity": bool(getattr(task, "multiple_entity", False)),
-		"assigned_agent_ids": [str(x) for x in list(getattr(task, "assigned_agent_ids", []) or [])],
-		"task_status": str(getattr(task, "task_status", "Inactive") or "Inactive"),
-		"parameters": _serialize_any(dict(getattr(task, "parameters", {}) or {})),
-		"progressor_id": str(getattr(task, "progressor_id", "") or ""),
-		"progressor_params": _serialize_any(dict(getattr(task, "progressor_params", {}) or {})),
-		"start_bundle": _serialize_any(getattr(task, "start_bundle", None)),
-		"tick_bundle": _serialize_any(getattr(task, "tick_bundle", None)),
-		"cleanup_bundle": _serialize_any(getattr(task, "cleanup_bundle", None)),
-		"completion_bundle": _serialize_any(getattr(task, "completion_bundle", None)),
-	}
-
-
-def _serialize_arbiter_component(arb: Any) -> dict[str, Any]:
-	rules_out: list[dict[str, Any]] = []
-	for r in list(getattr(arb, "ruleset", []) or []):
-		if isinstance(r, dict):
-			rule_type = str(r.get("type", "") or "").strip()
-			if rule_type:
-				rules_out.append({str(k): _serialize_any(v) for k, v in r.items()})
-			continue
-		rule_class = str(getattr(getattr(r, "__class__", None), "__name__", "") or "")
-		priority = int(getattr(r, "priority", 999) or 999)
-		if rule_class == "LowNutritionRule":
-			rules_out.append({"type": "LowNutrition", "priority": priority, "threshold": float(getattr(r, "threshold", 50.0) or 50.0)})
-			continue
-		if rule_class == "PerceptionChangeRule":
-			rules_out.append(
-				{
-					"type": "PerceptionChange",
-					"priority": priority,
-					"trigger_on_agent_sighted": bool(getattr(r, "trigger_on_agent_sighted", True)),
-					"trigger_on_agent_left": bool(getattr(r, "trigger_on_agent_left", True)),
-				}
-			)
-			continue
-		if rule_class == "CorpseSightedRule":
-			rules_out.append({"type": "CorpseSighted", "priority": priority, "trigger_on_new_corpse": bool(getattr(r, "trigger_on_new_corpse", True))})
-			continue
-		if rule_class == "NoActiveTaskRule":
-			rules_out.append({"type": "NoActiveTask", "priority": priority})
-	return {
-		"rules": rules_out,
-		"active_interrupt_preset_id": str(getattr(arb, "active_interrupt_preset_id", "") or ""),
-		"interrupt_presets": _serialize_any(dict(getattr(arb, "interrupt_presets", {}) or {})),
-		"interrupt_preset_descriptions": _serialize_any(dict(getattr(arb, "interrupt_preset_descriptions", {}) or {})),
-		"interrupt_runtime_state": _serialize_any(dict(getattr(arb, "interrupt_runtime_state", {}) or {})),
-		"_runtime_preset_id": str(getattr(arb, "_runtime_preset_id", "") or ""),
-	}
-
-
-def _serialize_component_override(name: str, comp: Any) -> dict[str, Any]:
-	if isinstance(comp, DecisionArbiterComponent):
-		return _serialize_arbiter_component(comp)
-	if isinstance(comp, ContainerComponent):
-		slots_out: dict[str, Any] = {}
-		for sid, slot in (getattr(comp, "slots", {}) or {}).items():
-			slots_out[str(sid)] = {
-				"config": _serialize_any(dict(getattr(slot, "config", {}) or {})),
-				"items": [str(x) for x in list(getattr(slot, "items", []) or [])],
-			}
-		return {"slots": slots_out}
-	if isinstance(comp, TaskHostComponent):
-		task_map: dict[str, Any] = {}
-		task_items = []
-		if hasattr(comp, "get_all_tasks"):
-			task_items = list(comp.get_all_tasks() or [])
-		elif isinstance(getattr(comp, "tasks", None), dict):
-			task_items = list((getattr(comp, "tasks") or {}).values())
-		for t in task_items:
-			tid = str(getattr(t, "task_id", "") or "")
-			if tid:
-				task_map[tid] = _serialize_task(t)
-		return {"tasks": task_map}
-	raw = _serialize_any(comp)
-	if isinstance(raw, dict):
-		return raw
-	return {"value": raw}
+def _serialize_component_override(
+	name: str,
+	component: Any,
+	component_catalog: ComponentCatalog,
+) -> dict[str, Any]:
+	return component_catalog.serialize(name, component)
 
 
 def _build_parent_map(ws: WorldState) -> dict[str, str]:
@@ -168,7 +73,11 @@ def _build_parent_map(ws: WorldState) -> dict[str, str]:
 	return parent_map
 
 
-def _world_dict_from_world_state(ws: WorldState) -> dict[str, Any]:
+def _world_dict_from_world_state(
+	ws: WorldState,
+	component_catalog: ComponentCatalog | None = None,
+) -> dict[str, Any]:
+	catalog = component_catalog or build_core_component_catalog()
 	world: dict[str, Any] = {
 		"world_state": {
 			"current_tick": int(getattr(ws.game_time, "total_ticks", 0) or 0),
@@ -251,7 +160,7 @@ def _world_dict_from_world_state(ws: WorldState) -> dict[str, Any]:
 		if not snapshot["instance_id"] or not snapshot["template_id"]:
 			raise ValueError("world->checkpoint serialize failed: entity missing instance_id/template_id")
 		for comp_name, comp_value in (getattr(ent, "components", {}) or {}).items():
-			snapshot["component_overrides"][str(comp_name)] = _serialize_component_override(str(comp_name), comp_value)
+			snapshot["component_overrides"][str(comp_name)] = _serialize_component_override(str(comp_name), comp_value, catalog)
 		parent_id = str(parent_map.get(snapshot["instance_id"], "") or "")
 		if parent_id:
 			snapshot["parent_container"] = parent_id
@@ -348,7 +257,9 @@ def restore_world_state_from_checkpoint(
 	checkpoint_path: Path,
 	entity_templates: dict[str, Any],
 	named_bundles: dict[str, Any] | None = None,
+	component_catalog: ComponentCatalog | None = None,
 ) -> WorldState:
+	catalog = component_catalog or build_core_component_catalog()
 	if checkpoint_path.suffix == ".gz":
 		with gzip.open(checkpoint_path, "rt", encoding="utf-8") as f:
 			payload = json.load(f)
@@ -361,7 +272,14 @@ def restore_world_state_from_checkpoint(
 		raise ValueError("checkpoint world missing")
 	if not isinstance(entity_templates, dict) or not entity_templates:
 		raise ValueError("checkpoint restore requires non-empty entity_templates")
-	ws = build_world_state(world, entity_templates, {}, check_container_snapshot_consistency=True, named_bundles=named_bundles or {}).world_state
+	ws = build_world_state(
+		world,
+		entity_templates,
+		{},
+		check_container_snapshot_consistency=True,
+		named_bundles=named_bundles or {},
+		component_catalog=catalog,
+	).world_state
 	log_rows = _load_history_log_rows(checkpoint_path, meta)
 	if not log_rows:
 		log_rows = (payload or {}).get("log", []) or []

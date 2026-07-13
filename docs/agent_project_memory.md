@@ -168,11 +168,19 @@ Load and merge rules:
 
 `KERN.data.builder.build_world_state(...)` builds locations, paths,
 environment scopes, root entities, nested container entities, initial tasks, and
-component instances. Component names unknown to the Python model layer are loaded
-as `CustomComponent(data=...)`.
+component instances. It accepts a runtime-scoped `ComponentCatalog`; direct calls
+create a fresh core catalog by default. Component names unknown to the catalog are
+loaded as `CustomComponent(data=...)`.
 
 `component_overrides` are applied on top of templates. For `CustomComponent`, the
 override is a shallow merge into `data`.
+
+Core component construction, snapshot application, and serialization are defined
+under `KERN.component_catalog`. `DataclassCodec` handles ordinary pure-data
+dataclasses. Container, DecisionArbiter, and TaskHost use dedicated codecs for
+their nested state. Runtime assembly, executor-driven `CreateEntity`, scenario
+lint, archive recording, and checkpoint restore share the same catalog instance;
+the runtime freezes it before execution.
 
 ## World And Components
 
