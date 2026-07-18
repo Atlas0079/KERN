@@ -9,7 +9,7 @@ so a run remains inspectable and reproducible.
 The core runtime flow is:
 
 ```text
-runtime config / ScenarioPackage
+runtime config / Package composition
 -> data bundle
 -> WorldState
 -> recipes, workflow, and reactions
@@ -64,7 +64,7 @@ template JSON <-> live component object <-> checkpoint JSON
 executor, and archive. Runtime assembly freezes both before execution. A catalog
 must not be mutated while a runtime is running.
 
-## ScenarioPackage migration status
+## Package composition migration status
 
 Phases 0–2 are complete on `laptop`:
 
@@ -72,16 +72,13 @@ Phases 0–2 are complete on `laptop`:
 - runtime-scoped `ComponentCatalog` and component codecs;
 - behavior and real-scenario regression coverage.
 
-The next work is defined in `docs/scenario_package_migration_plan.md`:
+The next work is defined in `docs/scenario_package_migration_plan.md`. A runtime
+will compose one required world package with any number of capability packages.
+Selecting a Package in config means the user trusts its declared code; there is
+no separate code-authorization switch. The loader only imports modules declared
+by a selected Package's `extensions.py`, registers their marked definitions into
+the current runtime's catalogs, and freezes those catalogs before execution.
 
-1. load a data-only package from a manifest while retaining legacy config;
-2. explicitly authorize and load trusted scenario-owned Effects;
-3. explicitly authorize and load trusted pure-data components/codecs;
-4. record scenario identity and content version in archives before restore;
-5. migrate Camping as the first real package.
-
-Do not implement automatic Python discovery as a side effect of another task.
-Trusted scenario code must register its capabilities before catalogs freeze.
 Scenario code is not sandboxed and has the same process permissions as KERN.
 
 ## Module map
