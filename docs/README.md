@@ -12,6 +12,7 @@
 
 - `开发者快速上手.md`：第一次运行 KERN 的最短路径。
 - `配置详解.md`：runtime config 字段说明。
+- `仿真模拟研究前沿综述_管理研究与KERN.md`：面向管理研究的仿真方法、近期 LLM agent 文献、验证要求与 KERN 选题建议。
 - `仿真模拟研究前沿综述.md`：仿真与 LLM 主体文献综述，含证据边界与 KERN 定位。
 
 Effect、组件 codec、动态文本和 RumorSpread 并行决策的稳定约束已浓缩到
