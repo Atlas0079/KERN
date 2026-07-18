@@ -1,6 +1,6 @@
 # KERN Package 组合迁移计划
 
-> 状态：实施中。阶段 0–3 已完成；下一项为阶段 4（能力包 Effect 发现）。
+> 状态：实施中。阶段 0–5 已完成；下一项为阶段 6（archive 身份与可复现性）。
 
 ## 目标
 
@@ -107,6 +107,10 @@ EFFECT_MODULES = ("effects.weather",)
 COMPONENT_MODULES = ("components.weather",)
 ```
 
+组件模块以 `@package_component("weather:WeatherComponent")` 标记 dataclass；Effect 模块以
+`@package_effect(EffectSpec(...))` 标记一个模块级定义。Package 作者从
+`KERN.package_definitions` 导入这两个标记。标记之外的定义不会被注册。
+
 loader 依声明顺序导入模块，并只收集带 `@package_effect` 或
 `@package_component` 标记的定义。组件和 codec 先注册；Effect 后注册；随后冻结两个
 Catalog，再读取世界包数据和 lint。
@@ -130,7 +134,7 @@ Package ID 不重复，并验证恰好一个 `world: true` 条目与 manifest �
 零或多个世界包、manifest/data 不一致均有明确报错。以上由
 `tests/test_package_loading.py` 覆盖。
 
-### 阶段 4：能力包 Effect 发现
+### 阶段 4：能力包 Effect 发现（已完成）
 
 对每个 config 选择且声明 `extensions.py` 的 Package，loader 执行入口并读取
 `EFFECT_MODULES`。它按相对模块路径导入、收集 `@package_effect` 定义，并注册到 core
@@ -141,9 +145,10 @@ lint 与 executor 使用同一个扩展后的 Catalog。所选 Package 的入口
 导入失败、标记错误或 ID 冲突均立即失败。
 
 验收：选中 Weather 后其 Effect 仅在该 Runtime 可见；未选中 Weather 的 Runtime 无法
-引用其 Effect；场景 Effect 在单 effect 和 bundle 事务中与 core Effect 有相同语义。
+引用其 Effect；场景 Effect 在单 effect 和 bundle 事务中与 core Effect 有相同语义。已由
+`tests/test_package_loading.py` 的 capability fixture 覆盖。
 
-### 阶段 5：能力包组件和 codec 发现
+### 阶段 5：能力包组件和 codec 发现（已完成）
 
 先读取所有选中 Package 的 `COMPONENT_MODULES`，发现带 `@package_component` 标记的组件，
 再加载 Effect。组件只能是纯数据 dataclass；默认采用 `DataclassCodec`，特殊转换才允许
@@ -151,7 +156,8 @@ Package 提供 codec。ComponentCatalog 在 build 和 restore 前冻结并被两
 
 验收：自定义组件能由世界包模板构造、被 query/effect 读取或修改，并在 checkpoint 后
 保留类型和值；未选中能力包时同名组件不会静默得到该类型；不同 Runtime 的 Catalog
-隔离成立。
+隔离成立。当前测试已覆盖模板构造、未选中隔离和 executor 共享 Catalog；checkpoint
+身份验证随阶段 6 一起完成。
 
 ### 阶段 6：archive 身份与可复现性
 

@@ -1,6 +1,12 @@
 from __future__ import annotations
 
 import json
+import hashlib
+import importlib
+import importlib.util
+import sys
+import types
+from dataclasses import replace
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -8,6 +14,7 @@ from typing import Any
 from .data.loader import DataBundle, load_data_bundle
 from .component_catalog import ComponentCatalog, build_core_component_catalog
 from .effects import EffectCatalog, build_core_effect_catalog
+from .package_definitions import marked_component_spec, marked_effect_spec
 
 
 @dataclass(frozen=True)
@@ -82,26 +89,107 @@ def load_packages_from_config(
 		raise ValueError(f"selected world package does not provide a world: {world_package.manifest.package_id}")
 	if world_package.manifest.data is None:
 		raise ValueError(f"world package has no data declaration: {world_package.manifest.package_id}")
-	data_bundle = _load_world_data(world_package)
-	return _loaded_packages(tuple(loaded), world_package, data_bundle)
-
-
-def _loaded_packages(
-	packages: tuple[LoadedPackage, ...],
-	world_package: LoadedPackage,
-	data_bundle: DataBundle,
-) -> LoadedPackages:
 	effect_catalog = build_core_effect_catalog()
 	component_catalog = build_core_component_catalog()
+	_register_package_extensions(tuple(loaded), effect_catalog, component_catalog)
 	effect_catalog.freeze()
 	component_catalog.freeze()
-	return LoadedPackages(
-		packages=packages,
-		world_package=world_package,
-		data_bundle=data_bundle,
-		effect_catalog=effect_catalog,
-		component_catalog=component_catalog,
-	)
+	data_bundle = _load_world_data(world_package)
+	return LoadedPackages(tuple(loaded), world_package, data_bundle, effect_catalog, component_catalog)
+
+
+def _register_package_extensions(
+	packages: tuple[LoadedPackage, ...],
+	effect_catalog: EffectCatalog,
+	component_catalog: ComponentCatalog,
+) -> None:
+	loaded_modules: list[tuple[LoadedPackage, tuple[types.ModuleType, ...], tuple[types.ModuleType, ...]]] = []
+	for package in packages:
+		extension = str(package.manifest.extensions or "").strip()
+		if not extension:
+			loaded_modules.append((package, (), ()))
+			continue
+		entry = package.root / extension
+		if extension != "extensions.py" or not entry.is_file():
+			raise FileNotFoundError(f"package extensions entry not found: {entry}")
+		prefix = _package_module_prefix(package)
+		entry_module = _load_extension_entry(prefix, entry, package.root)
+		component_modules = _import_declared_modules(entry_module, "COMPONENT_MODULES", prefix, package)
+		effect_modules = _import_declared_modules(entry_module, "EFFECT_MODULES", prefix, package)
+		loaded_modules.append((package, component_modules, effect_modules))
+	for package, component_modules, _effect_modules in loaded_modules:
+		for module in component_modules:
+			for spec in _marked_specs(module, marked_component_spec):
+				_component_id_for_package(spec.component_id, package)
+				component_catalog.register(replace(spec, origin=package.manifest.package_id))
+	for package, _component_modules, effect_modules in loaded_modules:
+		for module in effect_modules:
+			for spec in _marked_specs(module, marked_effect_spec):
+				_component_id_for_package(spec.effect_id, package)
+				effect_catalog.register(_package_effect_spec(spec, package))
+
+
+def _package_module_prefix(package: LoadedPackage) -> str:
+	digest = hashlib.sha256(str(package.root).encode("utf-8")).hexdigest()[:12]
+	return f"_kern_package_{digest}"
+
+
+def _load_extension_entry(prefix: str, entry: Path, package_root: Path) -> types.ModuleType:
+	root_module = types.ModuleType(prefix)
+	root_module.__path__ = [str(package_root)]
+	sys.modules[prefix] = root_module
+	module_name = f"{prefix}.extensions"
+	spec = importlib.util.spec_from_file_location(module_name, entry)
+	if spec is None or spec.loader is None:
+		raise ImportError(f"unable to load package extensions: {entry}")
+	module = importlib.util.module_from_spec(spec)
+	sys.modules[module_name] = module
+	try:
+		spec.loader.exec_module(module)
+	except Exception as exc:
+		raise ImportError(f"package extensions import failed: {entry}: {exc}") from exc
+	return module
+
+
+def _import_declared_modules(entry: types.ModuleType, attribute: str, prefix: str, package: LoadedPackage) -> tuple[types.ModuleType, ...]:
+	declared = getattr(entry, attribute, ())
+	if not isinstance(declared, tuple) or not all(isinstance(item, str) for item in declared):
+		raise ValueError(f"{package.manifest.package_id} extensions.{attribute} must be a tuple of module paths")
+	modules: list[types.ModuleType] = []
+	for relative in declared:
+		if not relative or any(not part.isidentifier() for part in relative.split(".")):
+			raise ValueError(f"invalid package module path: {relative!r}")
+		try:
+			modules.append(importlib.import_module(f"{prefix}.{relative}"))
+		except Exception as exc:
+			raise ImportError(f"package module import failed: {package.manifest.package_id}:{relative}: {exc}") from exc
+	return tuple(modules)
+
+
+def _marked_specs(module: types.ModuleType, marker) -> tuple[Any, ...]:
+	seen: set[int] = set()
+	specs: list[Any] = []
+	for value in vars(module).values():
+		spec = marker(value)
+		if spec is not None and id(spec) not in seen:
+			seen.add(id(spec))
+			specs.append(spec)
+	return tuple(specs)
+
+
+def _component_id_for_package(identifier: str, package: LoadedPackage) -> None:
+	prefix = f"{package.manifest.package_id}:"
+	if not str(identifier or "").startswith(prefix):
+		raise ValueError(f"package definition id must use namespace {prefix}: {identifier}")
+
+
+def _package_effect_spec(spec: Any, package: LoadedPackage):
+	module = str(getattr(spec, "module", "") or "").strip()
+	if module:
+		if any(not part.isidentifier() for part in module.split(".")):
+			raise ValueError(f"invalid package effect module path: {module!r}")
+		module = f"{_package_module_prefix(package)}.{module}"
+	return replace(spec, module=module, origin=package.manifest.package_id)
 
 
 def _resolve_package_path(project_root: Path, config_path: Path, value: Any, index: int) -> Path:
