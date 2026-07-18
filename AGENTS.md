@@ -141,3 +141,5 @@ Run checks proportional to the change. The full local baseline is:
 Run focused tests for the boundary being changed as well, especially executor
 transactions, task lifecycle, archives, dynamic text, external runtimes, and
 social activity scheduling when applicable.
+
+Choose the smallest relevant test scope first; `tests/test_rumor_spread_config_runtime.py` and tests loading `runtime_config.su7_crisis.package.smoke.json` are slow integration tests and should run only for SU7Crisis, social-runtime, package-loading, or final smoke validation changes.
