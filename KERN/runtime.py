@@ -269,7 +269,7 @@ class KernRuntime:
 				buffer_size=_cfg_int(cfg, "LOG_BUFFER_SIZE", 1000),
 			)
 
-		loaded_packages = _loaded_packages or load_packages_from_config(root, resolved_config_path, env=cfg)
+		loaded_packages = _loaded_packages or load_packages_from_config(root, resolved_config_path)
 		bundle = loaded_packages.data_bundle
 		world_data = loaded_packages.world_package.manifest.data
 		if world_data is None:

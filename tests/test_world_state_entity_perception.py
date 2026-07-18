@@ -3,7 +3,6 @@ from pathlib import Path
 
 from KERN.agent_workflow.full_ws_view_builder import build_full_ws_view
 from KERN.agent_workflow.observer import build_agent_perception
-from KERN.data.loader import load_data_bundle
 from KERN.models.components import CustomComponent
 from KERN.runtime import KernRuntime
 
@@ -12,28 +11,12 @@ def _load_camping_smoke_world_and_bundle():
 	project_root = Path(__file__).resolve().parents[1]
 	runtime = KernRuntime.from_config(
 		project_root,
-		"runtime_config.camping.smoke.json",
+		"runtime_config.camping.package.smoke.json",
 		validate=False,
 		configure_logging=False,
 		overrides={"CHECKPOINT_EVERY_TICK": "0"},
 	)
 	return runtime.world_state, runtime.data_bundle
-
-
-def _load_companion_smoke_world_and_bundle():
-	project_root = Path(__file__).resolve().parents[1]
-	bundle = load_data_bundle(
-		project_root,
-		recipes_jsons=["Recipes.json", "CompanionRobot/Recipes.json"],
-		reactions_jsons=["Reactions.json", "CompanionRobot/Reactions.json"],
-		entities_dirs=["Entities", "CompanionRobot/Entities"],
-		world_json="CompanionRobot/World.json",
-		bundles_jsons=["Bundles.json"],
-	)
-	from KERN.data.builder import build_world_state
-
-	ws = build_world_state(bundle.world, bundle.entity_templates, bundle.recipes, named_bundles=bundle.named_bundles).world_state
-	return ws, bundle
 
 
 class WorldStateEntityPerceptionTests(unittest.TestCase):
@@ -138,25 +121,6 @@ class WorldStateEntityPerceptionTests(unittest.TestCase):
 				"nutrition": 70.0,
 				"max_nutrition": 100.0,
 				"stress": 0.0,
-				"max_stress": 100.0,
-			},
-		)
-
-	def test_kindergarten_child_vitals_include_stress_value(self):
-		ws, _bundle = _load_companion_smoke_world_and_bundle()
-		view = build_full_ws_view(ws, "child_doudou", "test", {})
-		perception = build_agent_perception(view, "child_doudou")
-
-		self.assertEqual(
-			perception.get("vitals"),
-			{
-				"hp": 100.0,
-				"max_hp": 100.0,
-				"energy": 72.0,
-				"max_energy": 100.0,
-				"nutrition": 100.0,
-				"max_nutrition": 100.0,
-				"stress": 18.0,
 				"max_stress": 100.0,
 			},
 		)

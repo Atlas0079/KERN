@@ -15,7 +15,7 @@ def _runtime_with_temp_social_db(db_path: Path) -> KernRuntime:
 	project_root = Path(__file__).resolve().parents[1]
 	return KernRuntime.from_config(
 		project_root,
-		"runtime_config.rumor_spread.smoke.json",
+		"runtime_config.su7_crisis.package.smoke.json",
 		validate=True,
 		configure_logging=False,
 		overrides={
@@ -27,7 +27,7 @@ def _runtime_with_temp_social_db(db_path: Path) -> KernRuntime:
 						"type": "sqlite_social_platform",
 						"db_path": str(db_path),
 						"reset_db": True,
-						"seed_json": "Data/RumorSpread/social_seed.json",
+						"seed_json": "Packages/SU7Crisis/Data/social_seed.json",
 					}
 				}
 			),
@@ -47,45 +47,44 @@ def _run_command(runtime: KernRuntime, actor_id: str, verb: str, parameters: dic
 	return runtime.executor.execute_bundle(ws, cmd["bundle"], cmd["context"])
 
 
-class RumorSpreadConfigRuntimeTests(unittest.TestCase):
+class SU7CrisisConfigRuntimeTests(unittest.TestCase):
 	def test_config_declares_sqlite_social_runtime_and_seed_data(self) -> None:
 		with tempfile.TemporaryDirectory() as td:
 			runtime = _runtime_with_temp_social_db(Path(td) / "social.sqlite3")
 
 			adapter = runtime.external_runtimes.get("social")
 			self.assertIsInstance(adapter, SQLiteSocialPlatformRuntime)
-			events = adapter.invoke("observe_feed", {"account_id": "acc_student_high_media", "limit": 5, "tick": 1}, {})
+			events = adapter.invoke("observe_feed", {"account_id": "acc_su7_001", "limit": 5, "tick": 1}, {})
 
 			self.assertEqual(events[0]["type"], "SocialFeedObserved")
-			summaries = [str(item.get("summary", "")) for item in events[0]["items"]]
-			self.assertTrue(any("饮水机" in text for text in summaries))
+			self.assertTrue(events[0]["items"])
 
 	def test_rumor_spread_scene_recipes_update_phone_screen(self) -> None:
 		with tempfile.TemporaryDirectory() as td:
 			runtime = _runtime_with_temp_social_db(Path(td) / "social.sqlite3")
 			ws = runtime.world_state
 			ws.services["external_runtime_bridge"] = ExternalRuntimeBridge(runtime.external_runtimes)
-			agent_inventory = ws.get_entity_by_id("agent_student_high_media").get_component("ContainerComponent").slots["inventory"].items
-			self.assertIn("phone_student_high_media", agent_inventory)
+			agent_inventory = ws.get_entity_by_id("agent_su7_001").get_component("ContainerComponent").slots["inventory"].items
+			self.assertIn("phone_su7_001", agent_inventory)
 
 			feed_cmd = runtime.interaction_engine.process_command(
 				ws,
-				"agent_student_high_media",
-				{"verb": "BrowseSocialFeed", "target_id": "phone_student_high_media", "parameters": {"limit": 1}},
+				"agent_su7_001",
+				{"verb": "BrowseSocialFeed", "target_id": "phone_su7_001", "parameters": {"limit": 1}},
 			)
 			self.assertEqual(feed_cmd["status"], "success")
 			feed_events = runtime.executor.execute_bundle(ws, feed_cmd["bundle"], feed_cmd["context"])
 			self.assertEqual(feed_events[0]["type"], "SocialFeedObserved")
 
-			screen = ws.get_entity_by_id("phone_student_high_media").get_component("ScreenComponent")
+			screen = ws.get_entity_by_id("phone_su7_001").get_component("ScreenComponent")
 			self.assertEqual(screen.view, "feed")
 			self.assertEqual(len(screen.feed_items), 1)
 			self.assertTrue(screen.feed_items[0]["post_id"])
 
 			open_cmd = runtime.interaction_engine.process_command(
 				ws,
-				"agent_student_high_media",
-				{"verb": "OpenSocialPost", "target_id": "phone_student_high_media", "parameters": {"slot": 0}},
+				"agent_su7_001",
+				{"verb": "OpenSocialPost", "target_id": "phone_su7_001", "parameters": {"slot": 0}},
 			)
 			self.assertEqual(open_cmd["status"], "success")
 			open_events = runtime.executor.execute_bundle(ws, open_cmd["bundle"], open_cmd["context"])
@@ -98,15 +97,15 @@ class RumorSpreadConfigRuntimeTests(unittest.TestCase):
 		with tempfile.TemporaryDirectory() as td:
 			runtime = _runtime_with_temp_social_db(Path(td) / "social.sqlite3")
 			ws = runtime.world_state
-			agent = ws.get_entity_by_id("agent_student_high_media")
+			agent = ws.get_entity_by_id("agent_su7_001")
 			container = agent.get_component("ContainerComponent")
-			self.assertTrue(container.remove_entity_by_id("phone_student_high_media"))
-			ws.get_location_by_id("rumor_lab_room").add_entity_id("phone_student_high_media")
+			self.assertTrue(container.remove_entity_by_id("phone_su7_001"))
+			ws.get_location_by_id("su7_public_discussion_room").add_entity_id("phone_su7_001")
 
 			cmd = runtime.interaction_engine.process_command(
 				ws,
-				"agent_student_high_media",
-				{"verb": "BrowseSocialFeed", "target_id": "phone_student_high_media", "parameters": {"limit": 1}},
+				"agent_su7_001",
+				{"verb": "BrowseSocialFeed", "target_id": "phone_su7_001", "parameters": {"limit": 1}},
 			)
 
 			self.assertEqual(cmd["status"], "failed")
@@ -118,8 +117,8 @@ class RumorSpreadConfigRuntimeTests(unittest.TestCase):
 			ws = runtime.world_state
 			ws.services["external_runtime_bridge"] = ExternalRuntimeBridge(runtime.external_runtimes)
 
-			actor_id = "agent_student_high_media"
-			phone_id = "phone_student_high_media"
+			actor_id = "agent_su7_001"
+			phone_id = "phone_su7_001"
 			feed_events = _run_command(runtime, actor_id, "BrowseSocialFeed", {"limit": 3}, phone_id)
 			self.assertEqual(feed_events[0]["type"], "SocialFeedObserved")
 

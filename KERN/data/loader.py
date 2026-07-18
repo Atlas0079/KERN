@@ -37,10 +37,8 @@ def load_data_bundle(
 	bundles_jsons: list[str] | None = None,
 ) -> DataBundle:
 	"""
-	Read JSON from Data directory.
-	project_root:
-	- Can be "Repo/Godot Project Root" (Has Data/ under it)
-	- Can also pass Data/ directory directly
+	Read JSON from a world package's Data directory.
+	project_root can be the package root (which contains Data/) or Data itself.
 	"""
 
 	data_dir = project_root

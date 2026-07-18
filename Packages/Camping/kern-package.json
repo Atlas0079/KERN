@@ -1,0 +1,12 @@
+{
+  "package_id": "camping",
+  "version": "1.0.0",
+  "provides_world": true,
+  "data": {
+    "world": "Data/World.json",
+    "entities": ["Data/Entities"],
+    "recipes": ["Data/Recipes.core.json", "Data/Recipes.json"],
+    "reactions": ["Data/Reactions.core.json", "Data/Reactions.json"],
+    "bundles": ["Data/Bundles.json"]
+  }
+}

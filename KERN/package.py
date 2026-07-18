@@ -42,14 +42,11 @@ class LoadedPackages:
 	data_bundle: DataBundle
 	effect_catalog: EffectCatalog
 	component_catalog: ComponentCatalog
-	is_legacy: bool = False
 
 
 def load_packages_from_config(
 	project_root: Path,
 	config_path: Path,
-	*,
-	env: dict[str, str],
 ) -> LoadedPackages:
 	"""Resolve one runtime's package composition and its world data bundle."""
 	root = Path(project_root).resolve()
@@ -58,7 +55,7 @@ def load_packages_from_config(
 		raise ValueError(f"runtime config must be an object: {config_path}")
 	package_entries = raw.get("packages")
 	if package_entries is None:
-		return _load_legacy_package(root, env)
+		raise ValueError("runtime config requires a top-level 'packages' array")
 	if not isinstance(package_entries, list):
 		raise ValueError("runtime config field 'packages' must be an array")
 
@@ -89,25 +86,10 @@ def load_packages_from_config(
 	return _loaded_packages(tuple(loaded), world_package, data_bundle)
 
 
-def _load_legacy_package(project_root: Path, env: dict[str, str]) -> LoadedPackages:
-	data = PackageData(
-		world=_cfg_get(env, "WORLD_JSON", "World.json"),
-		entities=tuple(_split_csv(_cfg_get(env, "ENTITIES_DIRS", "Entities"))),
-		recipes=tuple(_split_csv(_cfg_get(env, "RECIPES_JSONS", "Recipes.json"))),
-		reactions=tuple(_split_csv(_cfg_get(env, "REACTIONS_JSONS", "Reactions.json"))),
-		bundles=tuple(_split_csv(_cfg_get(env, "BUNDLES_JSONS", "Bundles.json"))),
-	)
-	manifest = PackageManifest("legacy", "legacy", True, data)
-	package = LoadedPackage(project_root, manifest, True)
-	return _loaded_packages((package,), package, _load_world_data(package), is_legacy=True)
-
-
 def _loaded_packages(
 	packages: tuple[LoadedPackage, ...],
 	world_package: LoadedPackage,
 	data_bundle: DataBundle,
-	*,
-	is_legacy: bool = False,
 ) -> LoadedPackages:
 	effect_catalog = build_core_effect_catalog()
 	component_catalog = build_core_component_catalog()
@@ -119,7 +101,6 @@ def _loaded_packages(
 		data_bundle=data_bundle,
 		effect_catalog=effect_catalog,
 		component_catalog=component_catalog,
-		is_legacy=is_legacy,
 	)
 
 
@@ -216,11 +197,3 @@ def _load_world_data(world_package: LoadedPackage) -> DataBundle:
 		reactions_jsons=list(data.reactions),
 		bundles_jsons=list(data.bundles),
 	)
-
-
-def _cfg_get(cfg: dict[str, str], key: str, default: str) -> str:
-	return str(cfg.get(key, default) or default).strip()
-
-
-def _split_csv(value: str) -> list[str]:
-	return [item.strip() for item in str(value or "").split(",") if item.strip()]

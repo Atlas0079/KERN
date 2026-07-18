@@ -264,12 +264,12 @@ class SocialActivityGateTests(unittest.TestCase):
 			self.assertEqual(len(provider.calls), 2)
 			self.assertEqual(gate["skipped"]["provider"], 0)
 
-	def test_rumor_spread_config_uses_social_activity_gate_not_default_agent_control(self) -> None:
+	def test_su7_crisis_config_uses_social_activity_gate_not_default_agent_control(self) -> None:
 		project_root = Path(__file__).resolve().parents[1]
 		with tempfile.TemporaryDirectory() as td:
 			runtime = KernRuntime.from_config(
 				project_root,
-				"runtime_config.rumor_spread.smoke.json",
+				"runtime_config.su7_crisis.package.smoke.json",
 				validate=True,
 				configure_logging=False,
 				overrides={
@@ -277,13 +277,13 @@ class SocialActivityGateTests(unittest.TestCase):
 					"EXTERNAL_RUNTIMES_JSON": (
 						'{"social":{"type":"sqlite_social_platform","db_path":"'
 						+ str(Path(td) / "social.sqlite3").replace("\\", "\\\\")
-						+ '","reset_db":true,"seed_json":"Data/RumorSpread/social_seed.json"}}'
+						+ '","reset_db":true,"seed_json":"Packages/SU7Crisis/Data/social_seed.json"}}'
 					),
 				},
 			)
 
 			rule_ids = [str(rule.get("id", "")) for rule in runtime.reaction_rules]
-			self.assertIn("rumor_world_tick_social_activity_gate", rule_ids)
+			self.assertIn("su7_world_tick_social_activity_gate", rule_ids)
 			self.assertNotIn("advance_tick_agent_control", rule_ids)
 			self.assertIn("SocialActivityGateTick", {effect.get("effect") for rule in runtime.reaction_rules for effect in rule.get("bundle", {}).get("effects", [])})
 			for rule in runtime.reaction_rules:

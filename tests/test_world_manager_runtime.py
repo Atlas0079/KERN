@@ -27,13 +27,13 @@ class KernRuntimeTests(unittest.TestCase):
 		project_root = Path(__file__).resolve().parents[1]
 		runtime = KernRuntime.from_config(
 			project_root,
-			"runtime_config.camping.smoke.json",
+			"runtime_config.camping.package.smoke.json",
 			validate=False,
 			configure_logging=False,
 			overrides={"CHECKPOINT_EVERY_TICK": "0"},
 		)
 
-		self.assertEqual(runtime.config_path, project_root / "runtime_config.camping.smoke.json")
+		self.assertEqual(runtime.config_path, project_root / "runtime_config.camping.package.smoke.json")
 		self.assertEqual(runtime.configured_max_ticks, 60)
 		self.assertIsNotNone(runtime.data_bundle)
 		self.assertIn("camp_main", runtime.world_state.locations)

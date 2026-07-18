@@ -168,7 +168,7 @@ class ExternalRuntimeBridgeTests(unittest.TestCase):
 		with tempfile.TemporaryDirectory() as td:
 			base_runtime = KernRuntime.from_config(
 				project_root,
-				"runtime_config.camping.smoke.json",
+				"runtime_config.camping.package.smoke.json",
 				validate=False,
 				configure_logging=False,
 				overrides={"CHECKPOINT_EVERY_TICK": "0"},
@@ -179,7 +179,7 @@ class ExternalRuntimeBridgeTests(unittest.TestCase):
 
 			restored_runtime = KernRuntime.from_config(
 				project_root,
-				"runtime_config.camping.smoke.json",
+				"runtime_config.camping.package.smoke.json",
 				validate=False,
 				configure_logging=False,
 				overrides={"CHECKPOINT_RESTORE_DIR": td, "CHECKPOINT_EVERY_TICK": "0"},
@@ -196,7 +196,7 @@ class ExternalRuntimeBridgeTests(unittest.TestCase):
 		with tempfile.TemporaryDirectory() as td:
 			base_runtime = KernRuntime.from_config(
 				project_root,
-				"runtime_config.camping.smoke.json",
+				"runtime_config.camping.package.smoke.json",
 				validate=False,
 				configure_logging=False,
 				overrides={"CHECKPOINT_EVERY_TICK": "0"},
@@ -207,7 +207,7 @@ class ExternalRuntimeBridgeTests(unittest.TestCase):
 			with self.assertRaises(RuntimeError):
 				KernRuntime.from_config(
 					project_root,
-					"runtime_config.camping.smoke.json",
+					"runtime_config.camping.package.smoke.json",
 					validate=False,
 					configure_logging=False,
 					overrides={"CHECKPOINT_RESTORE_DIR": td, "CHECKPOINT_EVERY_TICK": "0"},

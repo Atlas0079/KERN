@@ -57,7 +57,7 @@ class ProviderCatalogTests(unittest.TestCase):
 		profiles = {"fast_social": {"LLM_PROVIDER": "openai_compat", "LLM_PLANNER_MODEL": "fast-planner"}}
 		runtime = KernRuntime.from_config(
 			Path(__file__).resolve().parents[1],
-			"runtime_config.camping.smoke.json",
+			"runtime_config.camping.package.smoke.json",
 			validate=False,
 			configure_logging=False,
 			overrides={"USE_LLM": "1", "CHECKPOINT_EVERY_TICK": "0", "LLM_PROFILES_JSON": json.dumps(profiles)},

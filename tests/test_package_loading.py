@@ -45,6 +45,36 @@ def _write_world_package(root: Path, *, package_id: str = "demo") -> Path:
 
 
 class PackageLoadingTests(unittest.TestCase):
+	def test_camping_world_package_replaces_legacy_smoke_config(self) -> None:
+		project_root = Path(__file__).resolve().parents[1]
+
+		runtime = KernRuntime.from_config(
+			project_root,
+			"runtime_config.camping.package.smoke.json",
+			configure_logging=False,
+			overrides={"CHECKPOINT_EVERY_TICK": "0"},
+		)
+		lint = lint_config(project_root, "runtime_config.camping.package.smoke.json")
+
+		self.assertEqual(runtime.loaded_packages.world_package.manifest.package_id, "camping")
+		self.assertIn("camp_main", runtime.world_state.locations)
+		self.assertFalse([issue for issue in lint.issues if issue.severity == "ERROR"])
+
+	def test_su7_crisis_world_package_loads_the_canonical_generated_world(self) -> None:
+		project_root = Path(__file__).resolve().parents[1]
+
+		runtime = KernRuntime.from_config(
+			project_root,
+			"runtime_config.su7_crisis.package.smoke.json",
+			configure_logging=False,
+			overrides={"CHECKPOINT_EVERY_TICK": "0"},
+		)
+		lint = lint_config(project_root, "runtime_config.su7_crisis.package.smoke.json")
+
+		self.assertEqual(runtime.loaded_packages.world_package.manifest.package_id, "su7_crisis")
+		self.assertGreaterEqual(len(runtime.world_state.entities), 100)
+		self.assertFalse([issue for issue in lint.issues if issue.severity == "ERROR"])
+
 	def test_runtime_and_lint_load_a_selected_world_package(self) -> None:
 		with tempfile.TemporaryDirectory() as temp_dir:
 			root = Path(temp_dir)
@@ -60,19 +90,6 @@ class PackageLoadingTests(unittest.TestCase):
 			self.assertIn("room", runtime.world_state.locations)
 			self.assertEqual(runtime.loaded_packages.world_package.manifest.package_id, "demo")
 			self.assertFalse([issue for issue in lint.issues if issue.severity == "ERROR"])
-
-	def test_legacy_config_remains_a_world_package_adapter(self) -> None:
-		project_root = Path(__file__).resolve().parents[1]
-		runtime = KernRuntime.from_config(
-			project_root,
-			"runtime_config.camping.smoke.json",
-			validate=False,
-			configure_logging=False,
-			overrides={"CHECKPOINT_EVERY_TICK": "0"},
-		)
-
-		self.assertTrue(runtime.loaded_packages.is_legacy)
-		self.assertIn("camp_main", runtime.world_state.locations)
 
 	def test_package_path_cannot_escape_project_root(self) -> None:
 		with tempfile.TemporaryDirectory() as temp_dir:
@@ -109,7 +126,7 @@ class PackageLoadingTests(unittest.TestCase):
 			_write_world_package(root)
 			config_path = root / "runtime.json"
 			_write_json(config_path, {"packages": [{"path": "Packages/demo", "world": True}], "env": {"CHECKPOINT_EVERY_TICK": "0"}})
-			loaded = load_packages_from_config(root, config_path, env={"CHECKPOINT_EVERY_TICK": "0"})
+			loaded = load_packages_from_config(root, config_path)
 
 			runtime = KernRuntime.from_loaded_packages(loaded, root, "runtime.json", configure_logging=False)
 

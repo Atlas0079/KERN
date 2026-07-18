@@ -16,7 +16,7 @@ class SocialBehaviorComponent:
 	base_activity_rate: float = 0.2
 	active_hours: list[int] = field(default_factory=list)
 	# Legacy scheduling fields kept for checkpoint/data compatibility.
-	# Current RumorSpread action cooldown is represented by StatusComponent.
+	# Social-platform action cooldown is represented by StatusComponent.
 	cooldown_ticks: int = 0
 	last_social_opportunity_tick: int = -10**9
 	event_reaction_sensitivity: float = 0.5

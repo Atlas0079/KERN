@@ -279,7 +279,7 @@ class ComponentCatalogTests(unittest.TestCase):
 		project_root = Path(__file__).resolve().parents[1]
 		runtime = KernRuntime.from_config(
 			project_root,
-			"runtime_config.camping.smoke.json",
+			"runtime_config.camping.package.smoke.json",
 			validate=True,
 			configure_logging=False,
 			overrides={"CHECKPOINT_EVERY_TICK": "0"},
@@ -361,7 +361,7 @@ class ComponentCatalogTests(unittest.TestCase):
 		bundle = DataBundle(entity_templates=templates, recipes={}, reactions={"rules": []}, world=world)
 		common = {
 			"project_root": project_root,
-			"config_path": project_root / "runtime_config.camping.smoke.json",
+			"config_path": project_root / "runtime_config.camping.package.smoke.json",
 			"env": {},
 			"bundle": bundle,
 			"world_json": "World.json",

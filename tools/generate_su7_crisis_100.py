@@ -15,8 +15,8 @@ if str(ROOT) not in sys.path:
 from KERN.external_runtimes.social_profile_seed import generate_social_profiles
 
 
-DEFAULT_OUTPUT_DIR = ROOT / "Data" / "SU7Crisis" / "generated_100"
-DEFAULT_CONFIG_PATH = ROOT / "runtime_config.su7_crisis.100agent.smoke.json"
+DEFAULT_OUTPUT_DIR = ROOT / "Packages" / "SU7Crisis" / "Data"
+DEFAULT_CONFIG_PATH = ROOT / "runtime_config.su7_crisis.package.smoke.json"
 
 EVENT_CLASSES = {
 	"incident_initial": "事故初始信息",
@@ -491,13 +491,9 @@ def _reactions(max_agents_per_tick: int, max_decision_workers: int) -> dict[str,
 def _config(strategy: str, max_ticks: int) -> dict[str, Any]:
 	run_name = f"su7_crisis_100agent_{strategy}"
 	return {
+		"packages": [{"path": "Packages/SU7Crisis", "world": True}],
 		"env": {
 			"USE_LLM": "1",
-			"WORLD_JSON": "SU7Crisis/generated_100/World.json",
-			"RECIPES_JSONS": "RumorSpread/Recipes.json",
-			"REACTIONS_JSONS": "SU7Crisis/generated_100/Reactions.json",
-			"BUNDLES_JSONS": "Bundles.json",
-			"ENTITIES_DIRS": "SU7Crisis/generated_100/Entities",
 			"LOG_LEVEL": "warn",
 			"LOG_CATEGORIES": "system,executor,interaction,checkpoint,llm",
 			"MAX_TICKS": str(int(max_ticks)),
@@ -512,7 +508,7 @@ def _config(strategy: str, max_ticks: int) -> dict[str, Any]:
 						"type": "sqlite_social_platform",
 						"db_path": f"checkpoints/{run_name}/social.sqlite3",
 						"reset_db": True,
-						"seed_json": "Data/SU7Crisis/generated_100/social_seed.json",
+						"seed_json": "Packages/SU7Crisis/Data/social_seed.json",
 					}
 				},
 				ensure_ascii=False,
@@ -527,7 +523,7 @@ def main() -> None:
 	parser.add_argument("--count", type=int, default=100, help="Number of generated social agents.")
 	parser.add_argument("--seed", default="kern-su7-crisis-100-v1", help="Deterministic generation seed.")
 	parser.add_argument("--strategy", choices=sorted(STRATEGIES.keys()), default="empathy_first", help="Crisis response strategy schedule.")
-	parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR), help="Output directory under Data/SU7Crisis by default.")
+	parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR), help="Package Data directory to overwrite.")
 	parser.add_argument("--config-path", default=str(DEFAULT_CONFIG_PATH), help="Runtime config path to write.")
 	parser.add_argument("--max-ticks", type=int, default=12, help="MAX_TICKS for the generated runtime config.")
 	parser.add_argument("--max-agents-per-tick", type=int, default=100, help="SocialActivityGateTick max_agents_per_tick.")

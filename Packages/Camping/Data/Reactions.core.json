@@ -1,0 +1,65 @@
+{
+    "rules": [
+    {
+      "id": "world_tick_environment_condition",
+      "on_event": "WorldTickAdvanced",
+      "bundle": {
+        "effects": [
+          {
+            "effect": "EnvironmentConditionTick"
+          }
+        ]
+      }
+    },
+    {
+      "id": "advance_tick_agent_control",
+      "on_event": "AdvanceTick",
+      "condition": {
+                "type": "has_component",
+                "target": "event_entity",
+                "component": "AgentControlComponent"
+            },
+            "bundle": {
+                "effects": [
+                    {
+                        "effect": "AgentControlTick",
+                        "max_actions_in_tick": 50
+                    }
+                ]
+            }
+        },
+        {
+            "id": "advance_tick_worker",
+            "on_event": "AdvanceTick",
+            "condition": {
+                "type": "has_component",
+                "target": "event_entity",
+                "component": "WorkerComponent"
+            },
+            "bundle": {
+                "effects": [
+                    {
+                        "effect": "WorkerTick",
+                        "ticks": 1
+                    }
+                ]
+            }
+        },
+        {
+            "id": "advance_tick_status",
+            "on_event": "AdvanceTick",
+            "condition": {
+                "type": "has_component",
+                "target": "event_entity",
+                "component": "StatusComponent"
+            },
+            "bundle": {
+                "effects": [
+                    {
+                        "effect": "StatusTick"
+                    }
+                ]
+            }
+        }
+    ]
+}

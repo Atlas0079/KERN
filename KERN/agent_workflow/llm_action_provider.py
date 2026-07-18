@@ -491,9 +491,9 @@ class LLMActionProvider:
 	"""
 
 	llm: DualModelLLM
-	planner_template_path: Path = _repo_root() / "Data" / "LLMContext_Planner.md"
-	grounder_template_path: Path = _repo_root() / "Data" / "LLMContext_Grounder.md"
-	dialogue_template_path: Path = _repo_root() / "Data" / "LLMContext_Dialogue.md"
+	planner_template_path: Path = _repo_root() / "docs" / "scenario_authoring" / "LLMContext_Planner.md"
+	grounder_template_path: Path = _repo_root() / "docs" / "scenario_authoring" / "LLMContext_Grounder.md"
+	dialogue_template_path: Path = _repo_root() / "docs" / "scenario_authoring" / "LLMContext_Dialogue.md"
 	debug: bool = False
 	consecutive_failures: int = 0
 	cooldown_until_tick: int = -1

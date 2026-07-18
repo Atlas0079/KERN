@@ -1,13 +1,13 @@
 {
   "rules": [
     {
-      "id": "rumor_world_tick_social_activity_gate",
+      "id": "su7_world_tick_social_activity_gate",
       "on_event": "WorldTickAdvanced",
       "bundle": {
         "effects": [
           {
             "effect": "SocialActivityGateTick",
-            "max_agents_per_tick": 10,
+            "max_agents_per_tick": 100,
             "max_actions_per_agent": 1,
             "default_screen_context_window_ticks": 2,
             "decision_mode": "parallel_decide_serial_commit",
@@ -17,7 +17,7 @@
       }
     },
     {
-      "id": "rumor_world_tick_environment_condition",
+      "id": "su7_world_tick_environment_condition",
       "on_event": "WorldTickAdvanced",
       "bundle": {
         "effects": [
@@ -28,7 +28,7 @@
       }
     },
     {
-      "id": "rumor_advance_tick_status",
+      "id": "su7_advance_tick_status",
       "on_event": "AdvanceTick",
       "condition": {
         "type": "has_component",

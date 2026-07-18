@@ -109,11 +109,11 @@ class EffectCatalogTests(unittest.TestCase):
 	def test_lint_uses_the_callers_catalog(self) -> None:
 		project_root = Path(__file__).resolve().parents[1]
 		bundle = load_data_bundle(
-			project_root,
-			recipes_jsons=["Recipes.json", "Camping/Recipes.json"],
-			reactions_jsons=["Reactions.json", "Camping/Reactions.json"],
-			entities_dirs=["Entities", "Camping/Entities"],
-			world_json="Camping/World.json",
+			project_root / "Packages" / "Camping",
+			recipes_jsons=["Recipes.core.json", "Recipes.json"],
+			reactions_jsons=["Reactions.core.json", "Reactions.json"],
+			entities_dirs=["Entities"],
+			world_json="World.json",
 			bundles_jsons=["Bundles.json"],
 		)
 		bundle.reactions = deepcopy(bundle.reactions)
@@ -132,25 +132,25 @@ class EffectCatalogTests(unittest.TestCase):
 
 		result = lint_bundle(
 			project_root=project_root,
-			config_path=project_root / "runtime_config.camping.smoke.json",
+			config_path=project_root / "runtime_config.camping.package.smoke.json",
 			env={},
 			bundle=bundle,
-			world_json="Camping/World.json",
-			recipes_jsons=["Recipes.json", "Camping/Recipes.json"],
-			reactions_jsons=["Reactions.json", "Camping/Reactions.json"],
-			entities_dirs=["Entities", "Camping/Entities"],
+			world_json="World.json",
+			recipes_jsons=["Recipes.core.json", "Recipes.json"],
+			reactions_jsons=["Reactions.core.json", "Reactions.json"],
+			entities_dirs=["Entities"],
 			bundles_jsons=["Bundles.json"],
 			effect_catalog=catalog,
 		)
 		core_result = lint_bundle(
 			project_root=project_root,
-			config_path=project_root / "runtime_config.camping.smoke.json",
+			config_path=project_root / "runtime_config.camping.package.smoke.json",
 			env={},
 			bundle=bundle,
-			world_json="Camping/World.json",
-			recipes_jsons=["Recipes.json", "Camping/Recipes.json"],
-			reactions_jsons=["Reactions.json", "Camping/Reactions.json"],
-			entities_dirs=["Entities", "Camping/Entities"],
+			world_json="World.json",
+			recipes_jsons=["Recipes.core.json", "Recipes.json"],
+			reactions_jsons=["Reactions.core.json", "Reactions.json"],
+			entities_dirs=["Entities"],
 			bundles_jsons=["Bundles.json"],
 			effect_catalog=build_core_effect_catalog(),
 		)

@@ -82,14 +82,14 @@ class WorkflowViewProfileTests(unittest.TestCase):
 		self.assertEqual(patch["notes"], [])
 		self.assertGreaterEqual(patch["last_event_seq_seen"], 1)
 
-	def test_rumor_spread_config_enables_social_platform_profile(self) -> None:
+	def test_su7_crisis_config_enables_social_platform_profile(self) -> None:
 		root = Path(__file__).resolve().parents[1]
 		runtime = KernRuntime.from_config(
 			root,
-			"runtime_config.rumor_spread.smoke.json",
+			"runtime_config.su7_crisis.package.smoke.json",
 			validate=True,
 			configure_logging=False,
-			overrides={"CHECKPOINT_EVERY_TICK": "0"},
+			overrides={"CHECKPOINT_EVERY_TICK": "0", "EXTERNAL_RUNTIMES_JSON": ""},
 		)
 
 		self.assertEqual(runtime.workflow_view_profile["profile_id"], "social_platform")

@@ -32,7 +32,7 @@ def _load_camping_world():
 	project_root = Path(__file__).resolve().parents[1]
 	runtime = KernRuntime.from_config(
 		project_root,
-		"runtime_config.camping.smoke.json",
+		"runtime_config.camping.package.smoke.json",
 		validate=False,
 		configure_logging=False,
 		overrides={"CHECKPOINT_EVERY_TICK": "0"},

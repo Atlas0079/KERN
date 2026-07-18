@@ -1143,7 +1143,7 @@ def lint_config(
 	component_catalog: ComponentCatalog | None = None,
 ) -> LintContext:
 	env, resolved_config = _load_env_config(project_root, config_path)
-	loaded_packages = load_packages_from_config(project_root, resolved_config, env=env)
+	loaded_packages = load_packages_from_config(project_root, resolved_config)
 	data = loaded_packages.world_package.manifest.data
 	if data is None:
 		raise ValueError("loaded package composition has no world data")

@@ -52,8 +52,8 @@ Runtime
   能力包只提供代码能力。
 - Package 按 config 顺序处理。ID、Effect ID 或组件 ID 的冲突一律报错，不采用后者覆盖
   前者的隐式规则。
-- legacy `Data/` 布局和 runtime config 在迁移期继续可用，由 adapter 视为一个无扩展的
-  旧式世界包。
+- 不保留 legacy `Data/` 布局或 runtime config adapter。每个可运行场景必须是自包含的世界包；
+  历史场景只保留其设计与生成指导文档。
 
 ## config 与 Package 格式
 
@@ -115,19 +115,19 @@ Catalog，再读取世界包数据和 lint。
 
 ### 阶段 3：Package config、manifest 与世界包（已完成）
 
-已新增 `KERN.package` 的 manifest、package loader 和 legacy adapter。loader 复用现有
+已新增 `KERN.package` 的 manifest 和 package loader。loader 复用现有
 `load_data_bundle(...)`，不复制另一套数据读取逻辑。`LoadedPackages` 保存已解析的 Package
 清单、唯一 world package 和 world data bundle；Runtime 与 lint 使用同一个加载入口。
 
 `KernRuntime.from_config(...)` 识别顶层 `packages`。它验证每个路径都在项目根目录内、
-Package ID 不重复，并验证恰好一个 `world: true` 条目与 manifest 一致。缺少新字段时，
-legacy adapter 继续读取现有 `WORLD_JSON`、`RECIPES_JSONS` 等字段。
+Package ID 不重复，并验证恰好一个 `world: true` 条目与 manifest 一致。缺少 `packages`
+字段时立即报错。
 
 `KernRuntime.from_loaded_packages(...)` 可复用已验证的组合进行 Runtime 装配。阶段 3 不执行
 `extensions.py`；能力包可以参与组合解析，Catalog 扩展和 Package 身份 hash 留给阶段 4–6。
 
 验收：独立世界包可加载；能力包可被解析但在本阶段不执行 Python；路径逃逸、重复 ID、
-零或多个世界包、manifest/data 不一致均有明确报错；旧入口产生等价 WorldState。以上由
+零或多个世界包、manifest/data 不一致均有明确报错。以上由
 `tests/test_package_loading.py` 覆盖。
 
 ### 阶段 4：能力包 Effect 发现
@@ -173,14 +173,14 @@ hash 覆盖 manifest、被引用 JSON 和已加载 Python 源文件。恢复时�
 缺失 Package、版本、能力或 hash 不一致默认拒绝；无扩展的 legacy checkpoint 保持现有
 恢复路径并标记为 legacy。
 
-### 阶段 7：Camping 真实迁移
+### 阶段 7：Camping 与 SU7Crisis 真实迁移（已完成）
 
-将 Camping 迁为世界包，并选择一个小的、实际有用的能力包验证组合机制。比较旧入口和
-新 Package config 的初始世界状态、固定 tick 的关键事件与 checkpoint round-trip。稳定
-后再决定旧 `Data/Camping` 的弃用时间。
+Camping 与 SU7Crisis 已迁为自包含的世界包。SU7Crisis 保留 100-agent 生成世界，并将其
+所需社交 recipes 和 seed 数据纳入包内；Farm、RumorSpread、CompanionRobot、SpaceWerewolf 的
+运行数据与旧 config 已删除，后两者仅保留设计文档。
 
-验收：Package config lint、Camping no-LLM smoke、checkpoint round-trip 通过；旧 config
-在明确兼容期内继续工作。
+验收：两个 Package config lint、Camping no-LLM smoke、SU7Crisis load smoke 与 checkpoint
+round-trip 通过。
 
 ## 测试与兼容约束
 
@@ -189,10 +189,9 @@ hash 覆盖 manifest、被引用 JSON 和已加载 Python 源文件。恢复时�
 ```powershell
 & .\.venv\Scripts\python.exe -m unittest discover -s tests -p "test_*.py"
 & .\.venv\Scripts\python.exe -m compileall -q KERN tools default_orchestrator.py tests
-& .\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.camping.smoke.json
-& .\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.rumor_spread.smoke.json
-& .\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.example.json
-& .\.venv\Scripts\python.exe default_orchestrator.py --config runtime_config.camping.smoke.json
+& .\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.camping.package.smoke.json
+& .\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.su7_crisis.package.smoke.json
+& .\.venv\Scripts\python.exe default_orchestrator.py --config runtime_config.camping.package.smoke.json
 ```
 
 迁移过程中不顺手修改任务生命周期、Bundle 控制流、LLM workflow、runtime context 或
