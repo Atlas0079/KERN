@@ -4,19 +4,17 @@
 
 ## 当前主线
 
-- `agent_project_memory.md`：给 coding agent 的项目级记忆。记录稳定架构事实、当前约定和常用验证命令。
+- 仓库根目录 `AGENTS.md`：给 Codex 的项目级指导。记录稳定架构约束、当前迁移状态和验证命令；它不是工作日志。
+- `scenario_package_migration_plan.md`：ScenarioPackage 的剩余实施路线，当前下一步是数据型场景包加载。
 - `social_platform_runtime_plan.md`：社交平台 runtime 与 RumorSpread 谣言传播实验的当前说明。社交媒体相关工作优先看这里。
-- `social_activity_parallel_decision_plan.md`：RumorSpread 批量并行 LLM 决策、串行提交的已实现设计说明。
-- `crisis_management_ppt_worklog_20260709.md`：危机管理会议 PPT 的当日叙事工作台，记录主线、取舍、待补场景和验收标准。
 
 ## 通用参考
 
 - `开发者快速上手.md`：第一次运行 KERN 的最短路径。
 - `配置详解.md`：runtime config 字段说明。
-- `effect_capability_inventory.md`：当前 43 个 Effect 的能力目录、分层和 DSL 边界审查。
-- `scenario_package_migration_plan.md`：将场景数据、场景 Effect 和纯数据组件收敛为可独立加载场景包的分阶段实施计划。
-- `Bundle结构查询与编辑辅助方案.md`：bundle 查询与编辑辅助方案。
-- `动态文本一次性渲染设计.md`：动态文本渲染设计。
+
+Effect、组件 codec、动态文本和 RumorSpread 并行决策的稳定约束已浓缩到
+`AGENTS.md`；对应的已完成设计原文不再保留。
 
 ## 归档
 
@@ -25,10 +23,12 @@
 
 ## 当前开发重心
 
-当前主线是扩展 KERN 的 RumorSpread 社交平台实验：
+当前内核主线是完成 ScenarioPackage 迁移：先支持独立数据场景，再在显式授权下加载
+受信任的场景 Effect、组件和 codec，并让 archive 校验场景身份与版本。
 
-1. 用现有 KERN tick / reaction / effect / workflow 架构承载社交平台模拟。
-2. 通过 `SocialActivityGateTick` 控制社交行动机会。
-3. 在 RumorSpread 场景中使用并行 LLM 决策、串行 world commit。
-4. 基于已生成的 100-agent smoke 数据继续补齐可复现实验曲线和干预策略。
-5. 可视化工具放在后期；当前优先建设诊断、指标导出和对比工具。
+RumorSpread 社交平台实验继续作为现有的真实场景和验证对象：
+
+- 使用现有 tick / reaction / effect / workflow 架构承载社交平台模拟。
+- 通过 `SocialActivityGateTick` 控制社交行动机会。
+- 并行 LLM 决策、串行 world commit。
+- 后续补齐可复现实验曲线、干预策略、诊断和指标导出。
