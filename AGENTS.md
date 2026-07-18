@@ -109,14 +109,22 @@ a general expression language and does not recursively render values.
 
 ## Working rules
 
-- Before development, agree with the user on outcome, affected area, and
-  acceptance checks. Explain actual changes, validation, and tradeoffs after.
+- Before proposing a code change, read and understand the relevant code.
+- Treat incomplete or unsuitable requests as design questions: identify the
+  practical goal, risks, boundaries, and a better implementation path instead
+  of blindly following the first formulation.
+- Before development, agree with the user on the expected outcome, affected
+  area, and acceptance checks. Afterward, explain actual changes, validation,
+  difficulties, and tradeoffs.
 - Preserve unrelated work in a dirty worktree. Do not reset, checkout, or
   delete user files without explicit scope.
 - Use UTF-8 for text reads and writes. On Windows, prefer `.venv\Scripts\python.exe`
   when the `python` command resolves to the Microsoft Store alias.
 - Reuse existing interfaces and contracts. Add behavior tests before changing a
   seam or replacing compatibility behavior.
+- Use direct language in documentation and explanations. Avoid rhetorical
+  "not X but Y" constructions and unnecessary abstract alternatives; make a
+  concrete recommendation that can be implemented.
 - Keep stable agent instructions here. Put active, multi-stage designs in a
   dedicated plan; do not use this file as a work log.
 
