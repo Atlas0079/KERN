@@ -35,6 +35,10 @@ Catalog 被 lint、world build、checkpoint restore、executor 和 archive 共�
   沙箱。
 - 代码加载默认关闭；只允许 manifest 约定目录内、通过路径校验的文件，并要求
   CLI/SDK 显式授权。
+- 代码场景的固定装配入口是包根目录 `extensions.py`。它只声明可发现的扩展模块，
+  不保存 Catalog，也不直接执行仿真。
+- 内核只从 `extensions.py` 声明的模块中发现带明确标记的 Effect 和组件定义，并将它们
+  注册到当前 Runtime 的本地 Catalog；禁止 import 时修改模块级全局注册表。
 - 运行中的 Catalog 不可变。场景扩展在 build/restore 前注册，随后冻结。
 - legacy `Data/` 布局和 runtime config 在迁移期继续可用。
 
@@ -50,14 +54,28 @@ Scenarios/
    │  ├─ Recipes.json
    │  ├─ Reactions.json
    │  └─ Bundles.json
-   └─ extensions/                 # 仅代码场景使用
-      ├─ effects/
-      └─ components/
+   ├─ extensions.py               # 仅代码场景使用的固定入口
+   ├─ effects/
+   │  ├─ campfire.py
+   │  └─ weather.py
+   └─ components/
+      └─ weather.py
 ```
 
 manifest 负责说明场景身份、版本、数据文件路径和是否包含扩展代码。runtime config
 负责选择场景、运行时参数、LLM/provider 和 checkpoint 路径；它不重新声明场景内部
 文件清单或扩展模块。
+
+`extensions.py` 的第一版契约只声明模块，不逐个手工注册定义：
+
+```python
+EFFECT_MODULES = ("effects.campfire", "effects.weather")
+COMPONENT_MODULES = ("components.weather",)
+```
+
+loader 按这里的顺序导入模块，并只收集带 `@scenario_effect` 或
+`@scenario_component` 标记的定义。它把收集结果写入这次 Runtime 新建的 Catalog；
+另一个 Runtime 会新建另一份 Catalog。入口文件和被导入模块均不得修改全局注册表。
 
 ## 后续实施顺序
 
@@ -75,9 +93,10 @@ Runtime 装配。
 
 ### 阶段 4：受信任场景 Effect
 
-扩展 loader 按固定文件顺序导入 manifest 声明的 effect 模块，将场景 Effect 注册到
-core EffectCatalog 的可变 clone。场景 Effect 必须使用强制命名空间，不能覆盖 core
-ID；注册结束后冻结 Catalog。
+扩展 loader 只执行场景根目录 `extensions.py`，读取其中的 `EFFECT_MODULES`，并按
+声明顺序导入相对模块。它从模块中收集带 `@scenario_effect` 标记的定义，注册到 core
+EffectCatalog 的可变 clone。场景 Effect 必须使用强制命名空间，不能覆盖 core ID；
+注册结束后冻结 Catalog。
 
 授权入口使用 `allow_scenario_code`，默认 `false`。lint 与 executor 必须获得同一个
 扩展后的 Catalog。
@@ -87,8 +106,9 @@ ID；注册结束后冻结 Catalog。
 
 ### 阶段 5：受信任场景组件和 codec
 
-先加载组件，再加载 Effect。组件只能是纯数据 dataclass；默认采用
-`DataclassCodec`，特殊转换才允许场景提供 codec。ComponentCatalog 在 build 和
+先读取 `extensions.py` 的 `COMPONENT_MODULES`，按声明顺序发现带
+`@scenario_component` 标记的组件，再加载 Effect。组件只能是纯数据 dataclass；默认
+采用 `DataclassCodec`，特殊转换才允许场景提供 codec。ComponentCatalog 在 build 和
 restore 前冻结并被两者共用。
 
 代码场景声明了有类型组件而代码未获授权时，拒绝加载整个场景，不能静默降级为
