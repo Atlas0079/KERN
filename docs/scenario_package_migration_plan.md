@@ -1,6 +1,6 @@
 # KERN Package 组合迁移计划
 
-> 状态：实施中。阶段 0–2 已完成；下一项为阶段 3（Package 配置与世界包加载）。
+> 状态：实施中。阶段 0–3 已完成；下一项为阶段 4（能力包 Effect 发现）。
 
 ## 目标
 
@@ -113,20 +113,22 @@ Catalog，再读取世界包数据和 lint。
 
 ## 后续实施顺序
 
-### 阶段 3：Package config、manifest 与世界包
+### 阶段 3：Package config、manifest 与世界包（已完成）
 
-新增 `KERN.package` 的 manifest、package、loader 和 legacy adapter。loader 复用现有
-`load_data_bundle(...)`，不复制另一套数据读取逻辑。
+已新增 `KERN.package` 的 manifest、package loader 和 legacy adapter。loader 复用现有
+`load_data_bundle(...)`，不复制另一套数据读取逻辑。`LoadedPackages` 保存已解析的 Package
+清单、唯一 world package 和 world data bundle；Runtime 与 lint 使用同一个加载入口。
 
 `KernRuntime.from_config(...)` 识别顶层 `packages`。它验证每个路径都在项目根目录内、
 Package ID 不重复，并验证恰好一个 `world: true` 条目与 manifest 一致。缺少新字段时，
 legacy adapter 继续读取现有 `WORLD_JSON`、`RECIPES_JSONS` 等字段。
 
-新增 `KernRuntime.from_loaded_packages(...)`，集中 Runtime 装配。`LoadedPackages` 持有
-已解析 Package、世界数据、两个 Catalog 和 Package 身份清单。
+`KernRuntime.from_loaded_packages(...)` 可复用已验证的组合进行 Runtime 装配。阶段 3 不执行
+`extensions.py`；能力包可以参与组合解析，Catalog 扩展和 Package 身份 hash 留给阶段 4–6。
 
 验收：独立世界包可加载；能力包可被解析但在本阶段不执行 Python；路径逃逸、重复 ID、
-零或多个世界包、manifest/data 不一致均有明确报错；旧入口产生等价 WorldState。
+零或多个世界包、manifest/data 不一致均有明确报错；旧入口产生等价 WorldState。以上由
+`tests/test_package_loading.py` 覆盖。
 
 ### 阶段 4：能力包 Effect 发现
 

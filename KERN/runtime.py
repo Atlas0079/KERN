@@ -18,9 +18,7 @@ from .data.checkpoint import (
 	resolve_global_log_file,
 	restore_world_state_from_checkpoint,
 )
-from .data.loader import load_data_bundle
 from .execution_errors import is_execution_error_event
-from .effects import build_core_effect_catalog
 from .executor.executor import WorldExecutor
 from .external_runtime import ExternalRuntimeBridge
 from .external_runtimes import SQLiteSocialPlatformRuntime
@@ -28,6 +26,7 @@ from .external_runtimes.social_seed import seed_social_platform_runtime_from_fil
 from .interaction.engine import InteractionEngine
 from .log_manager import configure_logger, get_logger
 from .models.world_state import WorldState
+from .package import LoadedPackages, load_packages_from_config
 from .sim.trigger_system import TriggerSystem
 from .sim.world_settlement import WorldSettlement
 
@@ -203,6 +202,7 @@ class KernRuntime:
 	config_path: Path | None = None
 	runtime_config: dict[str, str] = field(default_factory=dict)
 	data_bundle: Any = None
+	loaded_packages: LoadedPackages | None = None
 	configured_max_ticks: int = 100
 	workflow_view_profile: dict[str, Any] = field(default_factory=dict)
 
@@ -245,6 +245,7 @@ class KernRuntime:
 		configure_logging: bool = True,
 		overrides: dict[str, Any] | None = None,
 		external_runtimes: dict[str, Any] | None = None,
+		_loaded_packages: LoadedPackages | None = None,
 	) -> "KernRuntime":
 		"""
 		Create a ready-to-run KERN runtime from a runtime config file.
@@ -268,22 +269,18 @@ class KernRuntime:
 				buffer_size=_cfg_int(cfg, "LOG_BUFFER_SIZE", 1000),
 			)
 
-		recipes_jsons = [x.strip() for x in _cfg_get(cfg, "RECIPES_JSONS", "Recipes.json").split(",") if x.strip()]
-		reactions_jsons = [x.strip() for x in _cfg_get(cfg, "REACTIONS_JSONS", "Reactions.json").split(",") if x.strip()]
-		entities_dirs = [x.strip() for x in _cfg_get(cfg, "ENTITIES_DIRS", "Entities").split(",") if x.strip()]
-		bundles_jsons = [x.strip() for x in _cfg_get(cfg, "BUNDLES_JSONS", "Bundles.json").split(",") if x.strip()]
-		world_json_name = _cfg_get(cfg, "WORLD_JSON", "World.json")
-
-		bundle = load_data_bundle(
-			root,
-			recipes_jsons=recipes_jsons,
-			reactions_jsons=reactions_jsons,
-			entities_dirs=entities_dirs,
-			world_json=world_json_name,
-			bundles_jsons=bundles_jsons,
-		)
-		effect_catalog = build_core_effect_catalog()
-		component_catalog = build_core_component_catalog()
+		loaded_packages = _loaded_packages or load_packages_from_config(root, resolved_config_path, env=cfg)
+		bundle = loaded_packages.data_bundle
+		world_data = loaded_packages.world_package.manifest.data
+		if world_data is None:
+			raise ValueError("loaded package composition has no world data")
+		recipes_jsons = list(world_data.recipes)
+		reactions_jsons = list(world_data.reactions)
+		entities_dirs = list(world_data.entities)
+		bundles_jsons = list(world_data.bundles)
+		world_json_name = world_data.world
+		effect_catalog = loaded_packages.effect_catalog
+		component_catalog = loaded_packages.component_catalog
 		restore_path = resolve_checkpoint_file(_cfg_get(cfg, "CHECKPOINT_RESTORE_FILE", ""), _cfg_get(cfg, "CHECKPOINT_RESTORE_DIR", ""))
 		external_runtime_map = _build_configured_external_runtimes(root, resolved_config_path, cfg)
 		external_runtime_map.update(dict(external_runtimes or {}))
@@ -373,7 +370,24 @@ class KernRuntime:
 			config_path=resolved_config_path,
 			runtime_config=dict(cfg),
 			data_bundle=bundle,
+			loaded_packages=loaded_packages,
 			configured_max_ticks=int(configured_max_ticks),
+		)
+
+	@classmethod
+	def from_loaded_packages(
+		cls,
+		loaded_packages: LoadedPackages,
+		project_root: str | Path,
+		config_path: str | Path = "",
+		**kwargs: Any,
+	) -> "KernRuntime":
+		"""Assemble a runtime from an already validated package composition."""
+		return cls.from_config(
+			project_root,
+			config_path,
+			_loaded_packages=loaded_packages,
+			**kwargs,
 		)
 
 	def run_configured(self) -> list[dict[str, Any]]:

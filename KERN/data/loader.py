@@ -51,11 +51,11 @@ def load_data_bundle(
 	else:
 		raise FileNotFoundError(f"Data directory not found under: {project_root}")
 	
-	if not entities_dirs:
+	if entities_dirs is None:
 		entities_dirs = ["Entities"]
-	if not recipes_jsons:
+	if recipes_jsons is None:
 		recipes_jsons = ["Recipes.json"]
-	if not reactions_jsons:
+	if reactions_jsons is None:
 		reactions_jsons = ["Reactions.json"]
 	if bundles_jsons is None:
 		bundles_jsons = ["Bundles.json"]

@@ -36,6 +36,7 @@ if str(ROOT) not in sys.path:
 
 from KERN.data.builder import build_world_state
 from KERN.data.loader import DataBundle, load_data_bundle
+from KERN.package import load_packages_from_config
 from KERN.component_catalog import ComponentCatalog, build_core_component_catalog
 from KERN.effects import EffectCatalog, EffectResolutionError, build_core_effect_catalog
 
@@ -1142,19 +1143,16 @@ def lint_config(
 	component_catalog: ComponentCatalog | None = None,
 ) -> LintContext:
 	env, resolved_config = _load_env_config(project_root, config_path)
-	world_json = _cfg_get(env, "WORLD_JSON", "World.json")
-	recipes_jsons = _split_csv(_cfg_get(env, "RECIPES_JSONS", "Recipes.json"), ["Recipes.json"])
-	reactions_jsons = _split_csv(_cfg_get(env, "REACTIONS_JSONS", "Reactions.json"), ["Reactions.json"])
-	entities_dirs = _split_csv(_cfg_get(env, "ENTITIES_DIRS", "Entities"), ["Entities"])
-	bundles_jsons = _split_csv(_cfg_get(env, "BUNDLES_JSONS", "Bundles.json"), ["Bundles.json"])
-	bundle = load_data_bundle(
-		project_root,
-		recipes_jsons=recipes_jsons,
-		reactions_jsons=reactions_jsons,
-		entities_dirs=entities_dirs,
-		world_json=world_json,
-		bundles_jsons=bundles_jsons,
-	)
+	loaded_packages = load_packages_from_config(project_root, resolved_config, env=env)
+	data = loaded_packages.world_package.manifest.data
+	if data is None:
+		raise ValueError("loaded package composition has no world data")
+	world_json = data.world
+	recipes_jsons = list(data.recipes)
+	reactions_jsons = list(data.reactions)
+	entities_dirs = list(data.entities)
+	bundles_jsons = list(data.bundles)
+	bundle = loaded_packages.data_bundle
 	return lint_bundle(
 		project_root=project_root,
 		config_path=resolved_config,
@@ -1165,8 +1163,8 @@ def lint_config(
 		reactions_jsons=reactions_jsons,
 		entities_dirs=entities_dirs,
 		bundles_jsons=bundles_jsons,
-		effect_catalog=effect_catalog,
-		component_catalog=component_catalog,
+		effect_catalog=effect_catalog or loaded_packages.effect_catalog,
+		component_catalog=component_catalog or loaded_packages.component_catalog,
 	)
 
 
