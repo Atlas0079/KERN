@@ -51,6 +51,18 @@ class LoadedPackages:
 	component_catalog: ComponentCatalog
 
 
+def package_identity(loaded: LoadedPackages) -> dict[str, Any]:
+	packages: list[dict[str, Any]] = []
+	for package in loaded.packages:
+		digest = hashlib.sha256()
+		for path in sorted(path for path in package.root.rglob("*") if path.is_file() and path.suffix in {".json", ".py"}):
+			digest.update(path.relative_to(package.root).as_posix().encode("utf-8"))
+			digest.update(b"\0")
+			digest.update(path.read_bytes())
+		packages.append({"package_id": package.manifest.package_id, "version": package.manifest.version, "content_hash": digest.hexdigest(), "world": bool(package.world_selected)})
+	return {"packages": packages, "effect_ids": sorted(loaded.effect_catalog.effect_ids()), "component_ids": sorted(loaded.component_catalog.component_ids())}
+
+
 def load_packages_from_config(
 	project_root: Path,
 	config_path: Path,

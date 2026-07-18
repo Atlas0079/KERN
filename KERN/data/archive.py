@@ -138,6 +138,7 @@ class ArchiveRecorder:
 	snapshot_interval_ticks: int = 60
 	include_logs: bool = True
 	component_catalog: ComponentCatalog = field(default_factory=build_core_component_catalog)
+	package_identity: dict[str, Any] = field(default_factory=dict)
 	last_state: dict[str, Any] | None = None
 	last_hash: str = ""
 	snapshots: list[dict[str, Any]] = field(default_factory=list)
@@ -188,6 +189,7 @@ class ArchiveRecorder:
 				"state_hash": cur_hash,
 				"event_seq": int(getattr(ws, "_event_seq", 0) or 0),
 				"interaction_seq": int(getattr(ws, "_interaction_seq", 0) or 0),
+				**dict(self.package_identity or {}),
 			},
 			"world": state,
 		}
@@ -223,6 +225,7 @@ class ArchiveRecorder:
 			"snapshot_interval_ticks": int(self.snapshot_interval_ticks),
 			"snapshots": sorted(self.snapshots, key=lambda x: int(x.get("tick", 0) or 0)),
 			"delta_chunks": sorted(self.delta_chunks.values(), key=lambda x: int(x.get("start_tick", 0) or 0)),
+			**dict(self.package_identity or {}),
 		}
 		path = Path(self.archive_dir) / ARCHIVE_MANIFEST_FILE_NAME
 		tmp_path = path.with_suffix(".tmp")

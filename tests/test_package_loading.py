@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from KERN.package import load_packages_from_config
+from KERN.package import load_packages_from_config, package_identity
 from KERN.runtime import KernRuntime
 from KERN.data.archive import ArchiveRecorder
 from KERN.data.checkpoint import restore_world_state_from_checkpoint
@@ -102,6 +102,7 @@ class PackageLoadingTests(unittest.TestCase):
 		self.assertEqual(runtime.loaded_packages.world_package.manifest.package_id, "camping")
 		self.assertIn("camp_main", runtime.world_state.locations)
 		self.assertFalse([issue for issue in lint.issues if issue.severity == "ERROR"])
+		self.assertEqual(package_identity(runtime.loaded_packages)["packages"][0]["package_id"], "camping")
 
 	def test_su7_crisis_world_package_loads_the_canonical_generated_world(self) -> None:
 		project_root = Path(__file__).resolve().parents[1]

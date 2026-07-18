@@ -14,6 +14,7 @@ from .data.archive import ArchiveRecorder
 from .data.builder import build_world_state
 from .data.checkpoint import (
 	build_simulation_log_payload_from_world_state,
+	load_checkpoint_meta,
 	resolve_checkpoint_file,
 	resolve_global_log_file,
 	restore_world_state_from_checkpoint,
@@ -26,7 +27,7 @@ from .external_runtimes.social_seed import seed_social_platform_runtime_from_fil
 from .interaction.engine import InteractionEngine
 from .log_manager import configure_logger, get_logger
 from .models.world_state import WorldState
-from .package import LoadedPackages, load_packages_from_config
+from .package import LoadedPackages, load_packages_from_config, package_identity
 from .sim.trigger_system import TriggerSystem
 from .sim.world_settlement import WorldSettlement
 
@@ -233,6 +234,7 @@ class KernRuntime:
 				snapshot_interval_ticks=int(self.checkpoint_snapshot_interval_ticks or 60),
 				include_logs=bool(self.checkpoint_include_logs),
 				component_catalog=catalog,
+				package_identity=package_identity(self.loaded_packages) if self.loaded_packages is not None else {},
 			)
 
 	@classmethod
@@ -287,6 +289,10 @@ class KernRuntime:
 		external_runtime_bridge = ExternalRuntimeBridge(external_runtime_map)
 		workflow_view_profile = _build_workflow_view_profile(root, resolved_config_path, cfg)
 		if restore_path is not None:
+			checkpoint_meta = load_checkpoint_meta(restore_path)
+			checkpoint_identity = {key: checkpoint_meta[key] for key in ("packages", "effect_ids", "component_ids") if key in checkpoint_meta}
+			if checkpoint_identity and checkpoint_identity != package_identity(loaded_packages):
+				raise ValueError("checkpoint package identity does not match the selected package composition")
 			ws = restore_world_state_from_checkpoint(
 				restore_path,
 				bundle.entity_templates,

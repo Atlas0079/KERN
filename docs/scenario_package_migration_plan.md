@@ -1,6 +1,6 @@
 # KERN Package 组合迁移计划
 
-> 状态：实施中。阶段 0–5 已完成；下一项为阶段 6（archive 身份与可复现性）。
+> 状态：实施中。阶段 0–7 已完成。
 
 ## 目标
 
@@ -159,7 +159,7 @@ Package 提供 codec。ComponentCatalog 在 build 和 restore 前冻结并被两
 隔离成立。当前测试已覆盖模板构造、未选中隔离和 executor 共享 Catalog；checkpoint
 身份验证随阶段 6 一起完成。
 
-### 阶段 6：archive 身份与可复现性
+### 阶段 6：archive 身份与可复现性（已完成）
 
 snapshot meta 保存完整 Package 组合，而非单个场景身份：
 
@@ -178,6 +178,10 @@ hash 覆盖 manifest、被引用 JSON 和已加载 Python 源文件。恢复时�
 加载相同 Package 组合、注册本地 Catalog、验证身份和 hash，再解码 checkpoint。任何
 缺失 Package、版本、能力或 hash 不一致默认拒绝；无扩展的 legacy checkpoint 保持现有
 恢复路径并标记为 legacy。
+
+Archive manifest 与 snapshot metadata 现已记录 Package 身份和 Catalog ID 清单；恢复会拒绝
+与当前 Package 组合不一致的 checkpoint。不含 Package metadata 的历史 checkpoint 继续使用
+兼容恢复路径。
 
 ### 阶段 7：Camping 与 SU7Crisis 真实迁移（已完成）
 

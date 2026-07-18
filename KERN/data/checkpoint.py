@@ -42,6 +42,13 @@ def resolve_global_log_file(checkpoint_dir: str | Path) -> Path:
 	return base_dir / GLOBAL_LOG_FILE_NAME
 
 
+def load_checkpoint_meta(checkpoint_path: Path) -> dict[str, Any]:
+	opener = gzip.open if checkpoint_path.suffix == ".gz" else open
+	with opener(checkpoint_path, "rt", encoding="utf-8") as f:
+		payload = json.load(f)
+	return dict((payload or {}).get("meta", {}) or {})
+
+
 def _int_or_default(value: Any, default: int) -> int:
 	try:
 		return int(value)
