@@ -21,13 +21,19 @@ from .data.checkpoint import (
 )
 from .execution_errors import is_execution_error_event
 from .executor.executor import WorldExecutor
-from .external_runtime import ExternalRuntimeBridge
+from .external_runtime import ExternalRuntimeBridge, ExternalRuntimeLifecycleError
 from .external_runtimes import SQLiteSocialPlatformRuntime
 from .external_runtimes.social_seed import seed_social_platform_runtime_from_file
 from .interaction.engine import InteractionEngine
 from .log_manager import configure_logger, get_logger
 from .models.world_state import WorldState
-from .package import LoadedPackages, load_packages_from_config, package_identity
+from .package import (
+	LoadedPackages,
+	load_packages_from_config,
+	loaded_package_selection_identity,
+	package_identity,
+	package_selection_identity,
+)
 from .sim.trigger_system import TriggerSystem
 from .sim.world_settlement import WorldSettlement
 
@@ -206,6 +212,8 @@ class KernRuntime:
 	loaded_packages: LoadedPackages | None = None
 	configured_max_ticks: int = 100
 	workflow_view_profile: dict[str, Any] = field(default_factory=dict)
+	is_terminal: bool = False
+	terminal_error: str = ""
 
 	def __post_init__(self) -> None:
 		catalog = self.component_catalog or getattr(self.executor, "component_catalog", None) or build_core_component_catalog()
@@ -271,6 +279,8 @@ class KernRuntime:
 				buffer_size=_cfg_int(cfg, "LOG_BUFFER_SIZE", 1000),
 			)
 
+		if _loaded_packages is not None and loaded_package_selection_identity(_loaded_packages) != package_selection_identity(root, resolved_config_path):
+			raise ValueError("loaded packages do not match the config package selection")
 		loaded_packages = _loaded_packages or load_packages_from_config(root, resolved_config_path)
 		bundle = loaded_packages.data_bundle
 		world_data = loaded_packages.world_package.manifest.data
@@ -401,6 +411,7 @@ class KernRuntime:
 		return self.run(max_ticks=int(self.configured_max_ticks or 100))
 
 	def run(self, max_ticks: int = 100) -> list[dict[str, Any]]:
+		self._raise_if_terminal()
 		self.is_running = True
 		all_events: list[dict[str, Any]] = []
 
@@ -414,13 +425,19 @@ class KernRuntime:
 
 	def record_initial_state(self) -> None:
 		"""Record the current world state before runtime advancement."""
+		self._raise_if_terminal()
 		self._record_runtime_frame(events_in_tick=[])
 
 	def step_and_record(self) -> list[dict[str, Any]]:
 		"""Advance one runtime tick and record snapshot/checkpoint/log outputs."""
-		tick_events = self.step()
-		self._record_runtime_frame(events_in_tick=tick_events)
-		return tick_events
+		self._raise_if_terminal()
+		try:
+			tick_events = self.step()
+			self._record_runtime_frame(events_in_tick=tick_events)
+			return tick_events
+		except ExternalRuntimeLifecycleError as exc:
+			self._mark_terminal(exc)
+			raise
 
 	def advance_ticks(self, count: int) -> dict[str, Any]:
 		"""
@@ -428,6 +445,7 @@ class KernRuntime:
 
 		This is the public API for app/server layers that manually drive KERN.
 		"""
+		self._raise_if_terminal()
 		requested = max(0, int(count or 0))
 		started_at_tick = int(getattr(self.world_state.game_time, "total_ticks", 0) or 0)
 		all_events: list[dict[str, Any]] = []
@@ -599,6 +617,10 @@ class KernRuntime:
 			self._raise_on_external_checkpoint_error(events, "save")
 			if events:
 				logger.debug("checkpoint", "external_runtime_checkpoint_saved", context={"tick": tick, "event_count": len(events)})
+		except ExternalRuntimeLifecycleError as e:
+			self._mark_terminal(e)
+			logger.warn("checkpoint", "checkpoint_lifecycle_failed", context={"tick": tick, "path": str(self.checkpoint_dir), "error": str(e)})
+			raise
 		except Exception as e:
 			logger.warn("checkpoint", "checkpoint_record_failed", context={"tick": tick, "path": str(self.checkpoint_dir), "error": str(e)})
 			raise
@@ -624,11 +646,35 @@ class KernRuntime:
 	def stop(self) -> None:
 		self.is_running = False
 
+	def _mark_terminal(self, error: ExternalRuntimeLifecycleError) -> None:
+		self.is_terminal = True
+		self.terminal_error = str(error)
+		self.request_stop(
+			{
+				"reason": "external_runtime_lifecycle_failed",
+				"phase": str(error.phase),
+				"runtime_id": str(error.runtime_id),
+				"error": str(error),
+			}
+		)
+
+	def _raise_if_terminal(self) -> None:
+		if self.is_terminal:
+			raise RuntimeError(f"runtime is terminal: {self.terminal_error or 'external runtime lifecycle failure'}")
+
 	def request_stop(self, info: dict[str, Any] | None = None) -> None:
 		self.is_running = False
 		self.last_stop_info = dict(info or {})
 
 	def step(self) -> list[dict[str, Any]]:
+		self._raise_if_terminal()
+		try:
+			return self._step()
+		except ExternalRuntimeLifecycleError as exc:
+			self._mark_terminal(exc)
+			raise
+
+	def _step(self) -> list[dict[str, Any]]:
 		"""
 		Advance one simulation tick (Turn-based).
 		"""

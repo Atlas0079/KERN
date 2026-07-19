@@ -3,7 +3,7 @@ from __future__ import annotations
 import importlib
 import re
 
-from .spec import EffectSpec
+from .spec import EffectSpec, SIDE_EFFECT_POLICIES
 
 
 class EffectResolutionError(RuntimeError):
@@ -34,6 +34,8 @@ class EffectCatalog:
 			raise ValueError(f"effect id must not contain surrounding whitespace: {spec.effect_id!r}")
 		if effect_id in self._specs:
 			raise ValueError(f"effect id already registered: {effect_id}")
+		if str(spec.side_effect or "") not in SIDE_EFFECT_POLICIES:
+			raise ValueError(f"effect side_effect is invalid for {effect_id}: {spec.side_effect!r}")
 		self._specs[effect_id] = spec
 
 	def contains(self, effect_id: str) -> bool:

@@ -57,6 +57,12 @@ class EffectCatalogTests(unittest.TestCase):
 		with self.assertRaisesRegex(ValueError, "surrounding whitespace"):
 			catalog.register(EffectSpec(effect_id=" test:Ping ", binder=_bind_passthrough, handler=_execute_ping))
 
+	def test_unknown_side_effect_policy_is_rejected(self) -> None:
+		catalog = EffectCatalog()
+
+		with self.assertRaisesRegex(ValueError, "side_effect"):
+			catalog.register(EffectSpec(effect_id="test:Ping", binder=_bind_passthrough, handler=_execute_ping, side_effect="network_magic"))
+
 	def test_import_failure_exposes_effect_and_module(self) -> None:
 		catalog = EffectCatalog()
 		catalog.register(EffectSpec(effect_id="test:Broken", module="missing.effect.module"))
@@ -157,6 +163,42 @@ class EffectCatalogTests(unittest.TestCase):
 
 		self.assertFalse(any(issue.message == "unknown effect: test:Ping" for issue in result.issues))
 		self.assertTrue(any(issue.message == "unknown effect: test:Ping" for issue in core_result.issues))
+
+	def test_lint_rejects_irreversible_effect_before_later_effect(self) -> None:
+		project_root = Path(__file__).resolve().parents[1]
+		bundle = load_data_bundle(project_root / "Packages" / "Camping")
+		bundle.named_bundles = {
+			"invalid_external_order": {
+				"effects": [
+					{"effect": "test:Irreversible"},
+					{"effect": "EmitEvent", "event_type": "Later", "payload": {}},
+				]
+			}
+		}
+		catalog = build_core_effect_catalog()
+		catalog.register(
+			EffectSpec(
+				effect_id="test:Irreversible",
+				binder=_bind_passthrough,
+				handler=_execute_ping,
+				side_effect="external_irreversible",
+			)
+		)
+
+		result = lint_bundle(
+			project_root=project_root,
+			config_path=project_root / "runtime_config.camping.package.smoke.json",
+			env={},
+			bundle=bundle,
+			world_json="World.json",
+			recipes_jsons=["Recipes.json"],
+			reactions_jsons=["Reactions.json"],
+			entities_dirs=["Entities"],
+			bundles_jsons=["Bundles.json"],
+			effect_catalog=catalog,
+		)
+
+		self.assertTrue(any("external irreversible effect must be last" in issue.message for issue in result.issues))
 
 	def test_scenario_effect_cannot_override_core_effect(self) -> None:
 		catalog = build_core_effect_catalog()

@@ -177,6 +177,18 @@ class PackageLoadingTests(unittest.TestCase):
 			self.assertIs(runtime.loaded_packages, loaded)
 			self.assertIn("room", runtime.world_state.locations)
 
+	def test_loaded_packages_must_match_the_config_package_selection(self) -> None:
+		with tempfile.TemporaryDirectory() as temp_dir:
+			root = Path(temp_dir)
+			_write_world_package(root, package_id="one")
+			_write_world_package(root, package_id="two")
+			_write_json(root / "one.json", {"packages": [{"path": "Packages/one", "world": True}], "env": {"CHECKPOINT_EVERY_TICK": "0"}})
+			_write_json(root / "two.json", {"packages": [{"path": "Packages/two", "world": True}], "env": {"CHECKPOINT_EVERY_TICK": "0"}})
+			loaded = load_packages_from_config(root, root / "one.json")
+
+			with self.assertRaisesRegex(ValueError, "package selection"):
+				KernRuntime.from_loaded_packages(loaded, root, "two.json", configure_logging=False)
+
 	def test_world_selection_must_be_boolean(self) -> None:
 		with tempfile.TemporaryDirectory() as temp_dir:
 			root = Path(temp_dir)

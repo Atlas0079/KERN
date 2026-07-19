@@ -63,6 +63,31 @@ def package_identity(loaded: LoadedPackages) -> dict[str, Any]:
 	return {"packages": packages, "effect_ids": sorted(loaded.effect_catalog.effect_ids()), "component_ids": sorted(loaded.component_catalog.component_ids())}
 
 
+def package_selection_identity(project_root: Path, config_path: Path) -> tuple[tuple[str, bool], ...]:
+	"""Read only the package selection from config without importing package code."""
+	root = Path(project_root).resolve()
+	raw = json.loads(Path(config_path).read_text(encoding="utf-8"))
+	if not isinstance(raw, dict):
+		raise ValueError(f"runtime config must be an object: {config_path}")
+	entries = raw.get("packages")
+	if not isinstance(entries, list):
+		raise ValueError("runtime config requires a top-level 'packages' array")
+	selection: list[tuple[str, bool]] = []
+	for index, entry in enumerate(entries):
+		if not isinstance(entry, dict):
+			raise ValueError(f"packages[{index}] must be an object")
+		selected_world = entry.get("world", False)
+		if not isinstance(selected_world, bool):
+			raise ValueError(f"packages[{index}].world must be boolean")
+		path = _resolve_package_path(root, Path(config_path), entry.get("path"), index)
+		selection.append((str(path), selected_world))
+	return tuple(selection)
+
+
+def loaded_package_selection_identity(loaded: LoadedPackages) -> tuple[tuple[str, bool], ...]:
+	return tuple((str(item.root.resolve()), bool(item.world_selected)) for item in loaded.packages)
+
+
 def load_packages_from_config(
 	project_root: Path,
 	config_path: Path,

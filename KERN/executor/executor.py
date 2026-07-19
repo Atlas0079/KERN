@@ -3,11 +3,13 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Any
+from uuid import uuid4
 
 from ._effect_binder import BindError, bind_effect_input
 from ..component_catalog import ComponentCatalog, build_core_component_catalog
 from ..effect_bundle import effect_bundle_from_raw
 from ..effects import EffectCatalog, EffectResolutionError, build_core_effect_catalog
+from ..external_runtime import ExternalRuntimeBridge, ExternalRuntimeLifecycleError
 from ..execution_errors import ERROR_KIND_CONTRACT, ERROR_KIND_ENGINE, executor_error, is_execution_error_event
 from ..entity_ref_resolver import resolve_entity
 from ..models.components import ContainerComponent
@@ -40,6 +42,10 @@ class WorldExecutor:
 	entity_templates: dict[str, Any] | None = None
 	effect_catalog: EffectCatalog = field(default_factory=build_core_effect_catalog)
 	component_catalog: ComponentCatalog = field(default_factory=build_core_component_catalog)
+	_bundle_depth: int = field(default=0, init=False, repr=False)
+	_bundle_transaction_id: str = field(default="", init=False, repr=False)
+	_bundle_uses_external: bool = field(default=False, init=False, repr=False)
+	_bundle_deferred_irreversible: list[tuple[dict[str, Any], dict[str, Any]]] = field(default_factory=list, init=False, repr=False)
 
 	def __post_init__(self) -> None:
 		self.effect_catalog.freeze()
@@ -100,26 +106,111 @@ class WorldExecutor:
 
 	def execute_bundle(self, ws: Any, bundle_data: Any, context: dict[str, Any]) -> list[dict[str, Any]]:
 		bundle = effect_bundle_from_raw(bundle_data)
+		effect_specs = [self.effect_catalog.require(str(effect.get("effect", "") or "")) for effect in bundle.effects if self.effect_catalog.contains(str(effect.get("effect", "") or ""))]
+		for index, effect in enumerate(bundle.effects):
+			effect_id = str(effect.get("effect", "") or "")
+			if not self.effect_catalog.contains(effect_id):
+				continue
+			if self.effect_catalog.require(effect_id).side_effect == "external_irreversible" and index != len(bundle.effects) - 1:
+				return executor_error(
+					f"external irreversible effect must be last in bundle: {effect_id}",
+					kind=ERROR_KIND_CONTRACT,
+					code="EXTERNAL_IRREVERSIBLE_NOT_LAST",
+					effect=effect_id,
+				)
+		is_outer_bundle = self._bundle_depth == 0
+		if is_outer_bundle:
+			self._bundle_transaction_id = str(uuid4())
+			self._bundle_uses_external = any(spec.side_effect != "world" for spec in effect_specs)
+			self._bundle_deferred_irreversible = []
+		transaction_id = str(self._bundle_transaction_id)
+		if not is_outer_bundle and any(spec.side_effect != "world" for spec in effect_specs):
+			self._bundle_uses_external = True
+		if is_outer_bundle and self._bundle_uses_external:
+			self._begin_external_bundle(ws, transaction_id)
+		self._bundle_depth += 1
 		snapshot = self._snapshot_world(ws)
 		context_snapshot = deepcopy(context) if isinstance(context, dict) else None
 		events: list[dict[str, Any]] = []
-		for idx, effect in enumerate(list(bundle.effects or [])):
-			if not isinstance(effect, dict):
-				continue
-			effect_events = self.execute(ws, effect, context)
-			error_event = self._first_error_event(effect_events)
-			if error_event is not None:
-				self._restore_world(ws, snapshot)
-				if isinstance(context, dict) and isinstance(context_snapshot, dict):
-					context.clear()
-					context.update(context_snapshot)
-				clean_error = dict(error_event)
-				clean_error["bundle_rolled_back"] = True
-				clean_error["failed_effect_index"] = int(idx)
-				clean_error.setdefault("failed_effect", str(effect.get("effect", "") or ""))
-				return [clean_error]
-			events.extend(effect_events)
-		return events
+		try:
+			for idx, effect in enumerate(list(bundle.effects or [])):
+				if not isinstance(effect, dict):
+					continue
+				effect_id = str(effect.get("effect", "") or "")
+				if self.effect_catalog.contains(effect_id) and self.effect_catalog.require(effect_id).side_effect == "external_irreversible":
+					self._bundle_deferred_irreversible.append((effect, self._transaction_context(context, transaction_id)))
+					continue
+				effect_events = self.execute(ws, effect, self._transaction_context(context, transaction_id))
+				error_event = self._first_error_event(effect_events)
+				if error_event is not None:
+					self._restore_world(ws, snapshot)
+					if isinstance(context, dict) and isinstance(context_snapshot, dict):
+						context.clear()
+						context.update(context_snapshot)
+					if is_outer_bundle and self._bundle_uses_external:
+						self._notify_external_bundle_lifecycle(ws, "rollback_bundle", transaction_id)
+					clean_error = dict(error_event)
+					clean_error["bundle_rolled_back"] = True
+					clean_error["failed_effect_index"] = int(idx)
+					clean_error.setdefault("failed_effect", str(effect.get("effect", "") or ""))
+					return [clean_error]
+				events.extend(effect_events)
+			if is_outer_bundle:
+				for effect, deferred_context in self._bundle_deferred_irreversible:
+					effect_events = self.execute(ws, effect, deferred_context)
+					error_event = self._first_error_event(effect_events)
+					if error_event is not None:
+						raise ExternalRuntimeLifecycleError(
+							phase="bundle_commit",
+							runtime_id="",
+							reason=str(error_event.get("message", error_event)),
+							transaction_id=transaction_id,
+							receipts=self._external_bundle_receipts(ws, transaction_id),
+						)
+					events.extend(effect_events)
+			if is_outer_bundle and self._bundle_uses_external:
+				self._notify_external_bundle_lifecycle(ws, "commit_bundle", transaction_id)
+			return events
+		finally:
+			self._bundle_depth -= 1
+			if is_outer_bundle:
+				if self._bundle_uses_external:
+					self._close_external_bundle(ws, transaction_id)
+				self._bundle_transaction_id = ""
+				self._bundle_uses_external = False
+				self._bundle_deferred_irreversible = []
+
+	def _transaction_context(self, context: dict[str, Any], transaction_id: str) -> dict[str, Any]:
+		out = dict(context or {})
+		if self._bundle_uses_external:
+			out["external_transaction_id"] = str(transaction_id)
+		return out
+
+	def _external_bridge(self, ws: Any) -> ExternalRuntimeBridge | None:
+		services = getattr(ws, "services", {}) or {}
+		bridge = services.get("external_runtime_bridge") if isinstance(services, dict) else None
+		return bridge if isinstance(bridge, ExternalRuntimeBridge) else None
+
+	def _begin_external_bundle(self, ws: Any, transaction_id: str) -> None:
+		bridge = self._external_bridge(ws)
+		if bridge is not None:
+			bridge.begin_bundle(transaction_id)
+
+	def _notify_external_bundle_lifecycle(self, ws: Any, phase_method: str, transaction_id: str) -> None:
+		bridge = self._external_bridge(ws)
+		if bridge is None:
+			return
+		method = getattr(bridge, phase_method)
+		method({"transaction_id": str(transaction_id), "receipts": self._external_bundle_receipts(ws, transaction_id)})
+
+	def _external_bundle_receipts(self, ws: Any, transaction_id: str) -> list[dict[str, Any]]:
+		bridge = self._external_bridge(ws)
+		return bridge.bundle_receipts(transaction_id) if bridge is not None else []
+
+	def _close_external_bundle(self, ws: Any, transaction_id: str) -> None:
+		bridge = self._external_bridge(ws)
+		if bridge is not None:
+			bridge.close_bundle(transaction_id)
 
 	def _first_error_event(self, events: list[dict[str, Any]]) -> dict[str, Any] | None:
 		for ev in list(events or []):

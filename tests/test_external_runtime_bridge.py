@@ -7,7 +7,8 @@ from pathlib import Path
 from KERN.data.archive import ArchiveRecorder
 from KERN.agent_workflow.simple_policy import SimplePolicyActionProvider
 from KERN.executor.executor import WorldExecutor
-from KERN.external_runtime import ExternalRuntimeBridge
+from KERN.effects import EffectSpec, build_core_effect_catalog
+from KERN.external_runtime import ExternalRuntimeBridge, ExternalRuntimeLifecycleError
 from KERN.interaction.engine import InteractionEngine
 from KERN.models.entity import Entity
 from KERN.models.location import Location
@@ -53,6 +54,24 @@ class CheckpointExternalRuntime:
 			raise RuntimeError("restore failed")
 		self.restored.append(dict(context))
 		return [{"type": "ExternalCheckpointRestored", "runtime_id": str(context.get("runtime_id", "")), "tick": int(context.get("tick", 0) or 0)}]
+
+
+class BundleLifecycleExternalRuntime:
+	def __init__(self, fail_phase: str = "") -> None:
+		self.fail_phase = str(fail_phase)
+		self.calls: list[tuple[str, dict]] = []
+
+	def commit_bundle(self, context: dict) -> list[dict]:
+		self.calls.append(("bundle_commit", dict(context)))
+		if self.fail_phase == "bundle_commit":
+			raise RuntimeError("commit failed")
+		return [{"type": "ExternalBundleCommitted"}]
+
+	def rollback_bundle(self, context: dict) -> list[dict]:
+		self.calls.append(("bundle_rollback", dict(context)))
+		if self.fail_phase == "bundle_rollback":
+			raise RuntimeError("rollback failed")
+		return [{"type": "ExternalBundleRolledBack"}]
 
 
 def _world() -> WorldState:
@@ -108,6 +127,27 @@ class ExternalRuntimeBridgeTests(unittest.TestCase):
 		self.assertEqual(adapter.restored[0]["runtime_id"], "social")
 		self.assertEqual(adapter.saved[0]["run_id"], "run_01")
 
+	def test_bundle_lifecycle_is_deterministic_and_carries_transaction_identity(self) -> None:
+		first = BundleLifecycleExternalRuntime()
+		second = BundleLifecycleExternalRuntime()
+		bridge = ExternalRuntimeBridge({"zeta": second, "alpha": first})
+
+		events = bridge.commit_bundle({"transaction_id": "tx_01", "receipts": [{"runtime_id": "alpha"}]})
+
+		self.assertEqual([event["type"] for event in events], ["ExternalBundleCommitted", "ExternalBundleCommitted"])
+		self.assertEqual(first.calls[0][1]["runtime_id"], "alpha")
+		self.assertEqual(second.calls[0][1]["runtime_id"], "zeta")
+		self.assertEqual(first.calls[0][1]["transaction_id"], "tx_01")
+
+	def test_bundle_lifecycle_failure_is_a_typed_error(self) -> None:
+		bridge = ExternalRuntimeBridge({"social": BundleLifecycleExternalRuntime(fail_phase="bundle_rollback")})
+
+		with self.assertRaises(ExternalRuntimeLifecycleError) as caught:
+			bridge.rollback_bundle({"transaction_id": "tx_02"})
+
+		self.assertEqual(caught.exception.phase, "bundle_rollback")
+		self.assertEqual(caught.exception.runtime_id, "social")
+
 	def test_runtime_injects_external_runtime_bridge_service(self) -> None:
 		adapter = MockExternalRuntime()
 		runtime = KernRuntime(
@@ -162,6 +202,42 @@ class ExternalRuntimeBridgeTests(unittest.TestCase):
 
 			with self.assertRaises(RuntimeError):
 				runtime.record_initial_state()
+			self.assertTrue(runtime.is_terminal)
+			with self.assertRaisesRegex(RuntimeError, "terminal"):
+				runtime.advance_ticks(1)
+
+	def test_runtime_becomes_terminal_when_bundle_rollback_lifecycle_fails(self) -> None:
+		catalog = build_core_effect_catalog().clone_mutable()
+		catalog.register(
+			EffectSpec(
+				effect_id="TestWrite",
+				binder=lambda _ws, data, context: (dict(data), dict(context)),
+				handler=lambda _executor, _ws, _data, _context: [{"type": "TestWriteAttempted"}],
+				side_effect="external_compensatable",
+			)
+		)
+		runtime = KernRuntime(
+			world_state=_world(),
+			interaction_engine=InteractionEngine(recipe_db={}),
+			executor=WorldExecutor(effect_catalog=catalog),
+			action_provider=SimplePolicyActionProvider(),
+			external_runtimes={"social": BundleLifecycleExternalRuntime(fail_phase="bundle_rollback")},
+			reaction_rules=[
+				{
+					"id": "rollback_failure",
+					"on_event": "WorldTickAdvanced",
+					"bundle": {"effects": [{"effect": "TestWrite"}, {"effect": "MissingEffect"}]},
+				}
+			],
+			checkpoint_enabled=False,
+		)
+
+		with self.assertRaises(ExternalRuntimeLifecycleError):
+			runtime.advance_ticks(1)
+
+		self.assertTrue(runtime.is_terminal)
+		with self.assertRaisesRegex(RuntimeError, "terminal"):
+			runtime.step()
 
 	def test_from_config_restore_notifies_external_runtime_before_runtime_construction(self) -> None:
 		project_root = Path(__file__).resolve().parents[1]

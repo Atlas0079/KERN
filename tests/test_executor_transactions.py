@@ -3,6 +3,8 @@ from __future__ import annotations
 import unittest
 
 from KERN.executor.executor import WorldExecutor
+from KERN.effects import EffectSpec, build_core_effect_catalog
+from KERN.external_runtime import ExternalRuntimeBridge
 from KERN.models.components import ContainerComponent, ContainerSlot, StatusComponent
 from KERN.models.entity import Entity
 from KERN.models.location import Location
@@ -10,6 +12,120 @@ from KERN.models.world_state import WorldState
 
 
 class ExecutorTransactionTests(unittest.TestCase):
+	def test_failed_outer_bundle_notifies_external_rollback_once(self) -> None:
+		class Adapter:
+			def __init__(self) -> None:
+				self.rollback_contexts: list[dict] = []
+
+			def rollback_bundle(self, context: dict) -> list[dict]:
+				self.rollback_contexts.append(dict(context))
+				return [{"type": "ExternalBundleRolledBack"}]
+
+		adapter = Adapter()
+		ws = WorldState()
+		ws.services["external_runtime_bridge"] = ExternalRuntimeBridge({"social": adapter})
+		catalog = build_core_effect_catalog().clone_mutable()
+		catalog.register(
+			EffectSpec(
+				effect_id="TestExternalWrite",
+				binder=lambda _ws, data, context: (dict(data), dict(context)),
+				handler=lambda _executor, _ws, _data, _context: [{"type": "ExternalWriteAttempted"}],
+				side_effect="external_compensatable",
+			)
+		)
+		executor = WorldExecutor(effect_catalog=catalog)
+
+		events = executor.execute_bundle(
+			ws,
+			{"effects": [{"effect": "TestExternalWrite"}, {"effect": "MissingEffect"}]},
+			{},
+		)
+
+		self.assertEqual(events[0]["type"], "ExecutorError")
+		self.assertEqual(len(adapter.rollback_contexts), 1)
+		self.assertTrue(adapter.rollback_contexts[0]["transaction_id"])
+
+	def test_irreversible_external_effect_must_be_last_in_a_bundle(self) -> None:
+		catalog = build_core_effect_catalog().clone_mutable()
+		catalog.register(
+			EffectSpec(
+				effect_id="TestIrreversible",
+				binder=lambda _ws, data, context: (dict(data), dict(context)),
+				handler=lambda _executor, _ws, _data, _context: [{"type": "IrreversibleExecuted"}],
+				side_effect="external_irreversible",
+			)
+		)
+		executor = WorldExecutor(effect_catalog=catalog)
+
+		events = executor.execute_bundle(
+			WorldState(),
+			{"effects": [{"effect": "TestIrreversible"}, {"effect": "AddTag", "target": "self", "tag": "later"}]},
+			{},
+		)
+
+		self.assertEqual(events[0]["code"], "EXTERNAL_IRREVERSIBLE_NOT_LAST")
+
+	def test_external_bundle_rollback_receives_operations_from_its_transaction(self) -> None:
+		class Adapter:
+			def __init__(self) -> None:
+				self.receipts: list[dict] = []
+
+			def invoke(self, operation: str, payload: dict, _context: dict) -> list[dict]:
+				return [{"type": "ExternalOperation", "operation": operation, "payload": dict(payload)}]
+
+			def invoke_with_receipt(self, operation: str, payload: dict, context: dict) -> tuple[list[dict], dict]:
+				return self.invoke(operation, payload, context), {"created_post_id": str(payload["id"])}
+
+			def rollback_bundle(self, context: dict) -> list[dict]:
+				self.receipts = [dict(item) for item in context["receipts"]]
+				return [{"type": "ExternalBundleRolledBack"}]
+
+		adapter = Adapter()
+		ws = WorldState()
+		ws.services["external_runtime_bridge"] = ExternalRuntimeBridge({"social": adapter})
+		catalog = build_core_effect_catalog().clone_mutable()
+		catalog.register(
+			EffectSpec(
+				effect_id="TestExternalOperation",
+				binder=lambda _ws, data, context: (dict(data), dict(context)),
+				handler=lambda _executor, world, _data, context: world.services["external_runtime_bridge"].invoke("social", "write", {"id": "post_01"}, context),
+				side_effect="external_compensatable",
+			)
+		)
+
+		WorldExecutor(effect_catalog=catalog).execute_bundle(
+			ws,
+			{"effects": [{"effect": "TestExternalOperation"}, {"effect": "MissingEffect"}]},
+			{},
+		)
+
+		self.assertEqual(adapter.receipts, [{"runtime_id": "social", "receipt": {"created_post_id": "post_01"}}])
+
+	def test_nested_irreversible_effect_waits_for_the_outer_transaction(self) -> None:
+		executed: list[str] = []
+		catalog = build_core_effect_catalog().clone_mutable()
+		catalog.register(
+			EffectSpec(
+				effect_id="TestNestedIrreversible",
+				binder=lambda _ws, data, context: (dict(data), dict(context)),
+				handler=lambda _executor, _ws, _data, _context: executed.append("external") or [{"type": "ExternalExecuted"}],
+				side_effect="external_irreversible",
+			)
+		)
+
+		events = WorldExecutor(effect_catalog=catalog).execute_bundle(
+			WorldState(),
+			{
+				"effects": [
+					{"effect": "InvokeBundle", "bundle": {"effects": [{"effect": "TestNestedIrreversible"}]}},
+					{"effect": "MissingEffect"},
+				]
+			},
+			{},
+		)
+
+		self.assertEqual(events[0]["type"], "ExecutorError")
+		self.assertEqual(executed, [])
 	def test_invoke_bundle_is_part_of_executor_transaction_without_runtime_service(self) -> None:
 		ws = WorldState()
 		target = Entity(entity_id="target", template_id="Thing", entity_name="Target")

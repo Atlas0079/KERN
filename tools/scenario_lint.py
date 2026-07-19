@@ -478,6 +478,11 @@ def _validate_bundle(ctx: LintContext, bundle: Any, where: str) -> None:
 		return
 	for idx, eff in enumerate(effects):
 		_validate_effect(ctx, eff, f"{where}.effects[{idx}]")
+		if not isinstance(eff, dict) or idx == len(effects) - 1:
+			continue
+		effect_id = str(eff.get("effect", "") or "")
+		if ctx.effect_catalog.contains(effect_id) and ctx.effect_catalog.require(effect_id).side_effect == "external_irreversible":
+			ctx.error(f"{where}.effects[{idx}]", f"external irreversible effect must be last in bundle: {effect_id}")
 
 
 def _validate_condition(ctx: LintContext, condition: Any, where: str, known_event_type: str = "") -> None:
