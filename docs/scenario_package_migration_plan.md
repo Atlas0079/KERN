@@ -113,8 +113,7 @@ Python handler、codec、catalog 或 `WorldState.services`。
 ## 已迁移的世界包
 
 Camping 与 SU7Crisis 是自包含世界包。SU7Crisis 保留 100-agent 生成世界，并将所需社交
-recipes 和 seed 数据纳入包内；Farm、RumorSpread、CompanionRobot、SpaceWerewolf 的旧运行数据
-已删除，后两者仅保留设计文档。
+recipes 和 seed 数据纳入包内；已迁移前的旧运行数据和场景草稿不再保留。
 
 ## 验证
 
