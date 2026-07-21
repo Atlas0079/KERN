@@ -171,6 +171,40 @@ class WorldSettlementTests(unittest.TestCase):
 		logged_rule_ids = [str(item.get("reaction_rule_id", "")) for item in ws.interaction_log]
 		self.assertNotIn("must_not_run", logged_rule_ids)
 
+	def test_failed_outer_bundle_does_not_publish_committed_child_events(self) -> None:
+		ws = WorldState()
+		actor = Entity(entity_id="agent", template_id="Agent", entity_name="Agent")
+		actor.add_component("TagComponent", TagComponent())
+		ws.register_entity(actor)
+		trigger = TriggerSystem(
+			rules=[
+				{
+					"id": "must_not_react",
+					"on_event": "TagAdded",
+					"bundle": {"effects": [{"effect": "AddTag", "target": "self", "tag": "reaction_ran"}]},
+				}
+			]
+		)
+		settlement = WorldSettlement(ws=ws, executor=WorldExecutor(), trigger_system=trigger, max_reaction_depth=4)
+
+		result = settlement.execute_bundle(
+			{
+				"effects": [
+					{
+						"effect": "InvokeBundle",
+						"bundle": {"effects": [{"effect": "AddTag", "target": "self", "tag": "child_committed"}]},
+					},
+					{"effect": "UnknownEffect"},
+				]
+			},
+			{"self_id": "agent"},
+		)
+
+		tags = ws.get_entity_by_id("agent").get_component("TagComponent").tags
+		self.assertEqual(tags, [])
+		self.assertEqual([event["type"] for event in result.events], ["ExecutorError"])
+		self.assertFalse(any(item.get("reaction_rule_id") == "must_not_react" for item in ws.interaction_log))
+
 	def test_reaction_depth_counts_layers_from_one_and_overflow_is_fatal(self) -> None:
 		ws = WorldState()
 		executor = RecordingExecutor()

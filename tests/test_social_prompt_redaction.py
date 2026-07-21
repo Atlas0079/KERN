@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
 import unittest
 
 from KERN.agent_workflow.llm_action_provider import _operable_screen_contexts_text
-from tools.run_rumor_spread_5agent_llm_smoke import _build_social_seed
 
 
 class SocialPromptRedactionTests(unittest.TestCase):
@@ -35,12 +36,13 @@ class SocialPromptRedactionTests(unittest.TestCase):
 		self.assertNotIn("post_rumor", text)
 		self.assertNotIn("acc_seed", text)
 
-	def test_five_agent_smoke_seed_uses_neutral_visible_account_names(self) -> None:
-		seed = _build_social_seed()
+	def test_su7_social_seed_uses_current_visible_account_names(self) -> None:
+		seed_path = Path(__file__).resolve().parents[1] / "Packages" / "SU7Crisis" / "Data" / "social_seed.json"
+		seed = json.loads(seed_path.read_text(encoding="utf-8"))
 		names = {str(x.get("display_name", "")) for x in seed.get("accounts", []) if isinstance(x, dict)}
 
-		self.assertIn("本地生活观察", names)
-		self.assertIn("校务通知", names)
+		self.assertIn("Auto Lens 汽车观察", names)
+		self.assertIn("消费观察员", names)
 		self.assertNotIn("Local Rumor Watch", names)
 		self.assertNotIn("Official Notice", names)
 
