@@ -8,6 +8,7 @@ from KERN.interaction.engine import InteractionEngine
 from KERN.models.entity import Entity
 from KERN.models.location import Location
 from KERN.models.world_state import WorldState
+from KERN.models.components import CreatureComponent
 from KERN.runtime import KernRuntime
 from pathlib import Path
 
@@ -52,6 +53,24 @@ class KernRuntimeTests(unittest.TestCase):
 		self.assertEqual(len(runtime.snapshots), 1)
 		self.assertEqual(runtime.snapshots[0]["tick"], 0)
 		self.assertEqual(runtime.snapshots[0]["events"], [])
+		self.assertEqual(runtime.snapshots[0]["schema_version"], "runtime_snapshot.v2")
+
+	def test_snapshot_keeps_legacy_projection_and_catalog_component_state(self) -> None:
+		ws = _world()
+		ws.get_entity_by_id("agent_01").add_component("CreatureComponent", CreatureComponent(max_nutrition=80, current_nutrition=40, current_energy=60))
+		runtime = KernRuntime(
+			world_state=ws,
+			interaction_engine=InteractionEngine(recipe_db={}),
+			executor=WorldExecutor(),
+			action_provider=SimplePolicyActionProvider(),
+			checkpoint_enabled=False,
+		)
+
+		runtime.record_initial_state()
+		entity = runtime.snapshots[0]["entities"]["agent_01"]
+
+		self.assertEqual(entity["components"]["CreatureComponent"], {"nutrition": 40, "energy": 60, "state": "Idle"})
+		self.assertEqual(entity["component_state"]["CreatureComponent"]["current_nutrition"], 40.0)
 
 	def test_advance_ticks_steps_and_records_each_tick(self) -> None:
 		runtime = KernRuntime(

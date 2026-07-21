@@ -1,89 +1,41 @@
-# KERN Package 组合迁移计划
+# KERN Package 组合与可恢复性
 
-> 状态：实施中。阶段 0–7 已完成。
+> 状态：当前实现参考。Package 迁移阶段 0–7 已完成。
 
-## 目标
+## 运行组合
 
-一次 KERN 运行由多个被 config 明确选择的 Package 组成。每个 Package 都是用户信任
-的输入：选择它即表示允许执行它声明的 Python 扩展。Package 可以只提供组件、codec
-和 effect；一次运行必须指定且只能指定一个提供初始世界的世界包。
+一次 KERN 运行由 config 明确选择的 Package 组成。选择 Package 即表示信任它声明的
+Python 代码；KERN 不提供额外的代码授权开关或 Python 沙箱。一次运行必须选择且只能选择
+一个世界包，也可以选择零个或多个能力包。
 
 ```text
 Runtime
 ├─ KERN core 能力
-├─ 能力包：Weather
-├─ 能力包：Crafting
+├─ 能力包：Weather、Crafting（可选）
 └─ 世界包：Camping（World、Entities、Recipes、Reactions）
 ```
 
-能力只注册到本次 Runtime 的 Catalog。另一次 Runtime 会重新装配自己的 Catalog，
-因此选择了 Weather 的 Camping 不会让 Farm 自动获得天气能力。
+每个 runtime 都有独立的 `EffectCatalog` 和 `ComponentCatalog`。两者分别由 lint、
+executor、world build、restore 和 archive 共用，并在执行前冻结；能力不会泄露到另一次
+runtime。
 
-## 已完成的基础
+## Package 格式与加载规则
 
-阶段 0–2 已在 `laptop` 分支落地：
-
-- `34e8d55 Introduce runtime-scoped effect catalog`
-- `840b656 Centralize component construction and checkpoint codecs`
-
-每次 Runtime 都有独立的 `EffectCatalog` 和 `ComponentCatalog`。EffectCatalog 被 lint
-和 executor 共用；ComponentCatalog 被 lint、world build、restore、executor 和 archive
-共用。二者均在运行前冻结。
-
-组件通过 codec 在模板 JSON、内存对象和 checkpoint JSON 之间转换；TaskHost codec 会
-保存任务及其生命周期 bundle。checkpoint 保存 effect 数据，不保存 Python handler
-代码或 Catalog。
-
-## 固定决策
-
-- KERN 保留小而稳定的 core Effect 和组件；Bundle 保持为有限、可序列化的 effect
-  列表，不发展为脚本语言。
-- 组件保存状态；世界行为由 Effect 或 System 承担。
-- config 中选择 Package 即代表用户信任该 Package 及其代码。没有单独的
-  `allow_scenario_code` 开关；第一版也不尝试构造 Python 沙箱。
-- loader 只加载 config 列出的 Package 和 Package 固定入口列出的模块；不扫描磁盘
-  上的其它目录或 Python 文件。
-- 一个 Package 根目录包含 `kern-package.json`。有代码扩展时，固定入口为根目录
-  `extensions.py`；入口只声明模块，不保存 Catalog，也不直接执行仿真。
-- loader 只从入口声明的模块中发现带明确标记的 Effect 和组件定义。它们写入当前
-  Runtime 的本地 Catalog；import 代码不得修改模块级全局注册表。
-- config 必须恰好指定一个 `world: true` 的 Package。该 Package 的 manifest 必须声明
-  `provides_world: true` 并提供 `Data/World.json`。第一版中，只有世界包提供启动数据；
-  能力包只提供代码能力。
-- Package 按 config 顺序处理。ID、Effect ID 或组件 ID 的冲突一律报错，不采用后者覆盖
-  前者的隐式规则。
-- 不保留 legacy `Data/` 布局或 runtime config adapter。每个可运行场景必须是自包含的世界包；
-  历史场景只保留其设计与生成指导文档。
-
-## config 与 Package 格式
-
-新的 config 使用顶层 `packages` 数组，`env` 保留现有运行时参数：
+config 使用顶层 `packages` 数组，`env` 保留运行时参数：
 
 ```json
 {
   "packages": [
-    { "path": "Packages/Weather" },
-    { "path": "Packages/Crafting" },
-    { "path": "Scenarios/Camping", "world": true }
+    {"path": "Packages/Weather"},
+    {"path": "Packages/Camping", "world": true}
   ],
-  "env": {
-    "USE_LLM": "0"
-  }
+  "env": {"USE_LLM": "0"}
 }
 ```
 
-最小能力包 manifest：
-
-```json
-{
-  "package_id": "weather",
-  "version": "1.0.0",
-  "extensions": "extensions.py",
-  "provides_world": false
-}
-```
-
-最小世界包 manifest：
+世界包 manifest 必须声明 `provides_world: true` 和世界数据；能力包不能声明世界数据。
+Package 路径必须位于项目根目录内，Package ID 不得重复。loader 会拒绝零个或多个世界包、
+路径逃逸、缺失 manifest、数据类型不匹配和 ID 冲突。
 
 ```json
 {
@@ -100,101 +52,71 @@ Runtime
 }
 ```
 
-`extensions.py` 只声明可被发现的相对模块：
+有扩展代码时，manifest 的入口固定为根目录 `extensions.py`：
 
 ```python
 EFFECT_MODULES = ("effects.weather",)
 COMPONENT_MODULES = ("components.weather",)
 ```
 
-组件模块以 `@package_component("weather:WeatherComponent")` 标记 dataclass；Effect 模块以
-`@package_effect(EffectSpec(...))` 标记一个模块级定义。Package 作者从
-`KERN.package_definitions` 导入这两个标记。标记之外的定义不会被注册。
+loader 只从入口声明的模块中发现带 `@package_effect` 或 `@package_component` 标记的定义。
+组件及其 codec 先注册，Effect 后注册；所有 Package definition ID 都必须使用所属 Package
+的命名空间。组件只能是纯数据 dataclass，默认采用 `DataclassCodec`；特殊转换由 Package
+显式提供 codec。
 
-loader 依声明顺序导入模块，并只收集带 `@package_effect` 或
-`@package_component` 标记的定义。组件和 codec 先注册；Effect 后注册；随后冻结两个
-Catalog，再读取世界包数据和 lint。
+## Archive 与 checkpoint identity
 
-## 后续实施顺序
+每次 Package 装配都会固定 `package_identity.v2`。它描述 runtime 实际依赖的 artifact，
+不把整个 Package 目录当作指纹。identity 包含：
 
-### 阶段 3：Package config、manifest 与世界包（已完成）
+- 每个选中 Package 的 `kern-package.json`；
+- 世界包实际读取的 world、recipe、reaction、bundle 与 entity JSON；
+- 声明扩展时的 `extensions.py`，以及 `COMPONENT_MODULES` / `EFFECT_MODULES` 实际导入的
+  Package-local Python 文件；
+- 冻结后的 effect 与 component ID 清单。
 
-已新增 `KERN.package` 的 manifest 和 package loader。loader 复用现有
-`load_data_bundle(...)`，不复制另一套数据读取逻辑。`LoadedPackages` 保存已解析的 Package
-清单、唯一 world package 和 world data bundle；Runtime 与 lint 使用同一个加载入口。
+每个 Package 的 `runtime_content_hash` 稳定地 hash 相对路径、artifact role 和文件内容。
+未加载的 JSON/Python 文件不会改变 identity；上述任一 artifact 变化会阻止 v2 checkpoint
+恢复。identity 在 loader 完成时保存于 `LoadedPackages`，archive 写入不会重新扫描磁盘。
 
-`KernRuntime.from_config(...)` 识别顶层 `packages`。它验证每个路径都在项目根目录内、
-Package ID 不重复，并验证恰好一个 `world: true` 条目与 manifest 一致。缺少 `packages`
-字段时立即报错。
-
-`KernRuntime.from_loaded_packages(...)` 可复用已验证的组合进行 Runtime 装配。阶段 3 不执行
-`extensions.py`；能力包可以参与组合解析，Catalog 扩展和 Package 身份 hash 留给阶段 4–6。
-
-验收：独立世界包可加载；能力包可被解析但在本阶段不执行 Python；路径逃逸、重复 ID、
-零或多个世界包、manifest/data 不一致均有明确报错。以上由
-`tests/test_package_loading.py` 覆盖。
-
-### 阶段 4：能力包 Effect 发现（已完成）
-
-对每个 config 选择且声明 `extensions.py` 的 Package，loader 执行入口并读取
-`EFFECT_MODULES`。它按相对模块路径导入、收集 `@package_effect` 定义，并注册到 core
-EffectCatalog 的可变 clone。Effect ID 必须具备 Package 命名空间，不能覆盖 core 或其它
-Package 的 ID。
-
-lint 与 executor 使用同一个扩展后的 Catalog。所选 Package 的入口缺失、模块路径非法、
-导入失败、标记错误或 ID 冲突均立即失败。
-
-验收：选中 Weather 后其 Effect 仅在该 Runtime 可见；未选中 Weather 的 Runtime 无法
-引用其 Effect；场景 Effect 在单 effect 和 bundle 事务中与 core Effect 有相同语义。已由
-`tests/test_package_loading.py` 的 capability fixture 覆盖。
-
-### 阶段 5：能力包组件和 codec 发现（已完成）
-
-先读取所有选中 Package 的 `COMPONENT_MODULES`，发现带 `@package_component` 标记的组件，
-再加载 Effect。组件只能是纯数据 dataclass；默认采用 `DataclassCodec`，特殊转换才允许
-Package 提供 codec。ComponentCatalog 在 build 和 restore 前冻结并被两者共用。
-
-验收：自定义组件能由世界包模板构造、被 query/effect 读取或修改，并在 checkpoint 后
-保留类型和值；未选中能力包时同名组件不会静默得到该类型；不同 Runtime 的 Catalog
-隔离成立。当前测试已覆盖模板构造、未选中隔离和 executor 共享 Catalog；checkpoint
-身份验证随阶段 6 一起完成。
-
-### 阶段 6：archive 身份与可复现性（已完成）
-
-snapshot meta 保存完整 Package 组合，而非单个场景身份：
+archive manifest 与 snapshot metadata 使用嵌套字段：
 
 ```json
 {
-  "packages": [
-    { "package_id": "weather", "version": "1.0.0", "content_hash": "..." },
-    { "package_id": "camping", "version": "1.0.0", "content_hash": "...", "world": true }
-  ],
-  "effect_ids": ["weather:ChangeWeather"],
-  "component_ids": ["weather:WeatherComponent"]
+  "package_identity": {
+    "schema_version": "package_identity.v2",
+    "packages": [
+      {"package_id": "camping", "version": "1.0.0", "runtime_content_hash": "…", "world": true}
+    ],
+    "effect_ids": ["…"],
+    "component_ids": ["…"]
+  }
 }
 ```
 
-hash 覆盖 manifest、被引用 JSON 和已加载 Python 源文件。恢复时先按 config/metadata
-加载相同 Package 组合、注册本地 Catalog、验证身份和 hash，再解码 checkpoint。任何
-缺失 Package、版本、能力或 hash 不一致默认拒绝；无扩展的 legacy checkpoint 保持现有
-恢复路径并标记为 legacy。
+恢复时，v2 metadata 按 artifact identity 验证；旧的顶层 v1 metadata 继续按完整目录中
+`.json`/`.py` 的旧 hash 规则验证；没有 Package metadata 的历史 checkpoint 保留 legacy
+restore 路径。
 
-Archive manifest 与 snapshot metadata 现已记录 Package 身份和 Catalog ID 清单；恢复会拒绝
-与当前 Package 组合不一致的 checkpoint。不含 Package metadata 的历史 checkpoint 继续使用
-兼容恢复路径。
+## Runtime snapshot
 
-### 阶段 7：Camping 与 SU7Crisis 真实迁移（已完成）
+`KernRuntime.snapshots` 使用 `runtime_snapshot.v2`。每个实体包含两个组件字段：
 
-Camping 与 SU7Crisis 已迁为自包含的世界包。SU7Crisis 保留 100-agent 生成世界，并将其
-所需社交 recipes 和 seed 数据纳入包内；Farm、RumorSpread、CompanionRobot、SpaceWerewolf 的
-运行数据与旧 config 已删除，后两者仅保留设计文档。
+- `component_state`：完整 canonical 状态。它遍历实体的全部组件，并调用当前 runtime 的
+  `ComponentCatalog.serialize(component_id, value)`；输出与 live world state 脱离引用。
+- `components`：兼容性展示投影，保留 Creature、Worker 与 Container 的既有精简形状。
 
-验收：两个 Package config lint、Camping no-LLM smoke、SU7Crisis load smoke 与 checkpoint
-round-trip 通过。
+`ContainerComponent`、`TaskHostComponent` 与 `DecisionArbiterComponent` 等复杂组件只通过
+各自 codec 序列化；runtime 不再维护第二套按组件类型转换的 canonical 逻辑。snapshot 不保存
+Python handler、codec、catalog 或 `WorldState.services`。
 
-## 测试与兼容约束
+## 已迁移的世界包
 
-每阶段独立提交、独立验证。至少运行：
+Camping 与 SU7Crisis 是自包含世界包。SU7Crisis 保留 100-agent 生成世界，并将所需社交
+recipes 和 seed 数据纳入包内；Farm、RumorSpread、CompanionRobot、SpaceWerewolf 的旧运行数据
+已删除，后两者仅保留设计文档。
+
+## 验证
 
 ```powershell
 & .\.venv\Scripts\python.exe -m unittest discover -s tests -p "test_*.py"
@@ -203,6 +125,3 @@ round-trip 通过。
 & .\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.su7_crisis.package.smoke.json
 & .\.venv\Scripts\python.exe default_orchestrator.py --config runtime_config.camping.package.smoke.json
 ```
-
-迁移过程中不顺手修改任务生命周期、Bundle 控制流、LLM workflow、runtime context 或
-场景数值。发现的无关问题应单独记录并用最小测试固定现状。

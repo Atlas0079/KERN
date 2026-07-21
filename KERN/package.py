@@ -11,10 +11,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .data.loader import DataBundle, load_data_bundle
+from .data.loader import DataBundle, load_data_bundle_with_sources
 from .component_catalog import ComponentCatalog, build_core_component_catalog
 from .effects import EffectCatalog, build_core_effect_catalog
 from .package_definitions import marked_component_spec, marked_effect_spec
+from .package_identity import build_runtime_identity
 
 
 @dataclass(frozen=True)
@@ -40,6 +41,7 @@ class LoadedPackage:
 	root: Path
 	manifest: PackageManifest
 	world_selected: bool = False
+	artifact_paths: tuple[tuple[str, str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -49,18 +51,12 @@ class LoadedPackages:
 	data_bundle: DataBundle
 	effect_catalog: EffectCatalog
 	component_catalog: ComponentCatalog
+	runtime_identity: dict[str, object]
 
 
 def package_identity(loaded: LoadedPackages) -> dict[str, Any]:
-	packages: list[dict[str, Any]] = []
-	for package in loaded.packages:
-		digest = hashlib.sha256()
-		for path in sorted(path for path in package.root.rglob("*") if path.is_file() and path.suffix in {".json", ".py"}):
-			digest.update(path.relative_to(package.root).as_posix().encode("utf-8"))
-			digest.update(b"\0")
-			digest.update(path.read_bytes())
-		packages.append({"package_id": package.manifest.package_id, "version": package.manifest.version, "content_hash": digest.hexdigest(), "world": bool(package.world_selected)})
-	return {"packages": packages, "effect_ids": sorted(loaded.effect_catalog.effect_ids()), "component_ids": sorted(loaded.component_catalog.component_ids())}
+	"""Return the identity fixed when this Package composition was loaded."""
+	return dict(loaded.runtime_identity)
 
 
 def package_selection_identity(project_root: Path, config_path: Path) -> tuple[tuple[str, bool], ...]:
@@ -128,23 +124,34 @@ def load_packages_from_config(
 		raise ValueError(f"world package has no data declaration: {world_package.manifest.package_id}")
 	effect_catalog = build_core_effect_catalog()
 	component_catalog = build_core_component_catalog()
-	_register_package_extensions(tuple(loaded), effect_catalog, component_catalog)
+	extension_sources = _register_package_extensions(tuple(loaded), effect_catalog, component_catalog)
 	effect_catalog.freeze()
 	component_catalog.freeze()
-	data_bundle = _load_world_data(world_package)
-	return LoadedPackages(tuple(loaded), world_package, data_bundle, effect_catalog, component_catalog)
+	loaded_data = _load_world_data(world_package)
+	resolved_packages: list[LoadedPackage] = []
+	for package in loaded:
+		artifacts: list[tuple[str, str]] = [("kern-package.json", "manifest")]
+		if package is world_package:
+			artifacts.extend((_relative_package_path(package, path), "world_data") for path in loaded_data.source_files)
+		artifacts.extend((_relative_package_path(package, path), "extension_module") for path in extension_sources.get(package.root, ()))
+		resolved_packages.append(replace(package, artifact_paths=tuple(artifacts)))
+	resolved_world_package = next(package for package in resolved_packages if package.world_selected)
+	partial = LoadedPackages(tuple(resolved_packages), resolved_world_package, loaded_data.bundle, effect_catalog, component_catalog, {})
+	return replace(partial, runtime_identity=build_runtime_identity(partial))
 
 
 def _register_package_extensions(
 	packages: tuple[LoadedPackage, ...],
 	effect_catalog: EffectCatalog,
 	component_catalog: ComponentCatalog,
-) -> None:
+) -> dict[Path, tuple[Path, ...]]:
 	loaded_modules: list[tuple[LoadedPackage, tuple[types.ModuleType, ...], tuple[types.ModuleType, ...]]] = []
+	sources: dict[Path, tuple[Path, ...]] = {}
 	for package in packages:
 		extension = str(package.manifest.extensions or "").strip()
 		if not extension:
 			loaded_modules.append((package, (), ()))
+			sources[package.root] = ()
 			continue
 		entry = package.root / extension
 		if extension != "extensions.py" or not entry.is_file():
@@ -154,6 +161,11 @@ def _register_package_extensions(
 		component_modules = _import_declared_modules(entry_module, "COMPONENT_MODULES", prefix, package)
 		effect_modules = _import_declared_modules(entry_module, "EFFECT_MODULES", prefix, package)
 		loaded_modules.append((package, component_modules, effect_modules))
+		sources[package.root] = tuple(
+			Path(str(module.__file__)).resolve()
+			for module in (entry_module, *component_modules, *effect_modules)
+			if str(getattr(module, "__file__", "") or "").strip()
+		)
 	for package, component_modules, _effect_modules in loaded_modules:
 		for module in component_modules:
 			for spec in _marked_specs(module, marked_component_spec):
@@ -164,6 +176,7 @@ def _register_package_extensions(
 			for spec in _marked_specs(module, marked_effect_spec):
 				_component_id_for_package(spec.effect_id, package)
 				effect_catalog.register(_package_effect_spec(spec, package))
+	return sources
 
 
 def _package_module_prefix(package: LoadedPackage) -> str:
@@ -310,11 +323,18 @@ def _safe_data_path(package_root: Path, value: Any, label: str, *, required: boo
 	return relative.as_posix()
 
 
-def _load_world_data(world_package: LoadedPackage) -> DataBundle:
+def _relative_package_path(package: LoadedPackage, path: Path) -> str:
+	try:
+		return path.resolve().relative_to(package.root.resolve()).as_posix()
+	except ValueError as exc:
+		raise ValueError(f"package artifact must remain within package root: {path}") from exc
+
+
+def _load_world_data(world_package: LoadedPackage):
 	data = world_package.manifest.data
 	if data is None:
 		raise ValueError("world package data is required")
-	return load_data_bundle(
+	return load_data_bundle_with_sources(
 		world_package.root / "Data",
 		world_json=data.world,
 		entities_dirs=list(data.entities),

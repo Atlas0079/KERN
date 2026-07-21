@@ -58,6 +58,9 @@ template JSON <-> live component object <-> checkpoint JSON
 - A `TaskHostComponent` codec persists tasks, including their start, tick,
   cleanup, and completion effect bundles. Checkpoints preserve effect data, not
   Python handler code or a catalog itself.
+- `KernRuntime.snapshots` uses `runtime_snapshot.v2`. Its `component_state` is
+  the complete catalog-serialized state; `components` is a compatibility-only
+  core display projection.
 
 `EffectCatalog` is runtime-scoped and shared by lint and executor.
 `ComponentCatalog` is runtime-scoped and shared by lint, build, restore,
@@ -66,18 +69,24 @@ must not be mutated while a runtime is running.
 
 ## Package composition migration status
 
-Phases 0–2 are complete on `laptop`:
+Phases 0–7 are complete:
 
 - runtime-scoped `EffectCatalog`;
 - runtime-scoped `ComponentCatalog` and component codecs;
-- behavior and real-scenario regression coverage.
+- Package config, world packages, extension discovery and runtime-scoped
+  catalog assembly;
+- versioned Package runtime identity and real-scenario regression coverage.
 
-The next work is defined in `docs/scenario_package_migration_plan.md`. A runtime
-will compose one required world package with any number of capability packages.
-Selecting a Package in config means the user trusts its declared code; there is
-no separate code-authorization switch. The loader only imports modules declared
-by a selected Package's `extensions.py`, registers their marked definitions into
-the current runtime's catalogs, and freezes those catalogs before execution.
+A runtime composes one required world package with any number of capability
+packages. Selecting a Package in config means the user trusts its declared code;
+there is no separate code-authorization switch. The loader imports only modules
+declared by a selected Package's `extensions.py`, registers their marked
+definitions into current runtime catalogs, and freezes those catalogs before
+execution. `LoadedPackages` fixes a `package_identity.v2` from the manifest,
+actual loaded world-data files, and declared extension source files. Restore
+accepts that v2 identity, validates historical v1 directory-hash metadata with
+the old rule, and leaves checkpoints without Package metadata on the legacy
+path.
 
 Scenario code is not sandboxed and has the same process permissions as KERN.
 
@@ -132,10 +141,9 @@ Run checks proportional to the change. The full local baseline is:
 ```powershell
 & .\.venv\Scripts\python.exe -m unittest discover -s tests -p "test_*.py"
 & .\.venv\Scripts\python.exe -m compileall -q KERN tools default_orchestrator.py tests
-& .\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.camping.smoke.json
-& .\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.rumor_spread.smoke.json
-& .\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.example.json
-& .\.venv\Scripts\python.exe default_orchestrator.py --config runtime_config.camping.smoke.json
+& .\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.camping.package.smoke.json
+& .\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.su7_crisis.package.smoke.json
+& .\.venv\Scripts\python.exe default_orchestrator.py --config runtime_config.camping.package.smoke.json
 ```
 
 Run focused tests for the boundary being changed as well, especially executor

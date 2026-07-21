@@ -1,6 +1,10 @@
 # 社交平台与谣言传播实验现状
 
-本文是 KERN 当前社交平台相关工作的合并说明。它覆盖两层内容：
+> 状态：设计与研究参考。本文保留 RumorSpread 的架构动机、实验设计和后续建议；其旧的
+> `Data/RumorSpread/` 与 `runtime_config.rumor_spread.*` 路径已迁出。当前可运行的社交世界包
+> 是 `Packages/SU7Crisis`，使用 `runtime_config.su7_crisis.package.smoke.json`。
+
+本文记录 KERN 社交平台相关工作的合并说明。它覆盖两层内容：
 
 1. 社交平台外部 runtime 基建：账号、帖子、推荐、曝光、互动、手机屏幕和 effects。
 2. 谣言传播实验场景：用 social runtime 模拟谣言曝光、打开、互动、澄清触达和未来干预。

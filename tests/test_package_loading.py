@@ -6,6 +6,8 @@ import unittest
 from pathlib import Path
 
 from KERN.package import load_packages_from_config, package_identity
+from KERN.package_identity import verify_checkpoint_identity
+from KERN.data.checkpoint import load_checkpoint_meta
 from KERN.runtime import KernRuntime
 from KERN.data.archive import ArchiveRecorder
 from KERN.data.checkpoint import restore_world_state_from_checkpoint
@@ -72,6 +74,11 @@ class PackageLoadingTests(unittest.TestCase):
 
 			self.assertEqual(type(runtime.component_catalog.build("weather:WeatherComponent", {"level": 3})).__name__, "WeatherComponent")
 			self.assertEqual(type(runtime.world_state.get_entity_by_id("probe_1").get_component("weather:WeatherComponent")).__name__, "WeatherComponent")
+			runtime.record_initial_state()
+			snapshot_component = runtime.snapshots[0]["entities"]["probe_1"]["component_state"]["weather:WeatherComponent"]
+			self.assertEqual(snapshot_component, {"level": 3})
+			runtime.world_state.get_entity_by_id("probe_1").get_component("weather:WeatherComponent").level = 9
+			self.assertEqual(snapshot_component, {"level": 3})
 			self.assertEqual(runtime.executor.execute(runtime.world_state, {"effect": "weather:Ping"}, {}), [{"type": "WeatherPing"}])
 			archive_dir = root / "archive"
 			ArchiveRecorder(archive_dir=str(archive_dir), run_id="weather", component_catalog=runtime.component_catalog).record_tick(runtime.world_state)
@@ -258,6 +265,36 @@ class PackageLoadingTests(unittest.TestCase):
 
 			with self.assertRaisesRegex(ValueError, "exactly one"):
 				KernRuntime.from_config(root, "runtime.json", configure_logging=False)
+
+	def test_runtime_identity_hashes_only_loaded_artifacts_and_validates_restore(self) -> None:
+		with tempfile.TemporaryDirectory() as temp_dir:
+			root = Path(temp_dir)
+			package_root = _write_world_package(root)
+			_write_json(root / "runtime.json", {"packages": [{"path": "Packages/demo", "world": True}], "env": {"CHECKPOINT_EVERY_TICK": "0"}})
+			(package_root / "unused.py").write_text("VALUE = 1\n", encoding="utf-8")
+			_write_json(package_root / "Data" / "unused.json", {"unused": True})
+
+			first = load_packages_from_config(root, root / "runtime.json")
+			first_identity = package_identity(first)
+			(package_root / "unused.py").write_text("VALUE = 2\n", encoding="utf-8")
+			_write_json(package_root / "Data" / "unused.json", {"unused": "changed"})
+			second = load_packages_from_config(root, root / "runtime.json")
+			self.assertEqual(package_identity(second), first_identity)
+
+			archive_dir = root / "archive"
+			ArchiveRecorder(
+				archive_dir=str(archive_dir),
+				run_id="identity",
+				component_catalog=first.component_catalog,
+				package_identity={"package_identity": first_identity},
+			).record_tick(KernRuntime.from_loaded_packages(first, root, "runtime.json", configure_logging=False).world_state)
+			meta = load_checkpoint_meta(archive_dir / "snapshots" / "snapshot_000000.json.gz")
+			verify_checkpoint_identity(meta, second)
+
+			_write_json(package_root / "Data" / "World.json", {"locations": [{"location_id": "changed", "location_name": "Changed", "description": "", "entities": []}], "entities": []})
+			changed = load_packages_from_config(root, root / "runtime.json")
+			with self.assertRaisesRegex(ValueError, "package identity"):
+				verify_checkpoint_identity(meta, changed)
 
 
 if __name__ == "__main__":

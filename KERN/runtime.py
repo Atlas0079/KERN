@@ -34,6 +34,8 @@ from .package import (
 	package_identity,
 	package_selection_identity,
 )
+from .package_identity import verify_checkpoint_identity
+from .runtime_snapshot import RuntimeSnapshotBuilder
 from .sim.trigger_system import TriggerSystem
 from .sim.world_settlement import WorldSettlement
 
@@ -214,11 +216,13 @@ class KernRuntime:
 	workflow_view_profile: dict[str, Any] = field(default_factory=dict)
 	is_terminal: bool = False
 	terminal_error: str = ""
+	snapshot_builder: RuntimeSnapshotBuilder | None = field(default=None, init=False, repr=False)
 
 	def __post_init__(self) -> None:
 		catalog = self.component_catalog or getattr(self.executor, "component_catalog", None) or build_core_component_catalog()
 		catalog.freeze()
 		self.component_catalog = catalog
+		self.snapshot_builder = RuntimeSnapshotBuilder(catalog)
 		if hasattr(self.executor, "component_catalog"):
 			self.executor.component_catalog = catalog
 		if self.trigger_system is None:
@@ -242,7 +246,7 @@ class KernRuntime:
 				snapshot_interval_ticks=int(self.checkpoint_snapshot_interval_ticks or 60),
 				include_logs=bool(self.checkpoint_include_logs),
 				component_catalog=catalog,
-				package_identity=package_identity(self.loaded_packages) if self.loaded_packages is not None else {},
+				package_identity={"package_identity": package_identity(self.loaded_packages)} if self.loaded_packages is not None else {},
 			)
 
 	@classmethod
@@ -300,9 +304,7 @@ class KernRuntime:
 		workflow_view_profile = _build_workflow_view_profile(root, resolved_config_path, cfg)
 		if restore_path is not None:
 			checkpoint_meta = load_checkpoint_meta(restore_path)
-			checkpoint_identity = {key: checkpoint_meta[key] for key in ("packages", "effect_ids", "component_ids") if key in checkpoint_meta}
-			if checkpoint_identity and checkpoint_identity != package_identity(loaded_packages):
-				raise ValueError("checkpoint package identity does not match the selected package composition")
+			verify_checkpoint_identity(checkpoint_meta, loaded_packages)
 			ws = restore_world_state_from_checkpoint(
 				restore_path,
 				bundle.entity_templates,
@@ -486,91 +488,9 @@ class KernRuntime:
 		self._save_simulation_log()
 
 	def _capture_snapshot(self, events_in_tick: list[dict[str, Any]]) -> None:
-		"""
-		Capture full world state snapshot for visualization/debugging.
-		"""
-		ws = self.world_state
-		
-		# 1. Entities snapshot
-		entities_snap = {}
-		for eid, ent in ws.entities.items():
-			# Basic info
-			ent_data = {
-				"template_id": ent.template_id,
-				"name": ent.entity_name,
-				"components": {}
-			}
-			
-			# Component data (Selectively serialize important components)
-			# CreatureComponent: Nutrition/Energy
-			cc = ent.get_component("CreatureComponent")
-			if cc:
-				ent_data["components"]["CreatureComponent"] = {
-					"nutrition": getattr(cc, "current_nutrition", 0),
-					"energy": getattr(cc, "current_energy", 0),
-					"state": getattr(cc, "current_state", "Idle"),
-				}
-			
-			# WorkerComponent: Current Task
-			wc = ent.get_component("WorkerComponent")
-			if wc:
-				task_id = getattr(wc, "current_task_id", "")
-				task_desc = ""
-				if task_id:
-					task = ws.get_task_by_id(task_id)
-					if task:
-						task_desc = f"{task.task_type}"
-				ent_data["components"]["WorkerComponent"] = {
-					"current_task_id": task_id,
-					"current_action_desc": task_desc
-				}
-
-			container = ent.get_component("ContainerComponent")
-			if container and hasattr(container, "slots"):
-				slots_data = {}
-				for slot_id, slot in container.slots.items():
-					slots_data[str(slot_id)] = {
-						"items": list(getattr(slot, "items", []) or []),
-						"config": dict(getattr(slot, "config", {}) or {}),
-					}
-				ent_data["components"]["ContainerComponent"] = {
-					"slots": slots_data
-				}
-
-			# Location info
-			loc = ws.get_location_of_entity(eid)
-			ent_data["location_id"] = loc.location_id if loc else None
-			
-			entities_snap[eid] = ent_data
-
-		# 2. Locations snapshot (Entities in location)
-		locations_snap = {}
-		for lid, loc in ws.locations.items():
-			locations_snap[lid] = {
-				"entities": list(loc.entities_in_location)
-			}
-
-		# 3. Construct frame
-		# Also collect interaction logs for this tick
-		current_interactions = []
-		if hasattr(ws, "interaction_log") and ws.interaction_log:
-			# Filter interactions that happened in this tick
-			# Note: tick in interaction_log is int
-			current_tick = int(ws.game_time.total_ticks)
-			for item in ws.interaction_log:
-				if item.get("tick") == current_tick:
-					current_interactions.append(item)
-
-		snapshot = {
-			"tick": ws.game_time.total_ticks,
-			"time_str": ws.game_time.time_to_string(),
-			"entities": entities_snap,
-			"locations": locations_snap,
-			"events": [dict(e) for e in events_in_tick], # Deep copy events to avoid reference issues
-			"interactions": [dict(i) for i in current_interactions]
-		}
-		
-		self.snapshots.append(snapshot)
+		if self.snapshot_builder is None:
+			raise RuntimeError("runtime snapshot builder is not initialized")
+		self.snapshots.append(self.snapshot_builder.capture(self.world_state, events_in_tick))
 
 	def _build_simulation_log_payload(self) -> dict[str, Any]:
 		return build_simulation_log_payload_from_world_state(self.world_state, run_id=str(self.run_id or "").strip())
