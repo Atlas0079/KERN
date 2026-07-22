@@ -17,7 +17,6 @@ from ..models.components import (
 	PerceptionComponent,
 	PlayerControlComponent,
 	ScreenComponent,
-	SocialBehaviorComponent,
 	StatusComponent,
 	TagComponent,
 	TaskHostComponent,
@@ -125,20 +124,6 @@ def _screen(raw: Any) -> dict[str, Any]:
 	}
 
 
-def _social_behavior(raw: Any) -> dict[str, Any]:
-	d = _dict(raw)
-	return {
-		"base_activity_rate": float(d.get("base_activity_rate", 0.2) or 0.0),
-		"active_hours": [int(item) for item in list(d.get("active_hours", []) or [])],
-		"cooldown_ticks": int(d.get("cooldown_ticks", 3) or 0),
-		"last_social_opportunity_tick": int(d.get("last_social_opportunity_tick", -10**9) or -10**9),
-		"event_reaction_sensitivity": float(d.get("event_reaction_sensitivity", 0.5) or 0.0),
-		"expression_opportunity_rate": float(d.get("expression_opportunity_rate", 0.2) or 0.0),
-		"routine_browse_rate": float(d.get("routine_browse_rate", 0.8) or 0.0),
-		"fatigue": float(d.get("fatigue", 0.0) or 0.0),
-	}
-
-
 def _status(raw: Any) -> dict[str, Any]:
 	d = _dict(raw)
 	expire: dict[str, int] = {}
@@ -183,7 +168,6 @@ def build_core_component_catalog() -> ComponentCatalog:
 		DataclassCodec(PerceptionComponent, lambda raw: {"enabled": bool(_dict(raw).get("enabled", True))}),
 	)
 	_register(catalog, "ScreenComponent", ScreenComponent, DataclassCodec(ScreenComponent, _screen))
-	_register(catalog, "SocialBehaviorComponent", SocialBehaviorComponent, DataclassCodec(SocialBehaviorComponent, _social_behavior))
 	_register(catalog, "StatusComponent", StatusComponent, DataclassCodec(StatusComponent, _status))
 	_register(
 		catalog,

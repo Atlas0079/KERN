@@ -29,6 +29,7 @@ DATA_TABLES = [
 	"exposures",
 	"view_history",
 	"action_traces",
+	"social_session_traces",
 ]
 
 
@@ -180,6 +181,15 @@ class SQLiteSocialPlatformRuntime:
 					payload_json TEXT NOT NULL DEFAULT '{}',
 					FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE CASCADE
 				);
+				CREATE TABLE IF NOT EXISTS social_session_traces (
+					session_id TEXT PRIMARY KEY,
+					account_id TEXT NOT NULL,
+					tick INTEGER NOT NULL,
+					exit_reason TEXT NOT NULL,
+					steps INTEGER NOT NULL DEFAULT 0,
+					payload_json TEXT NOT NULL DEFAULT '{}',
+					FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE CASCADE
+				);
 				CREATE TABLE IF NOT EXISTS checkpoint_snapshots (
 					run_id TEXT NOT NULL,
 					tick INTEGER NOT NULL,
@@ -192,6 +202,7 @@ class SQLiteSocialPlatformRuntime:
 				CREATE INDEX IF NOT EXISTS idx_posts_created ON posts(created_tick);
 				CREATE INDEX IF NOT EXISTS idx_post_tags_tag ON post_tags(tag);
 				CREATE INDEX IF NOT EXISTS idx_exposures_account_post ON exposures(account_id, post_id);
+				CREATE UNIQUE INDEX IF NOT EXISTS idx_reposts_account_post ON reposts(account_id, post_id);
 				"""
 			)
 			conn.execute(
@@ -250,6 +261,8 @@ class SQLiteSocialPlatformRuntime:
 				return self._interact_post(data, ctx)
 			if op == "follow_account":
 				return self._follow_account(data, ctx)
+			if op == "record_session_trace":
+				return self._record_session_trace(data, ctx)
 		except Exception as exc:
 			return executor_error(
 				f"SQLiteSocialPlatformRuntime.{op}: {exc}",
@@ -368,6 +381,21 @@ class SQLiteSocialPlatformRuntime:
 			""",
 			(trace_id, account_id, operation, target_type, target_id, tick, json.dumps(payload, ensure_ascii=False, sort_keys=True)),
 		)
+
+	def _record_session_trace(self, payload: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+		account_id = self._account_id(payload, context)
+		if not account_id:
+			return executor_error("record_session_trace: account_id missing", kind=ERROR_KIND_CONTRACT, code="SOCIAL_ACCOUNT_ID_MISSING")
+		tick = self._tick(payload, context)
+		session_id = str(payload.get("session_id", "") or "").strip()
+		if not session_id:
+			return executor_error("record_session_trace: session_id missing", kind=ERROR_KIND_CONTRACT, code="SOCIAL_SESSION_ID_MISSING")
+		with self._db() as conn:
+			conn.execute(
+				"INSERT OR REPLACE INTO social_session_traces(session_id, account_id, tick, exit_reason, steps, payload_json) VALUES(?, ?, ?, ?, ?, ?)",
+				(session_id, account_id, tick, str(payload.get("exit_reason", "") or ""), int(payload.get("steps", 0) or 0), json.dumps(payload, ensure_ascii=False, sort_keys=True)),
+			)
+		return [{"type": "SocialSessionTraceRecorded", "session_id": session_id, "account_id": account_id, "tick": tick}]
 
 	def _create_post(self, payload: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 		account_id = self._account_id(payload, context)
@@ -604,12 +632,15 @@ class SQLiteSocialPlatformRuntime:
 			elif action == "repost":
 				text = str(payload.get("text", "") or "")
 				repost_id = self._next_id(conn, "repost", "reposts", "repost_id")
-				conn.execute(
-					"INSERT INTO reposts(repost_id, account_id, post_id, text, created_tick) VALUES(?, ?, ?, ?, ?)",
+				cur = conn.execute(
+					"INSERT OR IGNORE INTO reposts(repost_id, account_id, post_id, text, created_tick) VALUES(?, ?, ?, ?, ?)",
 					(repost_id, account_id, post_id, text, tick),
 				)
-				conn.execute("UPDATE posts SET repost_count=repost_count+1 WHERE post_id=?", (post_id,))
-				detail = {"repost_id": repost_id, "text": text}
+				if cur.rowcount:
+					conn.execute("UPDATE posts SET repost_count=repost_count+1 WHERE post_id=?", (post_id,))
+					detail = {"repost_id": repost_id, "text": text, "created": True}
+				else:
+					detail = {"repost_id": "", "text": text, "created": False}
 			self._trace(conn, account_id, f"interact_post.{action}", "post", post_id, tick, payload)
 		importance = 0.35 if action in {"like", "unlike"} else 0.65
 		return [

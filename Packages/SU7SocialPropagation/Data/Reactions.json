@@ -1,17 +1,20 @@
 {
   "rules": [
     {
-      "id": "su7_world_tick_social_activity_gate",
+      "id": "su7_world_tick_social_session_round",
       "on_event": "WorldTickAdvanced",
       "bundle": {
         "effects": [
           {
-            "effect": "SocialActivityGateTick",
-            "max_agents_per_tick": 100,
-            "max_actions_per_agent": 1,
-            "default_screen_context_window_ticks": 2,
-            "decision_mode": "parallel_decide_serial_commit",
-            "max_decision_workers": 30
+            "effect": "social_propagation:SocialSessionRound",
+            "max_agents_per_round": 100,
+            "decision_mode": "serial",
+            "max_decision_workers": 1,
+            "policy": {
+              "selection": {"kind": "social_behavior_rate", "base_rate_multiplier": 1.0},
+              "session": {"initial_feed_limit": 8, "max_feed_pages": 3, "max_open_posts": 2, "max_terminal_actions": 1},
+              "permissions": {"allow_create_post": true, "like_requires_open_post": false, "comment_requires_open_post": true, "repost_requires_open_post": true}
+            }
           }
         ]
       }

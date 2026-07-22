@@ -47,7 +47,6 @@ CORE_EFFECT_MODULES: tuple[tuple[str, str], ...] = (
 	("CreateSocialPost", "KERN.executor._effect_social_platform"),
 	("InteractSocialPost", "KERN.executor._effect_social_platform"),
 	("FollowSocialAccount", "KERN.executor._effect_social_platform"),
-	("SocialActivityGateTick", "KERN.executor._effect_social_activity"),
 )
 
 

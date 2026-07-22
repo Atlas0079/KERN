@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .data.loader import DataBundle, load_data_bundle_with_sources
+from .data.loader import DataBundle, LoadedDataBundle, load_data_bundle_with_sources, load_json
 from .component_catalog import ComponentCatalog, build_core_component_catalog
 from .effects import EffectCatalog, build_core_effect_catalog
 from .package_definitions import marked_component_spec, marked_effect_spec
@@ -127,12 +127,14 @@ def load_packages_from_config(
 	extension_sources = _register_package_extensions(tuple(loaded), effect_catalog, component_catalog)
 	effect_catalog.freeze()
 	component_catalog.freeze()
-	loaded_data = _load_world_data(world_package)
+	loaded_data, capability_data_sources = _load_composed_data(tuple(loaded), world_package)
 	resolved_packages: list[LoadedPackage] = []
 	for package in loaded:
 		artifacts: list[tuple[str, str]] = [("kern-package.json", "manifest")]
 		if package is world_package:
 			artifacts.extend((_relative_package_path(package, path), "world_data") for path in loaded_data.source_files)
+		else:
+			artifacts.extend((_relative_package_path(package, path), "capability_data") for path in capability_data_sources.get(package.root, ()))
 		artifacts.extend((_relative_package_path(package, path), "extension_module") for path in extension_sources.get(package.root, ()))
 		resolved_packages.append(replace(package, artifact_paths=tuple(artifacts)))
 	resolved_world_package = next(package for package in resolved_packages if package.world_selected)
@@ -275,18 +277,18 @@ def _load_manifest(package_root: Path) -> PackageManifest:
 		raise ValueError(f"package manifest provides_world must be boolean: {path}")
 	extensions = str(raw.get("extensions", "") or "").strip()
 	data_raw = raw.get("data")
-	data = _parse_data(package_root, data_raw) if data_raw is not None else None
+	data = _parse_data(package_root, data_raw, require_world=provides_world) if data_raw is not None else None
 	if provides_world and data is None:
 		raise ValueError(f"world package manifest requires data: {path}")
-	if not provides_world and data is not None:
-		raise ValueError(f"capability package must not declare world data: {path}")
+	if not provides_world and data is not None and (data.world or data.entities or data.reactions):
+		raise ValueError(f"capability package data may declare only recipes and bundles: {path}")
 	return PackageManifest(package_id, version, provides_world, data, extensions)
 
 
-def _parse_data(package_root: Path, raw: Any) -> PackageData:
+def _parse_data(package_root: Path, raw: Any, *, require_world: bool) -> PackageData:
 	if not isinstance(raw, dict):
 		raise ValueError(f"package data must be an object: {package_root}")
-	world = _safe_data_path(package_root, raw.get("world"), "data.world", required=True, directory=False)
+	world = _safe_data_path(package_root, raw.get("world"), "data.world", required=require_world, directory=False)
 	return PackageData(
 		world=world,
 		entities=_safe_data_paths(package_root, raw.get("entities", []), "data.entities", directory=True),
@@ -342,3 +344,57 @@ def _load_world_data(world_package: LoadedPackage):
 		reactions_jsons=list(data.reactions),
 		bundles_jsons=list(data.bundles),
 	)
+
+
+def _load_composed_data(
+	packages: tuple[LoadedPackage, ...],
+	world_package: LoadedPackage,
+) -> tuple[LoadedDataBundle, dict[Path, tuple[Path, ...]]]:
+	"""Compose capability recipes/bundles ahead of the selected world's data."""
+	world_data = _load_world_data(world_package)
+	capability_sources: dict[Path, tuple[Path, ...]] = {}
+	capability_recipes: dict[str, Any] = {}
+	capability_bundles: dict[str, Any] = {}
+	for package in packages:
+		if package is world_package or package.manifest.data is None:
+			continue
+		data = package.manifest.data
+		sources: list[Path] = []
+		for relative in data.recipes:
+			path = package.root / "Data" / relative
+			value = load_json(path)
+			if not isinstance(value, dict):
+				raise ValueError(f"capability recipes must be an object: {path}")
+			_duplicate_package_data("recipe", capability_recipes, value, package)
+			capability_recipes.update(value)
+			sources.append(path.resolve())
+		for relative in data.bundles:
+			path = package.root / "Data" / relative
+			value = load_json(path)
+			if not isinstance(value, dict):
+				raise ValueError(f"capability bundles must be an object: {path}")
+			_duplicate_package_data("bundle", capability_bundles, value, package)
+			capability_bundles.update(value)
+			sources.append(path.resolve())
+		capability_sources[package.root] = tuple(sources)
+	_duplicate_package_data("recipe", capability_recipes, world_data.bundle.recipes, world_package)
+	_duplicate_package_data("bundle", capability_bundles, world_data.bundle.named_bundles, world_package)
+	return (
+		LoadedDataBundle(
+			bundle=DataBundle(
+				entity_templates=world_data.bundle.entity_templates,
+				recipes={**capability_recipes, **world_data.bundle.recipes},
+				reactions=world_data.bundle.reactions,
+				world=world_data.bundle.world,
+				named_bundles={**capability_bundles, **world_data.bundle.named_bundles},
+			),
+			source_files=world_data.source_files,
+		),
+		capability_sources,
+	)
+
+
+def _duplicate_package_data(kind: str, existing: dict[str, Any], incoming: dict[str, Any], package: LoadedPackage) -> None:
+	duplicates = sorted(set(existing).intersection(incoming))
+	if duplicates:
+		raise ValueError(f"duplicate {kind} ids while loading package {package.manifest.package_id}: {', '.join(duplicates)}")
