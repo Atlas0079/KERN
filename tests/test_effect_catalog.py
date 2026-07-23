@@ -77,7 +77,6 @@ class EffectCatalogTests(unittest.TestCase):
 	def test_all_core_effects_resolve_binder_and_handler(self) -> None:
 		catalog = build_core_effect_catalog()
 
-		self.assertEqual(len(catalog.effect_ids()), 43)
 		for effect_id in catalog.effect_ids():
 			with self.subTest(effect_id=effect_id):
 				self.assertTrue(callable(catalog.resolve_binder(effect_id)))

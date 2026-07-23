@@ -80,13 +80,13 @@ class AgentWorkflowRuntimeTests(unittest.TestCase):
 		agent.add_component("MemoryComponent", MemoryComponent())
 		ws.register_entity(agent)
 		loc.add_entity_id(agent.entity_id)
-		ws.services["workflow_view_profile"] = {"profile_id": "social_platform"}
+		ws.services["workflow_view_profile"] = {"profile_id": "embodied_default"}
 
 		workflow = _CaptureProfileWorkflow()
 		outcome = run_workflow_cycle(ws, "agent_01", workflow, "test", {})
 
 		self.assertEqual(outcome["type"], "noop")
-		self.assertEqual(workflow.profile_id, "social_platform")
+		self.assertEqual(workflow.profile_id, "embodied_default")
 
 
 if __name__ == "__main__":

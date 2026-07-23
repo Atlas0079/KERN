@@ -112,9 +112,8 @@ Python handler、codec、catalog 或 `WorldState.services`。
 
 ## 已迁移的世界包
 
-Camping 与 SU7Crisis 是自包含世界包。SU7Crisis 保留 100-agent 生成世界，并将所需社交
-recipes 和 seed 数据纳入包内；Farm、RumorSpread、CompanionRobot、SpaceWerewolf 的旧运行数据
-已删除，后两者仅保留设计文档。
+Camping 是当前自包含且可运行的世界包。其他历史场景的可执行数据已经移除；需要保留的
+研究输入位于 `research_data/`，不参与 Package 加载。
 
 ## 验证
 
@@ -122,6 +121,5 @@ recipes 和 seed 数据纳入包内；Farm、RumorSpread、CompanionRobot、Spac
 & .\.venv\Scripts\python.exe -m unittest discover -s tests -p "test_*.py"
 & .\.venv\Scripts\python.exe -m compileall -q KERN tools default_orchestrator.py tests
 & .\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.camping.package.smoke.json
-& .\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.su7_crisis.package.smoke.json
 & .\.venv\Scripts\python.exe default_orchestrator.py --config runtime_config.camping.package.smoke.json
 ```

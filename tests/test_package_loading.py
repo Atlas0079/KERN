@@ -49,37 +49,29 @@ def _write_world_package(root: Path, *, package_id: str = "demo") -> Path:
 
 
 class PackageLoadingTests(unittest.TestCase):
-	def test_social_propagation_base_package_loads_its_recipes_and_effects(self) -> None:
-		project_root = Path(__file__).resolve().parents[1]
-		loaded = load_packages_from_config(project_root, project_root / "runtime_config.social_propagation_base.smoke.json")
-
-		self.assertIn("social_browse_feed", loaded.data_bundle.recipes)
-		self.assertIn("social_propagation:SocialSessionRound", set(loaded.effect_catalog.effect_ids()))
-		self.assertIn("social_propagation:ExitSocialSession", set(loaded.effect_catalog.effect_ids()))
-
 	def test_capability_recipes_and_bundles_are_composed_before_world_data(self) -> None:
 		with tempfile.TemporaryDirectory() as temp_dir:
 			root = Path(temp_dir)
 			_write_world_package(root)
-			capability = root / "Packages" / "social_propagation"
+			capability = root / "Packages" / "navigation"
 			_write_json(
 				capability / "kern-package.json",
 				{
-					"package_id": "social_propagation",
+					"package_id": "navigation",
 					"version": "1.0.0",
 					"provides_world": False,
 					"data": {"recipes": ["Data/Recipes.json"], "bundles": ["Data/Bundles.json"]},
 				},
 			)
-			_write_json(capability / "Data" / "Recipes.json", {"ExitBrowsing": {"verb": "ExitBrowsing", "is_meta": True}})
-			_write_json(capability / "Data" / "Bundles.json", {"social_session_defaults": {"effects": []}})
-			_write_json(root / "runtime.json", {"packages": [{"path": "Packages/social_propagation"}, {"path": "Packages/demo", "world": True}], "env": {}})
+			_write_json(capability / "Data" / "Recipes.json", {"ExitNavigation": {"verb": "ExitNavigation", "is_meta": True}})
+			_write_json(capability / "Data" / "Bundles.json", {"navigation_defaults": {"effects": []}})
+			_write_json(root / "runtime.json", {"packages": [{"path": "Packages/navigation"}, {"path": "Packages/demo", "world": True}], "env": {}})
 
 			loaded = load_packages_from_config(root, root / "runtime.json")
 
-			self.assertIn("ExitBrowsing", loaded.data_bundle.recipes)
-			self.assertIn("social_session_defaults", loaded.data_bundle.named_bundles)
-			capability_identity = next(item for item in package_identity(loaded)["packages"] if item["package_id"] == "social_propagation")
+			self.assertIn("ExitNavigation", loaded.data_bundle.recipes)
+			self.assertIn("navigation_defaults", loaded.data_bundle.named_bundles)
+			capability_identity = next(item for item in package_identity(loaded)["packages"] if item["package_id"] == "navigation")
 			self.assertTrue(capability_identity["runtime_content_hash"])
 
 	def test_selected_capability_registers_component_and_effect(self) -> None:
@@ -143,21 +135,6 @@ class PackageLoadingTests(unittest.TestCase):
 		self.assertIn("camp_main", runtime.world_state.locations)
 		self.assertFalse([issue for issue in lint.issues if issue.severity == "ERROR"])
 		self.assertEqual(package_identity(runtime.loaded_packages)["packages"][0]["package_id"], "camping")
-
-	def test_su7_social_propagation_world_package_loads_the_canonical_generated_world(self) -> None:
-		project_root = Path(__file__).resolve().parents[1]
-
-		runtime = KernRuntime.from_config(
-			project_root,
-			"runtime_config.su7_social_propagation.package.smoke.json",
-			configure_logging=False,
-			overrides={"CHECKPOINT_EVERY_TICK": "0"},
-		)
-		lint = lint_config(project_root, "runtime_config.su7_social_propagation.package.smoke.json")
-
-		self.assertEqual(runtime.loaded_packages.world_package.manifest.package_id, "su7_social_propagation")
-		self.assertGreaterEqual(len(runtime.world_state.entities), 100)
-		self.assertFalse([issue for issue in lint.issues if issue.severity == "ERROR"])
 
 	def test_runtime_and_lint_load_a_selected_world_package(self) -> None:
 		with tempfile.TemporaryDirectory() as temp_dir:

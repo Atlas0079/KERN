@@ -24,11 +24,10 @@
 - 回滚回调与现有外部 checkpoint 保存/恢复回调处于同一架构层级。
 - 外部生命周期回调失败时，必须采用一致、明确的 runtime 级处理方式。
 
-### 复用现有外部 checkpoint 恢复能力
+### 复用外部 adapter 的 checkpoint 恢复能力
 
-- 现有 `SQLiteSocialPlatformRuntime.restore_checkpoint(...)` 已保存并恢复社交平台全部数据表的快照；它不是只有通知的空实现。
-- 本计划保留该恢复模型，不重新设计外部 runtime 的 checkpoint 数据格式或恢复算法。
-- 本计划只将 checkpoint 保存/恢复接入统一的外部生命周期错误与终止语义。
+- adapter 可以拥有独立的 checkpoint 数据格式和恢复算法。
+- KERN 只将 checkpoint 保存/恢复接入统一的外部生命周期错误与终止语义。
 
 ## 已确认的实施方案
 
@@ -125,7 +124,7 @@ external_irreversible
 
 ### 阶段 4：后续单独规划，当前不实施
 
-将现有 social-platform 操作分类为 transactional、compensatable 或 irreversible，并迁移到具体能力分类，是后续独立工作。本轮只提供基础生命周期协议、错误语义和相应测试，不改变现有 social-platform 操作的执行时机或补偿策略。
+具体外部操作应由各 adapter 分类为 transactional、compensatable 或 irreversible。本计划只提供基础生命周期协议和错误语义。
 
 ## 约束
 
@@ -139,4 +138,3 @@ external_irreversible
 
 - 不新增独立的、持久化的 incident log。生命周期错误保留在异常、运行日志和现有内存诊断状态中。
 - 发生终止性生命周期失败后，不额外导出用于诊断的 checkpoint；避免形成未声明外部状态不确定性的 archive。
-- 暂不迁移并逐项分类现有 social-platform 操作为 transactional、compensatable 或 irreversible。基础协议与校验机制先落地；具体 social-platform 迁移另立计划。

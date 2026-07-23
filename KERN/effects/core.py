@@ -42,11 +42,6 @@ CORE_EFFECT_MODULES: tuple[tuple[str, str], ...] = (
 	("AddEnvironmentCondition", "KERN.executor._effect_environment"),
 	("RemoveEnvironmentCondition", "KERN.executor._effect_environment"),
 	("EnvironmentConditionTick", "KERN.executor._effect_environment"),
-	("ObserveSocialFeed", "KERN.executor._effect_social_platform"),
-	("ObserveSocialPost", "KERN.executor._effect_social_platform"),
-	("CreateSocialPost", "KERN.executor._effect_social_platform"),
-	("InteractSocialPost", "KERN.executor._effect_social_platform"),
-	("FollowSocialAccount", "KERN.executor._effect_social_platform"),
 )
 
 

@@ -16,7 +16,6 @@ from ..models.components import (
 	MemoryComponent,
 	PerceptionComponent,
 	PlayerControlComponent,
-	ScreenComponent,
 	StatusComponent,
 	TagComponent,
 	TaskHostComponent,
@@ -104,26 +103,6 @@ def _edible(raw: Any) -> dict[str, Any]:
 	return {"on_consume_bundle": effect_bundle_from_raw(d.get("on_consume_bundle", {}) or {"effects": []})}
 
 
-def _screen(raw: Any) -> dict[str, Any]:
-	d = _dict(raw)
-	current_post = d.get("current_post")
-	return {
-		"runtime_id": str(d.get("runtime_id", "weibo") or "weibo"),
-		"account_id": str(d.get("account_id", "") or ""),
-		"app": str(d.get("app", "") or ""),
-		"view": str(d.get("view", "blank") or "blank"),
-		"title": str(d.get("title", "") or ""),
-		"feed_items": [dict(item) for item in list(d.get("feed_items", []) or []) if isinstance(item, dict)],
-		"current_post": dict(current_post) if isinstance(current_post, dict) else None,
-		"selected_post_id": str(d.get("selected_post_id", "") or ""),
-		"cursor": int(d.get("cursor", 0) or 0),
-		"updated_tick": int(d.get("updated_tick", 0) or 0),
-		"status_text": str(d.get("status_text", "") or ""),
-		"last_event_type": str(d.get("last_event_type", "") or ""),
-		"last_error": str(d.get("last_error", "") or ""),
-	}
-
-
 def _status(raw: Any) -> dict[str, Any]:
 	d = _dict(raw)
 	expire: dict[str, int] = {}
@@ -167,7 +146,6 @@ def build_core_component_catalog() -> ComponentCatalog:
 		PerceptionComponent,
 		DataclassCodec(PerceptionComponent, lambda raw: {"enabled": bool(_dict(raw).get("enabled", True))}),
 	)
-	_register(catalog, "ScreenComponent", ScreenComponent, DataclassCodec(ScreenComponent, _screen))
 	_register(catalog, "StatusComponent", StatusComponent, DataclassCodec(StatusComponent, _status))
 	_register(
 		catalog,

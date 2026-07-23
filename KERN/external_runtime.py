@@ -24,8 +24,8 @@ class ExternalRuntimeAdapter(Protocol):
 	Protocol implemented by an external application/runtime adapter.
 
 	KERN owns the effect contract and execution boundary. External runtimes own
-	their domain-specific operation semantics, such as social messages, phone
-	calls, browser actions, or platform notifications.
+	their domain-specific operation semantics, such as messages, device calls,
+	browser actions, or platform notifications.
 	"""
 
 	def invoke(self, operation: str, payload: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
@@ -42,9 +42,9 @@ class ExternalRuntimeBridge:
 	"""
 	Single runtime service for domain-specific external adapters.
 
-	Concrete effect handlers should remain explicit, for example
-	SendSocialMessage or ReadSocialInbox. Those handlers use this bridge to
-	route their normalized payload to the external runtime that owns the domain.
+	Concrete effect handlers should remain explicit. Those handlers use this
+	bridge to route normalized payloads to the external runtime that owns the
+	domain.
 	"""
 
 	adapters: dict[str, Any] = field(default_factory=dict)

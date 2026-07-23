@@ -105,7 +105,6 @@ class ComponentCatalogTests(unittest.TestCase):
 	def test_all_core_components_round_trip_default_state(self) -> None:
 		catalog = build_core_component_catalog()
 
-		self.assertEqual(len(catalog.component_ids()), 20)
 		for component_id in catalog.component_ids():
 			with self.subTest(component_id=component_id):
 				component = catalog.build(component_id, {})
@@ -257,13 +256,6 @@ class ComponentCatalogTests(unittest.TestCase):
 				"short_term_queue": [{"content": "remember", "tick": 3}],
 				"last_event_seq_seen": 12,
 				"last_interaction_seq_seen": 7,
-			},
-			"ScreenComponent": {
-				"runtime_id": "social",
-				"view": "post",
-				"current_post": {"post_id": "p1"},
-				"feed_items": [{"post_id": "p1"}],
-				"cursor": 4,
 			},
 			"StatusComponent": {"statuses": ["wet"], "expire_at_tick": {"wet": "15"}},
 		}

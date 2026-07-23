@@ -425,38 +425,6 @@ def run_workflow_cycle(
 	)
 
 
-def run_social_activity_cycle(
-	ws: Any,
-	actor_id: str,
-	workflow: Any,
-	reason: str,
-	mode_context: dict[str, Any],
-	max_actions: int = 1,
-) -> dict[str, Any]:
-	"""
-	Run one bounded social-platform action opportunity for an agent.
-
-	This bypasses the interrupt while-loop used by AgentControlTick. The caller
-	controls when the opportunity exists; the workflow still decides what to do.
-	"""
-
-	limit = max(0, int(max_actions or 0))
-	ctx = dict(mode_context or {})
-	ctx.setdefault("social_activity_opportunity", True)
-	ctx.setdefault("max_social_actions", limit)
-	ctx.setdefault("grounder", True)
-	outcome = run_workflow_cycle(ws, actor_id, workflow, reason, ctx, max_commands=limit)
-	otype = str((outcome or {}).get("type", "") or "")
-	if otype == "apply_operations":
-		stop_loop, consumed = _apply_operations(ws, actor_id, list((outcome or {}).get("operations", []) or []))
-		return {
-			"type": "applied" if consumed else "noop",
-			"consumed": bool(consumed),
-			"stop_loop": bool(stop_loop),
-		}
-	return dict(outcome or {"type": "noop"})
-
-
 def run_agent_control_tick(ws: Any, actor_id: str, workflow: Any, max_actions_in_tick: int) -> None:
 	agent = ws.get_entity_by_id(actor_id) if hasattr(ws, "get_entity_by_id") else None
 	if agent is None:

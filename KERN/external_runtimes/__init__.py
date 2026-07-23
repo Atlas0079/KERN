@@ -1,7 +1,3 @@
-"""External runtime adapters bundled for local development."""
+"""Concrete external runtime adapters bundled with KERN."""
 
-from __future__ import annotations
-
-from .social_platform import SQLiteSocialPlatformRuntime
-
-__all__ = ["SQLiteSocialPlatformRuntime"]
+__all__: list[str] = []

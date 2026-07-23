@@ -15,47 +15,11 @@ BUILTIN_PROFILES: dict[str, dict[str, Any]] = {
 			"include_reachable_locations": True,
 			"include_location_description": True,
 			"include_inventory": True,
-			"include_operable_screen_contexts": True,
 			"can_start_conversation_here": True,
 		},
 		"memory": {
 			"include_same_location_events": True,
 			"include_same_location_interactions": True,
-			"include_social_events_from_other_actors": True,
-		},
-	},
-	"social_platform": {
-		"profile_id": "social_platform",
-		"perception": {
-			"include_visible_entities": False,
-			"include_map_topology": False,
-			"include_reachable_locations": False,
-			"include_location_description": False,
-			"include_inventory": True,
-			"include_operable_screen_contexts": True,
-			"can_start_conversation_here": False,
-		},
-		"memory": {
-			"include_same_location_events": False,
-			"include_same_location_interactions": False,
-			"include_social_events_from_other_actors": False,
-		},
-	},
-	"social_platform_debug": {
-		"profile_id": "social_platform_debug",
-		"perception": {
-			"include_visible_entities": True,
-			"include_map_topology": False,
-			"include_reachable_locations": False,
-			"include_location_description": True,
-			"include_inventory": True,
-			"include_operable_screen_contexts": True,
-			"can_start_conversation_here": False,
-		},
-		"memory": {
-			"include_same_location_events": False,
-			"include_same_location_interactions": False,
-			"include_social_events_from_other_actors": False,
 		},
 	},
 }

@@ -71,28 +71,6 @@ def _read_vitals(ent: Any) -> dict[str, float | None]:
 	return out
 
 
-def _read_screen_component_dict(ent: Any) -> dict[str, Any]:
-	screen = ent.get_component("ScreenComponent") if hasattr(ent, "get_component") else None
-	if screen is None:
-		return {}
-	current_post = getattr(screen, "current_post", None)
-	return {
-		"runtime_id": str(getattr(screen, "runtime_id", "") or ""),
-		"account_id": str(getattr(screen, "account_id", "") or ""),
-		"app": str(getattr(screen, "app", "") or ""),
-		"view": str(getattr(screen, "view", "") or ""),
-		"title": str(getattr(screen, "title", "") or ""),
-		"feed_items": [dict(x) for x in list(getattr(screen, "feed_items", []) or []) if isinstance(x, dict)],
-		"current_post": dict(current_post) if isinstance(current_post, dict) else None,
-		"selected_post_id": str(getattr(screen, "selected_post_id", "") or ""),
-		"cursor": int(getattr(screen, "cursor", 0) or 0),
-		"updated_tick": int(getattr(screen, "updated_tick", 0) or 0),
-		"status_text": str(getattr(screen, "status_text", "") or ""),
-		"last_event_type": str(getattr(screen, "last_event_type", "") or ""),
-		"last_error": str(getattr(screen, "last_error", "") or ""),
-	}
-
-
 def _custom_component_data(ent: Any, component_name: str) -> dict[str, Any]:
 	comp = ent.get_component(component_name) if hasattr(ent, "get_component") else None
 	data = getattr(comp, "data", None)
@@ -223,7 +201,6 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 							"tags": list(item_ent.get_all_tags()) if hasattr(item_ent, "get_all_tags") else [],
 							"slot": str(slot_id),
 							"statuses": item_statuses,
-							"screen": _read_screen_component_dict(item_ent),
 						}
 					)
 
@@ -271,7 +248,6 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 				"worker_current_task": worker_current_task,
 				"vitals": _read_vitals(ent),
 				"world_state_entity": world_state_entity_data,
-				"screen": _read_screen_component_dict(ent),
 			}
 		)
 

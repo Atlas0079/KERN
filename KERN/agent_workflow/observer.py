@@ -105,18 +105,6 @@ def _build_map_topology(full_ws_view: dict[str, Any]) -> list[dict[str, Any]]:
 	return out
 
 
-def _operable_screen_context(screen: Any, entity_id: str, entity_name: str, tick: int, window_ticks: int) -> dict[str, Any] | None:
-	if not isinstance(screen, dict) or not screen:
-		return None
-	updated_tick = int(screen.get("updated_tick", 0) or 0)
-	if int(tick) - updated_tick > int(window_ticks):
-		return None
-	ctx = dict(screen)
-	ctx["entity_id"] = str(entity_id)
-	ctx["entity_name"] = str(entity_name)
-	return ctx
-
-
 def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[str, Any]:
 	view = dict(full_ws_view or {}) if isinstance(full_ws_view, dict) else {}
 	profile = normalize_workflow_view_profile(
@@ -300,23 +288,4 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 		"hidden_entity_count": max(0, len(containment.keys()) - len([x for x in visible_ids if x in containment])),
 		"tick": int(view.get("tick", 0) or 0),
 	}
-	operable_screen_contexts: list[dict[str, Any]] = []
-	grounder_mode = bool((view.get("mode_context", {}) or {}).get("grounder", False)) if isinstance(view.get("mode_context", {}), dict) else False
-	if grounder_mode and bool(perception_profile.get("include_operable_screen_contexts", True)):
-		window_ticks = int((view.get("mode_context", {}) or {}).get("grounder_screen_context_window_ticks", 2) or 2)
-		for item in list(self_ent.get("inventory", []) or []):
-			if not isinstance(item, dict):
-				continue
-			eid = _safe_str(item.get("id"))
-			ctx = _operable_screen_context(
-				item.get("screen", {}),
-				eid,
-				_safe_str(item.get("name")) or eid,
-				int(view.get("tick", 0) or 0),
-				window_ticks,
-			)
-			if ctx is not None:
-				operable_screen_contexts.append(ctx)
-	if operable_screen_contexts:
-		out["operable_screen_contexts"] = operable_screen_contexts
 	return out

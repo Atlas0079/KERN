@@ -31,9 +31,8 @@ file. Source code is the final authority.
 - An effect bundle is one world transaction. Any effect failure rolls back the
   containing bundle. Successful events become visible to reactions only after
   the bundle commits.
-- External runtime writes (for example SQLite social-platform writes) are not
-  part of this rollback. Keep them in explicit domain effects and avoid placing
-  them before other fallible effects in a bundle.
+- External runtime writes are not part of this rollback. Keep them in explicit
+  domain effects and avoid placing them before other fallible effects in a bundle.
 - `WorldState.services` is an existing string-keyed dependency bag. Reuse its
   current entries; do not add a new key without an explicit design task.
 
@@ -104,11 +103,7 @@ Scenario code is not sandboxed and has the same process permissions as KERN.
 - `KERN/external_runtime.py` and `KERN/external_runtimes/`: explicit adapters
   for state outside `WorldState`.
 
-## Current scenario-specific constraints
-
-RumorSpread may parallelize LLM `decide(...)` calls only. Preparation and all
-world commits remain serial and deterministic; worker threads never mutate
-`WorldState` or call `WorldExecutor`.
+## Current runtime constraints
 
 Dynamic text renders once, only in explicitly supported text fields. It is not
 a general expression language and does not recursively render values.
@@ -142,12 +137,8 @@ Run checks proportional to the change. The full local baseline is:
 & .\.venv\Scripts\python.exe -m unittest discover -s tests -p "test_*.py"
 & .\.venv\Scripts\python.exe -m compileall -q KERN tools default_orchestrator.py tests
 & .\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.camping.package.smoke.json
-& .\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.su7_crisis.package.smoke.json
 & .\.venv\Scripts\python.exe default_orchestrator.py --config runtime_config.camping.package.smoke.json
 ```
 
 Run focused tests for the boundary being changed as well, especially executor
-transactions, task lifecycle, archives, dynamic text, external runtimes, and
-social activity scheduling when applicable.
-
-Choose the smallest relevant test scope first; `tests/test_rumor_spread_config_runtime.py` and tests loading `runtime_config.su7_crisis.package.smoke.json` are slow integration tests and should run only for SU7Crisis, social-runtime, package-loading, or final smoke validation changes.
+transactions, task lifecycle, archives, dynamic text, and external runtimes.
