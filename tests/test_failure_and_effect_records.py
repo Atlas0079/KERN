@@ -15,6 +15,7 @@ from KERN.agent_workflow.runtime import _commands_to_operations
 from KERN.agent_workflow.llm_action_provider import LLMActionProvider
 from KERN.llm.openai_compat_client import LLMRequestError
 from KERN.models.components import TagComponent
+from KERN.models.components.memory import MemoryComponent
 from KERN.models.entity import Entity
 from KERN.models.world_state import WorldState
 from KERN.sim.trigger_system import TriggerSystem
@@ -254,6 +255,24 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 		view = build_full_ws_view(ws, "agent", "test", {})
 		self.assertNotIn("event_delta", view)
 		self.assertEqual(len(view["interaction_delta"]), 1)
+
+	def test_agent_view_does_not_expose_historical_event_memory(self) -> None:
+		ws = WorldState()
+		entity = Entity(entity_id="agent", template_id="Agent", entity_name="Agent")
+		entity.add_component(
+			"MemoryComponent",
+			MemoryComponent(
+				short_term_queue=[
+					{"type": "event", "content": "machine event", "source": {"kind": "event_log", "seq": 1}},
+					{"type": "interaction", "content": "visible interaction", "source": {"kind": "interaction_log", "seq": 2}},
+				]
+			),
+		)
+		ws.register_entity(entity)
+
+		view = build_full_ws_view(ws, "agent", "test", {})
+		memory = view["entities"][0]["memory"]
+		self.assertEqual([item["content"] for item in memory["short_term_queue"]], ["visible interaction"])
 
 	def test_interaction_details_are_transactional(self) -> None:
 		ws = WorldState()

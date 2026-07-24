@@ -10,12 +10,24 @@ def _read_memory_component_dict(ent: Any) -> dict[str, Any]:
 	mem = ent.get_component("MemoryComponent") if hasattr(ent, "get_component") else None
 	if mem is None:
 		return {}
+	def _interaction_memory_only(items: Any) -> list[dict[str, Any]]:
+		out: list[dict[str, Any]] = []
+		for item in list(items or []):
+			if not isinstance(item, dict):
+				continue
+			source = item.get("source", {}) or {}
+			if str(item.get("type", "") or "") == "event":
+				continue
+			if isinstance(source, dict) and str(source.get("kind", "") or "") == "event_log":
+				continue
+			out.append(dict(item))
+		return out
 	return {
-		"short_term_queue": [dict(x) for x in list(getattr(mem, "short_term_queue", []) or []) if isinstance(x, dict)],
+		"short_term_queue": _interaction_memory_only(getattr(mem, "short_term_queue", [])),
 		"short_term_max_entries": int(getattr(mem, "short_term_max_entries", 30) or 30),
-		"mid_term_prep_queue": [dict(x) for x in list(getattr(mem, "mid_term_prep_queue", []) or []) if isinstance(x, dict)],
+		"mid_term_prep_queue": _interaction_memory_only(getattr(mem, "mid_term_prep_queue", [])),
 		"mid_term_prep_max_entries": int(getattr(mem, "mid_term_prep_max_entries", 50) or 50),
-		"mid_term_queue": [dict(x) for x in list(getattr(mem, "mid_term_queue", []) or []) if isinstance(x, dict)],
+		"mid_term_queue": _interaction_memory_only(getattr(mem, "mid_term_queue", [])),
 		"mid_term_max_entries": int(getattr(mem, "mid_term_max_entries", 20) or 20),
 		"last_mid_term_summary_tick": int(getattr(mem, "last_mid_term_summary_tick", -1) or -1),
 		"mid_term_summary_cooldown_ticks": int(getattr(mem, "mid_term_summary_cooldown_ticks", 15) or 15),
