@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from ..dynamic_text import DynamicTextError, render_dynamic_payload_text_fields
+from ..execution_errors import executor_error
 from ._effect_binder import BindError, _base_bind, _require_param, _resolve_param_token
 
 
@@ -22,19 +23,19 @@ def _bind_emit_event(_ws: Any, effect_data: dict[str, Any], context: dict[str, A
 def execute_emit_event(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	event_type = str(data.get("event_type", "") or "").strip()
 	if not event_type:
-		return [{"type": "ExecutorError", "message": "EmitEvent: event_type missing"}]
+		return executor_error("EmitEvent: event_type missing")
 	payload = data.get("payload", {}) or {}
 	if not isinstance(payload, dict):
-		return [{"type": "ExecutorError", "message": "EmitEvent: payload must be object"}]
+		return executor_error("EmitEvent: payload must be object")
 	try:
 		payload_obj = render_dynamic_payload_text_fields(ws, context, payload)
 	except DynamicTextError as exc:
-		return [{"type": "ExecutorError", "message": f"EmitEvent.payload: {exc}"}]
+		return executor_error(f"EmitEvent.payload: {exc}")
 	if event_type == "MessageBroadcasted":
 		source_ref = str(payload_obj.get("source_ref", "self") or "self")
 		source_ent = executor._resolve_entity_from_ctx(ws, context, source_ref)
 		if source_ent is None:
-			return [{"type": "ExecutorError", "message": f"EmitEvent: source {source_ref} not found"}]
+			return executor_error(f"EmitEvent: source {source_ref} not found")
 		payload_obj["source_id"] = str(source_ent.entity_id)
 		payload_obj.pop("source_ref", None)
 	event: dict[str, Any] = {"type": event_type}

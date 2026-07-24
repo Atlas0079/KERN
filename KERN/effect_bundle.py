@@ -24,4 +24,6 @@ def effect_bundle_from_raw(raw: Any) -> EffectBundle:
 	effects = raw.get("effects", []) or []
 	if not isinstance(effects, list):
 		raise ValueError("effect bundle.effects must be list")
-	return EffectBundle(effects=[dict(x) for x in effects if isinstance(x, dict)])
+	if any(not isinstance(item, dict) for item in effects):
+		raise ValueError("effect bundle.effects entries must be objects")
+	return EffectBundle(effects=[dict(x) for x in effects])

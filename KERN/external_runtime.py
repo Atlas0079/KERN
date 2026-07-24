@@ -3,10 +3,16 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Protocol, runtime_checkable
 
-from .execution_errors import ERROR_KIND_BUSINESS, ERROR_KIND_CONTRACT, ERROR_KIND_ENGINE, executor_error
+from .execution_errors import ERROR_KIND_BUSINESS, ERROR_KIND_CONTRACT, ERROR_KIND_ENGINE, KernFailure, executor_error
 
 
-class ExternalRuntimeLifecycleError(RuntimeError):
+def _external_error(message: str, **kwargs: Any):
+	kwargs.setdefault("origin", "external_runtime")
+	kwargs.setdefault("phase", "adapter")
+	return executor_error(message, **kwargs)
+
+
+class ExternalRuntimeLifecycleError(KernFailure):
 	"""A lifecycle callback failed after the runtime crossed an external boundary."""
 
 	def __init__(self, *, phase: str, runtime_id: str, reason: str, transaction_id: str = "", receipts: list[dict[str, Any]] | None = None) -> None:
@@ -15,7 +21,13 @@ class ExternalRuntimeLifecycleError(RuntimeError):
 		self.reason = str(reason or "")
 		self.transaction_id = str(transaction_id or "")
 		self.receipts = [dict(item) for item in list(receipts or []) if isinstance(item, dict)]
-		super().__init__(f"external runtime lifecycle failed: phase={self.phase} runtime_id={self.runtime_id} transaction_id={self.transaction_id} reason={self.reason}")
+		super().__init__(
+			"EXTERNAL_RUNTIME_LIFECYCLE_FAILED",
+			f"external runtime lifecycle failed: phase={self.phase} runtime_id={self.runtime_id} transaction_id={self.transaction_id} reason={self.reason}",
+			origin="external_runtime",
+			phase=self.phase,
+			context={"runtime_id": self.runtime_id, "transaction_id": self.transaction_id, "receipts": list(self.receipts)},
+		)
 
 
 @runtime_checkable
@@ -78,7 +90,7 @@ class ExternalRuntimeBridge:
 		if events is None:
 			return []
 		if not isinstance(events, list):
-			return executor_error(
+			return _external_error(
 				f"ExternalRuntimeBridge: {source} returned non-list events: {label}",
 				kind=ERROR_KIND_CONTRACT,
 				code="EXTERNAL_RUNTIME_BAD_EVENTS",
@@ -86,13 +98,13 @@ class ExternalRuntimeBridge:
 		out: list[dict[str, Any]] = []
 		for idx, ev in enumerate(events):
 			if not isinstance(ev, dict):
-				return executor_error(
+				return _external_error(
 					f"ExternalRuntimeBridge: {source} event[{idx}] is not an object: {label}",
 					kind=ERROR_KIND_CONTRACT,
 					code="EXTERNAL_RUNTIME_BAD_EVENT",
 				)
 			if not str(ev.get("type", "") or "").strip():
-				return executor_error(
+				return _external_error(
 					f"ExternalRuntimeBridge: {source} event[{idx}] missing type: {label}",
 					kind=ERROR_KIND_CONTRACT,
 					code="EXTERNAL_RUNTIME_EVENT_TYPE_MISSING",
@@ -110,27 +122,27 @@ class ExternalRuntimeBridge:
 		rid = str(runtime_id or "").strip()
 		op = str(operation or "").strip()
 		if not rid:
-			return executor_error(
+			return _external_error(
 				"ExternalRuntimeBridge: runtime_id missing",
 				kind=ERROR_KIND_CONTRACT,
 				code="EXTERNAL_RUNTIME_ID_MISSING",
 			)
 		if not op:
-			return executor_error(
+			return _external_error(
 				"ExternalRuntimeBridge: operation missing",
 				kind=ERROR_KIND_CONTRACT,
 				code="EXTERNAL_OPERATION_MISSING",
 			)
 		adapter = self.adapters.get(rid)
 		if adapter is None:
-			return executor_error(
+			return _external_error(
 				f"ExternalRuntimeBridge: adapter not found: {rid}",
 				kind=ERROR_KIND_BUSINESS,
 				code="EXTERNAL_RUNTIME_ADAPTER_MISSING",
 			)
 		invoke = getattr(adapter, "invoke", None)
 		if not callable(invoke):
-			return executor_error(
+			return _external_error(
 				f"ExternalRuntimeBridge: adapter has no invoke(): {rid}",
 				kind=ERROR_KIND_CONTRACT,
 				code="EXTERNAL_RUNTIME_INVOKE_MISSING",
@@ -141,22 +153,22 @@ class ExternalRuntimeBridge:
 			if callable(invoke_with_receipt):
 				result = invoke_with_receipt(op, dict(payload or {}), dict(context or {}))
 				if not isinstance(result, tuple) or len(result) != 2:
-					return executor_error("ExternalRuntimeBridge: invoke_with_receipt must return (events, receipt)", kind=ERROR_KIND_CONTRACT, code="EXTERNAL_RUNTIME_BAD_RECEIPT_RESULT")
+					return _external_error("ExternalRuntimeBridge: invoke_with_receipt must return (events, receipt)", kind=ERROR_KIND_CONTRACT, code="EXTERNAL_RUNTIME_BAD_RECEIPT_RESULT")
 				events, receipt_raw = result
 				if receipt_raw is not None and not isinstance(receipt_raw, dict):
-					return executor_error("ExternalRuntimeBridge: receipt must be an object", kind=ERROR_KIND_CONTRACT, code="EXTERNAL_RUNTIME_BAD_RECEIPT")
+					return _external_error("ExternalRuntimeBridge: receipt must be an object", kind=ERROR_KIND_CONTRACT, code="EXTERNAL_RUNTIME_BAD_RECEIPT")
 				receipt = dict(receipt_raw) if isinstance(receipt_raw, dict) else None
 			else:
 				events = invoke(op, dict(payload or {}), dict(context or {}))
 		except Exception as exc:
-			return executor_error(
+			return _external_error(
 				f"ExternalRuntimeBridge: adapter exception: {rid}.{op} ({exc})",
 				kind=ERROR_KIND_ENGINE,
 				code="EXTERNAL_RUNTIME_EXCEPTION",
 			)
 		validated = self._validate_events(events, runtime_id=rid, operation=op, source="adapter")
 		transaction_id = str((context or {}).get("external_transaction_id", "") or "").strip()
-		if transaction_id and receipt is not None and not any(str(event.get("type", "") or "") == "ExecutorError" for event in validated):
+		if transaction_id and receipt is not None:
 			self._bundle_receipts.setdefault(transaction_id, []).append({"runtime_id": rid, "receipt": receipt})
 		return validated
 
@@ -168,14 +180,14 @@ class ExternalRuntimeBridge:
 	) -> list[dict[str, Any]]:
 		rid = str(runtime_id or "").strip()
 		if not rid:
-			return executor_error(
+			return _external_error(
 				"ExternalRuntimeBridge: runtime_id missing",
 				kind=ERROR_KIND_CONTRACT,
 				code="EXTERNAL_RUNTIME_ID_MISSING",
 			)
 		adapter = self.adapters.get(rid)
 		if adapter is None:
-			return executor_error(
+			return _external_error(
 				f"ExternalRuntimeBridge: adapter not found: {rid}",
 				kind=ERROR_KIND_BUSINESS,
 				code="EXTERNAL_RUNTIME_ADAPTER_MISSING",
@@ -186,7 +198,7 @@ class ExternalRuntimeBridge:
 		try:
 			events = poll(cursor, dict(context or {}))
 		except Exception as exc:
-			return executor_error(
+			return _external_error(
 				f"ExternalRuntimeBridge: poll exception: {rid} ({exc})",
 				kind=ERROR_KIND_ENGINE,
 				code="EXTERNAL_RUNTIME_POLL_EXCEPTION",
@@ -229,9 +241,10 @@ class ExternalRuntimeBridge:
 				events = method(call_context)
 			except Exception as exc:
 				raise ExternalRuntimeLifecycleError(phase=phase, runtime_id=rid, reason=str(exc), transaction_id=transaction_id, receipts=receipts) from exc
-			validated = self._validate_events(events, runtime_id=rid, operation=method_name, source=method_name)
-			if any(str(ev.get("type", "") or "") == "ExecutorError" for ev in validated):
-				reason = str((validated[0] if validated else {}).get("message", "adapter returned lifecycle error") or "adapter returned lifecycle error")
-				raise ExternalRuntimeLifecycleError(phase=phase, runtime_id=rid, reason=reason, transaction_id=transaction_id, receipts=receipts)
+			try:
+				validated = self._validate_events(events, runtime_id=rid, operation=method_name, source=method_name)
+			except KernFailure as exc:
+				exc.add_context(runtime_id=rid, lifecycle_phase=phase, transaction_id=transaction_id)
+				raise
 			out.extend(validated)
 		return out

@@ -4,6 +4,7 @@ import unittest
 
 from KERN.agent_workflow.simple_policy import SimplePolicyActionProvider
 from KERN.executor.executor import WorldExecutor
+from KERN.execution_errors import KernFailure
 from KERN.interaction.engine import InteractionEngine
 from KERN.models.entity import Entity
 from KERN.models.location import Location
@@ -104,12 +105,13 @@ class KernRuntimeTests(unittest.TestCase):
 			checkpoint_enabled=False,
 		)
 
-		result = runtime.advance_ticks(1)
+		with self.assertRaises(KernFailure) as caught:
+			runtime.advance_ticks(1)
 
-		self.assertTrue(result["stopped"])
-		self.assertEqual(runtime.last_stop_info["reason"], "reaction_failed")
-		self.assertEqual(runtime.last_stop_info["reaction_rule_id"], "broken_tick_rule")
-		self.assertEqual(runtime.last_stop_info["reaction_depth"], 1)
+		self.assertEqual(caught.exception.code, "UNKNOWN_EFFECT_TYPE")
+		self.assertTrue(runtime.is_terminal)
+		self.assertEqual(runtime.last_stop_info["reason"], "failure")
+		self.assertTrue(runtime.failure_report_writer is not None)
 
 
 if __name__ == "__main__":

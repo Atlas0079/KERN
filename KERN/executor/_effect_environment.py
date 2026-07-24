@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ..execution_errors import executor_error
 from ._effect_binder import BindError, _base_bind, _require_param, _resolve_param_token
 
 
@@ -53,10 +54,10 @@ def _bind_environment_condition_tick(_ws: Any, effect_data: dict[str, Any], cont
 
 def _require_scope(ws: Any, scope_id: str, effect_name: str) -> tuple[Any, list[dict[str, Any]] | None]:
 	if not hasattr(ws, "get_environment_scope_by_id"):
-		return None, [{"type": "ExecutorError", "message": f"{effect_name}: world has no environment scopes"}]
+		return None, executor_error(f"{effect_name}: world has no environment scopes")
 	scope = ws.get_environment_scope_by_id(scope_id)
 	if scope is None:
-		return None, [{"type": "ExecutorError", "message": f"{effect_name}: unknown scope_id: {scope_id}"}]
+		return None, executor_error(f"{effect_name}: unknown scope_id: {scope_id}")
 	return scope, None
 
 
@@ -64,9 +65,9 @@ def execute_set_environment_field(_executor: Any, ws: Any, data: dict[str, Any],
 	scope_id = str(data.get("scope_id", "") or "").strip()
 	key = str(data.get("key", "") or "").strip()
 	if not scope_id:
-		return [{"type": "ExecutorError", "message": "SetEnvironmentField: scope_id missing"}]
+		return executor_error("SetEnvironmentField: scope_id missing")
 	if not key:
-		return [{"type": "ExecutorError", "message": "SetEnvironmentField: key missing"}]
+		return executor_error("SetEnvironmentField: key missing")
 	scope, err = _require_scope(ws, scope_id, "SetEnvironmentField")
 	if err is not None:
 		return err
@@ -91,9 +92,9 @@ def execute_add_environment_condition(_executor: Any, ws: Any, data: dict[str, A
 	scope_id = str(data.get("scope_id", "") or "").strip()
 	condition_id = str(data.get("condition_id", "") or "").strip()
 	if not scope_id:
-		return [{"type": "ExecutorError", "message": "AddEnvironmentCondition: scope_id missing"}]
+		return executor_error("AddEnvironmentCondition: scope_id missing")
 	if not condition_id:
-		return [{"type": "ExecutorError", "message": "AddEnvironmentCondition: condition_id missing"}]
+		return executor_error("AddEnvironmentCondition: condition_id missing")
 	scope, err = _require_scope(ws, scope_id, "AddEnvironmentCondition")
 	if err is not None:
 		return err
@@ -120,9 +121,9 @@ def execute_remove_environment_condition(_executor: Any, ws: Any, data: dict[str
 	scope_id = str(data.get("scope_id", "") or "").strip()
 	condition_id = str(data.get("condition_id", "") or "").strip()
 	if not scope_id:
-		return [{"type": "ExecutorError", "message": "RemoveEnvironmentCondition: scope_id missing"}]
+		return executor_error("RemoveEnvironmentCondition: scope_id missing")
 	if not condition_id:
-		return [{"type": "ExecutorError", "message": "RemoveEnvironmentCondition: condition_id missing"}]
+		return executor_error("RemoveEnvironmentCondition: condition_id missing")
 	scope, err = _require_scope(ws, scope_id, "RemoveEnvironmentCondition")
 	if err is not None:
 		return err

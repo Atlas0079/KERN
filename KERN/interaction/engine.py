@@ -35,22 +35,22 @@ class InteractionEngine:
 		verb_text = str(verb or "")
 		if verb_text == "Talk":
 			if str(target_id or "").strip():
-				return {"status": "failed", "reason": "TALK_TARGET_FORBIDDEN", "message": "Talk must not provide target_id"}
+				return {"status": "rejected", "reason": "TALK_TARGET_FORBIDDEN", "message": "Talk must not provide target_id"}
 			text = str(params.get("text", "") or "").strip()
 			if not text:
-				return {"status": "failed", "reason": "MISSING_DIALOGUE_TEXT", "message": "Talk requires parameters.text as opening line"}
+				return {"status": "rejected", "reason": "MISSING_DIALOGUE_TEXT", "message": "Talk requires parameters.text as opening line"}
 			target = ws.get_entity_by_id(str(self_id))
 			target_id = str(self_id)
 		else:
 			target = ws.get_entity_by_id(str(target_id))
 		if target is None:
-			return {"status": "failed", "reason": "TARGET_MISSING", "message": f"Target entity not found: {target_id}"}
+			return {"status": "rejected", "reason": "TARGET_MISSING", "message": f"Target entity not found: {target_id}"}
 
 		resolved_params = dict(params)
 		recipe, mismatch_reasons = self._find_matching_recipe(ws=ws, verb=verb_text, self_id=str(self_id), target=target, params=resolved_params)
 		if not recipe:
 			return {
-				"status": "failed",
+				"status": "rejected",
 				"reason": "NO_RECIPE",
 				"message": "No matching recipe found for this interaction.",
 				"mismatch_reasons": list(mismatch_reasons or []),
@@ -63,7 +63,7 @@ class InteractionEngine:
 		process_data = recipe.get("process", {}) or {}
 		if self._is_duration_process(process_data):
 			if assign_to not in {"self", "target"}:
-				return {"status": "failed", "reason": "invalid_process_assign_to"}
+				return {"status": "rejected", "reason": "invalid_process_assign_to"}
 			return {
 				"status": "success",
 				"bundle": {

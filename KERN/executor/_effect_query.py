@@ -93,7 +93,7 @@ def execute_apply_to_query(executor: Any, ws: Any, data: dict[str, Any], context
 					"failed_entity_id": entity_id,
 				}
 			)
-			events.extend(executor_error(child_bundle_error_message(result, "ApplyToQuery")))
+			executor_error(child_bundle_error_message(result, "ApplyToQuery"))
 			return events
 		events.extend(result.events)
 	events.append({"type": "QueryApplied", "matched": matched, "applied": applied})

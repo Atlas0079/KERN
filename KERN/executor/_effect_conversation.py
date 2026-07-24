@@ -5,6 +5,7 @@ import uuid
 from typing import Any
 
 from ..dynamic_text import DynamicTextError, render_dynamic_text
+from ..execution_errors import executor_error
 from ..log_manager import get_logger
 from ..agent_workflow.provider_routing import resolve_workflow_provider
 from ._effect_binder import _base_bind, _require_int, _require_param, _resolve_param_token
@@ -17,7 +18,7 @@ def _bind_start_conversation(_ws: Any, effect_data: dict[str, Any], context: dic
 	return {"effect": effect_type, "max_utterances_per_tick": max_utterances, "opening_text": opening_text}, ctx
 
 
-def execute_start_conversation(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+def execute_start_conversation(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	logger = get_logger()
 	services = getattr(ws, "services", {}) or {}
 	state = ws.runtime_state
@@ -53,7 +54,7 @@ def execute_start_conversation(_executor: Any, ws: Any, data: dict[str, Any], co
 	try:
 		opening_text = render_dynamic_text(ws, context, data.get("opening_text", "")).strip()
 	except DynamicTextError as exc:
-		return [{"type": "ExecutorError", "message": f"StartConversation.opening_text: {exc}"}]
+		return executor_error(f"StartConversation.opening_text: {exc}")
 	others = [p for p in participants if p != self_id]
 	random.shuffle(others)
 	if self_id and self_id in participants:
@@ -118,14 +119,21 @@ def execute_start_conversation(_executor: Any, ws: Any, data: dict[str, Any], co
 				"text": line,
 			},
 		)
-		ws.record_interaction_attempt(
-			actor_id=speaker_id,
-			verb="Say",
-			target_id=speaker_id,
-			status="success",
-			reason="",
-			recipe_id="conversation.say",
-			extra={"is_dialogue": True, "conversation_id": conversation_id, "speech": line},
+		events.extend(
+			executor.execute(
+				ws,
+				{
+					"effect": "RecordInteraction",
+					"actor_id": speaker_id,
+					"verb": "Say",
+					"target_id": speaker_id,
+					"status": "success",
+					"reason": "",
+					"recipe_id": "conversation.say",
+					"extra": {"is_dialogue": True, "conversation_id": conversation_id, "speech": line},
+				},
+				{"self_id": speaker_id, "target_id": speaker_id},
+			)
 		)
 		events.append(
 			{

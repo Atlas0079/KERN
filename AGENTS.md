@@ -102,6 +102,9 @@ Scenario code is not sandboxed and has the same process permissions as KERN.
 - `KERN/agent_workflow/`: perception, memory patching, providers, workflows.
 - `KERN/external_runtime.py` and `KERN/external_runtimes/`: explicit adapters
   for state outside `WorldState`.
+- `KERN/failure_report.py`: run-scoped failure evidence and the single
+  developer-facing `failure.json`; failure reporting is separate from world
+  checkpoints and does not affect world transactions.
 
 ## Current runtime constraints
 
@@ -123,6 +126,9 @@ a general expression language and does not recursively render values.
   when the `python` command resolves to the Microsoft Store alias.
 - Reuse existing interfaces and contracts. Add behavior tests before changing a
   seam or replacing compatibility behavior.
+- Tests are not authoritative; kernel contracts are authoritative. Correct
+  tests are executable evidence of those contracts. Remove or rewrite tests
+  that require behavior which violates an agreed kernel contract.
 - Use direct language in documentation and explanations. Avoid rhetorical
   "not X but Y" constructions and unnecessary abstract alternatives; make a
   concrete recommendation that can be implemented.

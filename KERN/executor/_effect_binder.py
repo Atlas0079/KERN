@@ -4,13 +4,20 @@ from typing import Any
 
 from ..entity_ref_resolver import resolve_entity_id
 from ..effects import EffectCatalog, build_core_effect_catalog
+from ..execution_errors import KernFailure
 
 
-class BindError(RuntimeError):
+class BindError(KernFailure):
 	def __init__(self, effect_type: str, missing: list[str]):
 		self.effect_type = str(effect_type or "")
 		self.missing = [str(x) for x in list(missing or []) if str(x)]
-		super().__init__(f"{self.effect_type}: missing required context {self.missing}")
+		super().__init__(
+			code="EFFECT_BIND_FAILED",
+			message=f"{self.effect_type}: missing or invalid input {self.missing}",
+			origin="binder",
+			phase="effect_binding",
+			context={"effect": self.effect_type, "fields": list(self.missing)},
+		)
 
 
 def _as_dict(x: Any) -> dict[str, Any]:

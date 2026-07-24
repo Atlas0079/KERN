@@ -4,6 +4,7 @@ import unittest
 
 from KERN.executor.executor import WorldExecutor
 from KERN.executor._effect_child_bundle import EVENT_CONTEXT_KEY
+from KERN.execution_errors import KernFailure
 from KERN.models.entity import Entity
 from KERN.models.components import TagComponent
 from KERN.models.world_state import WorldState
@@ -65,12 +66,13 @@ class WorldSettlementTests(unittest.TestCase):
 
 		for entity_id in ("outer", "first", "second"):
 			self.assertIn("reacted", ws.get_entity_by_id(entity_id).get_all_tags())
-		applied_targets = {
-			entry["target_id"]
-			for entry in ws.interaction_log
-			if entry.get("verb") == "ReactionApplied:mark_selected"
+		reaction_targets = {
+			record["event"]["entity_id"]
+			for record in ws.event_log
+			if record.get("event", {}).get("type") == "TagAdded"
+			and record.get("event", {}).get("tag") == "reacted"
 		}
-		self.assertEqual(applied_targets, {"outer", "first", "second"})
+		self.assertEqual(reaction_targets, {"outer", "first", "second"})
 		self.assertTrue(all(EVENT_CONTEXT_KEY not in event for event in result.events))
 		self.assertTrue(all(EVENT_CONTEXT_KEY not in record["event"] for record in ws.event_log))
 
@@ -90,7 +92,7 @@ class WorldSettlementTests(unittest.TestCase):
 
 		self.assertEqual(executor.executed, ["R1", "R2", "R3"])
 		self.assertEqual([event["type"] for event in result.events], ["Root", "Child", "SecondDone", "ChildDone"])
-		self.assertIsNone(result.fatal_error)
+		self.assertEqual(result.events[0]["type"], "Root")
 
 	def test_nested_bundle_events_wait_for_later_reactions_of_the_current_event(self) -> None:
 		ws = WorldState()
@@ -109,18 +111,16 @@ class WorldSettlementTests(unittest.TestCase):
 
 		self.assertEqual(executor.executed, ["R1", "ChildBundle", "R2", "R3"])
 
-	def test_root_business_error_is_not_fatal(self) -> None:
+	def test_root_failure_is_fatal_and_does_not_publish_an_error_event(self) -> None:
 		ws = WorldState()
 		settlement = WorldSettlement(ws=ws, executor=WorldExecutor(), trigger_system=TriggerSystem(), max_reaction_depth=4)
 
-		result = settlement.execute_bundle(
-			{"effects": [{"effect": "AddTag", "target": "self", "tag": "unreachable"}]},
-			{},
-		)
-
-		self.assertEqual(result.events[0]["type"], "ExecutorError")
-		self.assertEqual(result.events[0]["kind"], "business")
-		self.assertIsNone(result.fatal_error)
+		with self.assertRaises(KernFailure):
+			settlement.execute_bundle(
+				{"effects": [{"effect": "AddTag", "target": "self", "tag": "unreachable"}]},
+				{},
+			)
+		self.assertEqual(ws.event_log, [])
 
 	def test_failed_reaction_rolls_back_its_bundle_keeps_prior_commit_and_stops(self) -> None:
 		ws = WorldState()
@@ -151,23 +151,20 @@ class WorldSettlementTests(unittest.TestCase):
 				},
 			]
 		)
-		fatals: list[dict] = []
 		settlement = WorldSettlement(
 			ws=ws,
 			executor=WorldExecutor(),
 			trigger_system=trigger,
 			max_reaction_depth=4,
-			on_fatal=fatals.append,
 		)
 
-		result = settlement.publish_event({"type": "Root"}, {"self_id": "agent"})
+		with self.assertRaises(KernFailure) as caught:
+			settlement.publish_event({"type": "Root"}, {"self_id": "agent"})
 
 		tags = ws.get_entity_by_id("agent").get_component("TagComponent").tags
 		self.assertEqual(tags, ["kept"])
-		self.assertEqual([event["type"] for event in result.events], ["Root", "TagAdded", "ExecutorError", "ReactionFailed"])
-		self.assertEqual(result.fatal_error["reaction_rule_id"], "failed")
-		self.assertEqual(result.fatal_error["reaction_depth"], 1)
-		self.assertEqual(fatals, [result.fatal_error])
+		self.assertEqual(caught.exception.code, "UNKNOWN_EFFECT_TYPE")
+		self.assertEqual([event["event"]["type"] for event in ws.event_log], ["Root", "TagAdded"])
 		logged_rule_ids = [str(item.get("reaction_rule_id", "")) for item in ws.interaction_log]
 		self.assertNotIn("must_not_run", logged_rule_ids)
 
@@ -181,14 +178,14 @@ class WorldSettlementTests(unittest.TestCase):
 		)
 		settlement = WorldSettlement(ws=ws, executor=executor, trigger_system=trigger, max_reaction_depth=2)
 
-		result = settlement.publish_event({"type": "Loop"}, {})
+		with self.assertRaises(KernFailure) as caught:
+			settlement.publish_event({"type": "Loop"}, {})
 
 		self.assertEqual(executor.executed, ["Again", "Again"])
-		self.assertEqual([event["type"] for event in result.events], ["Loop", "Loop", "Loop", "ReactionDepthExceeded"])
-		self.assertEqual(result.fatal_error["reaction_depth"], 3)
-		self.assertEqual(result.fatal_error["max_reaction_depth"], 2)
-		triggered = [item for item in ws.interaction_log if item.get("reaction_phase") == "triggered"]
-		self.assertEqual(len(triggered), 2)
+		self.assertEqual(caught.exception.code, "REACTION_DEPTH_EXCEEDED")
+		self.assertEqual(caught.exception.context["reaction_depth"], 3)
+		self.assertEqual(caught.exception.context["max_reaction_depth"], 2)
+		self.assertEqual(ws.interaction_log, [])
 
 
 if __name__ == "__main__":

@@ -10,6 +10,7 @@ class RuntimeState:
 	dialogue_budget_used_per_location: dict[str, int] = field(default_factory=dict)
 	dialogue_log_full: bool = False
 
+	# Kept in the checkpoint shape for compatibility; runtime policy is always fail_fast.
 	workflow_contract_on_error: str = "fail_fast"
 
 	abort_requested: bool = False

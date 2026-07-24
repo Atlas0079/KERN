@@ -4,7 +4,7 @@ from typing import Any
 from uuid import uuid4
 
 from ..dynamic_text import DynamicTextError, render_dynamic_text
-from ..execution_errors import executor_error, is_execution_error_event
+from ..execution_errors import executor_error
 from ..models.components import ContainerComponent, WorkerComponent
 from ._effect_binder import BindError, _base_bind, _require_dict, _require_param, _require_str, _resolve_ref_id
 
@@ -65,12 +65,12 @@ def execute_create_entity(executor: Any, ws: Any, data: dict[str, Any], context:
 	template_id = data.get("template")
 	destination_data = data.get("destination")
 	if not template_id or not isinstance(destination_data, dict):
-		return [{"type": "ExecutorError", "message": "CreateEntity: missing template or destination"}]
+		return executor_error("CreateEntity: missing template or destination")
 	if not isinstance(executor.entity_templates, dict):
-		return [{"type": "ExecutorError", "message": "CreateEntity: executor has no entity_templates"}]
+		return executor_error("CreateEntity: executor has no entity_templates")
 	template = executor.entity_templates.get(str(template_id), {})
 	if not isinstance(template, dict) or not template:
-		return [{"type": "ExecutorError", "message": f"CreateEntity: template not found: {template_id}"}]
+		return executor_error(f"CreateEntity: template not found: {template_id}")
 	from ..data.builder import create_entity_from_template
 	new_id = str(data.get("instance_id") or f"{template_id}_{uuid4().hex[:8]}")
 	new_entity = create_entity_from_template(
@@ -130,7 +130,7 @@ def execute_destroy_entity(executor: Any, ws: Any, data: dict[str, Any], context
 	target_key = str(data.get("target", "entity_to_destroy"))
 	ent = executor._resolve_entity_from_ctx(ws, context, target_key)
 	if ent is None:
-		return [{"type": "ExecutorError", "message": "DestroyEntity: target missing"}]
+		return executor_error("DestroyEntity: target missing")
 	events: list[dict[str, Any]] = []
 	cc_self = ent.get_component("ContainerComponent")
 	if isinstance(cc_self, ContainerComponent):
@@ -192,14 +192,14 @@ def _execute_move_entity_core(executor: Any, ws: Any, context: dict[str, Any]) -
 	source_node = executor._resolve_container_or_location_from_ctx(ws, ctx, "source_id")
 	dest_node = executor._resolve_container_or_location_from_ctx(ws, ctx, "destination_id")
 	if entity_to_move is None or source_node is None or dest_node is None:
-		return [{"type": "ExecutorError", "message": "MoveEntity: missing entity/source/destination"}]
+		return executor_error("MoveEntity: missing entity/source/destination")
 	if hasattr(source_node, "location_id"):
 		source_node.remove_entity_id(entity_to_move.entity_id)
 	else:
 		cc = source_node.get_component("ContainerComponent")
 		if isinstance(cc, ContainerComponent):
 			if not cc.remove_entity_by_id(entity_to_move.entity_id):
-				return [{"type": "ExecutorError", "message": "MoveEntity: failed to remove from source container"}]
+				return executor_error("MoveEntity: failed to remove from source container")
 	add_ok = False
 	if hasattr(dest_node, "location_id"):
 		dest_node.add_entity_id(entity_to_move.entity_id)
@@ -211,7 +211,7 @@ def _execute_move_entity_core(executor: Any, ws: Any, context: dict[str, Any]) -
 			if add_ok and hasattr(ws, "remove_entity_from_all_locations"):
 				ws.remove_entity_from_all_locations(entity_to_move.entity_id)
 	if not add_ok:
-		return [{"type": "ExecutorError", "message": "MoveEntity: failed to add to destination"}]
+		return executor_error("MoveEntity: failed to add to destination")
 
 	return [
 		{
@@ -236,7 +236,7 @@ def execute_move_entity(executor: Any, ws: Any, data: dict[str, Any], context: d
 def execute_kill_entity(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	target = executor._resolve_entity_from_ctx(ws, context, str(data.get("target", "target")))
 	if target is None:
-		return [{"type": "ExecutorError", "message": "KillEntity: target missing"}]
+		return executor_error("KillEntity: target missing")
 	owner_name = str(getattr(target, "entity_name", "") or "")
 	agent_setting = target.get_component("AgentSetting")
 	if agent_setting is not None:
@@ -280,8 +280,7 @@ def execute_kill_entity(executor: Any, ws: Any, data: dict[str, Any], context: d
 	destroy_ctx = {"target_id": str(target.entity_id)}
 	destroy_events = executor.execute(ws, destroy_req, destroy_ctx)
 	events.extend(destroy_events)
-	destroy_failed = any(is_execution_error_event(ev) for ev in list(destroy_events or []))
-	if not destroy_failed and ws.get_entity_by_id(str(target.entity_id)) is None:
+	if ws.get_entity_by_id(str(target.entity_id)) is None:
 		events.append({
 			"type": "EntityDied",
 			"entity_id": target.entity_id,

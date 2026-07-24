@@ -357,13 +357,7 @@ def _activate_task(executor: Any, ws: Any, task: Task, worker: WorkerComponent, 
 	lifecycle_ctx = _task_lifecycle_context(task, context, worker_id)
 	start_result = _run_task_lifecycle_bundle(executor, ws, task, lifecycle_ctx, "start_bundle")
 	if start_result.failed:
-		message = str(start_result.error_message or "")
-		cleanup_errors = _deactivate_task(executor, ws, task, worker_id, context, old_status)
-		return False, [
-			{"type": "TaskStartFailed", "task_id": str(task.task_id), "old_status": old_status, "worker_id": str(worker_id)},
-			*executor_error(f"TaskStart: lifecycle bundle failed ({message})"),
-			*cleanup_errors,
-		]
+		executor_error(f"TaskStart: lifecycle bundle failed ({start_result.error_message})")
 	return True, [
 		{
 			"type": event_type,
@@ -383,8 +377,7 @@ def _deactivate_task(executor: Any, ws: Any, task: Task, worker_id: str, context
 	if old_status == "InProgress":
 		cleanup_result = _run_task_lifecycle_bundle(executor, ws, task, lifecycle_ctx, "cleanup_bundle")
 		if cleanup_result.failed:
-			message = str(cleanup_result.error_message or "")
-			events.extend(executor_error(f"TaskCleanup: lifecycle bundle failed ({message})"))
+			executor_error(f"TaskCleanup: lifecycle bundle failed ({cleanup_result.error_message})")
 		else:
 			events.extend(cleanup_result.events)
 	task.task_status = str(new_status or "")
@@ -522,17 +515,17 @@ def execute_create_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 	try:
 		task.start_bundle = effect_bundle_from_raw(process.get("start_bundle", {}) or {"effects": []})
 	except Exception as exc:
-		return [{"type": "ExecutorError", "message": f"CreateTask: invalid process.start_bundle ({exc})"}]
+		return executor_error(f"CreateTask: invalid process.start_bundle ({exc})")
 	try:
 		task.cleanup_bundle = effect_bundle_from_raw(process.get("cleanup_bundle", {}) or {"effects": []})
 	except Exception as exc:
-		return [{"type": "ExecutorError", "message": f"CreateTask: invalid process.cleanup_bundle ({exc})"}]
+		return executor_error(f"CreateTask: invalid process.cleanup_bundle ({exc})")
 	try:
 		task.completion_bundle = effect_bundle_from_raw(recipe.get("bundle", {}) or {})
 	except Exception as exc:
-		return [{"type": "ExecutorError", "message": f"CreateTask: invalid recipe bundle ({exc})"}]
+		return executor_error(f"CreateTask: invalid recipe bundle ({exc})")
 	if task.completion_bundle.is_empty():
-		return [{"type": "ExecutorError", "message": "CreateTask: recipe has empty completion_bundle"}]
+		return executor_error("CreateTask: recipe has empty completion_bundle")
 	prog = recipe.get("progression", None)
 	if prog is None:
 		prog = process.get("progression", {}) or {}
@@ -541,12 +534,12 @@ def execute_create_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 		params = prog.get("params", {}) or {}
 		if isinstance(params, dict):
 			if "progress_contributors" in params:
-				return [{"type": "ExecutorError", "message": "CreateTask: progressor_params.progress_contributors is removed; use add_terms/mul_terms"}]
+				return executor_error("CreateTask: progressor_params.progress_contributors is removed; use add_terms/mul_terms")
 			task.progressor_params = dict(params)
 		try:
 			task.tick_bundle = effect_bundle_from_raw(prog.get("tick_bundle", {}) or {"effects": []})
 		except Exception as exc:
-			return [{"type": "ExecutorError", "message": f"CreateTask: invalid tick_bundle ({exc})"}]
+			return executor_error(f"CreateTask: invalid tick_bundle ({exc})")
 	
 	host.add_task(task)
 	ws.register_task(task)
@@ -654,7 +647,7 @@ def execute_accept_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 		selected = t
 		break
 	if selected is None:
-		return [{"type": "ExecutorError", "message": f"AcceptTask: no suitable task on host ({last_reason or 'no match'})"}]
+		return executor_error(f"AcceptTask: no suitable task on host ({last_reason or 'no match'})")
 
 	ok, activation_events = _activate_task(executor, ws, selected, worker, self_id, context, "TaskAccepted")
 	if not ok:
@@ -670,7 +663,7 @@ def execute_progress_task(_executor: Any, ws: Any, data: dict[str, Any], context
 	delta = float(data.get("delta", 0.0))
 	task = ws.get_task_by_id(task_id) if hasattr(ws, "get_task_by_id") else None
 	if task is None:
-		return [{"type": "ExecutorError", "message": f"ProgressTask: task not found {task_id}"}]
+		return executor_error(f"ProgressTask: task not found {task_id}")
 	if str(getattr(task, "task_status", "") or "") != "InProgress":
 		return [{"type": "TaskProgressSkipped", "task_id": task.task_id, "reason": f"status={getattr(task, 'task_status', '')}"}]
 	task.progress += delta
@@ -690,7 +683,7 @@ def execute_update_task_status(executor: Any, ws: Any, data: dict[str, Any], con
 	new_status = str(data.get("status", "")).strip()
 	task = ws.get_task_by_id(task_id) if hasattr(ws, "get_task_by_id") else None
 	if task is None:
-		return [{"type": "ExecutorError", "message": f"UpdateTaskStatus: task not found {task_id}"}]
+		return executor_error(f"UpdateTaskStatus: task not found {task_id}")
 	old_status = getattr(task, "task_status", "Unknown")
 	cleanup_events: list[dict[str, Any]] = []
 	if str(old_status) == "InProgress" and new_status != "InProgress":
@@ -712,7 +705,7 @@ def execute_finish_task(executor: Any, ws: Any, _data: dict[str, Any], context: 
 	task_id = str((context or {}).get("task_id", ""))
 	task = ws.get_task_by_id(task_id)
 	if task is None:
-		return [{"type": "ExecutorError", "message": "FinishTask: task not found"}]
+		return executor_error("FinishTask: task not found")
 	if isinstance(context, dict):
 		context.setdefault("target_id", str(getattr(task, "target_entity_id", "") or ""))
 		params = getattr(task, "parameters", {}) or {}
@@ -727,7 +720,7 @@ def execute_finish_task(executor: Any, ws: Any, _data: dict[str, Any], context: 
 			context["parameters"] = merged_params
 	bundle = getattr(task, "completion_bundle", None)
 	if bundle is None or bundle.is_empty():
-		return [{"type": "ExecutorError", "message": f"FinishTask: task has empty completion_bundle: {task_id}"}]
+		return executor_error(f"FinishTask: task has empty completion_bundle: {task_id}")
 	result = run_child_bundle(executor, ws, bundle.to_dict(), context)
 	if result.failed:
 		message = str(result.error_message or "")
@@ -739,10 +732,10 @@ def execute_finish_task(executor: Any, ws: Any, _data: dict[str, Any], context: 
 			*cleanup_events,
 		]
 	self_id = str((context or {}).get("self_id", "") or "")
+	interaction_events: list[dict[str, Any]] = []
 	if (
 		str(getattr(task, "task_type", "") or "") == "Travel"
 		and self_id
-		and hasattr(ws, "record_interaction_attempt")
 	):
 		to_location_id = ""
 		to_location_name = ""
@@ -756,23 +749,28 @@ def execute_finish_task(executor: Any, ws: Any, _data: dict[str, Any], context: 
 		if isinstance(task_params, dict):
 			recipe_id = str(task_params.get("recipe_id", "") or "")
 			source_location_id = str(task_params.get("source_location_id", "") or "")
-		ws.record_interaction_attempt(
-			actor_id=self_id,
-			verb="Travel",
-			target_id=self_id,
-			status="success",
-			reason="",
-			recipe_id=recipe_id,
-			extra={
-				"travel_phase": "arrive",
-				"to_location_id": to_location_id,
-				"to_location_name": to_location_name,
-				"source_location_id": source_location_id,
+		interaction_events = executor.execute(
+			ws,
+			{
+				"effect": "RecordInteraction",
+				"actor_id": self_id,
+				"verb": "Travel",
+				"target_id": self_id,
+				"status": "success",
+				"reason": "",
+				"recipe_id": recipe_id,
+				"extra": {
+					"travel_phase": "arrive",
+					"to_location_id": to_location_id,
+					"to_location_name": to_location_name,
+					"source_location_id": source_location_id,
+				},
 			},
+			{"self_id": self_id, "target_id": self_id},
 		)
 	cleanup_events = _deactivate_task(executor, ws, task, _task_worker_id(task, context), context, "Completed")
 	_remove_task_from_host_and_world(ws, task, context)
-	return [{"type": "TaskFinished", "task_id": task.task_id}, *result.events, *cleanup_events]
+	return [{"type": "TaskFinished", "task_id": task.task_id}, *result.events, *interaction_events, *cleanup_events]
 
 
 def execute_interrupt_task(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
@@ -783,7 +781,7 @@ def execute_interrupt_task(executor: Any, ws: Any, data: dict[str, Any], context
 	force = bool(data.get("force", False))
 	task = ws.get_task_by_id(task_id) if hasattr(ws, "get_task_by_id") else None
 	if task is None:
-		return [{"type": "ExecutorError", "message": f"InterruptTask: task not found {task_id}"}]
+		return executor_error(f"InterruptTask: task not found {task_id}")
 	old_status = str(getattr(task, "task_status", "") or "")
 	if old_status in {"Completed", "Cancelled", "Failed"}:
 		return [{"type": "TaskInterruptRejected", "task_id": task_id, "reason": f"terminal_status:{old_status}"}]
@@ -881,7 +879,7 @@ def execute_resume_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 	task_id = str(data.get("task_id") or (context or {}).get("task_id", "") or "")
 	task = ws.get_task_by_id(task_id) if hasattr(ws, "get_task_by_id") else None
 	if task is None:
-		return [{"type": "ExecutorError", "message": f"ResumeTask: task not found {task_id}"}]
+		return executor_error(f"ResumeTask: task not found {task_id}")
 	old_status = str(getattr(task, "task_status", "") or "")
 	if old_status not in {"Paused", "Inactive"}:
 		return [{"type": "TaskResumeRejected", "task_id": task.task_id, "reason": f"invalid_status:{old_status}"}]
@@ -913,7 +911,7 @@ def execute_cancel_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 	force = bool(data.get("force", False))
 	task = ws.get_task_by_id(task_id) if hasattr(ws, "get_task_by_id") else None
 	if task is None:
-		return [{"type": "ExecutorError", "message": f"CancelTask: task not found {task_id}"}]
+		return executor_error(f"CancelTask: task not found {task_id}")
 	old_status = str(getattr(task, "task_status", "") or "")
 	if old_status in {"Completed", "Cancelled", "Failed"}:
 		return [{"type": "TaskCancelRejected", "task_id": task.task_id, "reason": f"terminal_status:{old_status}"}]

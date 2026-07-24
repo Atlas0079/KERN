@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from ..models.components import ValuableComponent
+from ..execution_errors import executor_error
 from ._effect_binder import (
 	BindError,
 	_base_bind,
@@ -75,13 +76,13 @@ def execute_exchange_resources(executor: Any, ws: Any, data: dict[str, Any], con
 
 	source_ent = executor._resolve_entity_from_ctx(ws, context, source_key)
 	if source_ent is None:
-		return [{"type": "ExecutorError", "message": f"ExchangeResources: source {source_key} not found"}]
+		return executor_error(f"ExchangeResources: source {source_key} not found")
 
 	target_ent = None
 	if transfer_mode == "transfer":
 		target_ent = executor._resolve_entity_from_ctx(ws, context, target_key)
 		if target_ent is None:
-			return [{"type": "ExecutorError", "message": f"ExchangeResources: target {target_key} not found for transfer mode"}]
+			return executor_error(f"ExchangeResources: target {target_key} not found for transfer mode")
 
 	consume_items = data.get("consume_items", [])
 	consume_money = data.get("consume_money", 0.0)
@@ -93,7 +94,7 @@ def execute_exchange_resources(executor: Any, ws: Any, data: dict[str, Any], con
 	for item_ref in consume_items:
 		item = executor._resolve_entity_from_ctx(ws, context, item_ref)
 		if item is None:
-			return [{"type": "ExecutorError", "message": f"ExchangeResources: item to consume {item_ref} not found"}]
+			return executor_error(f"ExchangeResources: item to consume {item_ref} not found")
 		items_to_process.append(item)
 		val_comp = item.get_component("ValuableComponent")
 		if isinstance(val_comp, ValuableComponent):
@@ -103,11 +104,11 @@ def execute_exchange_resources(executor: Any, ws: Any, data: dict[str, Any], con
 
 	source_agent_comp = source_ent.get_component("AgentSetting")
 	if source_agent_comp is None:
-		return [{"type": "ExecutorError", "message": f"ExchangeResources: source {source_key} has no AgentSetting"}]
+			return executor_error(f"ExchangeResources: source {source_key} has no AgentSetting")
 
 	source_money = float(getattr(source_agent_comp, "money", 0.0))
 	if source_money < consume_money:
-		return [{"type": "ExecutorError", "message": f"ExchangeResources: insufficient money. Has {source_money}, needs {consume_money}"}]
+		return executor_error(f"ExchangeResources: insufficient money. Has {source_money}, needs {consume_money}")
 
 	target_agent_comp = None
 	target_money = 0.0
@@ -116,7 +117,7 @@ def execute_exchange_resources(executor: Any, ws: Any, data: dict[str, Any], con
 		if target_agent_comp is not None:
 			target_money = float(getattr(target_agent_comp, "money", 0.0))
 			if target_money < produce_money:
-				return [{"type": "ExecutorError", "message": f"ExchangeResources: target {target_key} has insufficient money to buy"}]
+				return executor_error(f"ExchangeResources: target {target_key} has insufficient money to buy")
 
 	events = []
 	source_loc = ws.get_location_of_entity(source_ent.entity_id)

@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from ..execution_errors import is_execution_error_event
 
 
 # This key is an executor-to-settlement transport detail.  WorldSettlement
@@ -15,7 +14,6 @@ EVENT_CONTEXT_KEY = "__kern_event_context__"
 class ChildBundleResult:
 	events: list[dict[str, Any]] = field(default_factory=list)
 	failed: bool = False
-	error_event: dict[str, Any] | None = None
 	error_message: str = ""
 
 
@@ -27,11 +25,7 @@ def run_child_bundle(executor: Any, ws: Any, bundle: Any, context: dict[str, Any
 	they are published only after the containing bundle commits.
 	"""
 	events = _attach_child_context(executor.execute_bundle(ws, bundle, context), context)
-	for ev in events:
-		if is_execution_error_event(ev):
-			message = str(ev.get("message", "") or ev.get("type", "") or "")
-			return ChildBundleResult(events=events, failed=True, error_event=dict(ev), error_message=message)
-	return ChildBundleResult(events=events, failed=False, error_event=None, error_message="")
+	return ChildBundleResult(events=events, failed=False, error_message="")
 
 
 def _attach_child_context(events: Any, context: dict[str, Any]) -> list[dict[str, Any]]:

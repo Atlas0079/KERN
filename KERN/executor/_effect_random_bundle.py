@@ -72,5 +72,5 @@ def execute_random_bundle(executor: Any, ws: Any, data: dict[str, Any], context:
 		return [resolved_event]
 	result = run_child_bundle(executor, ws, bundle.to_dict(), dict(context or {}))
 	if result.failed:
-		return [resolved_event, *executor_error(child_bundle_error_message(result, "RandomBundle", "selected"))]
+		executor_error(child_bundle_error_message(result, "RandomBundle", "selected"))
 	return [resolved_event, *result.events]

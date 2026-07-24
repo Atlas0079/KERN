@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..execution_errors import is_execution_error_event
+from ..execution_errors import KernFailure, executor_error
 from ..log_manager import get_logger
 from ..entity_ref_resolver import resolve_entity
 from ..models.components import DecisionArbiterComponent, WorkerComponent
@@ -14,6 +14,8 @@ from ._effect_binder import BindError, _base_bind, _require_dict, _require_int, 
 def _bind_agent_control_tick(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
 	effect_type, params, ctx = _base_bind(effect_data, context)
 	entity_id = str((ctx or {}).get("entity_id", "") or "")
+	if not entity_id:
+		raise BindError(effect_type, ["entity_id"])
 	max_actions = _require_int(params, effect_type, "max_actions_in_tick", ctx)
 	return {"effect": effect_type, "entity_id": entity_id, "max_actions_in_tick": max_actions}, ctx
 
@@ -59,16 +61,16 @@ def execute_agent_control_tick(_executor: Any, ws: Any, data: dict[str, Any], co
 		or ""
 	)
 	if not self_id:
-		return []
+		raise KernFailure("AGENT_CONTROL_ACTOR_MISSING", "AgentControlTick actor is missing", origin="executor", phase="effect_binding")
 	agent = ws.get_entity_by_id(self_id)
 	if agent is None:
-		return []
+		raise KernFailure("AGENT_CONTROL_ACTOR_NOT_FOUND", f"AgentControlTick actor not found: {self_id}", origin="executor", phase="effect_execution", context={"entity_id": self_id})
 	ctrl = agent.get_component("AgentControlComponent")
 	if ctrl is None or not bool(getattr(ctrl, "enabled", True)):
 		return []
 	workflow = resolve_workflow_provider(getattr(ws, "services", {}) or {}, ctrl)
 	if workflow is None or not hasattr(workflow, "decide"):
-		return []
+		raise KernFailure("WORKFLOW_PROVIDER_MISSING", f"No workflow provider for agent: {self_id}", origin="workflow", phase="decision", context={"entity_id": self_id})
 	max_actions_in_tick = max(1, int(data.get("max_actions_in_tick") or 1))
 	run_agent_control_tick(ws=ws, actor_id=self_id, workflow=workflow, max_actions_in_tick=max_actions_in_tick)
 	return []
@@ -114,8 +116,6 @@ def execute_worker_tick(executor: Any, ws: Any, data: dict[str, Any], context: d
 		},
 		{"self_id": self_id, "task_id": task.task_id},
 	)
-	if any(is_execution_error_event(event) for event in events):
-		return events
 	logger.debug(
 		"task",
 		"progress",
@@ -137,8 +137,6 @@ def execute_worker_tick(executor: Any, ws: Any, data: dict[str, Any], context: d
 			{"self_id": self_id, "task_id": task.task_id, "target_id": task.target_entity_id},
 		)
 		events.extend(tick_events)
-		if any(is_execution_error_event(event) for event in tick_events):
-			return events
 	if task.is_complete():
 		finish_events = executor.execute_bundle(
 			ws,
@@ -146,14 +144,6 @@ def execute_worker_tick(executor: Any, ws: Any, data: dict[str, Any], context: d
 			{"self_id": self_id, "task_id": task.task_id, "target_id": task.target_entity_id},
 		)
 		events.extend(finish_events)
-		for ev in list(finish_events or []):
-			if is_execution_error_event(ev):
-				logger.warn(
-					"task",
-					"finish_failed",
-					context={"self_id": self_id, "task_id": str(task.task_id), "error_event": dict(ev)},
-				)
-				break
 		worker.stop_task()
 	return events
 
@@ -162,7 +152,7 @@ def execute_apply_meta_action(executor: Any, ws: Any, data: dict[str, Any], cont
 	target_key = data.get("target")
 	target = executor._resolve_entity_from_ctx(ws, context, str(target_key))
 	if target is None:
-		return [{"type": "ExecutorError", "message": "ApplyMetaAction: target missing"}]
+		return executor_error("ApplyMetaAction: target missing")
 	action_type = str(data.get("action_type", "") or "").strip()
 	params = data.get("params", {}) or {}
 	if not isinstance(params, dict):
@@ -170,16 +160,16 @@ def execute_apply_meta_action(executor: Any, ws: Any, data: dict[str, Any], cont
 	if action_type == "SwitchInterruptPreset":
 		arb = target.get_component("DecisionArbiterComponent")
 		if not isinstance(arb, DecisionArbiterComponent):
-			return [{"type": "ExecutorError", "message": "ApplyMetaAction: DecisionArbiterComponent missing"}]
+			return executor_error("ApplyMetaAction: DecisionArbiterComponent missing")
 		# TODO: this API exposes preset switching directly to agents.
 		# That works, but it leaks internal configuration concepts into agent actions.
 		# Future design should prefer higher-level intent actions such as changing alertness,
 		# task focus, or threat sensitivity, then map those intents to arbiter configuration.
 		preset_id = str(params.get("preset_id", "") or "").strip()
 		if not preset_id:
-			return [{"type": "ExecutorError", "message": "ApplyMetaAction: missing preset_id"}]
+			return executor_error("ApplyMetaAction: missing preset_id")
 		if preset_id not in (arb.interrupt_presets or {}):
-			return [{"type": "ExecutorError", "message": f"ApplyMetaAction: unknown preset_id: {preset_id}"}]
+			return executor_error(f"ApplyMetaAction: unknown preset_id: {preset_id}")
 		old = str(arb.active_interrupt_preset_id or "")
 		arb.active_interrupt_preset_id = preset_id
 		return [
@@ -191,10 +181,10 @@ def execute_apply_meta_action(executor: Any, ws: Any, data: dict[str, Any], cont
 				"changed": {"active_interrupt_preset_id": {"from": old, "to": preset_id}},
 			}
 		]
-	return [{"type": "ExecutorError", "message": f"ApplyMetaAction: unknown action_type: {action_type}"}]
+	return executor_error(f"ApplyMetaAction: unknown action_type: {action_type}")
 
 
-def execute_attach_details(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+def execute_attach_details(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
 	import json
 	def _safe(v: Any, depth: int = 0) -> Any:
 		if depth > 4:
@@ -215,7 +205,7 @@ def execute_attach_details(_executor: Any, ws: Any, data: dict[str, Any], contex
 		agent = ws.get_entity_by_id(self_id) if self_id else None
 		arb = agent.get_component("DecisionArbiterComponent") if agent is not None else None
 		if not isinstance(arb, DecisionArbiterComponent):
-			return [{"type": "ExecutorError", "message": "AttachDetails: DecisionArbiterComponent missing"}]
+			return executor_error("AttachDetails: DecisionArbiterComponent missing")
 		preset_id = str((data or {}).get("preset_id", "") or "").strip()
 		presets = arb.interrupt_presets or {}
 		descs = getattr(arb, "interrupt_preset_descriptions", {}) or {}
@@ -229,20 +219,17 @@ def execute_attach_details(_executor: Any, ws: Any, data: dict[str, Any], contex
 			lines.append(f"Preset {pid}: {desc}".strip())
 		details = {"descriptions": dict(descs), "presets": selected}
 		details_text = "\n".join([x for x in lines if x] + ["", json.dumps(details, ensure_ascii=False, indent=2)])
-		log = getattr(ws, "interaction_log", None)
-		if not isinstance(log, list) or not log:
-			return [{"type": "ExecutorError", "message": "AttachDetails: interaction_log missing"}]
-		last = log[-1]
-		if isinstance(last, dict):
-			last["details_text"] = details_text
-			last["private_to_actor"] = True
-		return []
+		return executor.execute(
+			ws,
+			{"effect": "UpdateInteractionDetails", "actor_id": self_id, "details_text": details_text},
+			{"self_id": self_id},
+		)
 	if detail_type not in {"entity", "entity_recipe"}:
-		return [{"type": "ExecutorError", "message": f"AttachDetails: unknown detail_type: {detail_type}"}]
+		return executor_error(f"AttachDetails: unknown detail_type: {detail_type}")
 	target_ref = str((data or {}).get("target", (context or {}).get("target_id", "target")) or "target")
 	target = resolve_entity(ws, target_ref, context or {}, allow_literal=True)
 	if target is None:
-		return [{"type": "ExecutorError", "message": "AttachDetails: target missing"}]
+		return executor_error("AttachDetails: target missing")
 	payload = {
 		"entity_id": str(getattr(target, "entity_id", "") or ""),
 		"template_id": str(getattr(target, "template_id", "") or ""),
@@ -269,10 +256,13 @@ def execute_attach_details(_executor: Any, ws: Any, data: dict[str, Any], contex
 	if detail_type == "entity_recipe":
 		payload.pop("components", None)
 		payload.pop("observed_description", None)
-	log = getattr(ws, "interaction_log", None)
-	if isinstance(log, list) and log:
-		last = log[-1]
-		if isinstance(last, dict):
-			last["details_text"] = json.dumps(payload, ensure_ascii=False, indent=2)
-			last["private_to_actor"] = True
-	return [{"type": "DetailsAttached", "detail_type": detail_type, "entity_id": payload["entity_id"]}]
+	updated = executor.execute(
+		ws,
+		{
+			"effect": "UpdateInteractionDetails",
+			"actor_id": str((context or {}).get("self_id", "") or ""),
+			"details_text": json.dumps(payload, ensure_ascii=False, indent=2),
+		},
+		{"self_id": str((context or {}).get("self_id", "") or "")},
+	)
+	return [*updated, {"type": "DetailsAttached", "detail_type": detail_type, "entity_id": payload["entity_id"]}]

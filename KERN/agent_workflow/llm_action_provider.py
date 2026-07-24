@@ -2,10 +2,13 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass
+import traceback
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from ..execution_errors import KernFailure
+from ..failure_report import FailureEvidence
 from ..log_manager import get_logger
 from ..llm.openai_compat_client import DualModelLLM, OpenAICompatClient, LLMRequestError
 from ..llm.gemini_client import GeminiClient
@@ -13,7 +16,6 @@ from .memory_policy import build_memory_patch
 from .observer import build_agent_perception
 from .workflow_contract import (
 	build_apply_commands_decision,
-	build_error_decision,
 	build_noop_decision,
 )
 
@@ -475,6 +477,72 @@ class LLMActionProvider:
 	llm_failure_threshold: int = 3
 	llm_failure_cooldown_ticks: int = 60
 	llm_debug_view: str = ""
+	failure_evidence: FailureEvidence = field(default_factory=FailureEvidence)
+
+	def _new_failure_context(
+		self,
+		*,
+		context_type: str,
+		actor_id: str,
+		tick: int,
+		location_id: str,
+		perception: dict[str, Any],
+		reason: str = "",
+	) -> dict[str, Any] | None:
+		recorder = self.failure_evidence
+		if recorder is None or not recorder.enabled:
+			return None
+		client = getattr(self.llm, "client", None)
+		return {
+			"context_type": str(context_type or "llm_decision"),
+			"actor_id": str(actor_id or ""),
+			"tick": int(tick or 0),
+			"location_id": str(location_id or ""),
+			"reason": str(reason or ""),
+			"provider": {
+				"type": str(type(client).__name__) if client is not None else str(type(self.llm).__name__),
+				"planner_model": str(getattr(self.llm, "planner_model", "") or ""),
+				"grounder_model": str(getattr(self.llm, "grounder_model", "") or ""),
+				"base_url": str(getattr(client, "base_url", "") or ""),
+				"api_prefix": str(getattr(client, "api_prefix", "") or ""),
+			},
+			"perception": dict(perception or {}),
+			"attempts": [],
+		}
+
+	def _failure_request(self, *, model: str, temperature: float, messages: list[dict[str, Any]]) -> dict[str, Any]:
+		return {
+			"model": str(model or ""),
+			"temperature": float(temperature),
+			"max_tokens": None,
+			"response_format": None,
+			"messages": [dict(item) for item in messages],
+			"request_extra": dict(getattr(self.llm, "request_extra", {}) or {}),
+		}
+
+	def _record_failure_evidence(
+		self,
+		context: dict[str, Any] | None,
+		*,
+		kind: str,
+		stage: str,
+		summary: str,
+		details: dict[str, Any] | None = None,
+	) -> None:
+		recorder = self.failure_evidence
+		if recorder is None or not recorder.enabled:
+			return
+		ctx = dict(context or {})
+		recorder.record_failure(
+			kind=kind,
+			stage=stage,
+			summary=summary,
+			tick=int(ctx.get("tick", 0) or 0),
+			actor_id=str(ctx.get("actor_id", "") or ""),
+			location_id=str(ctx.get("location_id", "") or ""),
+			details=dict(details or {}),
+			context=ctx,
+		)
 
 	# System Prompt Definition
 	PLANNER_SYSTEM_PROMPT = """
@@ -595,11 +663,12 @@ Output rules:
 		view_payload = dict(ws_view or {}) if isinstance(ws_view, dict) else {}
 		full_ws_view = dict(view_payload.get("full_ws_view", {}) or {}) if isinstance(view_payload.get("full_ws_view", {}), dict) else {}
 		if not full_ws_view:
-			return build_error_decision(
-				kind="contract",
-				code="WORKFLOW_INPUT_MISSING_FULL_WS_VIEW",
-				message="ws_view.full_ws_view is required",
-				meta={"provider": "llm_workflow"},
+			raise KernFailure(
+				"WORKFLOW_INPUT_MISSING_FULL_WS_VIEW",
+				"ws_view.full_ws_view is required",
+				origin="workflow",
+				phase="decision_input",
+				context={"actor_id": str(actor_id or "")},
 			)
 		perception = build_agent_perception(full_ws_view, str(actor_id))
 		recipe_db_view = dict(recipe_db or {}) if isinstance(recipe_db, dict) else {}
@@ -607,30 +676,70 @@ Output rules:
 		if mode_ctx:
 			perception["mode_context"] = dict(mode_ctx)
 		perception["interrupt_reason"] = str(reason or "")
+		location = dict(perception.get("location", {}) or {}) if isinstance(perception.get("location", {}), dict) else {}
+		failure_context = self._new_failure_context(
+			context_type="llm_decision",
+			actor_id=str(actor_id),
+			tick=int(perception.get("tick", 0) or 0),
+			location_id=str(location.get("id", "") or ""),
+			perception=perception,
+			reason=str(reason or ""),
+		)
 		try:
-			actions = self._decide_actions_from_perception(perception, recipe_db_view, reason, str(actor_id))
+			actions = self._decide_actions_from_perception(
+				perception,
+				recipe_db_view,
+				reason,
+				str(actor_id),
+				failure_context=failure_context,
+			)
+		except KernFailure:
+			raise
 		except GroundingUngroundable as e:
-			return build_noop_decision(
-				meta={
-					"provider": "llm_workflow",
-					"reason": "ungroundable",
-					"memory_notes": [self._build_ungroundable_memory_note(str(e.reason), full_ws_view)],
-				}
+			self._record_failure_evidence(
+				failure_context,
+				kind="grounding",
+				stage="grounder_ungroundable",
+				summary=str(e.reason),
+				details={"reason": str(e.reason)},
 			)
+			raise KernFailure(
+				"WORKFLOW_GROUNDING_UNGROUNDED",
+				str(e.reason),
+				origin="llm",
+				phase="grounding",
+				context={"actor_id": str(actor_id or ""), "failure_evidence": failure_context or {}},
+			) from e
 		except ValueError as e:
-			return build_error_decision(
-				kind="contract",
-				code="WORKFLOW_OUTPUT_PARSE_FAILED",
-				message=str(e),
-				meta={"provider": "llm_workflow"},
+			self._record_failure_evidence(
+				failure_context,
+				kind="llm_output",
+				stage="grounder_parse",
+				summary=str(e),
+				details={"error_type": type(e).__name__, "error": str(e), "traceback": traceback.format_exc()},
 			)
+			raise KernFailure(
+				"WORKFLOW_OUTPUT_PARSE_FAILED",
+				str(e),
+				origin="llm",
+				phase="grounder_parse",
+				context={"actor_id": str(actor_id or ""), "failure_evidence": failure_context or {}},
+			) from e
 		except Exception as e:
-			return build_error_decision(
-				kind="temporary",
-				code="WORKFLOW_DECIDE_RUNTIME_ERROR",
-				message=str(e),
-				meta={"provider": "llm_workflow"},
+			self._record_failure_evidence(
+				failure_context,
+				kind="infrastructure",
+				stage="workflow_decide",
+				summary=str(e),
+				details={"error_type": type(e).__name__, "error": str(e), "traceback": traceback.format_exc()},
 			)
+			raise KernFailure(
+				"WORKFLOW_DECIDE_RUNTIME_ERROR",
+				str(e),
+				origin="llm",
+				phase="workflow_decide",
+				context={"actor_id": str(actor_id or ""), "failure_evidence": failure_context or {}},
+			) from e
 		if not list(actions or []):
 			return build_noop_decision(meta={"provider": "llm_workflow", "reason": "no_actions"})
 		memory_notes: list[dict[str, Any]] = []
@@ -642,9 +751,14 @@ Output rules:
 			for x in list(actions or [])
 			if isinstance(x, dict) and str(x.get("_workflow_note_type", "") or "") != "ungroundable"
 		]
+		if failure_context is not None:
+			failure_context["commands"] = [dict(item) for item in commands]
+		meta = {"provider": "llm_workflow", "memory_notes": memory_notes} if memory_notes else {"provider": "llm_workflow"}
+		if failure_context is not None:
+			meta["failure_evidence"] = dict(failure_context)
 		return build_apply_commands_decision(
 			commands=commands,
-			meta={"provider": "llm_workflow", "memory_notes": memory_notes} if memory_notes else {"provider": "llm_workflow"},
+			meta=meta,
 		)
 
 	def build_memory_patch_data(self, ws_view: Any, recipe_db: dict[str, Any] | None, actor_id: str) -> dict[str, Any] | None:
@@ -673,6 +787,8 @@ Output rules:
 		recipe_db: dict[str, Any],
 		reason: str,
 		self_id: str | None = None,
+		*,
+		failure_context: dict[str, Any] | None = None,
 	) -> list[dict[str, Any]]:
 		logger = get_logger()
 		self_id = str(self_id or perception.get("self_id", "") or "")
@@ -686,6 +802,7 @@ Output rules:
 					reason=reason,
 					self_id=self_id,
 					ungroundable_notes=ungroundable_notes,
+					failure_context=failure_context,
 				)
 			except GroundingUngroundable as e:
 				note = str(e.reason or "").strip()
@@ -721,6 +838,7 @@ Output rules:
 		reason: str,
 		self_id: str,
 		ungroundable_notes: list[str] | None = None,
+		failure_context: dict[str, Any] | None = None,
 	) -> list[dict[str, Any]]:
 		logger = get_logger()
 		decision_mode_context = {
@@ -832,6 +950,23 @@ Output rules:
 			"planner_output_here": "",
 		}
 		planner_prompt = _fill_template(planner_template, planner_mapping)
+		planner_messages = [
+			{"role": "system", "content": self.PLANNER_SYSTEM_PROMPT},
+			{"role": "user", "content": planner_prompt},
+		]
+		failure_attempt: dict[str, Any] | None = None
+		if failure_context is not None:
+			failure_attempt = {
+				"attempt": len(list(failure_context.get("attempts", []) or [])) + 1,
+				"planner": {
+					"request": self._failure_request(
+						model=str(getattr(self.llm, "planner_model", "") or ""),
+						temperature=1,
+						messages=planner_messages,
+					),
+				},
+			}
+			failure_context.setdefault("attempts", []).append(failure_attempt)
 		focus_perception = {
 			"self_id": self_id,
 			"tick": tick,
@@ -883,16 +1018,30 @@ Output rules:
 
 		try:
 			planner_raw = self.llm.planner_text(
-				messages=[
-					{"role": "system", "content": self.PLANNER_SYSTEM_PROMPT},
-					{"role": "user", "content": planner_prompt},
-				],
+				messages=planner_messages,
 				temperature=1,
 			).strip()
 		except LLMRequestError as e:
+			if failure_attempt is not None:
+				failure_attempt["planner"]["error"] = str(e)
+			self._record_failure_evidence(
+				failure_context,
+				kind="infrastructure",
+				stage="planner_request",
+				summary=str(e),
+				details={"error_type": type(e).__name__, "error": str(e), "traceback": traceback.format_exc()},
+			)
 			self._on_llm_failure(logger, self_id, tick_i, "planner", str(e))
-			return []
+			raise KernFailure(
+				"LLM_PLANNER_REQUEST_FAILED",
+				str(e),
+				origin="llm",
+				phase="planner_request",
+				context={"actor_id": str(self_id or ""), "tick": int(tick_i), "failure_evidence": failure_context or {}},
+			) from e
 		planner_thought, intent = self._parse_planner_output(planner_raw)
+		if failure_attempt is not None:
+			failure_attempt["planner"].update({"response": planner_raw, "thought": planner_thought, "intent": intent})
 		if bool(self.debug) or logger.enabled("debug", "llm"):
 			logger.debug("llm", "planner_thought", context={"self_id": self_id, "thought": planner_thought})
 			logger.debug("llm", "planner_intent", context={"self_id": self_id, "intent": intent})
@@ -928,6 +1077,18 @@ Output rules:
 				"target_id": "",
 			},
 		)
+		grounder_messages = [
+			{"role": "system", "content": self.GROUNDER_SYSTEM_PROMPT},
+			{"role": "user", "content": grounder_prompt},
+		]
+		if failure_attempt is not None:
+			failure_attempt["grounder"] = {
+				"request": self._failure_request(
+					model=str(getattr(self.llm, "grounder_model", "") or ""),
+					temperature=1,
+					messages=grounder_messages,
+				)
+			}
 
 		if bool(self.debug) or logger.enabled("trace", "llm"):
 			logger.trace(
@@ -955,22 +1116,38 @@ Output rules:
 
 		try:
 			raw = self.llm.grounder_text(
-				messages=[
-					{"role": "system", "content": self.GROUNDER_SYSTEM_PROMPT},
-					{"role": "user", "content": grounder_prompt},
-				],
+				messages=grounder_messages,
 				temperature=1,
 			).strip()
 		except LLMRequestError as e:
+			if failure_attempt is not None:
+				failure_attempt["grounder"]["error"] = str(e)
+			self._record_failure_evidence(
+				failure_context,
+				kind="infrastructure",
+				stage="grounder_request",
+				summary=str(e),
+				details={"error_type": type(e).__name__, "error": str(e), "traceback": traceback.format_exc()},
+			)
 			self._on_llm_failure(logger, self_id, tick_i, "grounder", str(e))
-			return []
+			raise KernFailure(
+				"LLM_GROUNDER_REQUEST_FAILED",
+				str(e),
+				origin="llm",
+				phase="grounder_request",
+				context={"actor_id": str(self_id or ""), "tick": int(tick_i), "failure_evidence": failure_context or {}},
+			) from e
 		self.consecutive_failures = 0
 		if bool(self.debug) or logger.enabled("debug", "llm"):
 			logger.debug("llm", "grounder_raw", context={"self_id": self_id, "raw": raw})
 		self._focus_log(logger, "focus_grounder_raw", self_id, {"self_id": self_id, "raw": raw})
 
 		# 1. Parse Failure -> System Error (Raise Exception)
+		if failure_attempt is not None:
+			failure_attempt["grounder"]["response"] = raw
 		actions = self._parse_actions(raw)
+		if failure_attempt is not None:
+			failure_attempt["grounder"]["actions"] = [dict(item) for item in list(actions or []) if isinstance(item, dict)]
 		if bool(self.debug) or logger.enabled("debug", "llm"):
 			logger.debug("llm", "grounder_actions", context={"self_id": self_id, "actions": actions})
 		self._focus_log(logger, "focus_grounder_actions", self_id, {"self_id": self_id, "actions": list(actions)})
@@ -1188,6 +1365,31 @@ Output rules:
 				"recent_interactions_text": short_term_memory_text,
 			},
 		)
+		dialogue_context = self._new_failure_context(
+			context_type="llm_dialogue",
+			actor_id=self_id,
+			tick=int(agent_context.get("tick", 0) or 0),
+			location_id=loc_id,
+			perception=perception,
+			reason=str(mode_context.get("dialogue_phase", "dialogue") or "dialogue"),
+		)
+		dialogue_messages = [
+			{"role": "system", "content": self.DIALOGUE_SYSTEM_PROMPT},
+			{"role": "user", "content": dialogue_prompt},
+		]
+		if dialogue_context is not None:
+			dialogue_context["attempts"] = [
+				{
+					"attempt": 1,
+					"dialogue": {
+						"request": self._failure_request(
+							model=str(getattr(self.llm, "planner_model", "") or ""),
+							temperature=1,
+							messages=dialogue_messages,
+						),
+					},
+				}
+			]
 		if bool(self.debug) or logger.enabled("trace", "llm"):
 			logger.trace("llm", "dialogue_prompt", context={"self_id": self_id, "system_prompt": self.DIALOGUE_SYSTEM_PROMPT.strip(), "user_prompt": dialogue_prompt})
 		self._focus_log(
@@ -1202,13 +1404,30 @@ Output rules:
 				"perception": dict(perception or {}) if bool(self.focus_log_perception) else {},
 			},
 		)
-		line = self.llm.planner_text(
-			messages=[
-				{"role": "system", "content": self.DIALOGUE_SYSTEM_PROMPT},
-				{"role": "user", "content": dialogue_prompt},
-			],
-			temperature=1,
-		).strip()
+		try:
+			line = self.llm.planner_text(
+				messages=dialogue_messages,
+				temperature=1,
+			).strip()
+		except Exception as exc:
+			if dialogue_context is not None:
+				dialogue_context["attempts"][0]["dialogue"]["error"] = str(exc)
+			self._record_failure_evidence(
+				dialogue_context,
+				kind="infrastructure" if isinstance(exc, LLMRequestError) else "llm_output",
+				stage="dialogue_request",
+				summary=str(exc),
+				details={"error_type": type(exc).__name__, "error": str(exc), "traceback": traceback.format_exc()},
+			)
+			raise KernFailure(
+				"LLM_DIALOGUE_REQUEST_FAILED",
+				str(exc),
+				origin="llm",
+				phase="dialogue_request",
+				context={"actor_id": str(self_id or ""), "failure_evidence": dialogue_context or {}},
+			) from exc
+		if dialogue_context is not None:
+			dialogue_context["attempts"][0]["dialogue"]["response"] = line
 		line = _sanitize_dialogue_output(line)
 		self._focus_log(logger, "focus_dialogue_output", self_id, {"self_id": self_id, "line": line})
 		return str(line or "PASS")

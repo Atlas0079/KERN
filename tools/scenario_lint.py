@@ -100,6 +100,8 @@ EVENT_FIELDS: dict[str, set[str]] = {
 	"SimulationAbortRequested": {"type", "reason", "detail", "severity", "stop", "actor_id"},
 	"MetaActionApplied": {"type", "entity_id", "action_type", "params", "changed"},
 	"DetailsAttached": {"type", "detail_type", "entity_id"},
+	"InteractionRecorded": {"type", "actor_id", "target_id", "verb", "status", "recipe_id"},
+	"InteractionDetailsUpdated": {"type", "seq", "actor_id"},
 	"MemoryPatched": {"type", "entity_id"},
 	"MemoryNoteAdded": {"type", "entity_id"},
 	"EventEmitted": {"type", "event_type", "payload"},

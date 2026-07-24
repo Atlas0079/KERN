@@ -36,6 +36,8 @@ CORE_EFFECT_MODULES: tuple[tuple[str, str], ...] = (
 	("AddMemoryNote", "KERN.executor._effect_memory"),
 	("ApplyMemoryPatch", "KERN.executor._effect_memory"),
 	("EmitEvent", "KERN.executor._effect_event"),
+	("RecordInteraction", "KERN.executor._effect_interaction"),
+	("UpdateInteractionDetails", "KERN.executor._effect_interaction"),
 	("ExchangeResources", "KERN.executor._effect_resource"),
 	("AbortSimulation", "KERN.executor._effect_resource"),
 	("SetEnvironmentField", "KERN.executor._effect_environment"),

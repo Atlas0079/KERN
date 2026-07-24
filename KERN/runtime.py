@@ -19,9 +19,10 @@ from .data.checkpoint import (
 	resolve_global_log_file,
 	restore_world_state_from_checkpoint,
 )
-from .execution_errors import is_execution_error_event
+from .execution_errors import KernFailure
+from .failure_report import FailureReportWriter
 from .executor.executor import WorldExecutor
-from .external_runtime import ExternalRuntimeBridge, ExternalRuntimeLifecycleError
+from .external_runtime import ExternalRuntimeBridge
 from .interaction.engine import InteractionEngine
 from .log_manager import configure_logger, get_logger
 from .models.world_state import WorldState
@@ -167,6 +168,7 @@ class KernRuntime:
 	loaded_packages: LoadedPackages | None = None
 	configured_max_ticks: int = 100
 	workflow_view_profile: dict[str, Any] = field(default_factory=dict)
+	failure_report_writer: FailureReportWriter | None = None
 	is_terminal: bool = False
 	terminal_error: str = ""
 	snapshot_builder: RuntimeSnapshotBuilder | None = field(default=None, init=False, repr=False)
@@ -192,6 +194,11 @@ class KernRuntime:
 		if not run_id:
 			run_id = uuid4().hex
 		self.run_id = run_id
+		if self.failure_report_writer is None:
+			report_root = str(self.checkpoint_dir or "").strip()
+			if not report_root:
+				report_root = str(Path.cwd() / "failures" / self.run_id)
+			self.failure_report_writer = FailureReportWriter(report_root, self.run_id)
 		if self.checkpoint_enabled:
 			self.archive_recorder = ArchiveRecorder(
 				archive_dir=str(self.checkpoint_dir),
@@ -265,14 +272,13 @@ class KernRuntime:
 			)
 			if not ws.entities or not ws.locations:
 				raise ValueError(f"Invalid checkpoint format or empty world state: {restore_path}")
-			restore_events = external_runtime_bridge.restore_checkpoint(
+			external_runtime_bridge.restore_checkpoint(
 				cls._build_checkpoint_context_for_world(
 					ws,
 					run_id=str(getattr(ws, "_checkpoint_run_id", "") or ""),
 					phase="restore",
 				)
 			)
-			cls._raise_on_external_checkpoint_error(restore_events, "restore")
 		else:
 			if validate:
 				from tools.scenario_lint import lint_bundle
@@ -329,7 +335,7 @@ class KernRuntime:
 			reaction_rules=list((bundle.reactions or {}).get("rules", []) or []),
 			max_trigger_depth=_cfg_int(cfg, "MAX_TRIGGER_DEPTH", 4),
 			dialogue_budget_limit_per_location=_cfg_int(cfg, "DIALOGUE_BUDGET_LIMIT_PER_LOCATION", 4),
-			workflow_contract_on_error=_cfg_get(cfg, "WORKFLOW_CONTRACT_ON_ERROR", "fail_fast").lower() or "fail_fast",
+			workflow_contract_on_error="fail_fast",
 			checkpoint_enabled=_cfg_bool(cfg, "CHECKPOINT_EVERY_TICK", True),
 			checkpoint_dir=checkpoint_dir_env if checkpoint_dir_env else str(default_checkpoint_dir),
 			checkpoint_include_logs=_cfg_bool(cfg, "CHECKPOINT_INCLUDE_LOGS", True),
@@ -368,19 +374,26 @@ class KernRuntime:
 		self._raise_if_terminal()
 		self.is_running = True
 		all_events: list[dict[str, Any]] = []
-
-		self.record_initial_state()
-
-		while self.is_running and self.world_state.game_time.total_ticks < max_ticks:
-			tick_events = self.step_and_record()
-			all_events.extend(tick_events)
-
-		return all_events
+		try:
+			self.record_initial_state()
+			while self.is_running and self.world_state.game_time.total_ticks < max_ticks:
+				tick_events = self.step_and_record()
+				all_events.extend(tick_events)
+			return all_events
+		except Exception as exc:
+			self._mark_failure(exc)
+			self._write_failure_report(exc)
+			raise
 
 	def record_initial_state(self) -> None:
 		"""Record the current world state before runtime advancement."""
 		self._raise_if_terminal()
-		self._record_runtime_frame(events_in_tick=[])
+		try:
+			self._record_runtime_frame(events_in_tick=[])
+		except Exception as exc:
+			self._mark_failure(exc)
+			self._write_failure_report(exc)
+			raise
 
 	def step_and_record(self) -> list[dict[str, Any]]:
 		"""Advance one runtime tick and record snapshot/checkpoint/log outputs."""
@@ -389,8 +402,9 @@ class KernRuntime:
 			tick_events = self.step()
 			self._record_runtime_frame(events_in_tick=tick_events)
 			return tick_events
-		except ExternalRuntimeLifecycleError as exc:
-			self._mark_terminal(exc)
+		except Exception as exc:
+			self._mark_failure(exc)
+			self._write_failure_report(exc)
 			raise
 
 	def advance_ticks(self, count: int) -> dict[str, Any]:
@@ -461,12 +475,6 @@ class KernRuntime:
 			"phase": str(phase or ""),
 		}
 
-	@staticmethod
-	def _raise_on_external_checkpoint_error(events: list[dict[str, Any]], phase: str) -> None:
-		for ev in list(events or []):
-			if is_execution_error_event(ev):
-				raise RuntimeError(f"External runtime checkpoint {phase} failed: {ev.get('message', ev)}")
-
 	def _build_checkpoint_context(self, phase: str) -> dict[str, Any]:
 		return self._build_checkpoint_context_for_world(
 			self.world_state,
@@ -486,16 +494,19 @@ class KernRuntime:
 			logger.debug("checkpoint", "archive_recorded", context={"tick": tick, "path": str(self.checkpoint_dir)})
 			bridge = ExternalRuntimeBridge(dict(self.external_runtimes or {}))
 			events = bridge.save_checkpoint(self._build_checkpoint_context("save"))
-			self._raise_on_external_checkpoint_error(events, "save")
 			if events:
 				logger.debug("checkpoint", "external_runtime_checkpoint_saved", context={"tick": tick, "event_count": len(events)})
-		except ExternalRuntimeLifecycleError as e:
-			self._mark_terminal(e)
-			logger.warn("checkpoint", "checkpoint_lifecycle_failed", context={"tick": tick, "path": str(self.checkpoint_dir), "error": str(e)})
+		except KernFailure as exc:
+			exc.add_context(tick=tick, path=str(self.checkpoint_dir), phase="checkpoint_record")
 			raise
 		except Exception as e:
-			logger.warn("checkpoint", "checkpoint_record_failed", context={"tick": tick, "path": str(self.checkpoint_dir), "error": str(e)})
-			raise
+			raise KernFailure(
+				"CHECKPOINT_RECORD_FAILED",
+				str(e),
+				origin="persistence",
+				phase="checkpoint_record",
+				context={"tick": tick, "path": str(self.checkpoint_dir)},
+			) from e
 
 	def _save_simulation_log(self) -> None:
 		if not self.checkpoint_enabled or not self.checkpoint_write_global_log:
@@ -512,27 +523,62 @@ class KernRuntime:
 				json.dump(payload, f, ensure_ascii=False, indent=2)
 			tmp_path.replace(log_path)
 			logger.debug("checkpoint", "global_log_saved", context={"tick": tick, "path": str(log_path)})
+		except KernFailure as exc:
+			exc.add_context(tick=tick, path=str(log_path), phase="simulation_log_write")
+			raise
 		except Exception as e:
-			logger.warn("checkpoint", "global_log_save_failed", context={"tick": tick, "path": str(log_path), "error": str(e)})
+			raise KernFailure(
+			"SIMULATION_LOG_WRITE_FAILED",
+			str(e),
+			origin="persistence",
+			phase="simulation_log_write",
+			context={"tick": tick, "path": str(log_path)},
+		) from e
 
 	def stop(self) -> None:
 		self.is_running = False
 
-	def _mark_terminal(self, error: ExternalRuntimeLifecycleError) -> None:
+	def _mark_failure(self, error: BaseException) -> None:
 		self.is_terminal = True
 		self.terminal_error = str(error)
-		self.request_stop(
-			{
-				"reason": "external_runtime_lifecycle_failed",
-				"phase": str(error.phase),
-				"runtime_id": str(error.runtime_id),
-				"error": str(error),
+		if isinstance(error, KernFailure):
+			info = error.to_dict()
+		else:
+			info = {
+				"code": "UNEXPECTED_EXCEPTION",
+				"message": str(error),
+				"origin": "kernel",
 			}
+		self.request_stop({"reason": "failure", **dict(info)})
+
+	def _write_failure_report(self, error: BaseException) -> None:
+		writer = self.failure_report_writer
+		if writer is None:
+			return
+		writer.write_failure(
+			error,
+			tick=int(getattr(getattr(self.world_state, "game_time", None), "total_ticks", 0) or 0),
+			context={
+				"run_id": str(self.run_id or ""),
+				"terminal_error": str(self.terminal_error or ""),
+				"runtime_config": dict(self.runtime_config or {}),
+				"last_stop_info": dict(self.last_stop_info or {}),
+				"event_seq": int(getattr(self.world_state, "_event_seq", 0) or 0),
+				"interaction_seq": int(getattr(self.world_state, "_interaction_seq", 0) or 0),
+			},
 		)
+		if writer.last_write_error:
+			error.add_note(f"failure report write failed: {writer.last_write_error}")
 
 	def _raise_if_terminal(self) -> None:
 		if self.is_terminal:
-			raise RuntimeError(f"runtime is terminal: {self.terminal_error or 'external runtime lifecycle failure'}")
+			raise KernFailure(
+				"RUNTIME_TERMINAL",
+				f"runtime is terminal: {self.terminal_error or 'runtime failure'}",
+				origin="runtime",
+				phase="lifecycle",
+				context={"terminal_error": str(self.terminal_error or "")},
+			)
 
 	def request_stop(self, info: dict[str, Any] | None = None) -> None:
 		self.is_running = False
@@ -542,8 +588,9 @@ class KernRuntime:
 		self._raise_if_terminal()
 		try:
 			return self._step()
-		except ExternalRuntimeLifecycleError as exc:
-			self._mark_terminal(exc)
+		except Exception as exc:
+			self._mark_failure(exc)
+			self._write_failure_report(exc)
 			raise
 
 	def _step(self) -> list[dict[str, Any]]:
@@ -573,7 +620,7 @@ class KernRuntime:
 			dialogue_budget_limit_per_location=int(self.dialogue_budget_limit_per_location),
 			dialogue_budget_used_per_location={},
 			dialogue_log_full=bool(self.dialogue_log_full),
-			workflow_contract_on_error=str(self.workflow_contract_on_error or "fail_fast"),
+			workflow_contract_on_error="fail_fast",
 			abort_requested=False,
 			abort_reason="",
 			abort_detail="",
@@ -581,21 +628,11 @@ class KernRuntime:
 			abort_actor_id="",
 		)
 
-		def stop_for_settlement_failure(fatal: dict[str, Any]) -> None:
-			fatal_type = str(fatal.get("type", "") or "")
-			reason = "reaction_depth_exceeded" if fatal_type == "ReactionDepthExceeded" else "reaction_failed"
-			ws.runtime_state.abort_requested = True
-			ws.runtime_state.abort_reason = reason
-			ws.runtime_state.abort_detail = str(fatal)
-			ws.runtime_state.abort_severity = "fatal"
-			self.request_stop({"reason": reason, **dict(fatal)})
-
 		settlement = WorldSettlement(
 			ws=ws,
 			executor=self.executor,
 			trigger_system=self.trigger_system,
 			max_reaction_depth=self.max_trigger_depth,
-			on_fatal=stop_for_settlement_failure,
 		)
 		ws.services["execute"] = settlement.execute_bundle
 
@@ -608,9 +645,7 @@ class KernRuntime:
 		}
 		world_tick_ctx = {"actor_id": ""}
 		logger.debug("tick", "tick_advanced", context=dict(world_tick_event))
-		world_result = settlement.publish_event(world_tick_event, world_tick_ctx)
-		if world_result.fatal_error is not None:
-			logger.error("reaction", "settlement_failed", context=dict(world_result.fatal_error))
+		settlement.publish_event(world_tick_event, world_tick_ctx)
 
 		# 3) Dispatch AdvanceTick events per entity, then let Reactions decide which effects to run.
 		for ent_id in list(ws.entities.keys()):
@@ -622,9 +657,7 @@ class KernRuntime:
 				"ticks": int(self.ticks_per_step),
 			}
 			tick_ctx = {"entity_id": ent_id, "event_entity_id": ent_id, "self_id": ent_id}
-			tick_result = settlement.publish_event(tick_event, tick_ctx)
-			if tick_result.fatal_error is not None:
-				logger.error("reaction", "settlement_failed", context=dict(tick_result.fatal_error))
+			settlement.publish_event(tick_event, tick_ctx)
 
 		events_in_tick_records: list[dict[str, Any]] = []
 		for rec in list(getattr(ws, "event_log", []) or []):

@@ -2,26 +2,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..execution_errors import is_execution_error_event
+from ..execution_errors import KernFailure
 from .full_ws_view_builder import build_full_ws_view
 from .interrupt_runtime import check_if_interrupt_is_needed
 from .view_profile import active_workflow_view_profile
 from .workflow_contract import validate_workflow_decision
-
-
-def workflow_contract_error_policy(ws: Any) -> str:
-	raw = str(ws.runtime_state.workflow_contract_on_error or "fail_fast").strip().lower()
-	if raw not in {"fail_fast", "degrade_to_noop"}:
-		return "fail_fast"
-	return raw
-
-
-def _record_workflow_error_event(ws: Any, actor_id: str, stage: str, detail: dict[str, Any]) -> None:
-	if hasattr(ws, "record_event"):
-		ws.record_event(
-			{"type": "WorkflowDecisionError", "stage": str(stage or ""), "detail": dict(detail or {})},
-			{"actor_id": actor_id},
-		)
+from ..interaction.results import ActionRejected
 
 
 def _build_workflow_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[str, Any]) -> dict[str, Any]:
@@ -49,32 +35,32 @@ def prepare_workflow_decision_input(ws: Any, actor_id: str, workflow: Any, reaso
 	ws_view = _build_workflow_ws_view(ws, actor_id, reason, mode_context)
 	recipe_db = _build_workflow_recipe_db(ws)
 	if not hasattr(workflow, "build_memory_patch_data"):
-		_record_workflow_error_event(
-			ws,
-			actor_id,
-			"workflow_missing_memory_patch_data_hook",
-			{"provider": str(type(workflow).__name__)},
+		raise KernFailure(
+			"WORKFLOW_MISSING_MEMORY_PATCH_HOOK",
+			f"workflow provider {type(workflow).__name__} lacks build_memory_patch_data",
+			origin="workflow",
+			phase="workflow_input",
+			context={"actor_id": str(actor_id or "")},
 		)
-		return {
-			"status": "error",
-			"outcome": {
-				"type": "error",
-				"error": {
-					"kind": "contract",
-					"code": "WORKFLOW_MISSING_MEMORY_PATCH_HOOK",
-					"message": str(type(workflow).__name__),
-				},
-			},
-		}
 	try:
 		mem_patch = workflow.build_memory_patch_data(ws_view, recipe_db, actor_id)
 	except Exception as e:
-		_record_workflow_error_event(ws, actor_id, "memory_patch_data_build_failed", {"error": str(e)})
-		return {"status": "error", "outcome": {"type": "noop"}}
+		raise KernFailure(
+			"WORKFLOW_MEMORY_PATCH_BUILD_FAILED",
+			str(e),
+			origin="workflow",
+			phase="memory_patch",
+			context={"actor_id": str(actor_id or "")},
+		) from e
 	if isinstance(mem_patch, dict) and mem_patch:
 		if not _apply_memory_patch(ws, actor_id, mem_patch):
-			_record_workflow_error_event(ws, actor_id, "memory_patch_apply_failed", {"reason": "executor_failed"})
-			return {"status": "error", "outcome": {"type": "noop"}}
+			raise KernFailure(
+				"WORKFLOW_MEMORY_PATCH_APPLY_FAILED",
+				"workflow memory patch executor failed",
+				origin="workflow",
+				phase="memory_patch",
+				context={"actor_id": str(actor_id or "")},
+			)
 		ws_view = _build_workflow_ws_view(ws, actor_id, reason, mode_context)
 	return {
 		"status": "ready",
@@ -111,12 +97,22 @@ def commit_workflow_decision(
 	decide_error: str = "",
 ) -> dict[str, Any]:
 	if decide_error:
-		_record_workflow_error_event(ws, actor_id, "decide_exception", {"error": str(decide_error)})
-		return {"type": "noop"}
+		raise KernFailure(
+			"WORKFLOW_PROVIDER_EXCEPTION",
+			str(decide_error),
+			origin="workflow",
+			phase="decision",
+			context={"actor_id": str(actor_id or ""), "reason": str(reason or "")},
+		)
 	decision, err = validate_workflow_decision(decision_raw)
 	if decision is None:
-		_record_workflow_error_event(ws, actor_id, "contract_invalid", {"error": str(err), "raw": str(decision_raw)})
-		return {"type": "error", "error": {"kind": "contract", "code": "WORKFLOW_CONTRACT_INVALID_DECISION", "message": str(err)}}
+		raise KernFailure(
+			"WORKFLOW_CONTRACT_INVALID_DECISION",
+			str(err),
+			origin="workflow",
+			phase="decision_validation",
+			context={"actor_id": str(actor_id or ""), "raw_decision": decision_raw},
+		)
 	if max_commands is not None and str(decision.get("type", "") or "") == "apply_commands":
 		limit = max(0, int(max_commands or 0))
 		decision["commands"] = [dict(x) for x in list(decision.get("commands", []) or [])[:limit] if isinstance(x, dict)]
@@ -197,7 +193,7 @@ def _commands_to_operations(ws: Any, actor_id: str, reason: str, commands: list[
 		if verb == "YieldCurrentTask":
 			task_id = _current_worker_task_id(ws, actor_id)
 			if not task_id:
-				return None, {"kind": "business", "code": "NO_CURRENT_TASK_TO_YIELD", "message": "YieldCurrentTask requested but no task is in progress"}
+				return None, {"kind": "rejection", "code": "NO_CURRENT_TASK_TO_YIELD", "message": "YieldCurrentTask requested but no task is in progress"}
 			ops.append(
 				{
 					"effect": {
@@ -219,7 +215,7 @@ def _commands_to_operations(ws: Any, actor_id: str, reason: str, commands: list[
 				continue
 			if current_task is not None:
 				return None, {
-					"kind": "business",
+					"kind": "rejection",
 					"code": "CURRENT_TASK_ACTIVE",
 					"message": "AcceptTask requested while another task is already in progress; use ContinueCurrentTask or YieldCurrentTask first",
 				}
@@ -236,23 +232,14 @@ def _commands_to_operations(ws: Any, actor_id: str, reason: str, commands: list[
 			actor_name = _entity_display_name(actor, str(actor_id))
 			target_name = _entity_display_name(target, target_id)
 			narrative = _render_interaction_narrative({}, actor_name, target_name, verb, "failed", reason_code or message, dict(cmd))
-			if hasattr(ws, "record_interaction_attempt"):
-				ws.record_interaction_attempt(
-					actor_id=str(actor_id),
-					verb=verb,
-					target_id=target_id,
-					status="failed",
-					reason=reason_code,
-					recipe_id="",
-					extra={
-						"narrative": narrative,
-						"parameters": dict(cmd.get("parameters", {}) or {}) if isinstance(cmd.get("parameters", {}), dict) else {},
-					},
-				)
 			return None, {
-				"kind": "business",
+				"kind": "rejection" if status in {"rejected", "failed"} else "contract",
 				"code": reason_code,
 				"message": message,
+				"command_index": int(idx),
+				"command": dict(cmd),
+				"narrative": narrative,
+				"mismatch_reasons": [dict(item) for item in list((result or {}).get("mismatch_reasons", []) or []) if isinstance(item, dict)],
 			}
 		ctx = dict((result or {}).get("context", {}) or {})
 		bundle = (result or {}).get("bundle", {}) or {}
@@ -267,21 +254,36 @@ def _commands_to_operations(ws: Any, actor_id: str, reason: str, commands: list[
 		narrative_values = {**params, **dict(cmd)}
 		narrative_values["to_location_id"] = str(params.get("to_location_id", "") or cmd.get("to_location_id", "") or "")
 		narrative = _render_interaction_narrative(recipe, actor_name, target_name, verb, "success", "", narrative_values)
-		if hasattr(ws, "record_interaction_attempt"):
-			ws.record_interaction_attempt(
-				actor_id=str(actor_id),
-				verb=verb,
-				target_id=target_id,
-				status="success",
-				reason="",
-				recipe_id=recipe_id,
-				extra={
-					"narrative": narrative,
-					"parameters": params,
-				},
-			)
 		if isinstance(bundle, dict):
-			ops.append({"bundle": dict(bundle), "context": dict(ctx)})
+			operation_context = dict(ctx)
+			operation_context["action_narrative"] = narrative
+			operation_context["recipe_id"] = recipe_id
+			operation_context["verb"] = verb
+			operation_context["actor_id"] = str(actor_id)
+			operation_context["target_id"] = target_id
+			operation_context["parameters"] = params
+			compiled_bundle = dict(bundle)
+			effects = [dict(item) for item in list(compiled_bundle.get("effects", []) or []) if isinstance(item, dict)]
+			if not any(str(item.get("effect", "") or "") == "RecordInteraction" for item in effects):
+				effects.insert(
+					0,
+					{
+						"effect": "RecordInteraction",
+						"actor_id": str(actor_id),
+						"verb": verb,
+						"target_id": target_id,
+						"status": "success",
+						"reason": "",
+						"recipe_id": recipe_id,
+						"extra": {
+							"narrative": narrative,
+							"parameters": dict(params),
+							"is_action": True,
+						},
+					},
+				)
+			compiled_bundle["effects"] = effects
+			ops.append({"bundle": compiled_bundle, "context": operation_context})
 	return ops, None
 
 
@@ -303,10 +305,7 @@ def _apply_memory_patch(ws: Any, actor_id: str, mem_patch: dict[str, Any]) -> bo
 			}
 		]
 	}
-	mem_events = execute(mem_effect, {"self_id": actor_id, "target_id": actor_id})
-	for ev in list(mem_events or []):
-		if is_execution_error_event(ev):
-			return False
+	execute(mem_effect, {"self_id": actor_id, "target_id": actor_id})
 	return True
 
 
@@ -347,59 +346,82 @@ def _apply_decision_memory_notes(ws: Any, actor_id: str, decision: dict[str, Any
 
 def _decision_to_outcome(ws: Any, actor_id: str, reason: str, decision: dict[str, Any]) -> dict[str, Any]:
 	dtype = str((decision or {}).get("type", "") or "")
+	meta = dict((decision or {}).get("meta", {}) or {})
+	raw_failure_evidence = meta.get("failure_evidence", meta.get("failure_context", {}))
+	failure_evidence = dict(raw_failure_evidence or {}) if isinstance(raw_failure_evidence, dict) else {}
 	if not _apply_decision_memory_notes(ws, actor_id, decision):
-		_record_workflow_error_event(ws, actor_id, "decision_memory_notes_apply_failed", {"reason": "executor_failed"})
+		raise KernFailure(
+			"MEMORY_PATCH_FAILED",
+			"decision memory notes could not be applied",
+			origin="workflow",
+			phase="memory_patch",
+			context={"actor_id": str(actor_id or "")},
+		)
 	if dtype == "noop":
 		return {"type": "noop"}
-	if dtype == "error":
-		err = dict((decision or {}).get("error", {}) or {})
-		kind = str(err.get("kind", "") or "")
-		code = str(err.get("code", "") or "")
-		message = str(err.get("message", "") or "")
-		_record_workflow_error_event(ws, actor_id, "provider_error", {"kind": kind, "code": code, "message": message})
-		return {"type": "error", "error": {"kind": kind, "code": code, "message": message}}
 	if dtype == "apply_commands":
 		commands = list((decision or {}).get("commands", []) or [])
 		ops, cmd_error = _commands_to_operations(ws, actor_id, reason, commands)
 		if cmd_error is not None:
-			_record_workflow_error_event(ws, actor_id, "command_compile_failed", dict(cmd_error))
-			return {
-				"type": "error",
-				"error": {
-					"kind": str(cmd_error.get("kind", "") or ""),
-					"code": str(cmd_error.get("code", "") or ""),
-					"message": str(cmd_error.get("message", "") or ""),
-				},
-			}
+			if str(cmd_error.get("kind", "") or "") == "rejection":
+				rejection = ActionRejected(
+					code=str(cmd_error.get("code", "ACTION_REJECTED") or "ACTION_REJECTED"),
+					message=str(cmd_error.get("message", "action rejected") or "action rejected"),
+					command_index=int(cmd_error.get("command_index", -1) or -1),
+					command=dict(cmd_error.get("command", {}) or {}),
+					details={"mismatch_reasons": list(cmd_error.get("mismatch_reasons", []) or [])},
+					narrative=str(cmd_error.get("narrative", "") or ""),
+				)
+				return {"type": "rejected", "rejection": rejection.to_dict()}
+			raise KernFailure(
+				str(cmd_error.get("code", "COMMAND_COMPILATION_FAILED") or "COMMAND_COMPILATION_FAILED"),
+				str(cmd_error.get("message", "command compilation failed") or "command compilation failed"),
+				origin="interaction",
+				phase="command_compilation",
+				context=dict(cmd_error),
+			)
 		if not ops:
 			return {"type": "noop"}
-		return {"type": "apply_operations", "operations": [dict(x) for x in list(ops or []) if isinstance(x, dict)]}
-	_record_workflow_error_event(ws, actor_id, "contract_invalid_type", {"type": dtype})
-	return {"type": "error", "error": {"kind": "contract", "code": "INVALID_DECISION_TYPE", "message": str(dtype)}}
+	if failure_evidence:
+		for operation in ops:
+			if isinstance(operation, dict) and isinstance(operation.get("context"), dict):
+				operation["context"]["failure_evidence"] = dict(failure_evidence)
+		return {
+			"type": "apply_operations",
+			"operations": [dict(x) for x in list(ops or []) if isinstance(x, dict)],
+		}
+	raise KernFailure(
+		"INVALID_DECISION_TYPE",
+		f"unsupported workflow decision type: {dtype}",
+		origin="workflow",
+		phase="decision_validation",
+		context={"actor_id": str(actor_id or ""), "type": dtype},
+	)
 
 
 def _apply_operations(ws: Any, actor_id: str, operations: list[dict[str, Any]]) -> tuple[bool, bool]:
 	execute = (getattr(ws, "services", {}) or {}).get("execute")
 	if not callable(execute):
-		_record_workflow_error_event(
-			ws,
-			actor_id,
-			"execute_missing",
-			{"reason": "ws.services.execute not callable"},
+		raise KernFailure(
+			"EXECUTE_SERVICE_MISSING",
+			"ws.services.execute is not callable",
+			origin="workflow",
+			phase="action_execution",
+			context={"actor_id": str(actor_id or "")},
 		)
-		return True, False
 	ops = [dict(x) for x in list(operations or []) if isinstance(x, dict)]
 	for op in list(ops):
 		bundle = op.get("bundle", {}) or {}
 		ctx = op.get("context", {}) or {}
 		if not isinstance(bundle, dict) or not isinstance(ctx, dict):
-			_record_workflow_error_event(ws, actor_id, "operation_invalid", {"operation": dict(op) if isinstance(op, dict) else str(op)})
-			return True, False
-		evs = execute(dict(bundle), dict(ctx))
-		for ev in list(evs or []):
-			if is_execution_error_event(ev):
-				_record_workflow_error_event(ws, actor_id, "executor_failed", {"bundle": dict(bundle), "error_event": dict(ev)})
-				return True, False
+			raise KernFailure(
+				"INVALID_ACTION_OPERATION",
+				"workflow produced an invalid operation",
+				origin="workflow",
+				phase="action_execution",
+				context={"actor_id": str(actor_id or ""), "operation": dict(op) if isinstance(op, dict) else str(op)},
+			)
+		execute(dict(bundle), dict(ctx))
 	return False, bool(ops)
 
 
@@ -448,52 +470,24 @@ def run_agent_control_tick(ws: Any, actor_id: str, workflow: Any, max_actions_in
 		}
 		outcome = run_workflow_cycle(ws, actor_id, workflow, reason, mode_context)
 		otype = str((outcome or {}).get("type", "") or "")
-		if otype == "error":
-			err = dict((outcome or {}).get("error", {}) or {})
-			kind = str(err.get("kind", "") or "")
-			code = str(err.get("code", "") or "")
-			message = str(err.get("message", "") or "")
-			if kind == "contract" and workflow_contract_error_policy(ws) == "fail_fast":
-				execute = (services or {}).get("execute")
-				if callable(execute):
-					execute(
-						{
-							"effects": [
-								{
-									"effect": "AbortSimulation",
-									"reason": "workflow_contract_violation",
-									"detail": f"{code}: {message}",
-									"severity": "error",
-									"stop": True,
-								}
-							]
-						},
-						{"self_id": actor_id},
-					)
+		if otype == "rejected":
+			actions_executed += 1
 			break
 		if otype == "noop":
 			break
 		if otype != "apply_operations":
-			_record_workflow_error_event(ws, actor_id, "workflow_runtime_invalid_outcome_type", {"type": otype})
-			if workflow_contract_error_policy(ws) == "fail_fast":
-				execute = (services or {}).get("execute")
-				if callable(execute):
-					execute(
-						{
-							"effects": [
-								{
-									"effect": "AbortSimulation",
-									"reason": "workflow_runtime_invalid_outcome_type",
-									"detail": str(otype),
-									"severity": "error",
-									"stop": True,
-								}
-							]
-						},
-						{"self_id": actor_id},
-					)
-			break
-		stop_loop, consumed = _apply_operations(ws, actor_id, list((outcome or {}).get("operations", []) or []))
+			raise KernFailure(
+				"WORKFLOW_RUNTIME_INVALID_OUTCOME",
+				f"workflow returned unsupported outcome type: {otype}",
+				origin="workflow",
+				phase="decision_commit",
+				context={"actor_id": str(actor_id or ""), "outcome_type": otype},
+			)
+		stop_loop, consumed = _apply_operations(
+			ws,
+			actor_id,
+			list((outcome or {}).get("operations", []) or []),
+		)
 		if consumed:
 			actions_executed += 1
 		if stop_loop:
