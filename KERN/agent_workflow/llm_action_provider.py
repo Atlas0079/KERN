@@ -754,8 +754,6 @@ Output rules:
 		if failure_context is not None:
 			failure_context["commands"] = [dict(item) for item in commands]
 		meta = {"provider": "llm_workflow", "memory_notes": memory_notes} if memory_notes else {"provider": "llm_workflow"}
-		if failure_context is not None:
-			meta["failure_evidence"] = dict(failure_context)
 		return build_apply_commands_decision(
 			commands=commands,
 			meta=meta,

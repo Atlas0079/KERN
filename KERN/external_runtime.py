@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Protocol, runtime_checkable
 
-from .execution_errors import ERROR_KIND_BUSINESS, ERROR_KIND_CONTRACT, ERROR_KIND_ENGINE, KernFailure, executor_error
+from .execution_errors import ERROR_KIND_BUSINESS, ERROR_KIND_CONTRACT, ERROR_KIND_ENGINE, ERROR_KIND_INFRASTRUCTURE, KernFailure, executor_error
 
 
 def _external_error(message: str, **kwargs: Any):
@@ -27,6 +27,7 @@ class ExternalRuntimeLifecycleError(KernFailure):
 			origin="external_runtime",
 			phase=self.phase,
 			context={"runtime_id": self.runtime_id, "transaction_id": self.transaction_id, "receipts": list(self.receipts)},
+			category=ERROR_KIND_INFRASTRUCTURE,
 		)
 
 

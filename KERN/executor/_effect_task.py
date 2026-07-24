@@ -724,13 +724,7 @@ def execute_finish_task(executor: Any, ws: Any, _data: dict[str, Any], context: 
 	result = run_child_bundle(executor, ws, bundle.to_dict(), context)
 	if result.failed:
 		message = str(result.error_message or "")
-		worker_id = _task_worker_id(task, context)
-		cleanup_events = _deactivate_task(executor, ws, task, worker_id, context, "Failed")
-		return [
-			{"type": "TaskFinishFailed", "task_id": task.task_id, "reason": message},
-			*executor_error(f"FinishTask: completion bundle failed ({message})"),
-			*cleanup_events,
-		]
+		executor_error(f"FinishTask: completion bundle failed ({message})")
 	self_id = str((context or {}).get("self_id", "") or "")
 	interaction_events: list[dict[str, Any]] = []
 	if (

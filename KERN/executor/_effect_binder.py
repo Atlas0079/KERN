@@ -4,7 +4,7 @@ from typing import Any
 
 from ..entity_ref_resolver import resolve_entity_id
 from ..effects import EffectCatalog, build_core_effect_catalog
-from ..execution_errors import KernFailure
+from ..execution_errors import ERROR_KIND_CONTRACT, KernFailure
 
 
 class BindError(KernFailure):
@@ -17,6 +17,7 @@ class BindError(KernFailure):
 			origin="binder",
 			phase="effect_binding",
 			context={"effect": self.effect_type, "fields": list(self.missing)},
+			category=ERROR_KIND_CONTRACT,
 		)
 
 

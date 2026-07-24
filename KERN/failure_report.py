@@ -81,6 +81,9 @@ class FailureReportWriter:
 		else:
 			failure = {
 				"code": "UNEXPECTED_EXCEPTION",
+				"category": "engine",
+				"disposition": "terminal",
+				"retryable": False,
 				"message": str(exc),
 				"origin": "kernel",
 				"phase": "runtime",
@@ -88,6 +91,12 @@ class FailureReportWriter:
 				"exception_type": type(exc).__name__,
 				"traceback": "".join(traceback.format_exception(exc)).strip(),
 			}
+			cause = exc.__cause__ or exc.__context__
+			if cause is not None:
+				failure["cause"] = {
+					"exception_type": type(cause).__name__,
+					"message": str(cause),
+				}
 		notes = list(getattr(exc, "__notes__", []) or [])
 		if notes:
 			failure["notes"] = [str(note) for note in notes]

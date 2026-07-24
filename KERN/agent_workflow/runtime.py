@@ -82,8 +82,16 @@ def decide_from_prepared_workflow(prepared: dict[str, Any]) -> dict[str, Any]:
 	recipe_db = dict(prepared.get("recipe_db", {}) or {})
 	try:
 		decision_raw = workflow.decide(ws_view, recipe_db, actor_id, reason, mode_context)
+	except KernFailure:
+		raise
 	except Exception as e:
-		return {"status": "exception", "actor_id": actor_id, "error": str(e)}
+		raise KernFailure(
+			"WORKFLOW_PROVIDER_EXCEPTION",
+			str(e),
+			origin="workflow",
+			phase="decision",
+			context={"actor_id": actor_id, "reason": reason},
+		) from e
 	return {"status": "ok", "actor_id": actor_id, "decision_raw": decision_raw}
 
 
@@ -263,8 +271,11 @@ def _commands_to_operations(ws: Any, actor_id: str, reason: str, commands: list[
 			operation_context["target_id"] = target_id
 			operation_context["parameters"] = params
 			compiled_bundle = dict(bundle)
-			effects = [dict(item) for item in list(compiled_bundle.get("effects", []) or []) if isinstance(item, dict)]
-			if not any(str(item.get("effect", "") or "") == "RecordInteraction" for item in effects):
+			effects = list(compiled_bundle.get("effects", []) or [])
+			if not any(
+				isinstance(item, dict) and str(item.get("effect", "") or "") == "RecordInteraction"
+				for item in effects
+			):
 				effects.insert(
 					0,
 					{
@@ -346,9 +357,6 @@ def _apply_decision_memory_notes(ws: Any, actor_id: str, decision: dict[str, Any
 
 def _decision_to_outcome(ws: Any, actor_id: str, reason: str, decision: dict[str, Any]) -> dict[str, Any]:
 	dtype = str((decision or {}).get("type", "") or "")
-	meta = dict((decision or {}).get("meta", {}) or {})
-	raw_failure_evidence = meta.get("failure_evidence", meta.get("failure_context", {}))
-	failure_evidence = dict(raw_failure_evidence or {}) if isinstance(raw_failure_evidence, dict) else {}
 	if not _apply_decision_memory_notes(ws, actor_id, decision):
 		raise KernFailure(
 			"MEMORY_PATCH_FAILED",
@@ -382,14 +390,10 @@ def _decision_to_outcome(ws: Any, actor_id: str, reason: str, decision: dict[str
 			)
 		if not ops:
 			return {"type": "noop"}
-	if failure_evidence:
-		for operation in ops:
-			if isinstance(operation, dict) and isinstance(operation.get("context"), dict):
-				operation["context"]["failure_evidence"] = dict(failure_evidence)
-		return {
-			"type": "apply_operations",
-			"operations": [dict(x) for x in list(ops or []) if isinstance(x, dict)],
-		}
+	return {
+		"type": "apply_operations",
+		"operations": [dict(x) for x in list(ops or []) if isinstance(x, dict)],
+	}
 	raise KernFailure(
 		"INVALID_DECISION_TYPE",
 		f"unsupported workflow decision type: {dtype}",
