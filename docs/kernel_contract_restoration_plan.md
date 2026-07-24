@@ -1,627 +1,336 @@
 # KERN 内核契约恢复计划
 
-状态：核心错误与 EffectRecord 契约已实施；领域能力迁移仍在进行
+状态：核心执行、失败和 EffectRecord 契约已落实；当前工作集中在剩余设计缺口、领域能力迁移和测试迁移。
+
 建立日期：2026-07-23
-适用范围：`KERN/` 内核运行链、相关测试、Package 能力迁移与失败报告
+最近复核：2026-07-24
+适用范围：`KERN/` 运行链、Package 组合、事件与 interaction、失败报告及跨模块契约测试。
 
-## 1. 目标
+本文是当前问题清单。早期问题登记中的“当前行为”描述了历史缺陷，不能继续当作现状；每项问题都必须以本文的状态和代码为准。
 
-恢复 KERN 作为数据驱动多智能体仿真内核的完整能力，同时重新建立清晰、可验证的模块契约：
+状态标记：
 
-- 场景选择决定领域行为，KERN 内核不隐含特定场景世界观；
-- Decision、Workflow、Recipe 和 Reaction 不直接修改 `WorldState`；
-- Effect Bundle 是一次完整世界事务，失败不会留下部分世界事实；
-- 成功事件只在 Bundle 提交后可见；
-- 错误在不同模块间无损传递，并由统一策略决定继续、回滚、中止或终止；
-- `failure.json` 记录一次运行的完整失败证据，不改变世界事务，也不重新定义错误；
-- Checkpoint、Archive 和分析工具只观察已经提交的世界事实。
+- `已吸收`：新架构已经消除了原问题的主要风险。
+- `部分遗留`：核心机制已经存在，但仍有明确的边界缺口。
+- `未解决`：仍需要设计决定或代码迁移。
+- `已过时`：后续产品决定已经使原问题失去原来的意义。
 
-本计划追求能力迁移和契约恢复，不以删除功能作为完成标准。需要移出内核的能力应进入明确的 capability package，并继续拥有行为测试和 smoke 覆盖。
-
-## 2. 当前验证基线
-
-2026-07-24 契约恢复后的验证结果：
-
-- 19 个新的/改写后的契约测试通过；旧测试中仍有大量与新失败语义冲突的断言；
-- `compileall` 通过；
-- Camping package lint 为 0 error、0 warning；
-- Camping smoke 正常完成；
-- 核心 Effect/Component Catalog 已不再暴露已删除的社交平台定义；
-- 社交平台实现与 SU7 可运行包已从内核和 Packages 移除，历史研究数据保留在 `research_data/su7_social_platform_legacy/`。
-
-这些结果证明现有测试所覆盖的能力仍可运行。它们不能证明跨模块契约正确；部分测试正在固定错误的局部行为。
-
-当前工作树同时包含用户修改和本次契约恢复修改。恢复工作必须保留并区分用户现有修改，不得通过 reset、checkout 或覆盖文件来整理工作树。
-
-## 3. 权威运行链
-
-目标运行链如下：
+## 1. 当前权威运行链
 
 ```text
 runtime config / Package composition
 -> data bundle
 -> WorldState
--> Decision / Workflow reads a view and returns intent
--> InteractionEngine compiles commands into effect bundles
--> WorldExecutor validates, normalizes, and executes one transaction
--> WorldSettlement publishes committed events
--> Reactions consume committed events and produce new bundles
--> Archive / Checkpoint / FailureReport observe authoritative outcomes
+-> Decision / Workflow 读取视图并产生意图
+-> InteractionEngine 将命令编译为 Effect Bundle
+-> WorldExecutor 绑定、规范化并执行一个事务
+-> WorldSettlement 发布已提交的 EffectRecord
+-> Reaction FIFO 消费已提交记录并产生新的 Bundle
+-> Archive / Checkpoint / FailureReport 观察权威结果
 ```
 
-每个模块的所有权：
+模块所有权：
 
-| 模块 | 拥有的责任 | 禁止承担的责任 |
+| 模块 | 允许承担的责任 | 不应承担的责任 |
 |---|---|---|
-| Decision / Workflow | 读取视图、产生决策或命令 | 修改世界、提前宣告动作成功 |
-| InteractionEngine | Recipe 匹配、命令到 Bundle 的纯编译 | 执行 Bundle、写 interaction/event log |
-| Binder | 验证和规范化 Effect 输入 | 修改世界、选择错误处置策略 |
-| WorldExecutor | 世界写入、Bundle 事务、回滚 | 场景决策、提交前发布事件 |
-| WorldSettlement | 提交后事件发布、Reaction FIFO 结算 | 绕过 Executor 修改实体状态 |
-| Package | 提供领域 Component、Effect、Recipe、Reaction | 修改另一个 Runtime 的 Catalog |
-| FailureReport | 保存失败证据和关联上下文 | 改变世界结果、定义另一套错误分类 |
+| Decision / Workflow | 读取视图、产生决策或命令 | 修改 `WorldState`、预先宣告成功 |
+| InteractionEngine | Recipe 匹配、命令到 Bundle 的纯编译 | 执行 Bundle、直接写日志 |
+| Binder | 校验并规范化 Effect 输入 | 修改世界、决定错误处置 |
+| WorldExecutor | 世界写入、事务、回滚、EffectRecord 生成 | 场景决策、提交前发布事件 |
+| WorldSettlement | 提交后发布记录、Reaction FIFO | 绕过 Executor 修改实体 |
+| FailureReport | 保存一次运行的失败证据 | 改变世界结果、重新定义错误模型 |
+| Package | 提供场景 Component、Effect、Recipe、Reaction | 修改其他 Runtime 的 Catalog |
 
-## 4. 必须恢复的不变量
+## 2. 已落实的基础契约
 
-### I-01 事实唯一性
+### 2.1 失败语义
 
-一次动作只有一个权威结果：`committed`、`rejected` 或 `rolled_back`。Interaction log、event log、world state、archive 和 failure report 不得互相矛盾。
+- `KernFailure` 是跨 Binder、Executor、Workflow、Reaction、External Runtime、Persistence 和 Runtime 的统一致命异常。
+- `KernFailure` 在 Bundle 内抛出时会回滚包含它的 Bundle；无 Bundle 的 Workflow、Persistence 或 Runtime 失败直接使 Runtime 进入 terminal 状态。
+- 失败报告每个 Runtime 最多写一个 `failure.json`，保留 traceback、cause、规范化输入和上下文。
+- 报告写入失败不会改变世界事务。
+- WorldState 回滚不等于外部世界回滚；外部 transactional、compensatable 和 irreversible Effect 必须显式声明，irreversible 写入延迟到 Bundle 末尾，生命周期通知失败不能伪装成成功。
+- 用户已明确要求开发者可见的原始错误信息不脱敏，因此 secret-redaction 不再是本项目的契约要求。
+- 合法但当前不可执行的命令使用 `ActionRejected` 值返回；它不是错误，也不会伪装成成功事件。
 
-### I-02 世界写入唯一入口
+### 2.2 Effect 与事件
 
-Decision、Workflow、Recipe 和 Reaction 只产生数据。所有 `WorldState` 写入，包括 event log、interaction log、任务、记忆和运行状态，必须经过 Executor/Settlement 明确拥有的路径。
+- Binder 规范化后的 Effect 输入只在 Handler 成功后进入 `EffectRecord`。
+- `EffectRecord` 保存 Effect 名称、规范化输入、上下文、Bundle 追踪信息和 Handler facts。
+- Handler 没有返回业务 fact 时生成通用 `EffectExecuted`。
+- 一个 Effect 返回多个 fact 时，事件流中产生多个平坦记录，每条记录保留同一个 Effect 身份。
+- `WorldExecutor` 只返回结果；`WorldSettlement` 在 Bundle 成功后写入 `event_log` 并将记录放入 Reaction FIFO。
 
-### I-03 Bundle 原子性
+### 2.3 Interaction 与 Reaction
 
-Bundle 中任一 Effect 失败时，Bundle 内全部世界写入回滚。嵌套 child bundle 属于父事务。外部写入必须依据 `world`、`external_transactional`、`external_compensatable` 或 `external_irreversible` 明确声明。
+- `RecordInteraction` 和 `UpdateInteractionDetails` 是专用 Effect，interaction 写入服从 Bundle 回滚。
+- Workflow、Settlement 不再直接写入成功 interaction。
+- Reaction 的匹配顺序为：`on_event/on_effect -> selector -> condition -> bundle`。
+- Effect 触发的 Reaction 只能消费已经提交的 EffectRecord；`WorldTickAdvanced`、`AdvanceTick` 等生命周期事件是 Settlement 有意注入的原始触发事件。
+- Bundle 记录携带 `bundle_id`、`parent_bundle_id` 和 `effect_index`，事件日志保持平坦。
 
-### I-04 提交后可见性
+## 3. 原问题重新分类
 
-成功事件、成功 interaction 和 Reaction 输入只能来自已经提交的 Bundle。Attempt 可以记录拒绝或失败，但必须明确标识为 attempt，不能伪装为提交结果。
+| 原问题 | 当前状态 | 现在的含义 |
+|---|---|---|
+| CR-01 Workflow 提前写日志 | 部分遗留 | 提前成功日志已消失；拒绝 attempt 表示和多 command 事务粒度仍未决定 |
+| Decision 结果分类 | 部分遗留 | 当前把 InteractionEngine 的部分 `failed` 结果归为 rejection；需要区分合法不可执行动作与 contract/runtime 错误 |
+| CR-02 ExecutorError 结构 | 部分遗留 | 统一 Failure 已存在；大量 Handler 仍使用通用错误码，完整 schema 约束不足 |
+| CR-03 错误处置矩阵 | 已过时 | “所有错误终止模拟”使原来的继续、降级、恢复矩阵失去主要意义 |
+| CR-04 Diagnostics | 已吸收 | Diagnostics 已由单次 FailureReport 取代；不脱敏是当前明确决定 |
+| CR-05 核心领域政策 | 未解决 | Package 机制已具备，但 Corpse、Survival、Equipment 等政策仍在核心 |
+| CR-06 测试偏局部 | 部分遗留 | 新增了跨 Executor/Settlement 的契约测试，旧测试仍固定大量旧语义 |
+| CR-07 Event/Interaction 混杂 | 部分遗留 | 写入路径已分离；记忆层仍依赖 Event 黑名单，Reaction interaction 尚未正式化 |
+| CR-08 缺少 Action | 未解决 | 只有可选的 `action_id` 字段，没有 Action 生命周期或持久化对象 |
+| CR-09 Effect 事件契约 | 部分遗留 | 通用 EffectRecord 已解决最低追踪要求；扩展事件 schema 和 lint 尚未定义 |
+| CR-10 Reaction 叙事 | 未解决 | 没有 `narrative_success` 的正式声明和自动 interaction 生成 |
+| CR-11 动态文本双契约 | 未解决 | `KERN.dynamic_text` 与 Recipe 的 `{actor}/{target}/{reason}` 仍并存 |
+| CR-12 Bundle 追踪 | 部分吸收 | 运行时父子追踪已存在；作者语义和显式 Bundle 规范仍未收敛 |
+| CR-13 Task interaction 特例 | 未解决 | 生命周期 Bundle 已存在，但 Travel 完成 interaction 仍硬编码 |
 
-### I-05 错误无损性
+## 4. 已被新架构吸收的历史问题
 
-错误跨越 Binder、Executor、Workflow、Settlement、Runtime 和 FailureReport 时，稳定 code、来源、phase 和 cause 不得丢失或被静默改写。
+### 4.1 CR-01 的日志提前写入
 
-### I-06 场景隔离
+历史问题是 Workflow 在执行前直接写入 success interaction，Bundle 回滚后仍留下成功事实。
 
-KERN 提供组合和执行机制。尸体、营养、生存、交易、社交平台等领域语义只有在被确认是所有世界共同需要的原语时才能保留在核心；否则迁入 capability package。
-
-### I-07 运行时依赖受控
-
-`WorldState.services` 不能继续成为任意依赖总线。新字符串键需要独立设计任务和明确所有者；长期目标是让调用者通过小而明确的 Interface 使用运行能力。
-
-### I-08 Event 与 Interaction 分层
-
-`event_log` 保存 Effect 级、机器可读的已提交结果；`interaction_log` 保存 Recipe 或 Reaction 级、面向 Agent 的自然语言经历。Agent 感知层从完整 interaction 队列中筛选自己能够知道的记录。底层 Event 不能依靠事后黑名单承担自然语言记忆职责。
-
-### I-09 叙事显式且提交后生效
-
-自然语言叙事必须由 Recipe、Reaction 或任务生命周期数据显式提供，并通过统一动态文本模块渲染。成功叙事只能在对应世界修改提交后写入；提前渲染的文本只能作为待确认数据，回滚时必须丢弃。
-
-## 5. 已确认的问题登记
-
-### CR-01 Workflow 提前写入 interaction/event log
-
-严重度：阻断契约恢复
-证据：`KERN/agent_workflow/runtime.py`
-
-当前行为：
-
-- `_commands_to_operations()` 在 Bundle 执行前写入成功 interaction；
-- `_record_workflow_error_event()` 直接调用 `ws.record_event()`；
-- Bundle 后续失败并回滚时，提前写入的成功 interaction 仍然存在；
-- `AgentControlTick` handler 忽略嵌套执行产生的错误事件并返回空事件列表，外层 Effect 因而可能被视为成功。
-
-已复现结果：一个包含 `UnknownEffect` 的命令先写入 `status=success`，随后 Bundle 返回 `bundle_rolled_back=True`，成功 interaction 仍保留。
-
-需要决定：
-
-1. Interaction 是由专用 Effect 写入，还是由 Settlement 根据提交结果统一生成；
-2. 被 Recipe 拒绝的命令如何表示 attempt；
-3. 多命令决策是每条命令一个事务，还是整个决策一个事务；
-4. `AgentControlTick` 是否应成为编排入口，而不是普通世界 Effect。
-
-验收标准：
-
-- Workflow 静态扫描不再出现直接 `ws.record_*` 写入；
-- Bundle 回滚后不存在 success interaction；
-- 拒绝、回滚和提交三种结果有独立行为测试；
-- Reaction 只能观察提交后的成功事件。
-
-### CR-02 ExecutorError 结构不完整且默认分类失真
-
-严重度：高
-证据：`KERN/execution_errors.py` 和多个 `KERN/executor/_effect_*.py`
-
-当前行为：
-
-- 约 50 个 handler 手写只有 `type` 和 `message` 的 `ExecutorError`；
-- 缺少 kind 的错误被默认解释为 `business`；
-- contract、engine 和正常业务拒绝因此可能获得相同处置；
-- 部分无效 Bundle 使用默认 `executor_error()`，被错误标记为可恢复业务错误。
-
-需要决定统一错误模型，建议至少包含：
+当前路径是：
 
 ```text
-code          稳定机器代码，必填
-category      business | contract | engine | infrastructure
-origin        binder | executor | workflow | interaction | reaction | llm | external_runtime | persistence
-disposition   reject_action | rollback_bundle | abort_run | terminal
-retryable     true | false
-message       面向人的摘要
-cause         可选的原始错误链
-context       结构化定位信息
+command
+-> InteractionEngine 编译
+-> 插入 RecordInteraction Effect
+-> Bundle 执行
+-> 成功后由 Settlement 发布 EffectRecord
 ```
 
-验收标准：
+因此，失败 Bundle 不会留下成功 interaction，也不会触发 Reaction。原问题的核心事务缺陷已经消失。
 
-- 内核中不存在手写的不完整 `BindError`/`ExecutorError`；
-- 每个错误都具有稳定 code；
-- 不再通过缺省值把未知错误降级为 business；
-- schema/constructor 测试覆盖所有 Effect handler 返回的错误。
+仍需单独决定：
 
-### CR-03 Workflow、Executor、Reaction 和 Runtime 的处置策略不一致
+1. `ActionRejected` 是否产生显式 `attempt` 记录；
+2. 一个 decision 的多个 command 是每个 command 一个 Bundle，还是整个 decision 一个 Bundle；
+3. `AgentControlTick` 是否长期保留为普通编排 Effect。
 
-严重度：高
+### 4.2 CR-03 的复杂错误处置矩阵
 
-当前行为：
+当前产品决定把所有错误视为致命错误。运行时策略已经收敛为：
 
-- Workflow contract error 可以 fail-fast；
-- Workflow 的普通 Python 异常可能被转换成 noop；
-- 普通 Agent Action 的 ExecutorError 通常只停止本轮行为；
-- 相同 ExecutorError 出现在 Reaction 中会停止整场模拟；
-- External runtime lifecycle failure 会把 Runtime 标记为 terminal；
-- `recoverable` 字段没有统一策略消费者。
+```text
+KernFailure ->（若存在）包含它的 Bundle 回滚 -> Runtime terminal -> failure.json
+```
 
-需要建立唯一错误处置矩阵。错误后果必须由错误内容和显式 runtime policy 决定，不能由偶然调用路径决定。
+`ActionRejected` 是正常的决策结果，不属于错误路径。原文档中关于 `recoverable`、degrade-to-noop 和多套错误处置矩阵的讨论应归档，不再作为独立恢复任务。
 
-验收标准：
+### 4.3 CR-04 的 Diagnostics
 
-- 为 category × disposition 建立明确矩阵；
-- Workflow 编程异常不能静默变成合法 noop；
-- 同一错误在顶层、child bundle 和 Reaction 中保持同一错误身份；
-- fail-fast 与 degrade 策略只改变处置，不改变错误事实；
-- terminal runtime 不能继续推进 tick。
+旧 Diagnostics、多个连续错误日志和 `diagnostic_recorder` service 已移除。当前只保留：
 
-### CR-04 旧 Diagnostics 正在重新定义错误并侵入 WorldState services（已由 FailureReport 取代）
+- 运行内存中的当前异常及其 cause chain；
+- 一份独立的 `failure.json`；
+- LLM 失败时附带的原始 request/response evidence。
 
-严重度：高，当前改动不得直接落地
+FailureReport 不属于 `WorldState`，也不参与世界事务。原文档中“FailureReport 需要自行定义 category”以及“必须脱敏”的内容已过时。
 
-当前行为：
+### 4.4 CR-09 和 CR-12 的最低运行时能力
 
-- 旧 Diagnostics 使用 `business/llm_output/grounding/kernel/infrastructure`；
-- Executor 使用 `business/contract/engine`；
-- Workflow 使用 `temporary/business/contract`；
-- `engine`、`contract` 等值进入旧 Diagnostics 后可能被归并为 `kernel`；
-- `diagnostic_recorder` 曾被添加为新的 `WorldState.services` 字符串键；
-- Workflow 通过 WorldState 获取运行设施，扩大了隐式 Interface。
+EffectRecord 已提供默认执行路径的通用外壳；空输出自动获得 `EffectExecuted`。Executor 在 Bundle 执行中生成运行时 ID，并记录父 Bundle 关系。扩展作者可以自由定义业务 facts，但当前仍存在 `_effect_record=True` 直接透传和直接 `WorldExecutor.execute` 缺少 Bundle 追踪字段的收尾问题。
 
-需要决定：
+这使“每个 Effect 是否可追踪”和“嵌套事件是否必须复制完整 Bundle 树”不再是阻断问题。
 
-1. FailureReport 是否只接收统一 Failure 的只读投影；
-2. LLM request/response context 由谁建立、保留和释放；
-3. FailureReport 如何注入，且不成为 WorldState 世界数据的一部分；
-4. 文件写入失败为何永远不能影响世界事务；
-5. 哪些敏感信息绝不允许进入诊断文件。
+## 5. 当前仍需处理的问题
 
-验收标准：
+### P-01 错误身份收尾（来源：CR-02）
 
-- FailureReport 不拥有独立 category 词表；
-- 错误进入 failure report 后字段无损；
-- 不新增未经设计的 `WorldState.services` key；
-- failure report 写入失败不改变世界结果；
-- secret redaction 和上下文生命周期测试保留。
+当前 `KernFailure.to_dict()` 已包含：
 
-### CR-05 核心仍包含具体领域政策
+```text
+code, category, disposition, retryable, message,
+origin, phase, cause, context
+```
 
-严重度：高
+剩余工作：
 
-已确认的明确候选：
+- 为仍使用默认 `EXECUTOR_FAILURE` 的 Handler 分配稳定 code；
+- 明确普通 Python 异常的 category 归属；
+- 用契约扫描或测试保证所有 Handler 的错误都能生成完整 Failure schema。
 
-- `KillEntity` 默认创建 `Corpse` 模板；
-- 内核生成中文尸体名称并搬运遗物；
-- `CorpseSightedRule` 硬编码 `corpse/dead_body` 标签；
-- `LowNutritionRule`、`CreatureComponent`、`EdibleComponent` 等生存领域定义仍在核心 Catalog；
-- 交易、装备和价值相关 Component/Effect 也需要依据“最小内核”定义复核。
+这属于错误模型的质量收尾，不再需要重新设计 FailureReport。
 
-需要先区分机制和政策：
+验收：扫描所有 Handler 的失败路径，每个 Failure 都有稳定 `code`，并能序列化完整 schema。
 
-- 机制候选：DestroyEntity、CreateEntity、MoveEntity、ModifyProperty、EmitEvent；
-- 政策候选：死亡生成尸体、遗物归尸体、低营养中断、食物恢复营养。
+### P-02 Interaction、Event 与 Agent 记忆边界（来源：CR-07）
 
-验收标准：
+当前 World 已保存完整 `event_log` 和 `interaction_log`，但 `memory_policy.py` 仍通过 `DROP_EVENT_TYPES` 排除底层事件，并跳过 `is_reaction` interaction。这说明 Agent 感知边界尚未完全迁移到 interaction 语义。
 
-- 建立核心 Effect/Component 保留清单及理由；
-- 领域政策迁入 capability package；
-- Package 未选择时相关定义不进入运行时 Catalog；
-- Camping 通过显式选择 capability package 恢复全部既有能力；
-- Package lint、checkpoint、archive 和 restore 覆盖迁移后的类型。
+剩余工作：
 
-### CR-06 当前测试偏向局部行为，没有保护跨模块不变量
+- 明确哪些 interaction 对 Agent 可见；
+- 删除依赖 Event 黑名单的补救逻辑；
+- 为 Reaction 的流程控制记录和可感知记录建立明确区分；
+- 用稳定 interaction ID 替代 `UpdateInteractionDetails` 对“最后一条记录”的依赖。
 
-严重度：高
+验收：Agent 记忆输入不再依靠 Event 类型黑名单补救；回滚、流程控制和可感知 interaction 有独立测试。
 
-当前例子：
+### P-03 领域政策隔离（来源：CR-05）
 
-- 测试断言命令编译后已有 interaction narrative，却没有执行并验证 Bundle 提交；
-- 旧 Diagnostics 测试把 `engine -> kernel` 的有损映射固定为预期；
-- 现有绿色基线没有检查 Workflow 是否直接修改 WorldState；
-- 没有统一扫描所有 handler 的错误 schema。
+Package 组合和运行时 Catalog 已经具备，社交平台实现也已从核心移除。以下内容仍需判断是否迁入 capability package：
 
-验收标准：
+- `KillEntity` 默认生成 `Corpse`、生成中文尸体名并搬运遗物；
+- `CorpseSightedRule`、`LowNutritionRule`；
+- `CreatureComponent`、`EdibleComponent`、`EquipmentComponent`；
+- 交易、价值和生存相关的 Effect/Component。
 
-- 测试 seam 与真实运行 seam 一致；
-- 增加跨模块 transaction/settlement 行为测试；
-- 增加禁止越权写入和核心场景泄漏的契约测试；
-- 删除或改写固定错误行为的测试，而不是在新结构外继续兼容旧错误。
+目标是保留通用机制（Create、Destroy、Move、Modify、Emit），将领域政策放入显式选定的 Package。
 
-### CR-07 event_log 与 interaction_log 的语义和生产路径混杂
+验收：未选择 capability package 时，相关 Component、Effect 和政策规则不进入 Runtime Catalog；选择后 Camping smoke 保持通过。
 
-严重度：阻断契约恢复
+### P-04 运行时依赖边界（来源：I-07）
 
-当前行为：
+`WorldState.services["execute"]` 仍是 Workflow、Effect Handler 和嵌套 Bundle 的运行入口。它目前是受控的既有 seam，但仍然是隐式接口。
 
-- `event_log` 预期保存机器可读的世界事实，但 Agent 记忆仍直接读取并通过 `DROP_EVENT_TYPES` 黑名单过滤；
-- `interaction_log` 预期保存自然语言经历，却同时包含 Workflow 提前写入、对话、Travel 特例和 Reaction 内部运行记录；
-- `WorldSettlement` 会把所有 Reaction 的 triggered/applied 记录写入 interaction，记忆层随后又丢弃所有 `is_reaction=True` 的记录；
-- interaction 写入时可能已经保存 `narrative`，记忆层仍根据 `recipe_id` 再次渲染；
-- `AttachDetails` 通过“修改最后一条 interaction”追加信息，缺少稳定记录 ID。
+后续需要把 Workflow 和嵌套执行依赖收敛到小而明确的 Runtime Interface，并保持现有 `WorldState.services` 兼容行为，避免继续增加任意字符串键。
 
-用户确认的方向：
+验收：Workflow 和嵌套执行只依赖显式 Runtime Interface；不新增未登记的 `WorldState.services` key。
 
-- event 粒度是 Effect；interaction 粒度是一次 Recipe 或 Reaction；
-- World 保存完整 interaction 队列，Agent Workflow/感知模块负责判断角色能够知道哪些记录；
-- 增加专用的 interaction 写入 Effect，使 interaction 世界写入经过 Executor；
-- 任务相关的开始、完成等 interaction 由场景或扩展开发者在相应任务 Bundle 中显式编写该 Effect；
-- Agent 的自然语言经历主要来自 interaction，不再依赖读取底层 event 后用黑名单排除噪声。
+### P-05 契约测试迁移（来源：CR-06）
 
-仍需决定：
+新契约测试已经覆盖：
 
-- 专用 Effect 的正式名称、字段和 binder 契约；
-- Recipe/Reaction 的 narrative 是由运行时自动转换成该 Effect，还是要求数据作者显式放入 Bundle；
-- 合理业务拒绝是否同时产生结构化 Event 和自然语言 interaction。
+- 失败 Bundle 回滚；
+- EffectRecord 输入；
+- Reaction 提交后触发；
+- interaction Effect 的事务性；
+- 单次 FailureReport。
 
-验收标准：
+旧测试仍有一批 failure/error，主要期待旧的错误返回值、裸业务 Event 或 LLM 自动 noop。计数可能受 LLM/gateway 测试顺序影响，因此不能把一次全量计数当作稳定指标；它们不能作为当前契约的验收标准，后续应删除或改写，而不是增加兼容层。
 
-- Workflow、Settlement 和普通系统代码不再直接调用 `ws.record_interaction_attempt()`；
-- 回滚 Bundle 不留下 success interaction；
-- interaction 具有稳定来源 ID，不通过列表最后位置更新；
-- Agent 记忆输入测试证明 event 与 interaction 的职责已经分离。
+验收：契约测试通过真实 Runtime seam 验证事务、Settlement、FailureReport 和越权写入边界；旧语义断言被删除或改写。
 
-### CR-08 KERN 没有显式建模 Action
+### P-06 Decision 结果分类（来源：CR-01、CR-03）
 
-严重度：高
+`_commands_to_operations()` 当前把 InteractionEngine 的 `rejected` 和 `failed` 都映射为 `ActionRejected`。在“所有错误致命”的产品决定下，合法但当前不可执行的动作可以返回 rejection；Recipe contract、Binder 或运行时失败必须保留为 `KernFailure`。
 
-当前行为：
+验收：每个 InteractionEngine 非 success 结果都有明确的 rejection 或 fatal 映射，错误不会被降级成正常 rejection；rejection 若写入日志必须标记为 attempt。
 
-- KERN 已有 Command、Recipe、Reaction、Bundle、Effect 和 Event，但没有对象表示“一次有业务意义的行为”；
-- Recipe 和 Reaction 都可以执行一个或多个 Effect，但无法统一关联它们产生的 Event 和最终 interaction；
-- 耗时 Recipe 会跨越任务创建、逐 tick 推进和完成阶段，当前没有稳定身份贯穿这些时点。
+### P-07 FailureReport 输出隔离（来源：CR-04）
 
-用户提供的定义方向：
+`FailureReportWriter` 对单个 Writer 只写一次，但默认 `checkpoint_dir` 可能被多个 Runtime 共享，导致不同运行的 `failure.json` 互相覆盖。当前“每个 Runtime 一份”依赖调用方为每次运行提供独立输出目录。
 
-- 一次 Recipe 执行或一次 Reaction 执行属于 Action 粒度；
-- Action 负责关联业务定义、根 Bundle、Effect 事件和可选 interaction；
-- Action 不等同于单条 Effect，也不等同于一次 LLM decision。
+验收：同一输出根目录启动多个 Runtime 时，每次运行的报告都可独立定位；报告写入失败仍不改变世界结果。
 
-仍需决定：
+## 6. 尚未决定的设计问题
 
-- Action 是否成为正式运行时数据结构，还是仅作为执行上下文中的稳定 ID；
-- Action 的状态集合以及 Recipe 合理拒绝是否创建 Action；
-- 耗时任务是一个跨 tick Action，还是开始与完成两个 Action；
-- checkpoint/archive 是否持久化 Action 身份。
+### D-01 Action 模型（来源：CR-08）
 
-### CR-09 扩展 Effect 的事件契约未定义
+需要决定 Action 是：
 
-严重度：高
+- 仅存在于执行上下文中的稳定 ID；还是
+- 需要进入 checkpoint/archive 的正式持久化对象。
 
-当前行为：
+还需要定义 Action 的状态集合、Recipe rejection 是否创建 Action，以及跨 tick Task 是否保持同一个 Action。
 
-- Effect handler 可以返回任意数量和任意结构的事件；
-- 第三方开发者可以把复杂业务脚本封装为自定义 Effect，内核无法推断其业务结果；
-- 部分 Effect 返回多个业务事件，部分返回空列表，部分错误结构不完整；
-- 当前 event log 只知道 handler 实际返回了什么，不能保证每次 Effect 执行都可追踪。
+验收：同一 Action 的根 Bundle、EffectRecord、interaction 和跨 tick 生命周期可由稳定 ID 关联，并明确 checkpoint/archive 行为。
 
-用户确认的约束：
+### D-02 Reaction 叙事（来源：CR-10）
 
-- event_log 的归属粒度是 Effect；
-- 内核不能预设自定义 Effect 必须产生哪一种业务事件或有哪些业务字段。
+需要增加 Reaction 的可选 `narrative_success` 语义：
 
-仍需决定：
+- 有 narrative 的 Reaction 产生 Action 级 interaction；
+- 没有 narrative 的 Reaction 只承担流程控制；
+- Reaction 失败仍然抛出致命 `KernFailure`。
 
-- 是否要求每个成功 Effect 至少返回一个事件；
-- 返回空事件时，内核是否补充只含 Effect 名称和执行身份的通用 `EffectExecuted`；
-- 一条 Effect 返回多个业务事件时，是每条事件分别入队，还是使用一个包含子事件的 Effect 结果；
-- EffectCatalog/EffectSpec 是否声明事件 schema，扩展包 lint 如何验证；
-- event log 的通用外壳应包含哪些稳定字段，业务 payload 保留多大自由度。
+还需要规定 actor、target、location 和 trigger event 如何进入动态文本上下文。
 
-### CR-10 Reaction 缺少正式的 Agent 叙事声明
+验收：Reaction 有 narrative 时生成一次 Action 级 interaction；无 narrative 时不进入 Agent 经历；Reaction 失败进入统一 Failure 路径。
 
-严重度：高
+### D-03 动态文本统一（来源：CR-11）
 
-当前行为：
+Recipe、Reaction、Task interaction 和明确支持文本字段应使用同一个渲染模块。需要统一：
 
-- Reaction 数据主要只有 `id/on_event/selector/condition/bundle`；
-- 代码会读取 `reaction_verb`，但它只用于内部 triggered/applied interaction 标签；
-- Reaction 没有与 Recipe `narrative_success` 对等的自然语言字段；
-- 流程控制 Reaction 和角色可感知 Reaction 没有正式区分。
+- `{actor}/{target}/{reason}` 与 `{self.*}/{target.*}/{event.*}/{param:*}` 的语法；
+- 执行前渲染和提交后落盘之间的快照规则；
+- 对已被 Destroy 的实体仍可用的名称快照；
+- lint 可以验证的引用路径。
 
-用户确认的方向：
+验收：Recipe、Reaction 和 Task 文本使用同一渲染器，文本只渲染一次，非法引用在 lint 或运行前失败。
 
-- Reaction 可以提供 `narrative_success`；
-- 只有提供 `narrative_success` 的 Reaction 才产生 action 级 interaction；
-- 流程控制 Reaction 通常不提供 narrative，因此不进入 Agent 经历；
-- Reaction 不提供 `narrative_fail`；Reaction Bundle 执行失败属于严重错误，需要中断模拟并进入错误处置流程。
+### D-04 Task interaction 生命周期（来源：CR-13）
 
-仍需决定：
+Task 已有 start、tick、cleanup、completion Bundle。需要移除 Travel 硬编码，改由数据作者在需要的生命周期 Bundle 中显式放置 `RecordInteraction`。
 
-- Reaction narrative 如何转换成专用 interaction Effect；
-- narrative 的 actor、target、地点和其他动态引用从 trigger event/context 中如何取得；
-- Reaction interaction 是否需要 importance/topic 等感知元数据。
+需要另外决定开始、完成、中断、恢复是否分别产生 interaction，以及一个跨 tick Task 是否对应一个 Action。
 
-### CR-11 动态文本存在两套不兼容的软契约
+验收：Travel 不再依赖硬编码完成分支；任务 interaction 只由生命周期 Bundle 中显式的 interaction Effect 产生。
 
-严重度：高
+### D-05 扩展 Effect 与 Bundle 作者契约（来源：CR-09、CR-12）
 
-当前行为：
+运行时最低契约已经确定：Effect 成功后必须生成通用 EffectRecord。仍需决定：
 
-- Recipe narrative 使用 `{actor}`、`{target}`、`{reason}`，由 Workflow 中的专用字符串替换实现；
-- `KERN.dynamic_text` 使用 `{self.entity_name}`、`{target.entity_name}`、`{event.*}` 和 `{param:*}`；
-- Recipe 中 `{target}` 表示目标名称，而独立动态文本模块中 `{target}` 表示目标 ID；
-- JSON 作者无法从 schema/lint 得知某个位置允许引用哪些对象和字段；
-- 如果提交后才渲染，`DestroyEntity` 等 Effect 可能已经删除 narrative 引用的目标。
+- 扩展包是否声明业务 fact schema；
+- 一个 Effect 的多个 fact 是否需要显式顺序或类型约束；
+- 没有显式 Bundle 的 Effect 是否统一包装成单 Effect Bundle；
+- `_effect_record=True` 是否禁止扩展绕过通用 EffectRecord 外壳；
+- 命名 Bundle 的复用 ID 与运行时 Bundle ID 如何区分；
+- package lint 检查哪些扩展事件约束。
 
-用户确认的方向：
+验收：自定义 Effect 的 facts、空输出、Bundle 父子关系和运行时 ID 都能通过 lint 或契约测试验证。
 
-- Recipe、Reaction 和 interaction Effect 应复用独立动态文本渲染模块；
-- 动态文本保持只渲染一次，不递归解释渲染结果；
-- JSON 可用引用必须形成显式、可 lint 的作者契约。
+### D-06 多 command decision 原子性（来源：CR-01）
 
-仍需决定：
+当前代码把每个编译后的 operation 交给独立 Bundle 执行。这是实现现状，不代表最终产品语义已经确认。
 
-- Recipe、Reaction 和任务生命周期分别向渲染器提供哪些上下文；
-- 是否迁移到统一的 `{self.*}/{target.*}/{event.*}/{param:*}` 语法，旧 `{actor}/{target}/{reason}` 如何兼容；
-- narrative 在执行前渲染并提交后落盘，还是建立不可变的对象快照后提交后渲染；
-- 是否以及如何暴露任意自定义 Effect 的执行结果给 action narrative。
+需要在以下两种语义中明确选择：
 
-### CR-12 Bundle 的作者语义与运行时追踪身份不足
+1. 每条 command 独立提交，前一条成功不会被后一条回滚；
+2. 整个 decision 作为一个 Bundle，任一 command 失败则整体回滚。
 
-严重度：中高
+验收：选择一种语义后，前一条 command 是否保留、interaction 结果和 Reaction 输入都有跨模块测试覆盖。
 
-当前行为：
+## 7. 已过时或应归档的讨论
 
-- `EffectBundle` 目前只是一个 Effect 列表；
-- Bundle 同时承担原子事务、内联打包、命名复用和嵌套调用用途；
-- `InvokeBundle`、任务生命周期 Bundle 和临时单 Effect Bundle 可以形成嵌套，但事件没有稳定 bundle ID、父 bundle ID 或路径；
-- Recipe/Reaction 当前读取显式 `bundle.effects`，对直接放在定义下的 Effect 没有统一规范化规则。
+以下内容不应继续出现在当前问题清单中：
 
-用户同意的方向：
+- 多条 Diagnostics 连续错误模型；
+- `ExecutorError` 作为普通返回值的兼容设计；
+- LLM ungroundable 自动降级为合法 noop；
+- FailureReport 的独立 category 词表；
+- 为开发者错误报告强制脱敏；
+- 把 Event 黑名单当作完整 Agent 记忆边界的设计假设；现有实现残留已登记在 P-02。
 
-- event log 保持平坦，不把整个嵌套树复制到每条记录；
-- 通过 `bundle_id`、`parent_bundle_id` 或等价路径信息恢复嵌套关系。
+这些内容可以保留在 git 历史和审查记录中，当前计划只保留它们对新架构的迁移结论。
 
-仍需决定：
+## 8. 建议实施顺序
 
-- Bundle 的唯一正式语义是否收敛为“共同提交或共同回滚的事务边界”；
-- 没有显式 Bundle 的 Effect 是否自动包装成单 Effect Bundle；
-- 命名 Bundle 是作者复用机制还是稳定业务身份；
-- 运行时 bundle ID 和 JSON 定义 ID 如何区分。
+1. 完成 P-01 错误 code 和 schema 扫描，锁定 Failure 的机器身份。
+2. 完成 P-02 interaction、Reaction 和 Agent 记忆边界。
+3. 完成 P-06 结果分类，并决定 D-06 多 command 原子性。
+4. 解决 P-07 报告输出隔离，再补充跨 Runtime FailureReport 测试。
+5. 决定 D-01 Action 身份，再处理 Reaction narrative 和 Task lifecycle。
+6. 统一 D-03 动态文本，再迁移 D-04 Task interaction 特例。
+7. 依据 P-03 清单迁移领域政策到 capability package。
+8. 最后清理旧测试并补齐 D-05 扩展 lint 契约。
 
-### CR-13 任务的 interaction 生命周期依赖特例
-
-严重度：高
-
-当前行为：
-
-- Task 实际保存 `start_bundle`、`tick_bundle`、`cleanup_bundle` 和 `completion_bundle`；
-- 每 tick 先执行 `ProgressTask`，再执行 `tick_bundle`，完成时执行 Recipe 的 completion Bundle；
-- Recipe 的单个 `narrative_success` 通常描述任务开始；
-- Travel 完成 interaction 由 `FinishTask` handler 硬编码，其他任务没有统一完成叙事。
-
-用户提供的方向：
-
-- 任务至少存在推进和完成两个重要执行时点；
-- 任务相关 interaction 使用专用 interaction Effect；
-- 场景或扩展开发者在希望记录的任务生命周期 Bundle 中显式提供该 Effect 数据；
-- 逐 tick 进度可以只产生 Effect/Event，不要求每 tick 产生自然语言 interaction。
-
-仍需决定：
-
-- 开始、完成、中断、恢复分别是否需要独立 interaction；
-- 一个耗时任务对应一个 Action 还是多个阶段 Action；
-- interaction Effect 如何引用 Task、原始 Recipe、worker 和 completion Effect 结果；
-- 移除 Travel 特例后的数据迁移和兼容策略。
-
-## 6. 建议解决顺序
-
-顺序依据是依赖关系，不代表已获得实施授权。
-
-### 阶段 A：确定事实和事务 seam
-
-1. 联合处理 CR-01、CR-07、CR-08；
-2. 明确 Command、Action、Bundle、Effect、Event 和 Interaction 的关系；
-3. 定义专用 interaction Effect 的最小契约；
-4. 明确 command、attempt、rejected action 和 committed interaction 的术语；
-5. 确定 AgentControlTick 的编排位置；
-6. 用回滚测试锁定事实唯一性。
-
-如果不先完成这一阶段，后续错误和 failure report 都不知道应关联“尝试”还是“提交结果”。
-
-### 阶段 B：统一错误模型与处置
-
-1. 解决 CR-02；
-2. 解决 CR-03；
-3. 迁移所有 Binder、Handler、Workflow、Reaction 和 External runtime 错误；
-4. 删除错误分类的隐式缺省和字符串猜测。
-
-### 阶段 C：接入 FailureReport
-
-1. 解决 CR-04；
-2. FailureReport 消费统一 Failure；
-3. 保留未经脱敏的 LLM 失败证据和 best-effort 文件写入能力；
-4. 不通过新的 WorldState service key 建立耦合。
-
-### 阶段 D：迁移领域能力
-
-1. 解决 CR-05；
-2. 先迁移 Corpse/Death 这组边界最明确的能力；
-3. 再审查 Survival、Economy、Conversation 等候选；
-4. 每次迁移后恢复对应 package smoke，而不是删除能力。
-
-### 阶段 E：收紧测试和文档
-
-1. 解决 CR-06；
-2. 更新配置详解和开发者上手文档；
-3. 增加稳定的架构契约测试；
-4. 运行完整本地基线。
-
-### 阶段 F：补齐 Action、叙事与扩展契约
-
-1. 解决 CR-09，定义扩展 Effect 的事件责任和内核通用外壳；
-2. 解决 CR-10，增加 Reaction 可选 `narrative_success`；
-3. 解决 CR-11，统一动态文本输入和 lint；
-4. 解决 CR-12，增加 Bundle 运行时父子追踪；
-5. 解决 CR-13，用数据化 interaction Effect 替换 Travel 等任务特例。
-
-## 7. 每个问题的工作协议
-
-开始任何一项实现前，先和用户确认：
-
-1. 预期结果；
-2. 受影响模块和不受影响模块；
-3. 要保留的兼容行为；
-4. 必须先变红的行为测试；
-5. 验收命令；
-6. 是否涉及 Package 数据迁移或 checkpoint 兼容。
-
-实现时：
-
-- 先写能捕获具体契约破坏的测试；
-- 一次只改变一个 seam；
-- 不为旧的错误结构增加新的兼容层；
-- 不顺手增加新的 `WorldState.services` key；
-- 不修改无关的用户工作树内容；
-- 场景能力迁移必须同时提交 package、catalog、codec 和测试。
-
-完成时记录：
-
-- 实际修改；
-- 验证结果；
-- 困难和剩余风险；
-- 是否改变 checkpoint/archive schema；
-- 下一项是否已经具备前置条件。
-
-## 8. 完整恢复验收
-
-最低验收命令：
+## 9. 当前验证命令
 
 ```powershell
-& .\.venv\Scripts\python.exe -m unittest discover -s tests -p "test_*.py"
 & .\.venv\Scripts\python.exe -m compileall -q KERN tools default_orchestrator.py tests
 & .\.venv\Scripts\python.exe tools\scenario_lint.py --config runtime_config.camping.package.smoke.json
 & .\.venv\Scripts\python.exe default_orchestrator.py --config runtime_config.camping.package.smoke.json
 ```
 
-此外必须证明：
+上述命令和 `tests.test_failure_and_effect_records` 是当前契约门禁。全量旧测试仅作为迁移观测：
 
-- 回滚 Bundle 不留下成功 interaction 或部分世界写入；
-- 所有运行时错误符合统一 schema；
-- Workflow 和 Reaction 不直接修改 WorldState；
-- FailureReport 不改变世界事务；
-- 未选择 capability package 时，相关领域定义不进入 Catalog；
-- 选择所需 capability package 后，Camping 保持现有能力；
-- Checkpoint restore、Archive 和 runtime snapshot 仍可复现相同提交状态。
+```powershell
+& .\.venv\Scripts\python.exe -m unittest discover -s tests -p "test_*.py"
+```
 
-## 9. 已登记的多 command 事务决定
+当前验证记录：
 
-先讨论 CR-01：一次 Agent 决策输出多个 commands 时，KERN 应采用哪一种原子性？
+- `tests.test_failure_and_effect_records`：9 项通过；
+- `compileall`：通过；
+- Camping package lint：0 error、0 warning；
+- Camping smoke：退出码 0；
+- 最近一次全量旧测试记录为 156 项、3 failures、16 errors；计数可能受 LLM/gateway 测试顺序影响。已知失败主要固定了旧错误返回值、裸业务 Event 或旧 LLM 降级语义，外部/LLM 波动项需单独诊断。
 
-候选语义：
-
-### 方案 A：每条 command 一个独立事务
-
-- 前一条成功 command 会提交；
-- 后一条失败不会撤销前一条；
-- 每条 command 分别产生 committed/rejected/rolled_back interaction；
-- 适合连续行动，但决策整体不是原子的。
-
-### 方案 B：整个 decision 是一个事务
-
-- 所有 commands 编译成一个 Bundle；
-- 任一 command 失败则全部回滚；
-- interaction 只在整个 decision 提交后发布；
-- 原子性最强，但长决策更容易整体失败。
-
-这个决定仍未完成。CR-01 的实现还依赖 CR-07 至 CR-13 中列出的 Action、interaction Effect、事件外壳和动态文本契约，不能只移动现有日志写入位置。
-
-## 10. 本轮讨论确认的设计方向
-
-以下内容来自用户明确提出或同意的产品方向。它们用于约束后续设计，不代表具体 API、schema 或兼容策略已经完成。
-
-### D-01 两种日志采用不同粒度
-
-- `event_log` 是 Effect 级、机器可读的执行结果历史；
-- `interaction_log` 是 Action 级、面向 Agent 的自然语言经历；
-- 一次 Recipe 执行或一次 Reaction 执行属于 Action 粒度；
-- 一条 Effect 可以由扩展开发者实现为复杂脚本，内核不能替它猜测业务事件结构。
-
-### D-02 interaction 通过专用 Effect 写入
-
-- 增加专用的 interaction 写入 Effect；
-- interaction 因而服从 Binder、Executor 和 Bundle 回滚规则；
-- success interaction 必须与其对应世界修改共同提交，或在确认提交后执行；
-- Workflow、Settlement 和任务 handler 不再直接写 `WorldState.interaction_log`。
-
-具体 Effect 名称和字段尚未决定。
-
-### D-03 Recipe 与 Reaction 的叙事规则
-
-- Recipe 可以提供 `narrative_success` 和 `narrative_fail`；
-- Reaction 可以提供 `narrative_success`；
-- 没有 `narrative_success` 的 Reaction 不写 interaction，适用于流程控制规则；
-- Reaction 不提供 `narrative_fail`；Reaction 执行失败属于严重错误并中断模拟；
-- Reaction narrative 最终也应通过专用 interaction Effect 落盘，自动转换还是显式 Effect 尚未决定。
-
-### D-04 Agent 感知在 Workflow 一侧完成
-
-- World 保存整个模拟产生的 interaction 队列；
-- interaction 记录保留 actor、target、location、来源和自然语言等事实；
-- Agent Workflow/感知模块根据角色关系、地点和后续可见性规则筛选；
-- 流程控制是否进入队列由 narrative 是否存在决定，不依赖记忆层黑名单补救。
-
-### D-05 动态文本使用统一模块
-
-- Recipe、Reaction、任务 interaction 和其他明确支持的文本字段复用独立动态文本渲染模块；
-- 文本只渲染一次；
-- JSON 作者可以引用的对象和路径必须形成显式软契约，并由 lint 尽可能验证；
-- 当前 `{actor}/{target}/{reason}` 与 `{self.*}/{target.*}/{event.*}/{param:*}` 的冲突必须解决后才能迁移。
-
-### D-06 Bundle 事件采用平坦存储和父子追踪
-
-- event log 不直接保存递归 Bundle 树；
-- 每条 Effect/Event 记录携带运行时 `bundle_id`；
-- 嵌套执行通过 `parent_bundle_id`、路径或等价字段恢复；
-- Bundle 首先是共同提交或共同回滚的候选边界，其复用和作者语义仍需继续澄清。
-
-### D-07 任务 interaction 由数据作者放在生命周期时点
-
-- Task 已有开始、逐 tick、清理和完成 Bundle；
-- 场景或扩展开发者在需要产生自然语言经历的生命周期 Bundle 中编写专用 interaction Effect；
-- 逐 tick 推进可以只产生 event，不默认产生 interaction；
-- Travel 完成时的硬编码 interaction 应由通用数据方式替代。
-
-## 11. 当前仍未决定的设计问题
-
-在开始实现新增日志能力前，仍需依次决定：
-
-1. Action 是正式持久化对象，还是执行期间的关联 ID；
-2. 专用 interaction Effect 的输入字段、动态文本模板和提交时机；
-3. 自定义 Effect 返回事件的最低要求，以及空事件时是否补 `EffectExecuted`；
-4. Effect 返回多个事件时的 event log 结构；
-5. 统一动态文本模块对 Recipe、Reaction 和 Task 分别开放哪些引用；
-6. narrative 是执行前渲染后等待提交，还是基于不可变快照在提交后渲染；
-7. 没有显式 Bundle 的 Effect 是否规范化为单 Effect Bundle；
-8. 耗时任务是一个跨 tick Action，还是开始和完成两个 Action；
-9. 多 command decision 采用独立事务还是整体事务；
-10. 新增 Action/Event/Interaction 身份是否改变 checkpoint、archive 和 runtime snapshot schema。
+每个后续问题完成时必须记录：实际修改、跨模块验证、剩余风险、是否改变 checkpoint/archive schema，以及下一项工作的前置条件。
