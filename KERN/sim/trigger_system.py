@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .condition_evaluator import ConditionEvaluator
+from ..interaction.narrative import render_interaction_narrative
 
 
 @dataclass
@@ -53,10 +54,44 @@ class TriggerSystem:
 			req_ctx = dict(base_ctx)
 			req_ctx["reaction_rule_id"] = rule_id
 			req_ctx["reaction_trigger_event_type"] = event_type
-			req_ctx["reaction_verb"] = str(rule.get("reaction_verb", "") or "").strip()
+			reaction_verb = str(rule.get("reaction_verb", "") or "").strip() or rule_id
+			req_ctx["reaction_verb"] = reaction_verb
+			narrative_template = str(rule.get("narrative_success", "") or "").strip()
+			compiled_bundle = dict(bundle) if isinstance(bundle, dict) else {}
+			effects = [
+				item
+				for item in list(compiled_bundle.get("effects", []) or [])
+				if not (isinstance(item, dict) and str(item.get("effect", "") or "") == "RecordInteraction")
+			]
+			if narrative_template:
+				narrative = render_interaction_narrative(
+					ws,
+					narrative_template,
+					req_ctx,
+					values={"event_type": event_type, "reaction_id": rule_id},
+				)
+				effects.insert(
+					0,
+					{
+						"effect": "RecordInteraction",
+						"actor_id": str(req_ctx.get("actor_id", "") or req_ctx.get("self_id", "") or ""),
+						"verb": reaction_verb,
+						"target_id": str(req_ctx.get("target_id", "") or req_ctx.get("event_entity_id", "") or ""),
+						"status": "success",
+						"reason": "",
+						"extra": {
+							"narrative": narrative,
+							"interaction_type": "reaction",
+							"source_id": rule_id,
+							"reaction_id": rule_id,
+							"trigger_event_type": event_type,
+						},
+					},
+				)
+			compiled_bundle["effects"] = effects
 			requests.append(
 				{
-					"bundle": dict(bundle) if isinstance(bundle, dict) else {},
+					"bundle": compiled_bundle,
 					"context": req_ctx,
 				}
 			)

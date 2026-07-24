@@ -37,6 +37,28 @@ def _actor_memory_cursors(ws: Any, actor_id: str) -> tuple[int, int]:
 	)
 
 
+def _interaction_visible_to_actor(ws: Any, actor_id: str, record: dict[str, Any]) -> bool:
+	"""Apply the coarse world-visibility boundary before workflow code sees a record."""
+	aid = str(actor_id or "")
+	owner = str(record.get("actor_id", "") or "")
+	target = str(record.get("target_id", "") or "")
+	if bool(record.get("private_to_actor", False)) and owner != aid:
+		return False
+	if aid and (owner == aid or target == aid):
+		return True
+	actor_location = ws.get_location_of_entity(aid) if aid and hasattr(ws, "get_location_of_entity") else None
+	actor_location_id = str(getattr(actor_location, "location_id", "") or "")
+	record_location_id = str(record.get("location_id", "") or "")
+	if not (actor_location_id and record_location_id and actor_location_id == record_location_id):
+		return False
+	services = getattr(ws, "services", {}) or {}
+	profile = services.get("workflow_view_profile", {}) if isinstance(services, dict) else {}
+	memory_profile = profile.get("memory", {}) if isinstance(profile, dict) else {}
+	if isinstance(memory_profile, dict) and "include_same_location_interactions" in memory_profile:
+		return bool(memory_profile.get("include_same_location_interactions", True))
+	return True
+
+
 def _round1(value: Any) -> float | None:
 	if value is None:
 		return None
@@ -287,18 +309,15 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 			}
 		)
 
-	last_event_seq_seen, last_interaction_seq_seen = _actor_memory_cursors(ws, actor_id)
-	event_delta: list[dict[str, Any]] = []
-	for rec in list(getattr(ws, "event_log", []) or []):
-		if not isinstance(rec, dict):
-			continue
-		if int(rec.get("seq", 0) or 0) > int(last_event_seq_seen):
-			event_delta.append(dict(rec))
+	_, last_interaction_seq_seen = _actor_memory_cursors(ws, actor_id)
 	interaction_delta: list[dict[str, Any]] = []
 	for rec in list(getattr(ws, "interaction_log", []) or []):
 		if not isinstance(rec, dict):
 			continue
-		if int(rec.get("seq", 0) or 0) > int(last_interaction_seq_seen):
+		if (
+			int(rec.get("seq", 0) or 0) > int(last_interaction_seq_seen)
+			and _interaction_visible_to_actor(ws, actor_id, rec)
+		):
 			interaction_delta.append(dict(rec))
 
 	state = ws.runtime_state
@@ -311,7 +330,6 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 		"entities": entities_out,
 		"locations": locations_out,
 		"paths": paths_out,
-		"event_delta": event_delta,
 		"interaction_delta": interaction_delta,
 		"dialogue_budget_limit_per_location": state.dialogue_budget_limit_per_location,
 		"dialogue_budget_used_per_location": dict(state.dialogue_budget_used_per_location),

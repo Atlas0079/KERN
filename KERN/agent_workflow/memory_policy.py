@@ -6,24 +6,6 @@ from ..models.components.memory import MemoryComponent
 from .view_profile import normalize_workflow_view_profile
 
 
-DROP_EVENT_TYPES = {
-	"WorldTickAdvanced",
-	"AdvanceTick",
-	"ReactionTriggered",
-	"ReactionApplied",
-	"PropertyModified",
-	"ConditionAdded",
-	"ConditionRemoved",
-	"CooldownSet",
-	"MemoryNoteAdded",
-	"MemoryPatched",
-	"TaskProgressed",
-	"ConversationStarted",
-	"ConversationSpoken",
-	"ConversationEnded",
-}
-
-
 def _safe_str(v: Any) -> str:
 	return str(v or "")
 
@@ -98,57 +80,6 @@ def _interaction_content(
 	return f"{actor_name}执行了{verb}"
 
 
-def _event_to_memory_entry(actor_id: str, actor_loc_id: str, item: dict[str, Any], profile: dict[str, Any] | None = None) -> dict[str, Any] | None:
-	memory_profile = dict((profile or {}).get("memory", {}) or {})
-	ev = item.get("event", {}) or {}
-	if not isinstance(ev, dict):
-		return None
-	ev_type = _safe_str(ev.get("type")).strip()
-	if not ev_type or ev_type in DROP_EVENT_TYPES:
-		return None
-	owner = _safe_str(item.get("actor_id"))
-	location_id = _safe_str(item.get("location_id"))
-	event_entity_id = _safe_str(ev.get("entity_id"))
-	is_self_related = bool(owner == actor_id or event_entity_id == actor_id)
-	is_same_location = bool(location_id and location_id == actor_loc_id)
-	if is_same_location and not is_self_related and not bool(memory_profile.get("include_same_location_events", True)):
-		is_same_location = False
-	if not is_self_related and not is_same_location:
-		return None
-	topic = "event"
-	importance = 0.5
-	if "Task" in ev_type:
-		topic = "task"
-		importance = 0.65 if is_self_related else 0.5
-	elif ev_type in {"KillEntity", "EntityDestroyed"}:
-		topic = "threat"
-		importance = 0.85
-	elif ev_type.startswith("Conversation"):
-		topic = "social"
-		importance = 0.55
-	content = ev_type
-	if ev_type.startswith("Task"):
-		task_id = _safe_str(ev.get("task_id"))
-		if task_id:
-			content = f"{ev_type} {task_id}"
-	elif ev_type.startswith("Conversation"):
-		cid = _safe_str(ev.get("conversation_id"))
-		if cid:
-			content = f"{ev_type} {cid}"
-	return {
-		"tick": int(item.get("tick", 0) or 0),
-		"time_str": "",
-		"type": "event",
-		"topic": topic,
-		"importance": float(importance),
-		"location_id": location_id,
-		"actor_id": owner,
-		"target_id": event_entity_id,
-		"content": content,
-		"source": {"kind": "event_log", "seq": int(item.get("seq", 0) or 0)},
-	}
-
-
 def _interaction_to_memory_entry(
 	recipe_db: dict[str, Any],
 	actor_id: str,
@@ -183,7 +114,16 @@ def _interaction_to_memory_entry(
 	else:
 		importance = 0.8 if is_self_related and status == "failed" else 0.65 if is_self_related else 0.5
 		topic = "action_failed" if status == "failed" else "action_success"
-		content = _interaction_content(recipe_db, item, owner_name, target_name, verb, status, reason, recipe_id)
+		content = _safe_str(item.get("narrative")).strip() or _interaction_content(
+			recipe_db,
+			item,
+			owner_name,
+			target_name,
+			verb,
+			status,
+			reason,
+			recipe_id,
+		)
 	return {
 		"tick": int(item.get("tick", 0) or 0),
 		"time_str": "",
@@ -219,24 +159,11 @@ def build_memory_patch(
 
 	last_event_seq_seen = int(getattr(mem, "last_event_seq_seen", 0) or 0)
 	last_interaction_seq_seen = int(getattr(mem, "last_interaction_seq_seen", 0) or 0)
-	event_delta = [dict(x) for x in list(view.get("event_delta", []) or []) if isinstance(x, dict)]
 	interaction_delta = [dict(x) for x in list(view.get("interaction_delta", []) or []) if isinstance(x, dict)]
 
 	notes: list[dict[str, Any]] = []
 	new_last_event = last_event_seq_seen
 	new_last_interaction = last_interaction_seq_seen
-
-	for item in event_delta:
-		seq = int(item.get("seq", 0) or 0)
-		if seq <= last_event_seq_seen:
-			continue
-		entry = _event_to_memory_entry(_safe_str(actor_id), actor_loc_id, item, profile)
-		new_last_event = max(new_last_event, seq)
-		if entry is None:
-			continue
-		if bool(entry.get("allow_low_importance", False)) or float(entry.get("importance", 0.0) or 0.0) >= float(min_importance):
-			notes.append(entry)
-			mem.add_short_term(entry)
 
 	for item in interaction_delta:
 		seq = int(item.get("seq", 0) or 0)

@@ -254,46 +254,15 @@ def _commands_to_operations(ws: Any, actor_id: str, reason: str, commands: list[
 		recipe = dict((result or {}).get("recipe", {}) or {}) if isinstance((result or {}).get("recipe", {}), dict) else {}
 		recipe_id = str(recipe.get("id", "") or "")
 		target_id = str(ctx.get("target_id", "") or cmd.get("target_id", "") or "")
-		actor = ws.get_entity_by_id(str(actor_id)) if hasattr(ws, "get_entity_by_id") else None
-		target = ws.get_entity_by_id(target_id) if target_id and hasattr(ws, "get_entity_by_id") else None
-		actor_name = _entity_display_name(actor, str(actor_id))
-		target_name = _entity_display_name(target, target_id)
 		params = dict(ctx.get("parameters", {}) or {}) if isinstance(ctx.get("parameters", {}), dict) else {}
-		narrative_values = {**params, **dict(cmd)}
-		narrative_values["to_location_id"] = str(params.get("to_location_id", "") or cmd.get("to_location_id", "") or "")
-		narrative = _render_interaction_narrative(recipe, actor_name, target_name, verb, "success", "", narrative_values)
 		if isinstance(bundle, dict):
 			operation_context = dict(ctx)
-			operation_context["action_narrative"] = narrative
 			operation_context["recipe_id"] = recipe_id
 			operation_context["verb"] = verb
 			operation_context["actor_id"] = str(actor_id)
 			operation_context["target_id"] = target_id
 			operation_context["parameters"] = params
 			compiled_bundle = dict(bundle)
-			effects = list(compiled_bundle.get("effects", []) or [])
-			if not any(
-				isinstance(item, dict) and str(item.get("effect", "") or "") == "RecordInteraction"
-				for item in effects
-			):
-				effects.insert(
-					0,
-					{
-						"effect": "RecordInteraction",
-						"actor_id": str(actor_id),
-						"verb": verb,
-						"target_id": target_id,
-						"status": "success",
-						"reason": "",
-						"recipe_id": recipe_id,
-						"extra": {
-							"narrative": narrative,
-							"parameters": dict(params),
-							"is_action": True,
-						},
-					},
-				)
-			compiled_bundle["effects"] = effects
 			ops.append({"bundle": compiled_bundle, "context": operation_context})
 	return ops, None
 

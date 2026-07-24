@@ -119,22 +119,6 @@ def execute_start_conversation(executor: Any, ws: Any, data: dict[str, Any], con
 				"text": line,
 			},
 		)
-		events.extend(
-			executor.execute(
-				ws,
-				{
-					"effect": "RecordInteraction",
-					"actor_id": speaker_id,
-					"verb": "Say",
-					"target_id": speaker_id,
-					"status": "success",
-					"reason": "",
-					"recipe_id": "conversation.say",
-					"extra": {"is_dialogue": True, "conversation_id": conversation_id, "speech": line},
-				},
-				{"self_id": speaker_id, "target_id": speaker_id},
-			)
-		)
 		events.append(
 			{
 				"type": "ConversationSpoken",

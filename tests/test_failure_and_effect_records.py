@@ -19,6 +19,7 @@ from KERN.models.entity import Entity
 from KERN.models.world_state import WorldState
 from KERN.sim.trigger_system import TriggerSystem
 from KERN.sim.world_settlement import WorldSettlement
+from KERN.agent_workflow.full_ws_view_builder import build_full_ws_view
 
 
 class FailureAndEffectRecordTests(unittest.TestCase):
@@ -148,6 +149,7 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 		)
 
 		self.assertEqual(ws.get_entity_by_id("agent").get_component("TagComponent").tags, ["reacted"])
+		self.assertEqual(ws.interaction_log, [])
 
 	def test_reaction_can_match_effect_identity_and_normalized_input(self) -> None:
 		ws = WorldState()
@@ -183,6 +185,7 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 				"mark": {
 					"verb": "Mark",
 					"condition": {},
+					"narrative_success": "{actor}标记了{target}",
 					"bundle": {"effects": [{"effect": "AddTag", "target": "self", "tag": "marked"}]},
 				}
 			}
@@ -197,7 +200,60 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 
 		self.assertEqual(entity.get_component("TagComponent").tags, ["marked"])
 		self.assertEqual(ws.interaction_log[0]["verb"], "Mark")
+		self.assertEqual(ws.interaction_log[0]["narrative"], "Agent标记了Agent")
 		self.assertTrue(any(record["event"].get("effect") == "RecordInteraction" for record in ws.event_log))
+
+	def test_recipe_without_narrative_does_not_create_interaction(self) -> None:
+		ws = WorldState()
+		entity = Entity(entity_id="agent", template_id="Agent", entity_name="Agent")
+		entity.add_component("TagComponent", TagComponent())
+		ws.register_entity(entity)
+		ws.services["interaction_engine"] = InteractionEngine(
+			recipe_db={
+				"mark": {
+					"verb": "Mark",
+					"condition": {},
+					"bundle": {"effects": [{"effect": "AddTag", "target": "self", "tag": "marked"}]},
+				}
+			}
+		)
+		operations, error = _commands_to_operations(
+			ws,
+			"agent",
+			"test",
+			[{"verb": "Mark", "target_id": "agent", "parameters": {}}],
+		)
+		self.assertIsNone(error)
+		self.assertFalse(any(item.get("effect") == "RecordInteraction" for item in operations[0]["bundle"]["effects"]))
+
+	def test_reaction_narrative_creates_one_interaction_and_agent_view_hides_events(self) -> None:
+		ws = WorldState()
+		entity = Entity(entity_id="agent", template_id="Agent", entity_name="Agent")
+		entity.add_component("TagComponent", TagComponent())
+		ws.register_entity(entity)
+		trigger = TriggerSystem(
+			rules=[
+				{
+					"id": "mark_probe",
+					"on_event": "Probe",
+					"narrative_success": "{actor}响应了探针",
+					"reaction_verb": "Respond",
+					"bundle": {"effects": [{"effect": "AddTag", "target": "self", "tag": "reacted"}]},
+				}
+			]
+		)
+		settlement = WorldSettlement(ws=ws, executor=WorldExecutor(), trigger_system=trigger, max_reaction_depth=4)
+		settlement.execute_bundle(
+			{"effects": [{"effect": "EmitEvent", "event_type": "Probe", "payload": {"value": 1}}]},
+			{"self_id": "agent"},
+		)
+
+		self.assertEqual(len(ws.interaction_log), 1)
+		self.assertEqual(ws.interaction_log[0]["interaction_type"], "reaction")
+		self.assertEqual(ws.interaction_log[0]["narrative"], "Agent响应了探针")
+		view = build_full_ws_view(ws, "agent", "test", {})
+		self.assertNotIn("event_delta", view)
+		self.assertEqual(len(view["interaction_delta"]), 1)
 
 	def test_interaction_details_are_transactional(self) -> None:
 		ws = WorldState()

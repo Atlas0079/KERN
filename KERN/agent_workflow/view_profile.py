@@ -18,7 +18,6 @@ BUILTIN_PROFILES: dict[str, dict[str, Any]] = {
 			"can_start_conversation_here": True,
 		},
 		"memory": {
-			"include_same_location_events": True,
 			"include_same_location_interactions": True,
 		},
 	},

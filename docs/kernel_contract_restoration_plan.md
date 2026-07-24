@@ -65,6 +65,8 @@ runtime config / Package composition
 
 - `RecordInteraction` 和 `UpdateInteractionDetails` 是专用 Effect，interaction 写入服从 Bundle 回滚。
 - Workflow、Settlement 不再直接写入成功 interaction。
+- Recipe 和 Reaction 只有在定义了 `narrative_success` 时各自产生一条 interaction；缺少该字段不产生 interaction。
+- Agent workflow view 只提供按 actor、target、location 和 private 标记筛选后的 interaction delta，不提供 `event_log` 或 `event_delta`。
 - Reaction 的匹配顺序为：`on_event/on_effect -> selector -> condition -> bundle`。
 - Effect 触发的 Reaction 只能消费已经提交的 EffectRecord；`WorldTickAdvanced`、`AdvanceTick` 等生命周期事件是 Settlement 有意注入的原始触发事件。
 - Bundle 记录携带 `bundle_id`、`parent_bundle_id` 和 `effect_index`，事件日志保持平坦。
@@ -80,13 +82,13 @@ runtime config / Package composition
 | CR-04 Diagnostics | 已吸收 | Diagnostics 已由单次 FailureReport 取代；不脱敏是当前明确决定 |
 | CR-05 核心领域政策 | 未解决 | Package 机制已具备，但 Corpse、Survival、Equipment 等政策仍在核心 |
 | CR-06 测试偏局部 | 部分遗留 | 新增了跨 Executor/Settlement 的契约测试，旧测试仍固定大量旧语义 |
-| CR-07 Event/Interaction 混杂 | 部分遗留 | 写入路径已分离；记忆层仍依赖 Event 黑名单，Reaction interaction 尚未正式化 |
+| CR-07 Event/Interaction 混杂 | 部分遗留 | Recipe/Reaction interaction 与 Agent view 已分离；稳定可见性和 interaction ID 仍需收尾 |
 | CR-08 缺少 Action | 未解决 | 只有可选的 `action_id` 字段，没有 Action 生命周期或持久化对象 |
 | CR-09 Effect 事件契约 | 部分遗留 | 通用 EffectRecord 已解决最低追踪要求；扩展事件 schema 和 lint 尚未定义 |
-| CR-10 Reaction 叙事 | 未解决 | 没有 `narrative_success` 的正式声明和自动 interaction 生成 |
+| CR-10 Reaction 叙事 | 部分吸收 | `narrative_success` 已生成一条 Reaction interaction；动态上下文和 Action 关联仍未完成 |
 | CR-11 动态文本双契约 | 未解决 | `KERN.dynamic_text` 与 Recipe 的 `{actor}/{target}/{reason}` 仍并存 |
 | CR-12 Bundle 追踪 | 部分吸收 | 运行时父子追踪已存在；作者语义和显式 Bundle 规范仍未收敛 |
-| CR-13 Task interaction 特例 | 未解决 | 生命周期 Bundle 已存在，但 Travel 完成 interaction 仍硬编码 |
+| CR-13 Task interaction 特例 | 部分遗留 | Travel 硬编码已移除；Task lifecycle Bundle 的显式 interaction 约定仍需补齐 |
 
 ## 4. 已被新架构吸收的历史问题
 
@@ -132,9 +134,9 @@ KernFailure ->（若存在）包含它的 Bundle 回滚 -> Runtime terminal -> f
 
 FailureReport 不属于 `WorldState`，也不参与世界事务。原文档中“FailureReport 需要自行定义 category”以及“必须脱敏”的内容已过时。
 
-### 4.4 CR-09 和 CR-12 的最低运行时能力
+### 4.4 CR-09、CR-10 和 CR-12 的最低运行时能力
 
-EffectRecord 已提供默认执行路径的通用外壳；空输出自动获得 `EffectExecuted`。Executor 在 Bundle 执行中生成运行时 ID，并记录父 Bundle 关系。扩展作者可以自由定义业务 facts，但当前仍存在 `_effect_record=True` 直接透传和直接 `WorldExecutor.execute` 缺少 Bundle 追踪字段的收尾问题。
+EffectRecord 已提供默认执行路径的通用外壳；空输出自动获得 `EffectExecuted`。Executor 在 Bundle 执行中生成运行时 ID，并记录父 Bundle 关系。Recipe 和 Reaction 在存在 `narrative_success` 时分别自动插入一条 interaction Effect；没有 narrative 时不写 interaction。扩展作者可以自由定义业务 facts，但当前仍存在 `_effect_record=True` 直接透传和直接 `WorldExecutor.execute` 缺少 Bundle 追踪字段的收尾问题。
 
 这使“每个 Effect 是否可追踪”和“嵌套事件是否必须复制完整 Bundle 树”不再是阻断问题。
 
@@ -161,12 +163,11 @@ origin, phase, cause, context
 
 ### P-02 Interaction、Event 与 Agent 记忆边界（来源：CR-07）
 
-当前 World 已保存完整 `event_log` 和 `interaction_log`，但 `memory_policy.py` 仍通过 `DROP_EVENT_TYPES` 排除底层事件，并跳过 `is_reaction` interaction。这说明 Agent 感知边界尚未完全迁移到 interaction 语义。
+当前 World 已保存完整 `event_log` 和 `interaction_log`。Agent workflow view 不再提供 `event_delta`，memory policy 也只消费 interaction delta；可见性规则和 interaction 的稳定身份仍需继续收敛。
 
 剩余工作：
 
 - 明确哪些 interaction 对 Agent 可见；
-- 删除依赖 Event 黑名单的补救逻辑；
 - 为 Reaction 的流程控制记录和可感知记录建立明确区分；
 - 用稳定 interaction ID 替代 `UpdateInteractionDetails` 对“最后一条记录”的依赖。
 
@@ -234,13 +235,13 @@ Package 组合和运行时 Catalog 已经具备，社交平台实现也已从核
 
 ### D-02 Reaction 叙事（来源：CR-10）
 
-需要增加 Reaction 的可选 `narrative_success` 语义：
+Reaction 的可选 `narrative_success` 语义已经接入：
 
-- 有 narrative 的 Reaction 产生 Action 级 interaction；
+- 有 narrative 的 Reaction 产生一条 Reaction interaction；
 - 没有 narrative 的 Reaction 只承担流程控制；
 - Reaction 失败仍然抛出致命 `KernFailure`。
 
-还需要规定 actor、target、location 和 trigger event 如何进入动态文本上下文。
+仍需规定 actor、target、location 和 trigger event 如何进入统一动态文本上下文，并在未来与 Action ID 关联。
 
 验收：Reaction 有 narrative 时生成一次 Action 级 interaction；无 narrative 时不进入 Agent 经历；Reaction 失败进入统一 Failure 路径。
 
@@ -257,7 +258,7 @@ Recipe、Reaction、Task interaction 和明确支持文本字段应使用同一�
 
 ### D-04 Task interaction 生命周期（来源：CR-13）
 
-Task 已有 start、tick、cleanup、completion Bundle。需要移除 Travel 硬编码，改由数据作者在需要的生命周期 Bundle 中显式放置 `RecordInteraction`。
+Task 已有 start、tick、cleanup、completion Bundle。Travel 硬编码已移除，数据作者可以在需要的生命周期 Bundle 中显式放置 `RecordInteraction`。
 
 需要另外决定开始、完成、中断、恢复是否分别产生 interaction，以及一个跨 tick Task 是否对应一个 Action。
 
@@ -296,7 +297,7 @@ Task 已有 start、tick、cleanup、completion Bundle。需要移除 Travel 硬
 - LLM ungroundable 自动降级为合法 noop；
 - FailureReport 的独立 category 词表；
 - 为开发者错误报告强制脱敏；
-- 把 Event 黑名单当作完整 Agent 记忆边界的设计假设；现有实现残留已登记在 P-02。
+- 依赖 Event 黑名单承担 Agent 记忆边界的实现已删除；当前只保留 interaction 可见性规则的收尾工作。
 
 这些内容可以保留在 git 历史和审查记录中，当前计划只保留它们对新架构的迁移结论。
 
@@ -327,7 +328,7 @@ Task 已有 start、tick、cleanup、completion Bundle。需要移除 Travel 硬
 
 当前验证记录：
 
-- `tests.test_failure_and_effect_records`：9 项通过；
+- `tests.test_failure_and_effect_records`：11 项通过；
 - `compileall`：通过；
 - Camping package lint：0 error、0 warning；
 - Camping smoke：退出码 0；

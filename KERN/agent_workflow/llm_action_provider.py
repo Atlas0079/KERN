@@ -460,7 +460,8 @@ class LLMActionProvider:
 	- Grounder: Output multi-step action JSON array
 
 	Explanation:
-	- Memory module not implemented yet: Planner uses perception-filtered "recent interaction narrative" directly as detailed event stream input.
+	- Planner receives perception and memory derived from Agent-visible interaction records.
+	- The machine-readable event log is not part of the Agent workflow view.
 	"""
 
 	llm: DualModelLLM

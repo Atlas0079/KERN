@@ -725,46 +725,9 @@ def execute_finish_task(executor: Any, ws: Any, _data: dict[str, Any], context: 
 	if result.failed:
 		message = str(result.error_message or "")
 		executor_error(f"FinishTask: completion bundle failed ({message})")
-	self_id = str((context or {}).get("self_id", "") or "")
-	interaction_events: list[dict[str, Any]] = []
-	if (
-		str(getattr(task, "task_type", "") or "") == "Travel"
-		and self_id
-	):
-		to_location_id = ""
-		to_location_name = ""
-		loc = ws.get_location_of_entity(self_id) if hasattr(ws, "get_location_of_entity") else None
-		if loc is not None:
-			to_location_id = str(getattr(loc, "location_id", "") or "")
-			to_location_name = str(getattr(loc, "location_name", "") or "")
-		task_params = getattr(task, "parameters", {}) or {}
-		recipe_id = ""
-		source_location_id = ""
-		if isinstance(task_params, dict):
-			recipe_id = str(task_params.get("recipe_id", "") or "")
-			source_location_id = str(task_params.get("source_location_id", "") or "")
-		interaction_events = executor.execute(
-			ws,
-			{
-				"effect": "RecordInteraction",
-				"actor_id": self_id,
-				"verb": "Travel",
-				"target_id": self_id,
-				"status": "success",
-				"reason": "",
-				"recipe_id": recipe_id,
-				"extra": {
-					"travel_phase": "arrive",
-					"to_location_id": to_location_id,
-					"to_location_name": to_location_name,
-					"source_location_id": source_location_id,
-				},
-			},
-			{"self_id": self_id, "target_id": self_id},
-		)
 	cleanup_events = _deactivate_task(executor, ws, task, _task_worker_id(task, context), context, "Completed")
 	_remove_task_from_host_and_world(ws, task, context)
-	return [{"type": "TaskFinished", "task_id": task.task_id}, *result.events, *interaction_events, *cleanup_events]
+	return [{"type": "TaskFinished", "task_id": task.task_id}, *result.events, *cleanup_events]
 
 
 def execute_interrupt_task(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:

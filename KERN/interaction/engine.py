@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from ..effect_bundle import effect_bundle_from_raw
+from .narrative import render_interaction_narrative
 from ..sim.condition_evaluator import ConditionEvaluator
 
 
@@ -61,12 +62,52 @@ class InteractionEngine:
 		context = {"self_id": self_id, "target_id": str(target_id), "parameters": dict(resolved_params)}
 
 		process_data = recipe.get("process", {}) or {}
+		narrative_template = str(recipe.get("narrative_success", "") or "").strip()
+		if narrative_template:
+			narrative = render_interaction_narrative(
+				ws,
+				narrative_template,
+				context,
+				values=dict(resolved_params),
+			)
+		else:
+			narrative = ""
+
+		def _with_recipe_interaction(bundle_data: dict[str, Any]) -> dict[str, Any]:
+			compiled = dict(bundle_data)
+			effects = [
+				item
+				for item in list(compiled.get("effects", []) or [])
+				if not (isinstance(item, dict) and str(item.get("effect", "") or "") == "RecordInteraction")
+			]
+			if narrative:
+				effects.insert(
+					0,
+					{
+						"effect": "RecordInteraction",
+						"actor_id": str(self_id),
+						"verb": verb_text,
+						"target_id": str(target_id or self_id),
+						"status": "success",
+						"reason": "",
+						"recipe_id": str(recipe.get("id", "") or ""),
+						"extra": {
+							"narrative": narrative,
+							"parameters": dict(resolved_params),
+							"interaction_type": "recipe",
+							"source_id": str(recipe.get("id", "") or ""),
+						},
+					}
+				)
+			compiled["effects"] = effects
+			return compiled
+
 		if self._is_duration_process(process_data):
 			if assign_to not in {"self", "target"}:
 				return {"status": "rejected", "reason": "invalid_process_assign_to"}
 			return {
 				"status": "success",
-				"bundle": {
+				"bundle": _with_recipe_interaction({
 					"effects": [
 						{
 							"effect": "CreateTask",
@@ -74,13 +115,18 @@ class InteractionEngine:
 							"assign_to": assign_to,
 						}
 					]
-				},
+				}),
 				"context": context,
 				"recipe": dict(recipe),
 			}
 
 		bundle = effect_bundle_from_raw(recipe.get("bundle", {}) or {})
-		return {"status": "success", "bundle": bundle.to_dict(), "context": context, "recipe": dict(recipe)}
+		return {
+			"status": "success",
+			"bundle": _with_recipe_interaction(bundle.to_dict()),
+			"context": context,
+			"recipe": dict(recipe),
+		}
 
 	def _find_matching_recipe(self, ws: Any, verb: str, self_id: str, target: Any, params: dict[str, Any]) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
 		mismatch_reasons: list[dict[str, Any]] = []
