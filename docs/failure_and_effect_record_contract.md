@@ -1,6 +1,9 @@
 # Failure 与 Event 契约
 
-状态：已实施
+状态：当前稳定契约
+
+整体运行链见 `current_architecture.md`；外部状态的一致性限制见
+`external_runtime_contract.md`。
 
 ## 术语
 
