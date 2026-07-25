@@ -10,6 +10,9 @@ def resolve_workflow_provider(
 ) -> Any | None:
 	"""Resolve a workflow by explicit request, controller preference, then default."""
 	service_map = dict(services or {})
+	registry = service_map.get("workflow_registry")
+	if registry is not None and callable(getattr(registry, "resolve", None)):
+		return registry.resolve(controller, requested_provider_id)
 	providers = service_map.get("action_providers", {}) or {}
 	if not isinstance(providers, dict):
 		providers = {}

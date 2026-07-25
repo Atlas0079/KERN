@@ -4,7 +4,7 @@ from typing import Any
 
 from ..execution_errors import executor_error
 from ..log_manager import get_logger
-from ..models.components import DecisionArbiterComponent, WorkerComponent
+from ..models.components import AgentWakePolicyComponent, WorkerComponent
 from ._effect_binder import _base_bind, _require_dict, _require_int, _require_str, _resolve_param_token
 
 
@@ -113,20 +113,20 @@ def execute_apply_meta_action(executor: Any, ws: Any, data: dict[str, Any], cont
 	if not isinstance(params, dict):
 		params = {}
 	if action_type == "SwitchInterruptPreset":
-		arb = target.get_component("DecisionArbiterComponent")
-		if not isinstance(arb, DecisionArbiterComponent):
-			return executor_error("ApplyMetaAction: DecisionArbiterComponent missing")
+		wake_policy = target.get_component("AgentWakePolicyComponent")
+		if not isinstance(wake_policy, AgentWakePolicyComponent):
+			return executor_error("ApplyMetaAction: AgentWakePolicyComponent missing")
 		# TODO: this API exposes preset switching directly to agents.
 		# That works, but it leaks internal configuration concepts into agent actions.
 		# Future design should prefer higher-level intent actions such as changing alertness,
-		# task focus, or threat sensitivity, then map those intents to arbiter configuration.
+		# task focus, or threat sensitivity, then map those intents to wake policy configuration.
 		preset_id = str(params.get("preset_id", "") or "").strip()
 		if not preset_id:
 			return executor_error("ApplyMetaAction: missing preset_id")
-		if preset_id not in (arb.interrupt_presets or {}):
+		if preset_id not in (wake_policy.interrupt_presets or {}):
 			return executor_error(f"ApplyMetaAction: unknown preset_id: {preset_id}")
-		old = str(arb.active_interrupt_preset_id or "")
-		arb.active_interrupt_preset_id = preset_id
+		old = str(wake_policy.active_interrupt_preset_id or "")
+		wake_policy.active_interrupt_preset_id = preset_id
 		return [
 			{
 				"type": "MetaActionApplied",

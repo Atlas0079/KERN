@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from ...models.components import DecisionArbiterComponent
+from ...models.components import AgentWakePolicyComponent
 from ..full_ws_view_builder import build_full_ws_view
 from ..observer import build_agent_perception
 from .base import InterruptResult
@@ -22,18 +22,18 @@ class PerceptionChangeRule:
 		if not agent:
 			return InterruptResult(False)
 
-		arb = agent.get_component("DecisionArbiterComponent")
-		if not isinstance(arb, DecisionArbiterComponent):
+		wake_policy = agent.get_component("AgentWakePolicyComponent")
+		if not isinstance(wake_policy, AgentWakePolicyComponent):
 			return InterruptResult(False)
 
-		params = arb.get_active_interrupt_rule_params("PerceptionChange")
+		params = wake_policy.get_active_interrupt_rule_params("PerceptionChange")
 		if params and not bool(params.get("enabled", True)):
-			if isinstance(getattr(arb, "interrupt_runtime_state", None), dict):
-				getattr(arb, "interrupt_runtime_state").pop("PerceptionChange", None)
+			if isinstance(getattr(wake_policy, "interrupt_runtime_state", None), dict):
+				getattr(wake_policy, "interrupt_runtime_state").pop("PerceptionChange", None)
 			return InterruptResult(False)
 
 		now_tick = int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
-		rt = arb.get_rule_runtime("PerceptionChange")
+		rt = wake_policy.get_rule_runtime("PerceptionChange")
 		last_tick = int(rt.get("last_interrupt_tick", -10**9))
 		cooldown_ticks = int(params.get("cooldown_ticks", self.cooldown_ticks) if isinstance(params, dict) else self.cooldown_ticks)
 		if now_tick - last_tick < int(cooldown_ticks):

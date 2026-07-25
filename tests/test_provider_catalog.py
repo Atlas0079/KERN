@@ -6,6 +6,7 @@ from pathlib import Path
 
 from KERN.agent_workflow.provider_catalog import build_workflow_provider_catalog
 from KERN.agent_workflow.provider_routing import resolve_workflow_provider
+from KERN.agent_workflow.registry import WorkflowRegistry
 from KERN.models.components import AgentControlComponent
 from KERN.runtime import KernRuntime
 
@@ -30,6 +31,19 @@ class ProviderRoutingTests(unittest.TestCase):
 		default = object()
 		services = {"default_action_provider": default, "action_providers": {"": object()}}
 		self.assertIs(resolve_workflow_provider(services, AgentControlComponent()), default)
+
+	def test_runtime_scoped_registry_uses_controller_then_default(self) -> None:
+		default = object()
+		named = object()
+		registry = WorkflowRegistry(default)
+		registry.register("named", named)
+		registry.freeze()
+		services = {"workflow_registry": registry}
+
+		self.assertIs(resolve_workflow_provider(services, AgentControlComponent(provider_id="named")), named)
+		self.assertIs(resolve_workflow_provider(services, AgentControlComponent(provider_id="missing")), default)
+		with self.assertRaisesRegex(RuntimeError, "frozen"):
+			registry.register("late", object())
 
 
 class ProviderCatalogTests(unittest.TestCase):
@@ -65,6 +79,23 @@ class ProviderCatalogTests(unittest.TestCase):
 
 		self.assertIn("fast_social", runtime.action_providers)
 		self.assertEqual(runtime.action_providers["fast_social"].llm.planner_model, "fast-planner")
+
+	def test_from_config_accepts_custom_workflow_registry(self) -> None:
+		custom = object()
+		registry = WorkflowRegistry(custom)
+		runtime = KernRuntime.from_config(
+			Path(__file__).resolve().parents[1],
+			"runtime_config.camping.package.smoke.json",
+			validate=False,
+			configure_logging=False,
+			overrides={"CHECKPOINT_EVERY_TICK": "0"},
+			workflow_registry=registry,
+		)
+
+		self.assertIs(runtime.workflow_registry, registry)
+		self.assertIs(runtime.workflow_registry.default_workflow, custom)
+		with self.assertRaisesRegex(RuntimeError, "frozen"):
+			registry.set_default(object())
 
 
 if __name__ == "__main__":

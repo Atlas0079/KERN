@@ -106,7 +106,7 @@ restore 路径。
   `ComponentCatalog.serialize(component_id, value)`；输出与 live world state 脱离引用。
 - `components`：兼容性展示投影，保留 Creature、Worker 与 Container 的既有精简形状。
 
-`ContainerComponent`、`TaskHostComponent` 与 `DecisionArbiterComponent` 等复杂组件只通过
+`ContainerComponent`、`TaskHostComponent` 与 `AgentWakePolicyComponent` 等复杂组件只通过
 各自 codec 序列化；runtime 不再维护第二套按组件类型转换的 canonical 逻辑。snapshot 不保存
 Python handler、codec、catalog 或 `WorldState.services`。
 

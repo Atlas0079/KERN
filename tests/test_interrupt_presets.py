@@ -4,7 +4,7 @@ import unittest
 
 from KERN.agent_workflow.interrupt_runtime import check_if_interrupt_is_needed
 from KERN.executor.executor import WorldExecutor
-from KERN.models.components import AgentControlComponent, CreatureComponent, DecisionArbiterComponent
+from KERN.models.components import AgentControlComponent, CreatureComponent, AgentWakePolicyComponent
 from KERN.models.entity import Entity
 from KERN.models.world_state import WorldState
 
@@ -13,8 +13,8 @@ def _agent() -> Entity:
 	ent = Entity(entity_id="agent_01", template_id="Agent", entity_name="Agent")
 	ent.add_component("AgentControlComponent", AgentControlComponent())
 	ent.add_component(
-		"DecisionArbiterComponent",
-		DecisionArbiterComponent.from_template_data(
+		"AgentWakePolicyComponent",
+		AgentWakePolicyComponent.from_template_data(
 			{
 				"active_interrupt_preset_id": "focused",
 				"interrupt_presets": {
@@ -37,8 +37,8 @@ def _low_nutrition_agent() -> Entity:
 	ent.add_component("AgentControlComponent", AgentControlComponent())
 	ent.add_component("CreatureComponent", CreatureComponent(max_nutrition=100, current_nutrition=40))
 	ent.add_component(
-		"DecisionArbiterComponent",
-		DecisionArbiterComponent.from_template_data(
+		"AgentWakePolicyComponent",
+		AgentWakePolicyComponent.from_template_data(
 			{
 				"active_interrupt_preset_id": "balanced",
 				"interrupt_presets": {
@@ -63,14 +63,14 @@ class InterruptPresetTests(unittest.TestCase):
 		ws = WorldState()
 		agent = _agent()
 		ws.register_entity(agent)
-		arb = agent.get_component("DecisionArbiterComponent")
+		wake_policy = agent.get_component("AgentWakePolicyComponent")
 
-		result = check_if_interrupt_is_needed(ws, "agent_01", arb)
+		result = check_if_interrupt_is_needed(ws, "agent_01", wake_policy)
 		self.assertTrue(result.interrupt)
 		self.assertEqual(result.rule_type, "NoActiveTask")
 
-		arb.active_interrupt_preset_id = "balanced"
-		result = check_if_interrupt_is_needed(ws, "agent_01", arb)
+		wake_policy.active_interrupt_preset_id = "balanced"
+		result = check_if_interrupt_is_needed(ws, "agent_01", wake_policy)
 		self.assertTrue(result.interrupt)
 		self.assertEqual(result.rule_type, "NoActiveTask")
 
@@ -78,9 +78,9 @@ class InterruptPresetTests(unittest.TestCase):
 		ws = WorldState()
 		agent = _low_nutrition_agent()
 		ws.register_entity(agent)
-		arb = agent.get_component("DecisionArbiterComponent")
+		wake_policy = agent.get_component("AgentWakePolicyComponent")
 
-		result = check_if_interrupt_is_needed(ws, "agent_01", arb)
+		result = check_if_interrupt_is_needed(ws, "agent_01", wake_policy)
 
 		self.assertTrue(result.interrupt)
 		self.assertEqual(result.rule_type, "LowNutrition")

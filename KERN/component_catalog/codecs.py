@@ -4,7 +4,7 @@ from dataclasses import asdict, is_dataclass
 from typing import Any, Callable
 
 from ..effect_bundle import effect_bundle_from_raw
-from ..models.components import ContainerComponent, ContainerSlot, DecisionArbiterComponent, TaskHostComponent
+from ..models.components import ContainerComponent, ContainerSlot, AgentWakePolicyComponent, TaskHostComponent
 from ..models.task import Task
 
 
@@ -51,8 +51,6 @@ class DataclassCodec:
 			if hasattr(component, key):
 				setattr(component, key, value)
 		return component
-
-
 class ContainerCodec:
 	def build(self, raw: Any) -> ContainerComponent:
 		data = dict(raw or {}) if isinstance(raw, dict) else {}
@@ -108,7 +106,7 @@ class ContainerCodec:
 		return component
 
 
-def _serialize_arbiter_rule(rule: Any) -> dict[str, Any] | None:
+def _serialize_wake_policy_rule(rule: Any) -> dict[str, Any] | None:
 	if isinstance(rule, dict):
 		rule_type = str(rule.get("type", "") or "").strip()
 		return {str(key): serialize_value(value) for key, value in rule.items()} if rule_type else None
@@ -130,17 +128,17 @@ def _serialize_arbiter_rule(rule: Any) -> dict[str, Any] | None:
 	return None
 
 
-class DecisionArbiterCodec:
-	def build(self, raw: Any) -> DecisionArbiterComponent:
+class AgentWakePolicyCodec:
+	def build(self, raw: Any) -> AgentWakePolicyComponent:
 		data = dict(raw or {}) if isinstance(raw, dict) else {}
-		component = DecisionArbiterComponent.from_template_data(data)
+		component = AgentWakePolicyComponent.from_template_data(data)
 		if isinstance(data.get("interrupt_runtime_state"), dict):
 			component.interrupt_runtime_state = dict(data.get("interrupt_runtime_state") or {})
 		component._runtime_preset_id = str(data.get("_runtime_preset_id", "") or "")
 		return component
 
-	def serialize(self, component: DecisionArbiterComponent) -> dict[str, Any]:
-		rules = [serialized for rule in list(component.ruleset or []) if (serialized := _serialize_arbiter_rule(rule)) is not None]
+	def serialize(self, component: AgentWakePolicyComponent) -> dict[str, Any]:
+		rules = [serialized for rule in list(component.ruleset or []) if (serialized := _serialize_wake_policy_rule(rule)) is not None]
 		return {
 			"rules": rules,
 			"active_interrupt_preset_id": str(component.active_interrupt_preset_id or ""),
@@ -152,11 +150,11 @@ class DecisionArbiterCodec:
 
 	def apply_snapshot(
 		self,
-		component: DecisionArbiterComponent,
+		component: AgentWakePolicyComponent,
 		patch: dict[str, Any],
 		*,
 		restore_container_items: bool = True,
-	) -> DecisionArbiterComponent:
+	) -> AgentWakePolicyComponent:
 		data = self.serialize(component)
 		if isinstance(patch.get("rules", patch.get("ruleset")), list):
 			data["rules"] = [dict(item) for item in list(patch.get("rules", patch.get("ruleset")) or []) if isinstance(item, dict)]
@@ -242,3 +240,6 @@ class TaskHostCodec:
 		if isinstance(patch.get("tasks"), dict):
 			component.tasks = self.build({"tasks": patch.get("tasks")}).tasks
 		return component
+
+
+__all__ = ["AgentWakePolicyCodec", "ContainerCodec", "DataclassCodec", "TaskHostCodec"]

@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 @dataclass
-class DecisionArbiterComponent:
+class AgentWakePolicyComponent:
 	"""Pure data component for interrupt configuration and runtime state."""
 
 	ruleset: list[Any] = field(default_factory=list)
@@ -15,7 +15,7 @@ class DecisionArbiterComponent:
 	_runtime_preset_id: str = ""
 
 	def per_tick(self, _ws: Any, _entity_id: str, _ticks_per_minute: int) -> None:
-		# Arbiter component usually doesn't need progression, read-only check suffices.
+		# Wake policy checks are read-only during ordinary component progression.
 		return
 
 	def get_active_interrupt_rule_params(self, rule_type: str) -> dict[str, Any]:
@@ -41,7 +41,7 @@ class DecisionArbiterComponent:
 		return rt
 
 	@staticmethod
-	def from_template_data(component_data: dict[str, Any]) -> "DecisionArbiterComponent":
+	def from_template_data(component_data: dict[str, Any]) -> "AgentWakePolicyComponent":
 		rules_raw = component_data.get("rules", []) if isinstance(component_data, dict) else []
 		ruleset: list[Any] = []
 
@@ -67,9 +67,12 @@ class DecisionArbiterComponent:
 			interrupt_presets = {}
 		if not isinstance(interrupt_preset_descriptions, dict):
 			interrupt_preset_descriptions = {}
-		return DecisionArbiterComponent(
+		return AgentWakePolicyComponent(
 			ruleset=ruleset,
 			active_interrupt_preset_id=active_interrupt_preset_id,
 			interrupt_presets=dict(interrupt_presets),
 			interrupt_preset_descriptions={str(k): str(v or "") for k, v in dict(interrupt_preset_descriptions).items()},
 		)
+
+
+__all__ = ["AgentWakePolicyComponent"]

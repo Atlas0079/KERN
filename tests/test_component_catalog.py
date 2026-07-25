@@ -11,7 +11,7 @@ from KERN.data.builder import build_world_state
 from KERN.data.checkpoint import restore_world_state_from_checkpoint
 from KERN.data.loader import DataBundle
 from KERN.executor.executor import WorldExecutor
-from KERN.models.components import CustomComponent, DecisionArbiterComponent, TaskHostComponent
+from KERN.models.components import CustomComponent, AgentWakePolicyComponent, TaskHostComponent
 from KERN.models.location import Location
 from KERN.models.world_state import WorldState
 from KERN.runtime import KernRuntime
@@ -196,10 +196,10 @@ class ComponentCatalogTests(unittest.TestCase):
 			serialized,
 		)
 
-	def test_decision_arbiter_codec_preserves_rules_presets_and_runtime_state(self) -> None:
+	def test_agent_wake_policy_codec_preserves_rules_presets_and_runtime_state(self) -> None:
 		catalog = build_core_component_catalog()
-		arbiter = catalog.build(
-			"DecisionArbiterComponent",
+		wake_policy = catalog.build(
+			"AgentWakePolicyComponent",
 			{
 				"rules": [
 					{"type": "NoActiveTask", "priority": 20},
@@ -212,13 +212,13 @@ class ComponentCatalogTests(unittest.TestCase):
 				"_runtime_preset_id": "careful",
 			},
 		)
-		serialized = catalog.serialize("DecisionArbiterComponent", arbiter)
-		rebuilt = catalog.build("DecisionArbiterComponent", serialized)
+		serialized = catalog.serialize("AgentWakePolicyComponent", wake_policy)
+		rebuilt = catalog.build("AgentWakePolicyComponent", serialized)
 
-		self.assertIsInstance(rebuilt, DecisionArbiterComponent)
+		self.assertIsInstance(rebuilt, AgentWakePolicyComponent)
 		self.assertEqual([rule["type"] for rule in rebuilt.ruleset], ["LowNutrition", "NoActiveTask"])
 		self.assertEqual(rebuilt.interrupt_runtime_state["LowNutrition"]["last_fire_tick"], 8)
-		self.assertEqual(catalog.serialize("DecisionArbiterComponent", rebuilt), serialized)
+		self.assertEqual(catalog.serialize("AgentWakePolicyComponent", rebuilt), serialized)
 
 	def test_task_host_codec_preserves_tasks_and_lifecycle_bundles(self) -> None:
 		catalog = build_core_component_catalog()

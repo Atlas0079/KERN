@@ -42,7 +42,7 @@
       },
       "WorkerComponent": {},
       "TaskHostComponent": {},
-      "DecisionArbiterComponent": {
+      "AgentWakePolicyComponent": {
         "active_interrupt_preset_id": "balanced",
         "interrupt_preset_descriptions": {
           "balanced": "平衡姿态：正常响应饥饿、感知变化和危险线索。",
@@ -193,7 +193,7 @@
       },
       "WorkerComponent": {},
       "TaskHostComponent": {},
-      "DecisionArbiterComponent": {
+      "AgentWakePolicyComponent": {
         "active_interrupt_preset_id": "balanced",
         "interrupt_preset_descriptions": {
           "balanced": "平衡姿态：正常响应饥饿、感知变化和危险线索。",

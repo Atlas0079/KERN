@@ -36,6 +36,7 @@ class WorldState:
 	# Runtime service registry (Injected by WorldManager, used by executor/effects and systems)
 	# Convention keys (Extensible):
 	# - "interaction_engine"
+	# - "workflow_registry"
 	# - "default_action_provider"
 	# - "action_providers"
 	# - "request_stop"

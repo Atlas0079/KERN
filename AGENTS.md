@@ -96,10 +96,10 @@ Scenario code is not sandboxed and has the same process permissions as KERN.
 - `KERN/component_catalog/`: component specifications and codecs.
 - `KERN/effects/`: effect specifications and catalog.
 - `KERN/executor/`: binders, handlers, transactions, rollback.
-- `KERN/interaction/`: recipe matching and command-to-bundle compilation.
-- `KERN/sim/`: reaction matching and settlement.
+- `KERN/interaction/`: recipe matching and ActionIntent-to-bundle compilation.
+- `KERN/sim/`: reaction settlement, active-turn scheduling, and turn execution.
 - `KERN/query/`: condition predicates and path resolution.
-- `KERN/agent_workflow/`: perception, memory patching, providers, workflows.
+- `KERN/agent_workflow/`: perception, memory patching, workflow contracts, registries, and provider adapters.
 - `KERN/external_runtime.py` and `KERN/external_runtimes/`: explicit adapters
   for state outside `WorldState`.
 - `KERN/failure_report.py`: run-scoped failure evidence and the single

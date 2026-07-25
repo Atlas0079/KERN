@@ -7,9 +7,10 @@ from typing import Any
 from uuid import uuid4
 
 from .agent_workflow.provider_catalog import build_workflow_provider_catalog
+from .agent_workflow.registry import WorkflowRegistry
 from .agent_workflow.simple_policy import SimplePolicyActionProvider
 from .agent_workflow.view_profile import normalize_workflow_view_profile
-from .agent_workflow.turn_scheduler import TurnScheduler
+from .sim.turn_scheduler import TurnScheduler
 from .component_catalog import ComponentCatalog, build_core_component_catalog
 from .data.archive import ArchiveRecorder
 from .data.builder import build_world_state
@@ -135,8 +136,9 @@ class KernRuntime:
 	world_state: WorldState
 	interaction_engine: Any
 	executor: Any
-	action_provider: Any
+	action_provider: Any = None
 	component_catalog: ComponentCatalog | None = None
+	workflow_registry: WorkflowRegistry | None = None
 
 	is_running: bool = False
 	ticks_per_step: int = 1
@@ -178,6 +180,9 @@ class KernRuntime:
 	snapshot_builder: RuntimeSnapshotBuilder | None = field(default=None, init=False, repr=False)
 
 	def __post_init__(self) -> None:
+		if self.workflow_registry is None:
+			self.workflow_registry = WorkflowRegistry.from_legacy(self.action_provider, self.action_providers)
+		self.workflow_registry.freeze()
 		catalog = self.component_catalog or getattr(self.executor, "component_catalog", None) or build_core_component_catalog()
 		catalog.freeze()
 		self.component_catalog = catalog
@@ -223,6 +228,7 @@ class KernRuntime:
 		configure_logging: bool = True,
 		overrides: dict[str, Any] | None = None,
 		external_runtimes: dict[str, Any] | None = None,
+		workflow_registry: WorkflowRegistry | None = None,
 		_loaded_packages: LoadedPackages | None = None,
 	) -> "KernRuntime":
 		"""
@@ -334,6 +340,7 @@ class KernRuntime:
 			),
 			action_provider=action_provider,
 			component_catalog=component_catalog,
+			workflow_registry=workflow_registry,
 			action_providers=action_providers,
 			external_runtimes=external_runtime_map,
 			reaction_rules=list((bundle.reactions or {}).get("rules", []) or []),
@@ -615,6 +622,7 @@ class KernRuntime:
 
 		self.world_state.services = {
 			"interaction_engine": self.interaction_engine,
+			"workflow_registry": self.workflow_registry,
 			"default_action_provider": self.action_provider,
 			"action_providers": dict(self.action_providers or {}),
 			"external_runtime_bridge": ExternalRuntimeBridge(dict(self.external_runtimes or {})),

@@ -51,7 +51,7 @@
       "StatusComponent": {
         "statuses": []
       },
-      "DecisionArbiterComponent": {
+      "AgentWakePolicyComponent": {
         "active_interrupt_preset_id": "balanced",
         "interrupt_preset_descriptions": {
           "balanced": "平衡姿态：正常响应饥饿、环境变化和危险线索。",

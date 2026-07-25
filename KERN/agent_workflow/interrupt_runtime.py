@@ -16,13 +16,13 @@ def _get_now_tick(ws: Any) -> int:
 	return int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
 
 
-def _ensure_runtime_preset_tracking(arb: Any) -> None:
-	pid = str(getattr(arb, "active_interrupt_preset_id", "") or "")
-	last = str(getattr(arb, "_runtime_preset_id", "") or "")
+def _ensure_runtime_preset_tracking(wake_policy: Any) -> None:
+	pid = str(getattr(wake_policy, "active_interrupt_preset_id", "") or "")
+	last = str(getattr(wake_policy, "_runtime_preset_id", "") or "")
 	if pid == last:
 		return
-	setattr(arb, "_runtime_preset_id", pid)
-	setattr(arb, "interrupt_runtime_state", {})
+	setattr(wake_policy, "_runtime_preset_id", pid)
+	setattr(wake_policy, "interrupt_runtime_state", {})
 
 
 def _get_creature_nutrition(ws: Any, agent_id: str) -> tuple[float | None, float | None]:
@@ -60,14 +60,14 @@ def _normalize_threshold_value(raw: Any, max_nutrition: float | None) -> float |
 	return v
 
 
-def _check_low_nutrition_with_latch(ws: Any, agent_id: str, arb: Any, rule: LowNutritionRule) -> InterruptResult:
-	params = arb.get_active_interrupt_rule_params("LowNutrition") if hasattr(arb, "get_active_interrupt_rule_params") else {}
+def _check_low_nutrition_with_latch(ws: Any, agent_id: str, wake_policy: Any, rule: LowNutritionRule) -> InterruptResult:
+	params = wake_policy.get_active_interrupt_rule_params("LowNutrition") if hasattr(wake_policy, "get_active_interrupt_rule_params") else {}
 	if params and not bool(params.get("enabled", True)):
-		if isinstance(getattr(arb, "interrupt_runtime_state", None), dict):
-			getattr(arb, "interrupt_runtime_state").pop("LowNutrition", None)
+		if isinstance(getattr(wake_policy, "interrupt_runtime_state", None), dict):
+			getattr(wake_policy, "interrupt_runtime_state").pop("LowNutrition", None)
 		return InterruptResult(interrupt=False, reason="", rule_type="LowNutrition", priority=int(getattr(rule, "priority", 10)))
 
-	rt = arb._get_rule_runtime("LowNutrition") if hasattr(arb, "_get_rule_runtime") else {}
+	rt = wake_policy._get_rule_runtime("LowNutrition") if hasattr(wake_policy, "_get_rule_runtime") else {}
 	now_tick = _get_now_tick(ws)
 
 	cur, max_nut = _get_creature_nutrition(ws, agent_id)
@@ -150,15 +150,15 @@ def _rule_from_data(rule_data: dict[str, Any]) -> Any | None:
 	return None
 
 
-def check_if_interrupt_is_needed(ws: Any, agent_id: str, arb: Any) -> InterruptResult:
-	_ensure_runtime_preset_tracking(arb)
+def check_if_interrupt_is_needed(ws: Any, agent_id: str, wake_policy: Any) -> InterruptResult:
+	_ensure_runtime_preset_tracking(wake_policy)
 	agent = ws.get_entity_by_id(agent_id) if hasattr(ws, "get_entity_by_id") else None
 	_ctrl_name, ctrl = resolve_enabled_controller_component(agent)
 	if ctrl is None:
 		return InterruptResult(interrupt=False, reason="", rule_type="", priority=999999)
 	worker = agent.get_component("WorkerComponent") if agent is not None else None
 	has_task = bool(getattr(worker, "current_task_id", "") or "") if worker is not None else False
-	ruleset = list(getattr(arb, "ruleset", []) or [])
+	ruleset = list(getattr(wake_policy, "ruleset", []) or [])
 	for item in list(ruleset):
 		rule = item
 		if isinstance(item, dict):
@@ -168,7 +168,7 @@ def check_if_interrupt_is_needed(ws: Any, agent_id: str, arb: Any) -> InterruptR
 		if has_task and isinstance(rule, NoActiveTaskRule):
 			continue
 		if isinstance(rule, LowNutritionRule):
-			result = _check_low_nutrition_with_latch(ws, agent_id, arb, rule)
+			result = _check_low_nutrition_with_latch(ws, agent_id, wake_policy, rule)
 		else:
 			result = rule.should_interrupt(ws, agent_id)
 		if bool(getattr(result, "interrupt", False)):

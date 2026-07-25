@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from ...models.components import CreatureComponent, DecisionArbiterComponent
+from ...models.components import CreatureComponent, AgentWakePolicyComponent
 from ..full_ws_view_builder import build_full_ws_view
 from ..observer import build_agent_perception
 from .base import InterruptResult
@@ -25,13 +25,13 @@ class CorpseSightedRule:
 		if not isinstance(cc, CreatureComponent):
 			return InterruptResult(False)
 
-		arb = agent.get_component("DecisionArbiterComponent")
-		params = arb.get_active_interrupt_rule_params("CorpseSighted") if isinstance(arb, DecisionArbiterComponent) else {}
+		wake_policy = agent.get_component("AgentWakePolicyComponent")
+		params = wake_policy.get_active_interrupt_rule_params("CorpseSighted") if isinstance(wake_policy, AgentWakePolicyComponent) else {}
 		if params and not bool(params.get("enabled", True)):
-			if isinstance(arb, DecisionArbiterComponent) and isinstance(getattr(arb, "interrupt_runtime_state", None), dict):
-				getattr(arb, "interrupt_runtime_state").pop("CorpseSighted", None)
+			if isinstance(wake_policy, AgentWakePolicyComponent) and isinstance(getattr(wake_policy, "interrupt_runtime_state", None), dict):
+				getattr(wake_policy, "interrupt_runtime_state").pop("CorpseSighted", None)
 			return InterruptResult(False)
-		rt = arb.get_rule_runtime("CorpseSighted") if isinstance(arb, DecisionArbiterComponent) else {}
+		rt = wake_policy.get_rule_runtime("CorpseSighted") if isinstance(wake_policy, AgentWakePolicyComponent) else {}
 		now_tick = int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
 		if isinstance(params, dict) and not bool(params.get("trigger_on_new_corpse", self.trigger_on_new_corpse)):
 			return InterruptResult(False)

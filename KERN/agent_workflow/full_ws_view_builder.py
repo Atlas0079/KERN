@@ -154,10 +154,10 @@ def build_full_ws_view(
 				observed_description = str(getattr(description_comp, "observed_description", "") or description)
 		perception = _select_perception(ws, ent, actor_id, eid, description, base_description, observed_description)
 		memory_dict = _read_memory_component_dict(ent)
-		arb = ent.get_component("DecisionArbiterComponent") if hasattr(ent, "get_component") else None
-		active_interrupt_preset_id = str(getattr(arb, "active_interrupt_preset_id", "") or "") if arb is not None else ""
-		interrupt_presets = dict(getattr(arb, "interrupt_presets", {}) or {}) if arb is not None else {}
-		interrupt_preset_descriptions = dict(getattr(arb, "interrupt_preset_descriptions", {}) or {}) if arb is not None else {}
+		wake_policy = ent.get_component("AgentWakePolicyComponent") if hasattr(ent, "get_component") else None
+		active_interrupt_preset_id = str(getattr(wake_policy, "active_interrupt_preset_id", "") or "") if wake_policy is not None else ""
+		interrupt_presets = dict(getattr(wake_policy, "interrupt_presets", {}) or {}) if wake_policy is not None else {}
+		interrupt_preset_descriptions = dict(getattr(wake_policy, "interrupt_preset_descriptions", {}) or {}) if wake_policy is not None else {}
 		world_state_entity = ent.get_component("WorldStateEntityComponent") if hasattr(ent, "get_component") else None
 		world_state_entity_data: dict[str, Any] = {}
 		if world_state_entity is not None:

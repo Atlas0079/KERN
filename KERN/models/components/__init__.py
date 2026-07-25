@@ -8,7 +8,7 @@ from .controller_resolver import resolve_enabled_controller_component
 from .container import ContainerComponent, ContainerSlot
 from .creature import CreatureComponent
 from .custom import CustomComponent
-from .decision_arbiter import DecisionArbiterComponent
+from .agent_wake_policy import AgentWakePolicyComponent
 from .description import DescriptionComponent
 from .edible import EdibleComponent
 from .equipment import EquipmentComponent
@@ -33,7 +33,7 @@ __all__ = [
 	"ContainerSlot",
 	"CreatureComponent",
 	"CustomComponent",
-	"DecisionArbiterComponent",
+	"AgentWakePolicyComponent",
 	"DescriptionComponent",
 	"EdibleComponent",
 	"EquipmentComponent",

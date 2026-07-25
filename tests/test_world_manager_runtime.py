@@ -9,7 +9,7 @@ from KERN.interaction.engine import InteractionEngine
 from KERN.models.entity import Entity
 from KERN.models.location import Location
 from KERN.models.world_state import WorldState
-from KERN.models.components import CreatureComponent
+from KERN.models.components import AgentControlComponent, AgentWakePolicyComponent, CreatureComponent
 from KERN.runtime import KernRuntime
 from pathlib import Path
 
@@ -112,6 +112,37 @@ class KernRuntimeTests(unittest.TestCase):
 		self.assertTrue(runtime.is_terminal)
 		self.assertEqual(runtime.last_stop_info["reason"], "failure")
 		self.assertTrue(runtime.failure_report_writer is not None)
+
+	def test_workflow_exception_is_terminal(self) -> None:
+		class _BrokenWorkflow:
+			def begin_turn(self, _start):
+				return self
+
+			def next_step(self, _frame):
+				raise OSError("provider unavailable")
+
+		ws = _world()
+		agent = ws.get_entity_by_id("agent_01")
+		agent.add_component("AgentControlComponent", AgentControlComponent())
+		agent.add_component(
+			"AgentWakePolicyComponent",
+			AgentWakePolicyComponent(ruleset=[{"type": "NoActiveTask", "priority": 1}]),
+		)
+		runtime = KernRuntime(
+			world_state=ws,
+			interaction_engine=InteractionEngine(recipe_db={}),
+			executor=WorldExecutor(),
+			workflow_registry=None,
+			action_provider=_BrokenWorkflow(),
+			checkpoint_enabled=False,
+		)
+
+		with self.assertRaises(KernFailure) as caught:
+			runtime.advance_ticks(1)
+
+		self.assertEqual(caught.exception.code, "WORKFLOW_PROVIDER_EXCEPTION")
+		self.assertTrue(runtime.is_terminal)
+		self.assertEqual(runtime.last_stop_info["reason"], "failure")
 
 
 if __name__ == "__main__":

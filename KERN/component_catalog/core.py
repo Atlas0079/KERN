@@ -8,7 +8,7 @@ from ..models.components import (
 	AgentSetting,
 	ContainerComponent,
 	CreatureComponent,
-	DecisionArbiterComponent,
+	AgentWakePolicyComponent,
 	DescriptionComponent,
 	EdibleComponent,
 	EquipmentComponent,
@@ -24,7 +24,7 @@ from ..models.components import (
 	WorldStateEntityComponent,
 )
 from .catalog import ComponentCatalog
-from .codecs import ContainerCodec, DataclassCodec, DecisionArbiterCodec, TaskHostCodec
+from .codecs import ContainerCodec, DataclassCodec, AgentWakePolicyCodec, TaskHostCodec
 from .spec import ComponentSpec
 
 
@@ -129,7 +129,7 @@ def build_core_component_catalog() -> ComponentCatalog:
 	_register(catalog, "MemoryComponent", MemoryComponent, DataclassCodec(MemoryComponent, _memory))
 	_register(catalog, "ContainerComponent", ContainerComponent, ContainerCodec())
 	_register(catalog, "CreatureComponent", CreatureComponent, DataclassCodec(CreatureComponent, _creature))
-	_register(catalog, "DecisionArbiterComponent", DecisionArbiterComponent, DecisionArbiterCodec())
+	_register(catalog, "AgentWakePolicyComponent", AgentWakePolicyComponent, AgentWakePolicyCodec())
 	_register(catalog, "DescriptionComponent", DescriptionComponent, DataclassCodec(DescriptionComponent, _description))
 	_register(catalog, "EdibleComponent", EdibleComponent, DataclassCodec(EdibleComponent, _edible, _edible))
 	_register(

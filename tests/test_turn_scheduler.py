@@ -3,11 +3,12 @@ from __future__ import annotations
 import unittest
 from typing import Any
 
-from KERN.agent_workflow.turn_scheduler import TurnScheduler
+from KERN.sim.turn_scheduler import TurnScheduler
+from KERN.agent_workflow.contracts import EndTurn, SubmitAction
 from KERN.execution_errors import KernFailure
 from KERN.executor.executor import WorldExecutor
 from KERN.interaction.engine import InteractionEngine
-from KERN.models.components import AgentControlComponent, DecisionArbiterComponent, MemoryComponent, PerceptionComponent, TagComponent, WorkerComponent
+from KERN.models.components import AgentControlComponent, AgentWakePolicyComponent, MemoryComponent, PerceptionComponent, TagComponent, WorkerComponent
 from KERN.models.entity import Entity
 from KERN.models.location import Location
 from KERN.models.world_state import WorldState
@@ -32,7 +33,7 @@ def _world(workflow: Any, recipes: dict[str, Any], reactions: list[dict[str, Any
 	ws.register_location(location)
 	actor = Entity(entity_id="agent", template_id="Agent", entity_name="Agent")
 	actor.add_component("AgentControlComponent", AgentControlComponent())
-	actor.add_component("DecisionArbiterComponent", DecisionArbiterComponent(ruleset=[{"type": "NoActiveTask", "priority": 1}]))
+	actor.add_component("AgentWakePolicyComponent", AgentWakePolicyComponent(ruleset=[{"type": "NoActiveTask", "priority": 1}]))
 	actor.add_component("MemoryComponent", MemoryComponent())
 	actor.add_component("PerceptionComponent", PerceptionComponent())
 	actor.add_component("TagComponent", TagComponent())
@@ -56,6 +57,87 @@ def _world(workflow: Any, recipes: dict[str, Any], reactions: list[dict[str, Any
 
 
 class TurnSchedulerTests(unittest.TestCase):
+	def test_native_turn_session_receives_post_settlement_feedback(self) -> None:
+		class _NativeWorkflow:
+			def __init__(self) -> None:
+				self.feedback_statuses: list[str] = []
+
+			def begin_turn(self, _start):
+				workflow = self
+
+				class _Session:
+					step_index = 0
+
+					def next_step(self, frame):
+						if frame.previous_action is not None:
+							workflow.feedback_statuses.append(frame.previous_action.status)
+						self.step_index += 1
+						if self.step_index == 1:
+							return SubmitAction({"verb": "Start", "target_id": "agent", "parameters": {}})
+						if self.step_index == 2:
+							return SubmitAction({"verb": "Finish", "target_id": "agent", "parameters": {}})
+						return EndTurn()
+
+				return _Session()
+
+		workflow = _NativeWorkflow()
+		recipes = {
+			"start": {"verb": "Start", "bundle": {"effects": [{"effect": "AddTag", "target": "self", "tag": "started"}]}},
+			"finish": {
+				"verb": "Finish",
+				"condition": {"type": "has_tag", "target": "self", "tag": "reaction_complete"},
+				"bundle": {"effects": [{"effect": "AddTag", "target": "self", "tag": "finished"}]},
+			},
+		}
+		reactions = [{
+			"id": "complete_start",
+			"on_event": "TagAdded",
+			"condition": {"type": "event_field_eq", "field": "payload.tag", "value": "started"},
+			"bundle": {"effects": [{"effect": "AddTag", "target": "self", "tag": "reaction_complete"}]},
+		}]
+		ws, settlement = _world(workflow, recipes, reactions)
+
+		TurnScheduler(max_actions_per_turn=5, max_replans_per_turn=2).run_active_phase(ws, settlement)
+
+		self.assertEqual(ws.get_entity_by_id("agent").get_all_tags(), ["started", "reaction_complete", "finished"])
+		self.assertEqual(workflow.feedback_statuses, ["committed", "committed"])
+
+	def test_native_turn_session_receives_rejection_and_continues_same_session(self) -> None:
+		class _NativeWorkflow:
+			def __init__(self) -> None:
+				self.sessions_started = 0
+				self.rejection_code = ""
+
+			def begin_turn(self, _start):
+				self.sessions_started += 1
+				workflow = self
+
+				class _Session:
+					step_index = 0
+
+					def next_step(self, frame):
+						self.step_index += 1
+						if self.step_index == 1:
+							return SubmitAction({"verb": "Missing", "target_id": "gone", "parameters": {}})
+						if self.step_index == 2:
+							workflow.rejection_code = frame.previous_action.rejection_code
+							return SubmitAction({"verb": "Recover", "target_id": "agent", "parameters": {}})
+						return EndTurn()
+
+				return _Session()
+
+		workflow = _NativeWorkflow()
+		ws, settlement = _world(
+			workflow,
+			{"recover": {"verb": "Recover", "bundle": {"effects": [{"effect": "AddTag", "target": "self", "tag": "recovered"}]}}},
+		)
+
+		TurnScheduler(max_actions_per_turn=5, max_replans_per_turn=2).run_active_phase(ws, settlement)
+
+		self.assertEqual(workflow.sessions_started, 1)
+		self.assertEqual(workflow.rejection_code, "TARGET_MISSING")
+		self.assertEqual(ws.get_entity_by_id("agent").get_all_tags(), ["recovered"])
+
 	def test_each_action_resolves_after_prior_reactions_settle(self) -> None:
 		workflow = _SequenceWorkflow([
 			{
