@@ -12,11 +12,10 @@ from ..failure_report import FailureEvidence
 from ..log_manager import get_logger
 from ..llm.openai_compat_client import DualModelLLM, OpenAICompatClient, LLMRequestError
 from ..llm.gemini_client import GeminiClient
-from .memory_policy import build_memory_patch
 from .observer import build_agent_perception
 from .workflow_contract import (
-	build_apply_commands_decision,
-	build_noop_decision,
+	build_action_plan_decision,
+	build_end_turn_decision,
 )
 
 
@@ -290,6 +289,8 @@ def _build_agent_context(perception: dict[str, Any], self_id: str) -> dict[str, 
 		"common_knowledge_summary": str(p.get("common_knowledge_summary", "") or ""),
 		"short_term_memory_text": str(p.get("short_term_memory_text", "") or ""),
 		"short_term_memory_items": list(p.get("short_term_memory_items", []) or []),
+		"recent_interactions": [dict(x) for x in list(p.get("recent_interactions", []) or []) if isinstance(x, dict)],
+		"recent_interactions_text": str(p.get("recent_interactions_text", "") or ""),
 		"mid_term_summary": str(p.get("mid_term_summary", "") or ""),
 		"vitals": dict(p.get("vitals", {}) or {}) if isinstance(p.get("vitals", {}), dict) else {},
 		"vitals_text": _vitals_text(dict(p.get("vitals", {}) or {}) if isinstance(p.get("vitals", {}), dict) else {}),
@@ -589,7 +590,6 @@ INTENT: <1-3句，给Grounder使用的实际意图，必须可执行>
 - InspectInterruptPresets（meta）：可选参数 `{"preset_id": "<可选>"}`，且不得提供 target_id。
 - Travel（non-meta）：target_id 必须是 self id，parameters 必须包含 `{"to_location_id": "<reachable_locations.to_location_id 之一>"}`。
 - Talk（non-meta）：不得提供 target_id；parameters 必须包含 `{"text": "<非空开场白>"}`。执行后会触发“当前地点群体对话”，该 text 作为第一轮发言，然后同地点其他角色按轮次继续。
-- ContinueCurrentTask（non-meta，仅在中断决策阶段可用）：不得提供 target_id；parameters 必须为空对象 `{}`。
 - YieldCurrentTask（non-meta，仅在中断决策阶段可用）：不得提供 target_id；parameters 必须为空对象 `{}`，表示先放下当前任务，再进入常规决策。
 - Give（non-meta）：target_id 必须是一个可见 agent 的 id，且 parameters 必须包含 `{"item_id": "<你背包中物品的id>"}`。
 - 对于出现在 Recipe Grounder Hints 中的动词，你必须满足对应 hint 约束。
@@ -742,31 +742,25 @@ Output rules:
 				context={"actor_id": str(actor_id or ""), "failure_evidence": failure_context or {}},
 			) from e
 		if not list(actions or []):
-			return build_noop_decision(meta={"provider": "llm_workflow", "reason": "no_actions"})
+			return build_end_turn_decision(meta={"provider": "llm_workflow", "reason": "no_actions"})
 		memory_notes: list[dict[str, Any]] = []
 		for item in list(actions or []):
 			if isinstance(item, dict) and str(item.get("_workflow_note_type", "") or "") == "ungroundable":
 				memory_notes.append(self._build_ungroundable_memory_note(str(item.get("reason", "") or ""), full_ws_view))
-		commands = [
+		action_plan = [
 			dict(x)
 			for x in list(actions or [])
 			if isinstance(x, dict) and str(x.get("_workflow_note_type", "") or "") != "ungroundable"
 		]
 		if failure_context is not None:
-			failure_context["commands"] = [dict(item) for item in commands]
+			failure_context["actions"] = [dict(item) for item in action_plan]
 		meta = {"provider": "llm_workflow", "memory_notes": memory_notes} if memory_notes else {"provider": "llm_workflow"}
-		return build_apply_commands_decision(
-			commands=commands,
+		if not action_plan:
+			return build_end_turn_decision(meta=meta)
+		return build_action_plan_decision(
+			actions=action_plan,
 			meta=meta,
 		)
-
-	def build_memory_patch_data(self, ws_view: Any, recipe_db: dict[str, Any] | None, actor_id: str) -> dict[str, Any] | None:
-		view_payload = dict(ws_view or {}) if isinstance(ws_view, dict) else {}
-		full_ws_view = dict(view_payload.get("full_ws_view", {}) or {}) if isinstance(view_payload.get("full_ws_view", {}), dict) else {}
-		if not full_ws_view:
-			return None
-		recipe_db_view = dict(recipe_db or {}) if isinstance(recipe_db, dict) else {}
-		return build_memory_patch(full_ws_view=full_ws_view, recipe_db=recipe_db_view, actor_id=str(actor_id))
 
 	def _build_ungroundable_memory_note(self, reason: str, full_ws_view: dict[str, Any]) -> dict[str, Any]:
 		tick = int((full_ws_view or {}).get("tick", 0) or 0) if isinstance(full_ws_view, dict) else 0
@@ -852,6 +846,10 @@ Output rules:
 		reachable_locations = list(agent_context.get("reachable_locations", []) or [])
 		can_start_conversation_here = bool(agent_context.get("can_start_conversation_here", True))
 		short_term_memory_text = str(agent_context.get("short_term_memory_text", "") or "")
+		recent_interactions_text = str(agent_context.get("recent_interactions_text", "") or "")
+		memory_context_text = "\n".join(
+			text for text in (recent_interactions_text.strip(), short_term_memory_text.strip()) if text
+		)
 		short_term_memory_items = list(agent_context.get("short_term_memory_items", []) or [])
 		inventory = list(agent_context.get("inventory", []) or [])
 		loc = agent_context.get("location", {}) or {}
@@ -880,17 +878,9 @@ Output rules:
 		interrupt_mode = bool((perception or {}).get("interrupt_decision_mode", False))
 		current_task_id_for_interrupt = str((perception or {}).get("current_task_id", "") or "")
 		if interrupt_mode and current_task_id_for_interrupt:
-			allowed_verbs = set()
-			allowed_verbs.add("ContinueCurrentTask")
-			allowed_verbs.add("YieldCurrentTask")
+			allowed_verbs = {"YieldCurrentTask"}
 			verb_lines = [f"- {v}" for v in sorted(allowed_verbs)]
 			available_verbs_list = "\n".join(verb_lines) if verb_lines else "(No available verbs)"
-			if "ContinueCurrentTask" not in str(available_verbs_with_duration):
-				available_verbs_with_duration = (
-					f"{available_verbs_with_duration}\n- ContinueCurrentTask: instant".strip()
-					if available_verbs_with_duration
-					else "- ContinueCurrentTask: instant"
-				)
 			if "YieldCurrentTask" not in str(available_verbs_with_duration):
 				available_verbs_with_duration = (
 					f"{available_verbs_with_duration}\n- YieldCurrentTask: instant".strip()
@@ -899,8 +889,8 @@ Output rules:
 				)
 		planner_recipe_hints, grounder_recipe_hints = _build_recipe_hints(recipe_db, allowed_verbs)
 		if interrupt_mode and current_task_id_for_interrupt:
-			extra_planner = "- ContinueCurrentTask: 当你被中断但判断当前任务更优先时，选择该动作以继续当前任务，不切换目标。"
-			extra_grounder = "- ContinueCurrentTask: 仅在中断决策阶段可用，输出格式为 {\"verb\":\"ContinueCurrentTask\",\"parameters\":{}}，不得提供 target_id。"
+			extra_planner = "- 如果你决定继续当前任务，不提出新动作；本轮直接结束。"
+			extra_grounder = "- 如果 Planner 决定继续当前任务，输出空 JSON 数组 []，表示 end_turn。"
 			planner_recipe_hints = f"{planner_recipe_hints}\n{extra_planner}".strip() if planner_recipe_hints else extra_planner
 			grounder_recipe_hints = f"{grounder_recipe_hints}\n{extra_grounder}".strip() if grounder_recipe_hints else extra_grounder
 			yield_planner = "- YieldCurrentTask: 当你决定先放下当前任务去处理打断事件时，选择该动作。放下后任务按 task_policy 自动处理（通常保留为 Paused）。"
@@ -913,7 +903,6 @@ Output rules:
 			"available_verbs_with_duration": str(available_verbs_with_duration),
 			"planner_recipe_hints": str(planner_recipe_hints),
 			"grounder_recipe_hints": str(grounder_recipe_hints),
-			"continue_current_task_available": bool(interrupt_mode and current_task_id_for_interrupt),
 			"yield_current_task_available": bool(interrupt_mode and current_task_id_for_interrupt),
 		}
 		agent_context = _build_agent_context(perception, self_id)
@@ -944,7 +933,7 @@ Output rules:
 			"can_start_conversation_here": str(can_start_conversation_here).lower(),
 			"visible_entities_table": _entities_table_planner(visible_entities),
 			"inventory_table": _inventory_table_planner(inventory),
-			"recent_interactions_text": short_term_memory_text,
+			"recent_interactions_text": memory_context_text,
 			"last_failure_summary": str(reason or ""),
 			"planner_output_here": "",
 		}
@@ -1071,7 +1060,7 @@ Output rules:
 				"inventory_table": _inventory_table(inventory),
 				"available_verbs_list": available_verbs_list,
 				"grounder_recipe_hints": grounder_recipe_hints,
-				"recent_interactions_text": short_term_memory_text,
+				"recent_interactions_text": memory_context_text,
 				"verb": "",
 				"target_id": "",
 			},
@@ -1194,16 +1183,11 @@ Output rules:
 			if isinstance(value, list):
 				out = [dict(item) for item in value if isinstance(item, dict)]
 				return out
-			# Tolerate wrapped shapes: {"actions":[...]} / {"commands":[...]}
+			# The grounder contract is a top-level list; only ungroundable uses an object.
 			if isinstance(value, dict):
 				dtype = str(value.get("type", "") or "").strip().lower()
 				if dtype == "ungroundable":
 					raise GroundingUngroundable(str(value.get("reason", "") or "Planner intent cannot be grounded with current actions."))
-				for key in ["actions", "commands"]:
-					v = value.get(key, None)
-					if isinstance(v, list):
-						out = [dict(item) for item in v if isinstance(item, dict)]
-						return out
 			return None
 
 		def _extract_code_fence_bodies(s: str) -> list[str]:
@@ -1330,6 +1314,10 @@ Output rules:
 		loc_name = str((loc or {}).get("name", "") or "")
 		visible_entities = list(agent_context.get("visible_entities", []) or [])
 		short_term_memory_text = str(agent_context.get("short_term_memory_text", "") or "")
+		recent_interactions_text = str(agent_context.get("recent_interactions_text", "") or "")
+		memory_context_text = "\n".join(
+			text for text in (recent_interactions_text.strip(), short_term_memory_text.strip()) if text
+		)
 		inventory = list(agent_context.get("inventory", []) or [])
 		reachable_locations = list(agent_context.get("reachable_locations", []) or [])
 		mode_context = dict(agent_context.get("mode_context", {}) or {})
@@ -1361,7 +1349,7 @@ Output rules:
 				"visible_entities_table": _entities_table(visible_entities),
 				"inventory_table": _inventory_table(inventory),
 				"reachable_locations_table": _reachable_locations_text(reachable_locations),
-				"recent_interactions_text": short_term_memory_text,
+				"recent_interactions_text": memory_context_text,
 			},
 		)
 		dialogue_context = self._new_failure_context(

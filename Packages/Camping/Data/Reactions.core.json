@@ -12,23 +12,6 @@
       }
     },
     {
-      "id": "advance_tick_agent_control",
-      "on_event": "AdvanceTick",
-      "condition": {
-                "type": "has_component",
-                "target": "event_entity",
-                "component": "AgentControlComponent"
-            },
-            "bundle": {
-                "effects": [
-                    {
-                        "effect": "AgentControlTick",
-                        "max_actions_in_tick": 50
-                    }
-                ]
-            }
-        },
-        {
             "id": "advance_tick_worker",
             "on_event": "AdvanceTick",
             "condition": {

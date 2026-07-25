@@ -303,6 +303,9 @@ def restore_world_state_from_checkpoint(
 		if kind == "event":
 			event_log.append(rec)
 		elif kind == "interaction":
+			seq = int(rec.get("seq", 0) or 0)
+			if seq > 0:
+				rec.setdefault("interaction_id", f"interaction_{seq}")
 			interaction_log.append(rec)
 	ws.event_log = event_log
 	ws.interaction_log = interaction_log

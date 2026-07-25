@@ -86,8 +86,8 @@ class EnvironmentScopeTests(unittest.TestCase):
 
 		self.assertEqual(ws.get_environment_field("camp", "weather"), "clear")
 		self.assertEqual(events[0]["type"], "EnvironmentFieldSet")
-		self.assertEqual(events[0]["old_value"], "rain")
-		self.assertEqual(events[0]["value"], "clear")
+		self.assertEqual(events[0]["payload"]["old_value"], "rain")
+		self.assertEqual(events[0]["payload"]["value"], "clear")
 
 	def test_environment_condition_effects_and_predicate(self) -> None:
 		result = build_world_state(_world_data(), {}, {})
@@ -101,7 +101,7 @@ class EnvironmentScopeTests(unittest.TestCase):
 		)
 
 		self.assertTrue(evaluate_predicate(ws, {"type": "environment_has_condition", "scope_id": "region", "condition_id": "muddy_ground"}, {}))
-		self.assertEqual(added[0]["expire_at_tick"], 5)
+		self.assertEqual(added[0]["payload"]["expire_at_tick"], 5)
 
 		removed = executor.execute(
 			ws,

@@ -372,7 +372,12 @@ def evaluate_predicate(ws: Any, predicate: dict[str, Any] | None, context: dict[
 		event = ctx.get("event", {}) or {}
 		if not isinstance(event, dict) or not field_name:
 			return False
-		return event.get(field_name) == expected
+		value: Any = event
+		for segment in field_name.split("."):
+			if not isinstance(value, dict) or segment not in value:
+				return False
+			value = value[segment]
+		return value == expected
 	if p_type == "has_tag":
 		target = resolve_entity(ws, predicate.get("target", "self"), ctx, allow_literal=True)
 		tag = str(predicate.get("tag", "") or "")

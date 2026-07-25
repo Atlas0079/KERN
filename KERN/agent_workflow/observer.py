@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ..interaction.presentation import interaction_content
 from .view_profile import normalize_workflow_view_profile
 
 
@@ -48,10 +49,25 @@ def _short_term_text(items: list[dict[str, Any]], max_items: int = 30) -> str:
 		if not content:
 			continue
 		tick = int(e.get("tick", 0) or 0)
+		time_str = _safe_str(e.get("time_str")).strip()
 		imp = float(e.get("importance", 0.5) or 0.5)
 		topic = _safe_str(e.get("topic")).strip()
 		topic_text = f"[{topic}] " if topic else ""
-		lines.append(f"- [tick {tick}][imp {imp:.2f}] {topic_text}{content}")
+		time_text = f"[{time_str}]" if time_str else ""
+		lines.append(f"- [tick {tick}]{time_text}[imp {imp:.2f}] {topic_text}{content}")
+	return "\n".join(lines)
+
+
+def _recent_interactions_text(items: list[dict[str, Any]]) -> str:
+	lines: list[str] = []
+	for item in [dict(value) for value in list(items or []) if isinstance(value, dict)]:
+		tick = int(item.get("tick", 0) or 0)
+		time_str = _safe_str(item.get("time_str")).strip()
+		status = _safe_str(item.get("status")).strip()
+		content = interaction_content(item)
+		time_text = f"[{time_str}]" if time_str else ""
+		status_text = f"[{status}]" if status else ""
+		lines.append(f"- [tick {tick}]{time_text}{status_text} {content}")
 	return "\n".join(lines)
 
 
@@ -242,6 +258,22 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 	mem = self_ent.get("memory", {}) or {}
 	mem_short = [dict(x) for x in list(mem.get("short_term_queue", []) or []) if isinstance(x, dict)]
 	mem_mid = [dict(x) for x in list(mem.get("mid_term_queue", []) or []) if isinstance(x, dict)]
+	recent_interactions = [
+		dict(x)
+		for x in list(view.get("recent_interactions", []) or [])
+		if isinstance(x, dict)
+	]
+	recent_interaction_ids = {
+		_safe_str(item.get("interaction_id")).strip()
+		for item in recent_interactions
+		if _safe_str(item.get("interaction_id")).strip()
+	}
+	prior_memory_items = [
+		dict(item)
+		for item in mem_short
+		if _safe_str((item.get("source", {}) or {}).get("interaction_id") if isinstance(item.get("source", {}), dict) else "").strip()
+		not in recent_interaction_ids
+	]
 	interrupt_preset_descriptions = self_ent.get("interrupt_preset_descriptions", {}) or {}
 	available_interrupt_presets = sorted(
 		[str(x) for x in list((self_ent.get("interrupt_presets", {}) or {}).keys()) if str(x)]
@@ -255,8 +287,10 @@ def build_agent_perception(full_ws_view: dict[str, Any], self_id: str) -> dict[s
 		"personality_summary": _safe_str(self_ent.get("personality_summary")),
 		"common_knowledge_summary": _safe_str(self_ent.get("common_knowledge_summary")),
 		"vitals": dict(self_ent.get("vitals", {}) or {}) if isinstance(self_ent.get("vitals", {}), dict) else {},
-		"short_term_memory_text": _short_term_text(mem_short, max_items=30),
+		"short_term_memory_text": _short_term_text(prior_memory_items, max_items=30),
 		"short_term_memory_items": mem_short,
+		"recent_interactions": recent_interactions,
+		"recent_interactions_text": _recent_interactions_text(recent_interactions),
 		"mid_term_summary": _mid_term_summary_text(mem_mid, max_items=4),
 		"location": {
 			"id": self_loc_id,

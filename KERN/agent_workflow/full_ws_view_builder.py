@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from typing import Any
 
 from ..sim.condition_evaluator import ConditionEvaluator
@@ -31,44 +32,16 @@ def _read_memory_component_dict(ent: Any) -> dict[str, Any]:
 		"mid_term_max_entries": int(getattr(mem, "mid_term_max_entries", 20) or 20),
 		"last_mid_term_summary_tick": int(getattr(mem, "last_mid_term_summary_tick", -1) or -1),
 		"mid_term_summary_cooldown_ticks": int(getattr(mem, "mid_term_summary_cooldown_ticks", 15) or 15),
-		"last_event_seq_seen": int(getattr(mem, "last_event_seq_seen", 0) or 0),
-		"last_interaction_seq_seen": int(getattr(mem, "last_interaction_seq_seen", 0) or 0),
 	}
 
 
-def _actor_memory_cursors(ws: Any, actor_id: str) -> tuple[int, int]:
-	agent = ws.get_entity_by_id(actor_id) if hasattr(ws, "get_entity_by_id") else None
-	if agent is None:
-		return (0, 0)
-	mem = agent.get_component("MemoryComponent") if hasattr(agent, "get_component") else None
-	if mem is None:
-		return (0, 0)
-	return (
-		int(getattr(mem, "last_event_seq_seen", 0) or 0),
-		int(getattr(mem, "last_interaction_seq_seen", 0) or 0),
-	)
-
-
-def _interaction_visible_to_actor(ws: Any, actor_id: str, record: dict[str, Any]) -> bool:
-	"""Apply the coarse world-visibility boundary before workflow code sees a record."""
-	aid = str(actor_id or "")
-	owner = str(record.get("actor_id", "") or "")
-	target = str(record.get("target_id", "") or "")
-	if bool(record.get("private_to_actor", False)) and owner != aid:
-		return False
-	if aid and (owner == aid or target == aid):
-		return True
-	actor_location = ws.get_location_of_entity(aid) if aid and hasattr(ws, "get_location_of_entity") else None
-	actor_location_id = str(getattr(actor_location, "location_id", "") or "")
-	record_location_id = str(record.get("location_id", "") or "")
-	if not (actor_location_id and record_location_id and actor_location_id == record_location_id):
-		return False
-	services = getattr(ws, "services", {}) or {}
-	profile = services.get("workflow_view_profile", {}) if isinstance(services, dict) else {}
-	memory_profile = profile.get("memory", {}) if isinstance(profile, dict) else {}
-	if isinstance(memory_profile, dict) and "include_same_location_interactions" in memory_profile:
-		return bool(memory_profile.get("include_same_location_interactions", True))
-	return True
+def _read_interaction_inbox(ent: Any) -> list[dict[str, Any]]:
+	perception = ent.get_component("PerceptionComponent") if hasattr(ent, "get_component") else None
+	return [
+		deepcopy(item)
+		for item in list(getattr(perception, "interaction_inbox", []) or [])
+		if isinstance(item, dict)
+	]
 
 
 def _round1(value: Any) -> float | None:
@@ -145,7 +118,12 @@ def _select_perception(ws: Any, ent: Any, actor_id: str, entity_id: str, descrip
 	}
 
 
-def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[str, Any]) -> dict[str, Any]:
+def build_full_ws_view(
+	ws: Any,
+	actor_id: str,
+	reason: str,
+	mode_context: dict[str, Any],
+) -> dict[str, Any]:
 	entities_out: list[dict[str, Any]] = []
 	for ent in list(getattr(ws, "entities", {}).values()):
 		if ent is None:
@@ -321,16 +299,8 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 			}
 		)
 
-	_, last_interaction_seq_seen = _actor_memory_cursors(ws, actor_id)
-	interaction_delta: list[dict[str, Any]] = []
-	for rec in list(getattr(ws, "interaction_log", []) or []):
-		if not isinstance(rec, dict):
-			continue
-		if (
-			int(rec.get("seq", 0) or 0) > int(last_interaction_seq_seen)
-			and _interaction_visible_to_actor(ws, actor_id, rec)
-		):
-			interaction_delta.append(dict(rec))
+	actor_entity = ws.get_entity_by_id(str(actor_id)) if hasattr(ws, "get_entity_by_id") else None
+	interaction_inbox = _read_interaction_inbox(actor_entity) if actor_entity is not None else []
 
 	state = ws.runtime_state
 	return {
@@ -342,7 +312,8 @@ def build_full_ws_view(ws: Any, actor_id: str, reason: str, mode_context: dict[s
 		"entities": entities_out,
 		"locations": locations_out,
 		"paths": paths_out,
-		"interaction_delta": interaction_delta,
+		"interaction_inbox": interaction_inbox,
+		"recent_interactions": [],
 		"dialogue_budget_limit_per_location": state.dialogue_budget_limit_per_location,
 		"dialogue_budget_used_per_location": dict(state.dialogue_budget_used_per_location),
 	}

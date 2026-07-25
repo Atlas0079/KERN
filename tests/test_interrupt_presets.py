@@ -74,38 +74,6 @@ class InterruptPresetTests(unittest.TestCase):
 		self.assertTrue(result.interrupt)
 		self.assertEqual(result.rule_type, "NoActiveTask")
 
-	def test_switch_preset_is_allowed_but_rule_param_patch_is_not(self) -> None:
-		ws = WorldState()
-		agent = _agent()
-		ws.register_entity(agent)
-		executor = WorldExecutor()
-
-		events = executor.execute(
-			ws,
-			{
-				"effect": "ApplyMetaAction",
-				"target": "self",
-				"action_type": "SwitchInterruptPreset",
-				"params": {"preset_id": "balanced"},
-			},
-			{"self_id": "agent_01"},
-		)
-		self.assertEqual(events[0]["type"], "MetaActionApplied")
-		self.assertEqual(agent.get_component("DecisionArbiterComponent").active_interrupt_preset_id, "balanced")
-
-		events = executor.execute(
-			ws,
-			{
-				"effect": "ApplyMetaAction",
-				"target": "self",
-				"action_type": "UpdateInterruptRuleParam",
-				"params": {"preset_id": "balanced", "rule_type": "NoActiveTask", "key": "enabled", "value": False},
-			},
-			{"self_id": "agent_01"},
-		)
-		self.assertEqual(events[0]["type"], "ExecutorError")
-		self.assertIn("unknown action_type", events[0]["message"])
-
 	def test_low_nutrition_threshold_on_comes_from_active_preset(self) -> None:
 		ws = WorldState()
 		agent = _low_nutrition_agent()

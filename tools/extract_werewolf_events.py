@@ -93,18 +93,19 @@ def _load_rows(path: Path) -> tuple[Path, list[dict[str, Any]], str]:
 
 def _event_summary(event: dict[str, Any]) -> str:
 	etype = str(event.get("type", "") or "")
+	payload = dict(event.get("payload", {}) or {}) if isinstance(event.get("payload", {}), dict) else {}
 	if etype == "EntityMoved":
-		return f"{event.get('entity_id', '')}: {event.get('source_id', '')} -> {event.get('destination_id', '')}"
+		return f"{payload.get('entity_id', '')}: {payload.get('source_id', '')} -> {payload.get('destination_id', '')}"
 	if etype == "ConversationSpoken":
-		return f"{event.get('speaker_id', '')}: {event.get('text', '')}"
+		return f"{payload.get('speaker_id', '')}: {payload.get('text', '')}"
 	if etype == "ConversationEnded":
-		return f"{event.get('conversation_id', '')}: spoken={event.get('spoken_count', 0)} participants={event.get('joined_participants', [])}"
+		return f"{payload.get('conversation_id', '')}: spoken={payload.get('spoken_count', 0)} participants={payload.get('joined_participants', [])}"
 	if etype in {"TaskCreated", "TaskAssigned", "TaskAccepted", "TaskProgressed", "TaskFinished", "TaskInterrupted", "TaskCancelled"}:
-		return f"task={event.get('task_id', '')} worker={event.get('worker_id', '')} progress={event.get('new_progress', '')}/{event.get('required', '')}"
+		return f"task={payload.get('task_id', '')} worker={payload.get('worker_id', '')} progress={payload.get('new_progress', '')}/{payload.get('required', '')}"
 	if etype == "WorkflowDecisionError":
-		return str(event.get("detail", ""))
+		return str(payload.get("detail", ""))
 	if etype in {"ExecutorError", "BindError"}:
-		return str(event.get("message", event))
+		return str(payload.get("message", event))
 	return json.dumps(event, ensure_ascii=False, separators=(",", ":"))
 
 
@@ -130,7 +131,8 @@ def _is_interesting_interaction(row: dict[str, Any], include_reactions: bool) ->
 
 def _is_interesting_event(event: dict[str, Any]) -> bool:
 	etype = str(event.get("type", "") or "")
-	if etype == "MemoryPatched" and int(event.get("notes_added", 0) or 0) <= 0:
+	payload = dict(event.get("payload", {}) or {}) if isinstance(event.get("payload", {}), dict) else {}
+	if etype == "MemoryPatched" and int(payload.get("notes_added", 0) or 0) <= 0:
 		return False
 	return etype in INTERESTING_EVENT_TYPES
 

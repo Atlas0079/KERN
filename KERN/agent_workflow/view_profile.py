@@ -17,9 +17,6 @@ BUILTIN_PROFILES: dict[str, dict[str, Any]] = {
 			"include_inventory": True,
 			"can_start_conversation_here": True,
 		},
-		"memory": {
-			"include_same_location_interactions": True,
-		},
 	},
 }
 
@@ -56,17 +53,12 @@ def normalize_workflow_view_profile(profile_id: str = "", override: dict[str, An
 	profile = _deep_merge(dict(base), dict(override or {}))
 	profile["profile_id"] = str(profile.get("profile_id", "") or pid)
 	perception = dict(profile.get("perception", {}) or {})
-	memory = dict(profile.get("memory", {}) or {})
 	default_perception = dict(BUILTIN_PROFILES[DEFAULT_PROFILE_ID]["perception"])
-	default_memory = dict(BUILTIN_PROFILES[DEFAULT_PROFILE_ID]["memory"])
 	profile["perception"] = {
 		key: _as_bool(perception.get(key), bool(default_perception.get(key, True)))
 		for key in default_perception.keys()
 	}
-	profile["memory"] = {
-		key: _as_bool(memory.get(key), bool(default_memory.get(key, True)))
-		for key in default_memory.keys()
-	}
+	profile.pop("memory", None)
 	return profile
 
 

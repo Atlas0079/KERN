@@ -7,6 +7,7 @@ from typing import Any
 from ..effect_bundle import effect_bundle_from_raw
 from ..execution_errors import KernFailure
 from ..executor._effect_child_bundle import EVENT_CONTEXT_KEY
+from ..effect_record import EVENT_ENVELOPE_KEY, build_runtime_event
 
 
 @dataclass
@@ -73,6 +74,9 @@ class WorldSettlement:
 	def publish_event(self, event: dict[str, Any], context: dict[str, Any]) -> SettlementResult:
 		return self._process_events([event], dict(context or {}), reaction_depth=0)
 
+	def publish_events(self, events: list[dict[str, Any]], context: dict[str, Any] | None = None) -> SettlementResult:
+		return self._process_events(list(events or []), dict(context or {}), reaction_depth=0)
+
 	def _process_events(self, events: list[dict[str, Any]], context: dict[str, Any], reaction_depth: int) -> SettlementResult:
 		result = SettlementResult()
 		queue: deque[_QueuedEvent] = deque()
@@ -127,7 +131,18 @@ class WorldSettlement:
 	) -> None:
 		clean = dict(event)
 		child_context = clean.pop(EVENT_CONTEXT_KEY, None)
-		clean_context = dict(child_context) if isinstance(child_context, dict) else dict(context or {})
+		is_envelope = bool(clean.pop(EVENT_ENVELOPE_KEY, False))
+		embedded_context = clean.get("context", {})
+		if isinstance(child_context, dict):
+			clean_context = dict(child_context)
+		elif isinstance(embedded_context, dict) and embedded_context:
+			clean_context = dict(embedded_context)
+		else:
+			clean_context = dict(context or {})
+		if not is_envelope:
+			event_type = str(clean.pop("type", "") or "")
+			clean = build_runtime_event(event_type, clean, clean_context)
+			clean.pop(EVENT_ENVELOPE_KEY, None)
 		self._record_event(clean, clean_context, result)
 		queue.append(_QueuedEvent(clean, clean_context, int(reaction_depth)))
 

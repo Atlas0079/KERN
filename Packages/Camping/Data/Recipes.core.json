@@ -403,12 +403,7 @@
       "required_progress": 0
     },
     "bundle": {
-      "effects": [
-        {
-          "effect": "AttachDetails",
-          "detail_type": "interrupt_preset"
-        }
-      ]
+      "effects": []
     }
   },
   "generic_observe_entity": {
@@ -453,13 +448,7 @@
       "required_progress": 0
     },
     "bundle": {
-      "effects": [
-        {
-          "effect": "AttachDetails",
-          "detail_type": "entity",
-          "target": "target"
-        }
-      ]
+      "effects": []
     }
   },
   "generic_query_entity_recipes": {
@@ -504,13 +493,7 @@
       "required_progress": 0
     },
     "bundle": {
-      "effects": [
-        {
-          "effect": "AttachDetails",
-          "detail_type": "entity_recipe",
-          "target": "target"
-        }
-      ]
+      "effects": []
     }
   }
 }

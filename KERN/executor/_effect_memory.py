@@ -4,7 +4,7 @@ from typing import Any
 
 from ..dynamic_text import DynamicTextError, render_dynamic_text
 from ..execution_errors import executor_error
-from ..models.components import MemoryComponent
+from ..models.components import MemoryComponent, PerceptionComponent
 from ._effect_binder import BindError, _base_bind, _require_param, _require_str, _resolve_param_token
 
 
@@ -59,10 +59,12 @@ def _bind_apply_memory_patch(_ws: Any, effect_data: dict[str, Any], context: dic
 	out: dict[str, Any] = {"effect": effect_type, "target": target}
 	notes = _resolve_param_token(params.get("notes", []), ctx)
 	out["notes"] = [dict(x) for x in list(notes or []) if isinstance(x, dict)] if isinstance(notes, list) else []
-	if "last_event_seq_seen" in params:
-		out["last_event_seq_seen"] = _resolve_param_token(params.get("last_event_seq_seen"), ctx)
-	if "last_interaction_seq_seen" in params:
-		out["last_interaction_seq_seen"] = _resolve_param_token(params.get("last_interaction_seq_seen"), ctx)
+	consume_ids = _resolve_param_token(params.get("consume_interaction_ids", []), ctx)
+	out["consume_interaction_ids"] = [
+		str(item)
+		for item in list(consume_ids or [])
+		if str(item or "").strip()
+	] if isinstance(consume_ids, list) else []
 	summaries = _resolve_param_token(params.get("mid_term_summaries", []), ctx)
 	out["mid_term_summaries"] = [dict(x) for x in list(summaries or []) if isinstance(x, dict)] if isinstance(summaries, list) else []
 	out["clear_mid_term_prep"] = bool(_resolve_param_token(params.get("clear_mid_term_prep", False), ctx))
@@ -94,25 +96,18 @@ def execute_apply_memory_patch(executor: Any, ws: Any, data: dict[str, Any], con
 		mem.add_mid_term_summary(summary, t0, t1, tags)
 	if bool(data.get("clear_mid_term_prep", False)):
 		mem.mid_term_prep_queue = []
-	if "last_event_seq_seen" in data:
-		try:
-			mem.last_event_seq_seen = max(int(mem.last_event_seq_seen or 0), int(data.get("last_event_seq_seen", 0) or 0))
-		except Exception:
-			pass
-	if "last_interaction_seq_seen" in data:
-		try:
-			mem.last_interaction_seq_seen = max(
-				int(mem.last_interaction_seq_seen or 0),
-				int(data.get("last_interaction_seq_seen", 0) or 0),
-			)
-		except Exception:
-			pass
+	consume_ids = [
+		str(item)
+		for item in list(data.get("consume_interaction_ids", []) or [])
+		if str(item or "").strip()
+	]
+	perception = target.get_component("PerceptionComponent")
+	interactions_consumed = perception.consume_interactions(consume_ids) if isinstance(perception, PerceptionComponent) else 0
 	return [
 		{
 			"type": "MemoryPatched",
 			"entity_id": str(getattr(target, "entity_id", "") or ""),
 			"notes_added": int(len(notes)),
-			"last_event_seq_seen": int(getattr(mem, "last_event_seq_seen", 0) or 0),
-			"last_interaction_seq_seen": int(getattr(mem, "last_interaction_seq_seen", 0) or 0),
+			"interactions_consumed": int(interactions_consumed),
 		}
 	]

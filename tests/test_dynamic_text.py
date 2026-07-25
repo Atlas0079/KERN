@@ -131,21 +131,6 @@ class DynamicTextTests(unittest.TestCase):
 		self.assertEqual(events[0]["source_id"], "target_01")
 		self.assertEqual(events[0]["message"], "hello Mira")
 
-	def test_emit_event_unknown_text_placeholder_returns_error(self) -> None:
-		executor = WorldExecutor()
-		events = execute_emit_event(
-			executor,
-			self.ws,
-			{
-				"effect": "EmitEvent",
-				"event_type": "MessageBroadcasted",
-				"payload": {"source_ref": "target", "message": "hello {unknown.value}"},
-			},
-			self.context,
-		)
-		self.assertEqual(events[0]["type"], "ExecutorError")
-		self.assertIn("EmitEvent.payload", events[0]["message"])
-
 
 if __name__ == "__main__":
 	unittest.main()

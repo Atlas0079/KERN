@@ -10,8 +10,7 @@ class ActionRejected:
 
 	code: str
 	message: str
-	command_index: int = -1
-	command: dict[str, Any] = field(default_factory=dict)
+	action_intent: dict[str, Any] = field(default_factory=dict)
 	details: dict[str, Any] = field(default_factory=dict)
 	narrative: str = ""
 
@@ -19,8 +18,7 @@ class ActionRejected:
 		return {
 			"code": str(self.code or "ACTION_REJECTED"),
 			"message": str(self.message or "action rejected"),
-			"command_index": int(self.command_index),
-			"command": dict(self.command or {}),
+			"action_intent": dict(self.action_intent or {}),
 			"details": dict(self.details or {}),
 			"narrative": str(self.narrative or ""),
 		}

@@ -8,7 +8,7 @@ from uuid import uuid4
 from ._effect_binder import BindError, bind_effect_input
 from ..component_catalog import ComponentCatalog, build_core_component_catalog
 from ..effect_bundle import effect_bundle_from_raw
-from ..effect_record import build_effect_records
+from ..effect_record import build_effect_events
 from ..effects import EffectCatalog, EffectResolutionError, build_core_effect_catalog
 from ..external_runtime import ExternalRuntimeBridge
 from ..execution_errors import ERROR_KIND_CONTRACT, ERROR_KIND_ENGINE, KernFailure, executor_error
@@ -149,7 +149,7 @@ class WorldExecutor:
 				phase="effect_execution",
 				context={"effect": effect_name, "input": normalized_data, "result": events},
 			)
-		return build_effect_records(
+		return build_effect_events(
 			effect_name,
 			normalized_data,
 			merged_ctx,
@@ -157,7 +157,7 @@ class WorldExecutor:
 			bundle_id=str(merged_ctx.get("_kern_bundle_id", "") or ""),
 			parent_bundle_id=str(merged_ctx.get("_kern_parent_bundle_id", "") or ""),
 			action_id=str(merged_ctx.get("action_id", "") or ""),
-			effect_index=int(merged_ctx.get("_kern_effect_index", -1) or -1),
+			effect_index=int(merged_ctx.get("_kern_effect_index", -1)),
 		)
 
 	def execute_bundle(self, ws: Any, bundle_data: Any, context: dict[str, Any]) -> list[dict[str, Any]]:

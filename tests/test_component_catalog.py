@@ -254,8 +254,6 @@ class ComponentCatalogTests(unittest.TestCase):
 		cases = {
 			"MemoryComponent": {
 				"short_term_queue": [{"content": "remember", "tick": 3}],
-				"last_event_seq_seen": 12,
-				"last_interaction_seq_seen": 7,
 			},
 			"StatusComponent": {"statuses": ["wet"], "expire_at_tick": {"wet": "15"}},
 		}

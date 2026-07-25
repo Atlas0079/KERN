@@ -55,20 +55,20 @@ runtime config / Package composition
 
 ### 2.2 Effect 与事件
 
-- Binder 规范化后的 Effect 输入只在 Handler 成功后进入 `EffectRecord`。
-- `EffectRecord` 保存 Effect 名称、规范化输入、上下文、Bundle 追踪信息和 Handler facts。
-- Handler 没有返回业务 fact 时生成通用 `EffectExecuted`。
-- 一个 Effect 返回多个 fact 时，事件流中产生多个平坦记录，每条记录保留同一个 Effect 身份。
+- Binder 规范化后的 Effect 输入只在 Handler 成功后进入 Event envelope。
+- Event 保存 `type`、`source_effect`、规范化输入、上下文、payload 和 Bundle/Action 追踪信息。
+- Handler 返回的 custom Event 按顺序发布，随后始终追加一个 `type=Effect ID` 的默认 Event。
+- 一个 Effect 返回多个 custom Event 时，事件流保持 Handler 顺序并使用同一个 Effect 身份。
 - `WorldExecutor` 只返回结果；`WorldSettlement` 在 Bundle 成功后写入 `event_log` 并将记录放入 Reaction FIFO。
 
 ### 2.3 Interaction 与 Reaction
 
-- `RecordInteraction` 和 `UpdateInteractionDetails` 是专用 Effect，interaction 写入服从 Bundle 回滚。
+- `RecordInteraction` 是专用 Effect，interaction 写入服从 Bundle 回滚；它也是通用的 Agent 可感知广播 Effect。交互文本和额外数据在写入时一次性确定。
 - Workflow、Settlement 不再直接写入成功 interaction。
-- Recipe 和 Reaction 只有在定义了 `narrative_success` 时各自产生一条 interaction；缺少该字段不产生 interaction。
+- Recipe 和 Reaction 只有在定义了 `narrative_success` 时才自动生成一条 interaction；缺少该字段不自动产生 interaction。作者仍可在任意 Bundle 中显式放置 `RecordInteraction`，重复或额外交互由 Bundle 作者负责。
 - Agent workflow view 只提供按 actor、target、location 和 private 标记筛选后的 interaction delta，不提供 `event_log` 或 `event_delta`。
-- Reaction 的匹配顺序为：`on_event/on_effect -> selector -> condition -> bundle`。
-- Effect 触发的 Reaction 只能消费已经提交的 EffectRecord；`WorldTickAdvanced`、`AdvanceTick` 等生命周期事件是 Settlement 有意注入的原始触发事件。
+- Reaction 的匹配顺序为：`on_event -> selector -> condition -> bundle`。
+- Reaction 只能消费已经提交的 Event；`WorldTickAdvanced`、`AdvanceTick` 等生命周期 Event 也使用统一 envelope。
 - Bundle 记录携带 `bundle_id`、`parent_bundle_id` 和 `effect_index`，事件日志保持平坦。
 
 ## 3. 原问题重新分类
@@ -86,9 +86,9 @@ runtime config / Package composition
 | CR-08 缺少 Action | 未解决 | 只有可选的 `action_id` 字段，没有 Action 生命周期或持久化对象 |
 | CR-09 Effect 事件契约 | 部分遗留 | 通用 EffectRecord 已解决最低追踪要求；扩展事件 schema 和 lint 尚未定义 |
 | CR-10 Reaction 叙事 | 部分吸收 | `narrative_success` 已生成一条 Reaction interaction；动态上下文和 Action 关联仍未完成 |
-| CR-11 动态文本双契约 | 未解决 | `KERN.dynamic_text` 与 Recipe 的 `{actor}/{target}/{reason}` 仍并存 |
+| CR-11 动态文本双契约 | 部分吸收 | `KERN.dynamic_text` 已承载 Recipe/Reaction 的别名和路径语法；统一 lint 与全部文本字段迁移仍需补齐 |
 | CR-12 Bundle 追踪 | 部分吸收 | 运行时父子追踪已存在；作者语义和显式 Bundle 规范仍未收敛 |
-| CR-13 Task interaction 特例 | 部分遗留 | Travel 硬编码已移除；Task lifecycle Bundle 的显式 interaction 约定仍需补齐 |
+| CR-13 Task interaction 特例 | 部分遗留 | Travel 硬编码已移除；Task lifecycle Bundle 的显式 interaction 约定仍需补齐，`RecordInteraction` 仍是通用广播 Effect |
 
 ## 4. 已被新架构吸收的历史问题
 
@@ -136,7 +136,7 @@ FailureReport 不属于 `WorldState`，也不参与世界事务。原文档中�
 
 ### 4.4 CR-09、CR-10 和 CR-12 的最低运行时能力
 
-EffectRecord 已提供默认执行路径的通用外壳；空输出自动获得 `EffectExecuted`。Executor 在 Bundle 执行中生成运行时 ID，并记录父 Bundle 关系。Recipe 和 Reaction 在存在 `narrative_success` 时分别自动插入一条 interaction Effect；没有 narrative 时不写 interaction。扩展作者可以自由定义业务 facts，但当前仍存在 `_effect_record=True` 直接透传和直接 `WorldExecutor.execute` 缺少 Bundle 追踪字段的收尾问题。
+统一 Event envelope 已提供默认执行路径；每个成功 Effect 都追加 Effect-ID Event。Executor 在 Bundle 执行中生成运行时 ID，并记录父 Bundle 和 Action 关系。Recipe 和 Reaction 在存在 `narrative_success` 时分别自动插入一条 interaction Effect；没有 narrative 时不写 interaction。嵌套 Bundle Event 通过内部传输标记保留自身 envelope，Settlement 发布前移除该标记。
 
 这使“每个 Effect 是否可追踪”和“嵌套事件是否必须复制完整 Bundle 树”不再是阻断问题。
 
@@ -163,13 +163,15 @@ origin, phase, cause, context
 
 ### P-02 Interaction、Event 与 Agent 记忆边界（来源：CR-07）
 
-当前 World 已保存完整 `event_log` 和 `interaction_log`。Agent workflow view 不再提供 `event_delta`，memory policy 也只消费 interaction delta；可见性规则和 interaction 的稳定身份仍需继续收敛。
+当前 World 已保存完整 `event_log` 和 `interaction_log`。Agent workflow view 不提供 `event_delta`。`RecordInteraction` 会在发生时确定感知者并写入各自的 `PerceptionComponent.interaction_inbox`；Agent 决策前由共享 memory policy 批量转成正式记忆。
 
 剩余工作：
 
-- 明确哪些 interaction 对 Agent 可见；
+- 在当前“参与者或同地点”的基础规则上扩展可见性等级；
 - 为 Reaction 的流程控制记录和可感知记录建立明确区分；
-- 用稳定 interaction ID 替代 `UpdateInteractionDetails` 对“最后一条记录”的依赖。
+- 用稳定 interaction ID 关联同一 Action、Bundle 和事件记录。
+
+当前实现将 interaction 记录标注为 `recipe_narrative`、`reaction_narrative` 或 `task_lifecycle`，并以 `interaction_id`、`task_id` 和 Bundle 身份支持跨模块关联。Inbox 消费与正式记忆写入由 `ApplyMemoryPatch` 原子完成，不再依赖全局 interaction cursor。
 
 验收：Agent 记忆输入不再依靠 Event 类型黑名单补救；回滚、流程控制和可感知 interaction 有独立测试。
 
@@ -204,13 +206,13 @@ Package 组合和运行时 Catalog 已经具备，社交平台实现也已从核
 - interaction Effect 的事务性；
 - 单次 FailureReport。
 
-旧测试仍有一批 failure/error，主要期待旧的错误返回值、裸业务 Event 或 LLM 自动 noop。计数可能受 LLM/gateway 测试顺序影响，因此不能把一次全量计数当作稳定指标；它们不能作为当前契约的验收标准，后续应删除或改写，而不是增加兼容层。
+旧语义测试已经删除或改写。全量测试现在验证统一 Event envelope、显式 `end_turn`、逐 Action 提交和 Reaction settlement。
 
 验收：契约测试通过真实 Runtime seam 验证事务、Settlement、FailureReport 和越权写入边界；旧语义断言被删除或改写。
 
 ### P-06 Decision 结果分类（来源：CR-01、CR-03）
 
-`_commands_to_operations()` 当前把 InteractionEngine 的 `rejected` 和 `failed` 都映射为 `ActionRejected`。在“所有错误致命”的产品决定下，合法但当前不可执行的动作可以返回 rejection；Recipe contract、Binder 或运行时失败必须保留为 `KernFailure`。
+`resolve_action_intent()` 每次只解析一个 ActionIntent。InteractionEngine 的合法不可执行结果映射为 `ActionRejected`；Recipe contract、Binder 或运行时失败保留为 `KernFailure`。TurnRunner 会提交独立 rejection interaction 并在同一个 Turn replan。
 
 验收：每个 InteractionEngine 非 success 结果都有明确的 rejection 或 fatal 映射，错误不会被降级成正常 rejection；rejection 若写入日志必须标记为 attempt。
 
@@ -247,9 +249,9 @@ Reaction 的可选 `narrative_success` 语义已经接入：
 
 ### D-03 动态文本统一（来源：CR-11）
 
-Recipe、Reaction、Task interaction 和明确支持文本字段应使用同一个渲染模块。需要统一：
+Recipe、Reaction、Task interaction 和明确支持文本字段应使用同一个渲染模块。当前 Recipe/Reaction 已通过 Adapter 使用 `KERN.dynamic_text`，仍需统一：
 
-- `{actor}/{target}/{reason}` 与 `{self.*}/{target.*}/{event.*}/{param:*}` 的语法；
+- `{actor}/{target}/{reason}` 与 `{self.*}/{target.*}/{event.*}/{param:*}` 的语法；当前统一解析器通过 `dynamic_values` 提供 Reaction 的 `event_type`/`reaction_id` 等额外别名；
 - 执行前渲染和提交后落盘之间的快照规则；
 - 对已被 Destroy 的实体仍可用的名称快照；
 - lint 可以验证的引用路径。
@@ -258,20 +260,19 @@ Recipe、Reaction、Task interaction 和明确支持文本字段应使用同一�
 
 ### D-04 Task interaction 生命周期（来源：CR-13）
 
-Task 已有 start、tick、cleanup、completion Bundle。Travel 硬编码已移除，数据作者可以在需要的生命周期 Bundle 中显式放置 `RecordInteraction`。
+Task 已有 start、tick、cleanup、completion Bundle。Travel 硬编码已移除，数据作者可以在需要的生命周期 Bundle 中显式放置通用 `RecordInteraction` 广播 Effect。
 
 需要另外决定开始、完成、中断、恢复是否分别产生 interaction，以及一个跨 tick Task 是否对应一个 Action。
 
-验收：Travel 不再依赖硬编码完成分支；任务 interaction 只由生命周期 Bundle 中显式的 interaction Effect 产生。
+验收：Travel 不再依赖硬编码完成分支；任务 interaction 可以由生命周期 Bundle 中显式的 interaction Effect 产生，其他通用广播场景也可以直接使用 `RecordInteraction`。
 
 ### D-05 扩展 Effect 与 Bundle 作者契约（来源：CR-09、CR-12）
 
-运行时最低契约已经确定：Effect 成功后必须生成通用 EffectRecord。仍需决定：
+运行时最低契约已经确定：Effect 成功后必须生成统一 Event envelope 和默认 Effect-ID Event。仍需决定：
 
 - 扩展包是否声明业务 fact schema；
 - 一个 Effect 的多个 fact 是否需要显式顺序或类型约束；
 - 没有显式 Bundle 的 Effect 是否统一包装成单 Effect Bundle；
-- `_effect_record=True` 是否禁止扩展绕过通用 EffectRecord 外壳；
 - 命名 Bundle 的复用 ID 与运行时 Bundle ID 如何区分；
 - package lint 检查哪些扩展事件约束。
 
@@ -279,14 +280,7 @@ Task 已有 start、tick、cleanup、completion Bundle。Travel 硬编码已移�
 
 ### D-06 多 command decision 原子性（来源：CR-01）
 
-当前代码把每个编译后的 operation 交给独立 Bundle 执行。这是实现现状，不代表最终产品语义已经确认。
-
-需要在以下两种语义中明确选择：
-
-1. 每条 command 独立提交，前一条成功不会被后一条回滚；
-2. 整个 decision 作为一个 Bundle，任一 command 失败则整体回滚。
-
-验收：选择一种语义后，前一条 command 是否保留、interaction 结果和 Reaction 输入都有跨模块测试覆盖。
+该决策已完成：ActionPlan 不是事务。每个 ActionIntent 基于最新 WorldState 单独解析并作为顶层 Bundle 提交，Reaction FIFO 清空后才处理下一项。后续 ActionRejected 不回滚此前提交，且会丢弃计划尾部并在同一个 Turn replan。跨模块测试覆盖该顺序。
 
 ## 7. 已过时或应归档的讨论
 

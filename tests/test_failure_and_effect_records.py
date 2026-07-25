@@ -5,18 +5,17 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from KERN.effect_record import build_effect_records
 from KERN.execution_errors import KernFailure
 from KERN.failure_report import FailureReportWriter
 from KERN.executor.executor import WorldExecutor
 from KERN.interaction.engine import InteractionEngine
-from KERN.agent_workflow.runtime import _decision_to_outcome
-from KERN.agent_workflow.runtime import _commands_to_operations
+from KERN.agent_workflow.runtime import resolve_action_intent
 from KERN.agent_workflow.llm_action_provider import LLMActionProvider
 from KERN.llm.openai_compat_client import LLMRequestError
-from KERN.models.components import TagComponent
+from KERN.models.components import PerceptionComponent, TagComponent
 from KERN.models.components.memory import MemoryComponent
 from KERN.models.entity import Entity
+from KERN.models.location import Location
 from KERN.models.world_state import WorldState
 from KERN.sim.trigger_system import TriggerSystem
 from KERN.sim.world_settlement import WorldSettlement
@@ -44,17 +43,14 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 		ws = WorldState()
 		ws.services["interaction_engine"] = InteractionEngine(recipe_db={})
 
-		outcome = _decision_to_outcome(
+		outcome = resolve_action_intent(
 			ws,
 			"agent",
 			"test",
-			{
-				"type": "apply_commands",
-				"commands": [{"verb": "FlyToMoon", "target_id": "moon", "parameters": {}}],
-			},
+			{"verb": "FlyToMoon", "target_id": "moon", "parameters": {}},
 		)
 
-		self.assertEqual(outcome["type"], "rejected")
+		self.assertEqual(outcome["status"], "rejected")
 		self.assertEqual(outcome["rejection"]["code"], "TARGET_MISSING")
 		self.assertEqual(ws.event_log, [])
 		self.assertEqual(ws.interaction_log, [])
@@ -68,7 +64,7 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 				"locations": [{"id": "room", "name": "Room", "entities": ["agent"], "environment": {}}],
 				"paths": [],
 				"event_delta": [],
-				"interaction_delta": [],
+				"recent_interactions": [],
 			}
 		}
 		with self.assertRaises(KernFailure) as caught:
@@ -85,11 +81,34 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 			{"parameters": {"value": 7}},
 		)
 
-		self.assertEqual(len(events), 1)
+		self.assertEqual(len(events), 2)
 		self.assertEqual(events[0]["type"], "Probe")
-		self.assertEqual(events[0]["effect"], "EmitEvent")
+		self.assertEqual(events[0]["source_effect"], "EmitEvent")
 		self.assertEqual(events[0]["input"]["payload"]["value"], 7)
-		self.assertTrue(events[0]["_effect_record"])
+		self.assertEqual(events[0]["payload"]["value"], 7)
+		self.assertEqual(events[1]["type"], "EmitEvent")
+		self.assertEqual([event["effect_index"] for event in events], [0, 0])
+
+	def test_kill_entity_uses_created_corpse_id_from_event_envelope(self) -> None:
+		ws = WorldState()
+		location = Location(location_id="room", location_name="Room", description="")
+		ws.register_location(location)
+		target = Entity(entity_id="agent", template_id="Agent", entity_name="Agent")
+		ws.register_entity(target)
+		location.add_entity_id(target.entity_id)
+		executor = WorldExecutor(entity_templates={"Corpse": {"name": "Corpse", "components": {}}})
+
+		events = executor.execute_bundle(
+			ws,
+			{"effects": [{"effect": "KillEntity", "target": "target", "corpse_template": "Corpse"}]},
+			{"target_id": "agent"},
+		)
+
+		death = next(event for event in events if event.get("type") == "EntityDied")
+		corpse_id = str(death["payload"]["corpse_id"])
+		self.assertTrue(corpse_id)
+		self.assertIsNotNone(ws.get_entity_by_id(corpse_id))
+		self.assertIsNone(ws.get_entity_by_id("agent"))
 
 	def test_failed_bundle_rolls_back_and_does_not_publish_records(self) -> None:
 		ws = WorldState()
@@ -137,7 +156,7 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 				{
 					"id": "mark_probe",
 					"on_event": "Probe",
-					"condition": {"type": "event_field_eq", "field": "value", "value": 7},
+					"condition": {"type": "event_field_eq", "field": "payload.value", "value": 7},
 					"bundle": {"effects": [{"effect": "AddTag", "target": "self", "tag": "reacted"}]},
 				}
 			]
@@ -152,7 +171,7 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 		self.assertEqual(ws.get_entity_by_id("agent").get_component("TagComponent").tags, ["reacted"])
 		self.assertEqual(ws.interaction_log, [])
 
-	def test_reaction_can_match_effect_identity_and_normalized_input(self) -> None:
+	def test_reaction_can_match_default_effect_event_and_normalized_input(self) -> None:
 		ws = WorldState()
 		entity = Entity(entity_id="agent", template_id="Agent", entity_name="Agent")
 		entity.add_component("TagComponent", TagComponent())
@@ -161,8 +180,8 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 			rules=[
 				{
 					"id": "mark_property_effect",
-					"on_effect": "AddTag",
-					"condition": {"type": "event_field_eq", "field": "tag", "value": "from_effect"},
+					"on_event": "AddTag",
+					"condition": {"type": "event_field_eq", "field": "input.tag", "value": "from_effect"},
 					"bundle": {"effects": [{"effect": "AddTag", "target": "self", "tag": "reacted"}]},
 				}
 			]
@@ -175,6 +194,14 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 		)
 
 		self.assertEqual(ws.get_entity_by_id("agent").get_component("TagComponent").tags, ["from_effect", "reacted"])
+
+	def test_reaction_runtime_rejects_removed_on_effect_schema(self) -> None:
+		trigger = TriggerSystem(rules=[{"id": "legacy", "on_effect": "AddTag", "bundle": {"effects": []}}])
+
+		with self.assertRaises(KernFailure) as caught:
+			trigger.build_reaction_effects(WorldState(), {"type": "AddTag", "payload": {}}, {})
+
+		self.assertEqual(caught.exception.code, "REACTION_RULE_INVALID")
 
 	def test_recipe_success_interaction_is_written_by_an_effect(self) -> None:
 		ws = WorldState()
@@ -192,17 +219,17 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 			}
 		)
 		ws.services["interaction_engine"] = engine
-		operations, error = _commands_to_operations(ws, "agent", "test", [{"verb": "Mark", "target_id": "agent", "parameters": {}}])
-		self.assertIsNone(error)
-		self.assertEqual(operations[0]["bundle"]["effects"][0]["effect"], "RecordInteraction")
+		resolved = resolve_action_intent(ws, "agent", "test", {"verb": "Mark", "target_id": "agent", "parameters": {}})
+		self.assertEqual(resolved["status"], "ready")
+		self.assertEqual(resolved["bundle"]["effects"][0]["effect"], "RecordInteraction")
 
 		settlement = WorldSettlement(ws=ws, executor=WorldExecutor(), trigger_system=TriggerSystem(), max_reaction_depth=4)
-		settlement.execute_bundle(operations[0]["bundle"], operations[0]["context"])
+		settlement.execute_bundle(resolved["bundle"], resolved["context"])
 
 		self.assertEqual(entity.get_component("TagComponent").tags, ["marked"])
 		self.assertEqual(ws.interaction_log[0]["verb"], "Mark")
 		self.assertEqual(ws.interaction_log[0]["narrative"], "Agent标记了Agent")
-		self.assertTrue(any(record["event"].get("effect") == "RecordInteraction" for record in ws.event_log))
+		self.assertTrue(any(record["event"].get("source_effect") == "RecordInteraction" for record in ws.event_log))
 
 	def test_recipe_without_narrative_does_not_create_interaction(self) -> None:
 		ws = WorldState()
@@ -218,19 +245,21 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 				}
 			}
 		)
-		operations, error = _commands_to_operations(
+		resolved = resolve_action_intent(
 			ws,
 			"agent",
 			"test",
-			[{"verb": "Mark", "target_id": "agent", "parameters": {}}],
+			{"verb": "Mark", "target_id": "agent", "parameters": {}},
 		)
-		self.assertIsNone(error)
-		self.assertFalse(any(item.get("effect") == "RecordInteraction" for item in operations[0]["bundle"]["effects"]))
+		self.assertEqual(resolved["status"], "ready")
+		self.assertFalse(any(item.get("effect") == "RecordInteraction" for item in resolved["bundle"]["effects"]))
 
 	def test_reaction_narrative_creates_one_interaction_and_agent_view_hides_events(self) -> None:
 		ws = WorldState()
 		entity = Entity(entity_id="agent", template_id="Agent", entity_name="Agent")
 		entity.add_component("TagComponent", TagComponent())
+		entity.add_component("MemoryComponent", MemoryComponent())
+		entity.add_component("PerceptionComponent", PerceptionComponent())
 		ws.register_entity(entity)
 		trigger = TriggerSystem(
 			rules=[
@@ -254,7 +283,7 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 		self.assertEqual(ws.interaction_log[0]["narrative"], "Agent响应了探针")
 		view = build_full_ws_view(ws, "agent", "test", {})
 		self.assertNotIn("event_delta", view)
-		self.assertEqual(len(view["interaction_delta"]), 1)
+		self.assertEqual(len(view["interaction_inbox"]), 1)
 
 	def test_agent_view_does_not_expose_historical_event_memory(self) -> None:
 		ws = WorldState()
@@ -274,34 +303,29 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 		memory = view["entities"][0]["memory"]
 		self.assertEqual([item["content"] for item in memory["short_term_queue"]], ["visible interaction"])
 
-	def test_interaction_details_are_transactional(self) -> None:
+	def test_explicit_interaction_is_a_generic_agent_broadcast_effect(self) -> None:
 		ws = WorldState()
 		entity = Entity(entity_id="agent", template_id="Agent", entity_name="Agent")
 		entity.add_component("TagComponent", TagComponent())
+		entity.add_component("MemoryComponent", MemoryComponent())
+		entity.add_component("PerceptionComponent", PerceptionComponent())
 		ws.register_entity(entity)
-		settlement = WorldSettlement(ws=ws, executor=WorldExecutor(), trigger_system=TriggerSystem(), max_reaction_depth=4)
-		settlement.execute_bundle(
+		WorldExecutor().execute_bundle(
+			ws,
 			{
 				"effects": [
-					{"effect": "RecordInteraction", "actor_id": "agent", "verb": "Inspect", "target_id": "agent", "status": "success"},
-					{"effect": "UpdateInteractionDetails", "actor_id": "agent", "details_text": "raw details"},
-				],
+					{
+						"effect": "RecordInteraction",
+						"actor_id": "agent",
+						"verb": "Inspect",
+						"target_id": "agent",
+						"status": "success",
+					}
+				]
 			},
 			{"self_id": "agent"},
 		)
-		self.assertEqual(ws.interaction_log[-1]["details_text"], "raw details")
-
-		with self.assertRaises(KernFailure):
-			settlement.execute_bundle(
-				{
-					"effects": [
-						{"effect": "UpdateInteractionDetails", "actor_id": "agent", "details_text": "will rollback"},
-						{"effect": "UnknownEffect"},
-					],
-				},
-				{"self_id": "agent"},
-			)
-		self.assertEqual(ws.interaction_log[-1]["details_text"], "raw details")
+		self.assertEqual(ws.interaction_log[-1]["interaction_origin"], "explicit")
 
 
 if __name__ == "__main__":

@@ -4,7 +4,6 @@ from typing import Any
 
 from .agent_control import AgentControlComponent
 from .logic_control import LogicControlComponent
-from .player_control import PlayerControlComponent
 
 
 def resolve_enabled_controller_component(entity: Any):
@@ -21,9 +20,9 @@ def resolve_enabled_controller_component(entity: Any):
 	if entity is None or not hasattr(entity, "get_component"):
 		return (None, None)
 
-	# Priority: Player > Agent > Pure Logic
+	# Player control requires a pending-turn persistence contract and is not
+	# eligible for the synchronous scheduler.
 	candidates = [
-		("PlayerControlComponent", PlayerControlComponent),
 		("AgentControlComponent", AgentControlComponent),
 		("LogicControlComponent", LogicControlComponent),
 	]

@@ -57,7 +57,7 @@ class ModifyPropertyClampTests(unittest.TestCase):
 
 		comp = self.entity.get_component("CreatureComponent")
 		self.assertEqual(comp.current_nutrition, 60.0)
-		self.assertEqual(events[0]["new_value"], 60.0)
+		self.assertEqual(events[0]["payload"]["new_value"], 60.0)
 
 	def test_creature_current_value_is_clamped_to_zero(self) -> None:
 		events = self.executor.execute(
@@ -74,7 +74,7 @@ class ModifyPropertyClampTests(unittest.TestCase):
 
 		comp = self.entity.get_component("CreatureComponent")
 		self.assertEqual(comp.current_energy, 0.0)
-		self.assertEqual(events[0]["new_value"], 0.0)
+		self.assertEqual(events[0]["payload"]["new_value"], 0.0)
 
 	def test_component_clamp_declaration_is_reusable(self) -> None:
 		events = self.executor.execute(
@@ -91,7 +91,7 @@ class ModifyPropertyClampTests(unittest.TestCase):
 
 		comp = self.entity.get_component("HeatComponent")
 		self.assertEqual(comp.temperature, 25.0)
-		self.assertEqual(events[0]["new_value"], 25.0)
+		self.assertEqual(events[0]["payload"]["new_value"], 25.0)
 
 	def test_unlisted_property_is_not_clamped(self) -> None:
 		events = self.executor.execute(
@@ -108,7 +108,7 @@ class ModifyPropertyClampTests(unittest.TestCase):
 
 		comp = self.entity.get_component("CreatureComponent")
 		self.assertEqual(comp.max_energy, -120.0)
-		self.assertEqual(events[0]["new_value"], -120.0)
+		self.assertEqual(events[0]["payload"]["new_value"], -120.0)
 
 
 if __name__ == "__main__":

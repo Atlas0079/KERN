@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -67,7 +68,8 @@ class WorldState:
 		reason: str = "",
 		recipe_id: str = "",
 		extra: dict[str, Any] | None = None,
-	) -> None:
+		task_id: str = "",
+	) -> dict[str, Any]:
 		"""
 		Record an action attempt (ActionAttempt / InteractionAttempt).
 
@@ -78,21 +80,22 @@ class WorldState:
 		"""
 
 		aid = str(actor_id or "")
-		tid = str(target_id or "")
+		target_identifier = str(target_id or "")
 		v = str(verb or "")
 		st = str(status or "")
 		rs = str(reason or "")
 		rid = str(recipe_id or "")
+		task_identifier = str(task_id or "")
 
 		actor = self.get_entity_by_id(aid) if aid else None
-		target = self.get_entity_by_id(tid) if tid else None
+		target = self.get_entity_by_id(target_identifier) if target_identifier else None
 
 		actor_name = str(getattr(actor, "entity_name", "") or aid)
 		if actor is not None:
 			actor_setting = actor.get_component("AgentSetting")
 			if actor_setting is not None:
 				actor_name = str(getattr(actor_setting, "agent_name", "") or actor_name)
-		target_name = str(getattr(target, "entity_name", "") or tid)
+		target_name = str(getattr(target, "entity_name", "") or target_identifier)
 		if target is not None:
 			target_setting = target.get_component("AgentSetting")
 			if target_setting is not None:
@@ -105,23 +108,46 @@ class WorldState:
 				loc_id = str(getattr(loc, "location_id", "") or "")
 
 		self._interaction_seq += 1
+		interaction_id = f"interaction_{int(self._interaction_seq)}"
 		record: dict[str, Any] = {
 				"seq": int(self._interaction_seq),
+				"interaction_id": interaction_id,
 				"tick": int(getattr(self.game_time, "total_ticks", 0)),
+				"time_str": str(getattr(self.game_time, "time_to_string", lambda: "")() or ""),
 				"location_id": loc_id,
 				"actor_id": aid,
 				"actor_name": actor_name,
 				"verb": v,
-				"target_id": tid,
+				"target_id": target_identifier,
 				"target_name": target_name,
 				"recipe_id": rid,
+				"task_id": task_identifier,
 				"status": st,
 				"reason": rs,
 		}
 		if isinstance(extra, dict) and extra:
 			for k, val in extra.items():
-				record[str(k)] = val
+				if str(k) in {
+					"seq",
+					"interaction_id",
+					"tick",
+					"time_str",
+					"location_id",
+					"actor_id",
+					"actor_name",
+					"verb",
+					"target_id",
+					"target_name",
+					"recipe_id",
+					"task_id",
+					"status",
+					"reason",
+					"perceived_by_agent_ids",
+				}:
+					continue
+				record[str(k)] = deepcopy(val)
 		self.interaction_log.append(record)
+		return record
 
 	def record_event(self, event: dict[str, Any], context: dict[str, Any] | None = None) -> None:
 		"""

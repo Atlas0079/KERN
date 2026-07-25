@@ -5,45 +5,49 @@ from dataclasses import dataclass, field
 from typing import Any
 
 
-@dataclass(frozen=True)
-class EffectRecord:
-	"""A successful, committed execution record for one Effect."""
+EVENT_ENVELOPE_KEY = "__kern_event_envelope__"
 
-	effect: str
+
+def build_runtime_event(event_type: str, payload: dict[str, Any] | None = None, context: dict[str, Any] | None = None) -> dict[str, Any]:
+	return EffectEvent(
+		type=str(event_type or ""),
+		source_effect="",
+		input={},
+		context=dict(context or {}),
+		payload=dict(payload or {}),
+	).to_dict()
+
+
+@dataclass(frozen=True)
+class EffectEvent:
+	"""Committed-event envelope produced by one successful Effect."""
+
+	type: str
+	source_effect: str
 	input: dict[str, Any]
 	context: dict[str, Any] = field(default_factory=dict)
-	facts: tuple[dict[str, Any], ...] = ()
+	payload: dict[str, Any] = field(default_factory=dict)
 	bundle_id: str = ""
 	parent_bundle_id: str = ""
 	action_id: str = ""
 	effect_index: int = -1
 
 	def to_dict(self) -> dict[str, Any]:
-		facts = [deepcopy(dict(fact)) for fact in self.facts if isinstance(fact, dict)]
-		primary = dict(facts[0]) if facts else {"type": "EffectExecuted"}
-		primary.setdefault("type", "EffectExecuted")
-		primary["record_type"] = "EffectRecord"
-		primary["effect"] = str(self.effect or "")
-		primary["input"] = deepcopy(dict(self.input or {}))
-		record_context = dict(self.context or {})
-		# The triggering event is already stored in the record stream.  Keeping a
-		# recursive copy in every nested EffectRecord makes logs grow geometrically.
-		record_context.pop("event", None)
-		primary["_effect_context"] = deepcopy(record_context)
-		primary["facts"] = facts
-		primary["_effect_record"] = True
-		if self.bundle_id:
-			primary["bundle_id"] = str(self.bundle_id)
-		if self.parent_bundle_id:
-			primary["parent_bundle_id"] = str(self.parent_bundle_id)
-		if self.action_id:
-			primary["action_id"] = str(self.action_id)
-		if self.effect_index >= 0:
-			primary["effect_index"] = int(self.effect_index)
-		return primary
+		return {
+			"type": str(self.type or ""),
+			"source_effect": str(self.source_effect or ""),
+			"input": deepcopy(dict(self.input or {})),
+			"context": deepcopy(dict(self.context or {})),
+			"payload": deepcopy(dict(self.payload or {})),
+			"bundle_id": str(self.bundle_id or ""),
+			"parent_bundle_id": str(self.parent_bundle_id or ""),
+			"action_id": str(self.action_id or ""),
+			"effect_index": int(self.effect_index),
+			EVENT_ENVELOPE_KEY: True,
+		}
 
 
-def build_effect_records(
+def build_effect_events(
 	effect: str,
 	input_data: dict[str, Any],
 	context: dict[str, Any],
@@ -54,25 +58,44 @@ def build_effect_records(
 	action_id: str = "",
 	effect_index: int = -1,
 ) -> list[dict[str, Any]]:
-	"""Build a record for one successful Effect and its optional handler facts."""
-	clean_facts = [deepcopy(dict(item)) for item in list(facts or []) if isinstance(item, dict)]
-	if not clean_facts:
-		clean_facts = [{}]
+	"""Build ordered custom Events followed by the Effect's default Event."""
+	clean_context = deepcopy(dict(context or {}))
+	clean_context.pop("event", None)
 	records: list[dict[str, Any]] = []
-	for fact in clean_facts:
-		if bool(fact.get("_effect_record", False)):
+	for fact in list(facts or []):
+		if not isinstance(fact, dict):
+			continue
+		if bool(fact.get(EVENT_ENVELOPE_KEY, False)):
 			records.append(dict(fact))
 			continue
+		fact_data = deepcopy(dict(fact))
+		event_type = str(fact_data.pop("type", "") or "").strip()
+		if not event_type:
+			event_type = str(effect or "")
 		records.append(
-			EffectRecord(
-				effect=str(effect or ""),
+			EffectEvent(
+				type=event_type,
+				source_effect=str(effect or ""),
 				input=deepcopy(dict(input_data or {})),
-				context=deepcopy(dict(context or {})),
-				facts=(fact,) if fact else (),
+				context=clean_context,
+				payload=fact_data,
 				bundle_id=str(bundle_id or ""),
 				parent_bundle_id=str(parent_bundle_id or ""),
 				action_id=str(action_id or ""),
 				effect_index=int(effect_index),
 			).to_dict()
 		)
+	records.append(
+		EffectEvent(
+			type=str(effect or ""),
+			source_effect=str(effect or ""),
+			input=deepcopy(dict(input_data or {})),
+			context=clean_context,
+			payload={},
+			bundle_id=str(bundle_id or ""),
+			parent_bundle_id=str(parent_bundle_id or ""),
+			action_id=str(action_id or ""),
+			effect_index=int(effect_index),
+		).to_dict()
+	)
 	return records

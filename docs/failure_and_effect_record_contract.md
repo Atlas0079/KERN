@@ -1,6 +1,6 @@
-# Failure 与 EffectRecord 契约
+# Failure 与 Event 契约
 
-状态：已开始实施
+状态：已实施
 
 ## 术语
 
@@ -33,25 +33,25 @@ cause / traceback
 
 Executor、Binder、Workflow、Reaction、Persistence 和 External runtime 的 Failure 都通过 Python exception 传播。Bundle 在异常路径恢复快照，Runtime 在公开执行入口捕获第一次 Failure。
 
-### EffectRecord
+### Event
 
-Effect 成功执行后产生的机器可读记录。记录只在包含它的 Bundle 成功提交后写入 `event_log` 并交给 Reaction。
+Effect 成功执行后产生的机器可读 Event。Event 只在包含它的 Bundle 成功提交后写入 `event_log` 并交给 Reaction。
 
 记录包含：
 
 ```text
-record_type = EffectRecord
-effect
+type
+source_effect
 input                 Binder 规范化后的 Effect 输入
-_effect_context       执行上下文（去除递归 event 副本）
-facts                 Handler 可选提供的事实
+context               执行上下文（去除递归 event 副本）
+payload               Handler 提供的领域事实
 bundle_id
 parent_bundle_id
 action_id
 effect_index
 ```
 
-动态 `param:*` 值在 Binder 阶段解析后进入 `input`。Handler 的事实保留在 `facts` 和兼容的顶层字段中，供需要生成 ID 或实际结果的 Reaction 使用。
+动态 `param:*` 值在 Binder 阶段解析后进入 `input`。Handler 返回的 Event 按原顺序发布，领域事实进入 `payload`；随后 Executor 追加一个 `type=Effect ID` 的默认 Event。
 
 ## 运行链
 
@@ -59,25 +59,29 @@ effect_index
 Decision
 -> ActionRejected
    或
--> Command -> Recipe Bundle -> Binder -> Handler
+-> ActionIntent -> Recipe Bundle -> Binder -> Handler
    -> KernFailure: 回滚、写 failure.json、终止
    或
-   -> Bundle committed -> EffectRecord -> Reaction matching
+   -> Bundle committed -> custom Event -> default Event -> Reaction matching
 ```
 
 Reaction 依次执行：
 
-1. `on_event` 匹配记录的 `type`；
-2. `on_effect` 匹配记录的 `effect`；
-3. `selector` 条件；
-4. `condition` 条件；
-5. 生成并执行 Reaction Bundle。
+1. `on_event` 匹配 Event 的 `type`；
+2. `selector` 条件；
+3. `condition` 条件；
+4. 生成并执行 Reaction Bundle。
 
 Reaction 只接收已提交记录。Reaction Bundle 的 Failure 直接终止 Runtime。
 
-Recipe 产生的成功 interaction 通过 `RecordInteraction` Effect 写入；需要把
-细节附加到最近一次 interaction 时使用 `UpdateInteractionDetails` Effect。
-这两个 Effect 与同一 Bundle 一起提交或一起回滚。
+Recipe 和 Reaction 只有在定义 `narrative_success` 时，才由编译器自动生成一条
+interaction 记录；没有 narrative 时不自动产生 interaction。作者仍可在 Recipe、
+Reaction 或其他 Bundle 中显式放置任意数量的 `RecordInteraction`；它本身是通用的
+Agent 可感知广播 Effect，是否产生重复交互由 Bundle 作者负责。交互文本和额外
+可感知数据必须在 `RecordInteraction` 写入时一次性提供；核心不提供事后修改
+interaction 的 Effect。Handler 会根据交互发生时的世界状态确定感知者，并把包含
+`tick`、`time_str` 和 `interaction_id` 的快照写入其 `PerceptionComponent.interaction_inbox`。
+该写入与 interaction log 属于同一个 Bundle 事务。
 
 ## Failure 报告
 

@@ -261,7 +261,8 @@ def execute_kill_entity(executor: Any, ws: Any, data: dict[str, Any], context: d
 	corpse_id = ""
 	for ev in create_res:
 		if ev.get("type") == "EntityCreated":
-			corpse_id = str(ev.get("entity_id", ""))
+			payload = ev.get("payload", {}) or {}
+			corpse_id = str(payload.get("entity_id", "") or "") if isinstance(payload, dict) else ""
 			break
 	if corpse_id:
 		cc = target.get_component("ContainerComponent")

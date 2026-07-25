@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from ..effect_bundle import effect_bundle_from_raw
+from ..dynamic_text import DynamicTextError
+from ..execution_errors import KernFailure
 from .narrative import render_interaction_narrative
 from ..sim.condition_evaluator import ConditionEvaluator
 
@@ -27,10 +29,10 @@ class InteractionEngine:
 		required_progress = float(process.get("required_progress", 0) or 0)
 		return required_progress != 0
 
-	def process_command(self, ws: Any, self_id: str, command_data: dict[str, Any]) -> dict[str, Any]:
-		verb = command_data.get("verb")
-		target_id = command_data.get("target_id")
-		params = command_data.get("parameters", {}) or {}
+	def resolve_action(self, ws: Any, self_id: str, action_intent: dict[str, Any]) -> dict[str, Any]:
+		verb = action_intent.get("verb")
+		target_id = action_intent.get("target_id")
+		params = action_intent.get("parameters", {}) or {}
 		if not isinstance(params, dict):
 			params = {}
 		verb_text = str(verb or "")
@@ -59,27 +61,36 @@ class InteractionEngine:
 			}
 		assign_to = str((recipe.get("process", {}) or {}).get("assign_to", "") or "").strip()
 		# context only carries invocation environment; effect-private config must stay in effect data.
-		context = {"self_id": self_id, "target_id": str(target_id), "parameters": dict(resolved_params)}
+		context = {
+			"self_id": self_id,
+			"target_id": str(target_id),
+			"parameters": dict(resolved_params),
+		}
 
 		process_data = recipe.get("process", {}) or {}
 		narrative_template = str(recipe.get("narrative_success", "") or "").strip()
 		if narrative_template:
-			narrative = render_interaction_narrative(
-				ws,
-				narrative_template,
-				context,
-				values=dict(resolved_params),
-			)
+			try:
+				narrative = render_interaction_narrative(
+					ws,
+					narrative_template,
+					context,
+					values=dict(resolved_params),
+				)
+			except DynamicTextError as exc:
+				raise KernFailure(
+					"INTERACTION_NARRATIVE_RENDER_FAILED",
+					str(exc),
+					origin="interaction",
+					phase="narrative_render",
+					context={"verb": verb_text, "recipe_id": str(recipe.get("id", "") or "")},
+				) from exc
 		else:
 			narrative = ""
 
 		def _with_recipe_interaction(bundle_data: dict[str, Any]) -> dict[str, Any]:
 			compiled = dict(bundle_data)
-			effects = [
-				item
-				for item in list(compiled.get("effects", []) or [])
-				if not (isinstance(item, dict) and str(item.get("effect", "") or "") == "RecordInteraction")
-			]
+			effects = list(compiled.get("effects", []) or [])
 			if narrative:
 				effects.insert(
 					0,
@@ -91,6 +102,7 @@ class InteractionEngine:
 						"status": "success",
 						"reason": "",
 						"recipe_id": str(recipe.get("id", "") or ""),
+						"interaction_origin": "recipe_narrative",
 						"extra": {
 							"narrative": narrative,
 							"parameters": dict(resolved_params),

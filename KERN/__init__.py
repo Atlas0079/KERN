@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from .external_runtime import ExternalRuntimeAdapter, ExternalRuntimeBridge
 from .execution_errors import KernFailure
-from .effect_record import EffectRecord
+from .effect_record import EffectEvent
 from .runtime import KernRuntime
 
-__all__ = ["EffectRecord", "ExternalRuntimeAdapter", "ExternalRuntimeBridge", "KernFailure", "KernRuntime"]
+__all__ = ["EffectEvent", "ExternalRuntimeAdapter", "ExternalRuntimeBridge", "KernFailure", "KernRuntime"]

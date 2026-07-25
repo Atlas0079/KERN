@@ -14,8 +14,6 @@ class MemoryComponent:
 	mid_term_max_entries: int = 20
 	last_mid_term_summary_tick: int = -1
 	mid_term_summary_cooldown_ticks: int = 15
-	last_event_seq_seen: int = 0
-	last_interaction_seq_seen: int = 0
 
 	def _normalize_importance(self, value: float) -> float:
 		try:
@@ -176,10 +174,12 @@ class MemoryComponent:
 			if not content:
 				continue
 			tick = int(e.get("tick", 0) or 0)
+			time_str = str(e.get("time_str", "") or "").strip()
 			imp = float(e.get("importance", 0.5) or 0.5)
 			topic = str(e.get("topic", "") or "")
 			topic_text = f"[{topic}] " if topic else ""
-			lines.append(f"- [tick {tick}][imp {imp:.2f}] {topic_text}{content}")
+			time_text = f"[{time_str}]" if time_str else ""
+			lines.append(f"- [tick {tick}]{time_text}[imp {imp:.2f}] {topic_text}{content}")
 		return "\n".join(lines)
 
 	def to_summary_text(self, max_items: int = 4) -> str:

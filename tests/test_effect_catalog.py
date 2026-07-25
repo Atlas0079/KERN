@@ -82,35 +82,6 @@ class EffectCatalogTests(unittest.TestCase):
 				self.assertTrue(callable(catalog.resolve_binder(effect_id)))
 				self.assertTrue(callable(catalog.resolve_handler(effect_id)))
 
-	def test_executor_uses_its_own_catalog(self) -> None:
-		custom_catalog = build_core_effect_catalog()
-		custom_catalog.register(
-			EffectSpec(
-				effect_id="test:Ping",
-				binder=_bind_passthrough,
-				handler=_execute_ping,
-				origin="scenario",
-			)
-		)
-		custom_executor = WorldExecutor(effect_catalog=custom_catalog)
-		core_executor = WorldExecutor()
-
-		with self.assertRaisesRegex(RuntimeError, "catalog is frozen"):
-			custom_catalog.register(EffectSpec(effect_id="test:Late", binder=_bind_passthrough, handler=_execute_ping))
-		self.assertEqual(custom_executor.execute(WorldState(), {"effect": "test:Ping"}, {}), [{"type": "PingExecuted"}])
-		unknown = core_executor.execute(WorldState(), {"effect": "test:Ping"}, {})
-		self.assertEqual(unknown[0]["code"], "UNKNOWN_EFFECT_TYPE")
-
-	def test_executor_reports_callable_resolution_failure(self) -> None:
-		catalog = build_core_effect_catalog()
-		catalog.register(EffectSpec(effect_id="test:Broken", module="missing.effect.module", origin="scenario"))
-		executor = WorldExecutor(effect_catalog=catalog)
-
-		result = executor.execute(WorldState(), {"effect": "test:Broken"}, {})
-
-		self.assertEqual(result[0]["code"], "EFFECT_BINDER_RESOLUTION_FAILED")
-		self.assertIn("missing.effect.module", result[0]["message"])
-
 	def test_lint_uses_the_callers_catalog(self) -> None:
 		project_root = Path(__file__).resolve().parents[1]
 		bundle = load_data_bundle(

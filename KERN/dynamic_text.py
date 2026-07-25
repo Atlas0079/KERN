@@ -27,6 +27,22 @@ class DynamicTextError(ValueError):
 	pass
 
 
+def entity_display_name(ws: Any, entity_id: Any) -> str:
+	"""Return the stable display name used by interaction-facing text."""
+	identifier = str(entity_id or "").strip()
+	if not identifier or not hasattr(ws, "get_entity_by_id"):
+		return identifier
+	entity = ws.get_entity_by_id(identifier)
+	if entity is None:
+		return identifier
+	name = str(getattr(entity, "entity_name", "") or identifier)
+	if hasattr(entity, "get_component"):
+		setting = entity.get_component("AgentSetting")
+		if setting is not None:
+			name = str(getattr(setting, "agent_name", "") or name)
+	return name
+
+
 def _stringify_rendered_value(value: Any) -> str:
 	if value is None:
 		return ""
@@ -46,6 +62,22 @@ def resolve_dynamic_text_value(ws: Any, context: dict[str, Any] | None, expressi
 	if not expr:
 		return None
 	ctx = context if isinstance(context, dict) else {}
+	dynamic_values = ctx.get("dynamic_values", {}) or {}
+	if not isinstance(dynamic_values, dict):
+		dynamic_values = {}
+	if expr in {"actor", "target"}:
+		if expr in dynamic_values:
+			return dynamic_values.get(expr)
+		entity_ref = "self" if expr == "actor" else "target"
+		entity_id = resolve_entity_id(entity_ref, ctx, allow_literal=False)
+		return entity_display_name(ws, entity_id)
+	if expr == "reason":
+		if "reason" in dynamic_values:
+			return dynamic_values.get("reason")
+		if str(ctx.get("reason", "") or ""):
+			return ctx.get("reason", "")
+		params = ctx.get("parameters", {}) or {}
+		return params.get("reason", "") if isinstance(params, dict) else ""
 	if expr.startswith("param:"):
 		params = ctx.get("parameters", {}) or {}
 		if not isinstance(params, dict):
@@ -59,6 +91,15 @@ def resolve_dynamic_text_value(ws: Any, context: dict[str, Any] | None, expressi
 	if expr.startswith("event.") or expr.startswith("param.") or expr.startswith("self.") or expr.startswith("target.") or expr.startswith("event_entity."):
 		value = resolve_value(ws, expr, ctx)
 		return None if value == expr else value
+	if dynamic_values:
+		value = resolve_path_value(dynamic_values, expr.split("."))
+		if value is not None:
+			return value
+	params = ctx.get("parameters", {}) or {}
+	if isinstance(params, dict):
+		value = resolve_path_value(params, expr.split("."))
+		if value is not None:
+			return value
 	return None
 
 

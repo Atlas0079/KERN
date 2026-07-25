@@ -44,7 +44,7 @@ class WorldSettlementTests(unittest.TestCase):
 				{
 					"id": "mark_selected",
 					"on_event": "TagAdded",
-					"condition": {"type": "event_field_eq", "field": "tag", "value": "selected"},
+					"condition": {"type": "event_field_eq", "field": "payload.tag", "value": "selected"},
 					"bundle": {"effects": [{"effect": "AddTag", "target": "target", "tag": "reacted"}]},
 				}
 			]
@@ -67,10 +67,10 @@ class WorldSettlementTests(unittest.TestCase):
 		for entity_id in ("outer", "first", "second"):
 			self.assertIn("reacted", ws.get_entity_by_id(entity_id).get_all_tags())
 		reaction_targets = {
-			record["event"]["entity_id"]
+			record["event"]["payload"]["entity_id"]
 			for record in ws.event_log
 			if record.get("event", {}).get("type") == "TagAdded"
-			and record.get("event", {}).get("tag") == "reacted"
+			and record.get("event", {}).get("payload", {}).get("tag") == "reacted"
 		}
 		self.assertEqual(reaction_targets, {"outer", "first", "second"})
 		self.assertTrue(all(EVENT_CONTEXT_KEY not in event for event in result.events))
@@ -164,7 +164,7 @@ class WorldSettlementTests(unittest.TestCase):
 		tags = ws.get_entity_by_id("agent").get_component("TagComponent").tags
 		self.assertEqual(tags, ["kept"])
 		self.assertEqual(caught.exception.code, "UNKNOWN_EFFECT_TYPE")
-		self.assertEqual([event["event"]["type"] for event in ws.event_log], ["Root", "TagAdded"])
+		self.assertEqual([event["event"]["type"] for event in ws.event_log], ["Root", "TagAdded", "AddTag"])
 		logged_rule_ids = [str(item.get("reaction_rule_id", "")) for item in ws.interaction_log]
 		self.assertNotIn("must_not_run", logged_rule_ids)
 

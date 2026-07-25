@@ -8,12 +8,12 @@
         "conditions": [
           {
             "type": "event_field_eq",
-            "field": "component",
+            "field": "payload.component",
             "value": "CreatureComponent"
           },
           {
             "type": "event_field_eq",
-            "field": "property",
+            "field": "payload.property",
             "value": "current_stress"
           }
         ]
@@ -80,7 +80,7 @@
             "event_type": "AgentFainted",
             "payload": {
               "source_ref": "event_entity",
-              "message": "{event.entity_id}因为精神压力过高而昏厥。"
+              "message": "{event.payload.entity_id}因为精神压力过高而昏厥。"
             }
           }
         ]
@@ -91,7 +91,7 @@
       "on_event": "StatusExpired",
       "selector": {
         "type": "event_field_eq",
-        "field": "status_id",
+          "field": "payload.status_id",
         "value": "fainted"
       },
       "bundle": {
@@ -125,7 +125,7 @@
             "event_type": "AgentRecoveredFromFaint",
             "payload": {
               "source_ref": "event_entity",
-              "message": "{event.entity_id}从昏厥中醒来。"
+              "message": "{event.payload.entity_id}从昏厥中醒来。"
             }
           }
         ]

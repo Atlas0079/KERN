@@ -9,6 +9,7 @@ from uuid import uuid4
 from .agent_workflow.provider_catalog import build_workflow_provider_catalog
 from .agent_workflow.simple_policy import SimplePolicyActionProvider
 from .agent_workflow.view_profile import normalize_workflow_view_profile
+from .agent_workflow.turn_scheduler import TurnScheduler
 from .component_catalog import ComponentCatalog, build_core_component_catalog
 from .data.archive import ArchiveRecorder
 from .data.builder import build_world_state
@@ -20,6 +21,7 @@ from .data.checkpoint import (
 	restore_world_state_from_checkpoint,
 )
 from .execution_errors import KernFailure
+from .effect_record import build_runtime_event
 from .failure_report import FailureReportWriter
 from .executor.executor import WorldExecutor
 from .external_runtime import ExternalRuntimeBridge
@@ -139,6 +141,8 @@ class KernRuntime:
 	is_running: bool = False
 	ticks_per_step: int = 1
 	max_trigger_depth: int = 4
+	max_actions_per_turn: int = 99
+	max_replans_per_turn: int = 5
 
 	# Named workflows are selected by provider_id; unresolved IDs fall back to
 	# action_provider so existing single-provider scenarios keep working.
@@ -334,6 +338,8 @@ class KernRuntime:
 			external_runtimes=external_runtime_map,
 			reaction_rules=list((bundle.reactions or {}).get("rules", []) or []),
 			max_trigger_depth=_cfg_int(cfg, "MAX_TRIGGER_DEPTH", 4),
+			max_actions_per_turn=_cfg_int(cfg, "MAX_ACTIONS_PER_TURN", 99),
+			max_replans_per_turn=_cfg_int(cfg, "MAX_REPLANS_PER_TURN", 5),
 			dialogue_budget_limit_per_location=_cfg_int(cfg, "DIALOGUE_BUDGET_LIMIT_PER_LOCATION", 4),
 			workflow_contract_on_error="fail_fast",
 			checkpoint_enabled=_cfg_bool(cfg, "CHECKPOINT_EVERY_TICK", True),
@@ -638,26 +644,31 @@ class KernRuntime:
 
 		# 2) Advance time and dispatch the world-level tick through reactions.
 		self.world_state.game_time.advance_ticks(self.ticks_per_step)
-		world_tick_event = {
-			"type": "WorldTickAdvanced",
-			"total_ticks": ws.game_time.total_ticks,
-			"time": ws.game_time.time_to_string(),
-		}
+		world_tick_event = build_runtime_event(
+			"WorldTickAdvanced",
+			{"total_ticks": ws.game_time.total_ticks, "time": ws.game_time.time_to_string()},
+		)
 		world_tick_ctx = {"actor_id": ""}
 		logger.debug("tick", "tick_advanced", context=dict(world_tick_event))
 		settlement.publish_event(world_tick_event, world_tick_ctx)
 
-		# 3) Dispatch AdvanceTick events per entity, then let Reactions decide which effects to run.
-		for ent_id in list(ws.entities.keys()):
-			if not bool(self.is_running):
-				break
-			tick_event = {
-				"type": "AdvanceTick",
-				"entity_id": ent_id,
-				"ticks": int(self.ticks_per_step),
-			}
-			tick_ctx = {"entity_id": ent_id, "event_entity_id": ent_id, "self_id": ent_id}
-			settlement.publish_event(tick_event, tick_ctx)
+		# 3) Queue every entity tick before settling passive reactions.
+		tick_events = [
+			build_runtime_event(
+				"AdvanceTick",
+				{"entity_id": ent_id, "ticks": int(self.ticks_per_step)},
+				{"entity_id": ent_id, "event_entity_id": ent_id, "self_id": ent_id},
+			)
+			for ent_id in sorted(str(entity_id) for entity_id in ws.entities.keys())
+		]
+		settlement.publish_events(tick_events)
+
+		# 4) Only the scheduler can grant active turns.
+		if not bool(getattr(ws.runtime_state, "abort_requested", False)):
+			TurnScheduler(
+				max_actions_per_turn=self.max_actions_per_turn,
+				max_replans_per_turn=self.max_replans_per_turn,
+			).run_active_phase(ws, settlement)
 
 		events_in_tick_records: list[dict[str, Any]] = []
 		for rec in list(getattr(ws, "event_log", []) or []):

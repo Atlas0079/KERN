@@ -82,8 +82,6 @@ def _memory(raw: Any) -> dict[str, Any]:
 		"mid_term_max_entries": int(d.get("mid_term_max_entries", 20) or 20),
 		"last_mid_term_summary_tick": int(d.get("last_mid_term_summary_tick", -1) or -1),
 		"mid_term_summary_cooldown_ticks": int(d.get("mid_term_summary_cooldown_ticks", 15) or 15),
-		"last_event_seq_seen": int(d.get("last_event_seq_seen", 0) or 0),
-		"last_interaction_seq_seen": int(d.get("last_interaction_seq_seen", 0) or 0),
 	}
 
 
@@ -144,7 +142,17 @@ def build_core_component_catalog() -> ComponentCatalog:
 		catalog,
 		"PerceptionComponent",
 		PerceptionComponent,
-		DataclassCodec(PerceptionComponent, lambda raw: {"enabled": bool(_dict(raw).get("enabled", True))}),
+		DataclassCodec(
+			PerceptionComponent,
+			lambda raw: {
+				"enabled": bool(_dict(raw).get("enabled", True)),
+				"interaction_inbox": [
+					dict(item)
+					for item in list(_dict(raw).get("interaction_inbox", []) or [])
+					if isinstance(item, dict)
+				],
+			},
+		),
 	)
 	_register(catalog, "StatusComponent", StatusComponent, DataclassCodec(StatusComponent, _status))
 	_register(

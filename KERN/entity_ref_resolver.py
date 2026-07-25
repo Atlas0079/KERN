@@ -17,13 +17,19 @@ def resolve_entity_id(ref: Any, context: dict[str, Any] | None, allow_literal: b
 			return str(ctx.get("event_entity_id", "") or "")
 		event = ctx.get("event", {}) or {}
 		if isinstance(event, dict):
-			return str(event.get("entity_id", "") or "")
+			payload = event.get("payload", {}) or {}
+			return str(payload.get("entity_id", "") or "") if isinstance(payload, dict) else ""
 		return ""
 	if key.startswith("event."):
 		event = ctx.get("event", {}) or {}
 		if not isinstance(event, dict):
 			return ""
-		return str(event.get(key[len("event.") :], "") or "")
+		value: Any = event
+		for segment in key[len("event.") :].split("."):
+			if not isinstance(value, dict) or segment not in value:
+				return ""
+			value = value[segment]
+		return str(value or "")
 	if key.startswith("param:"):
 		p = ctx.get("parameters", {}) or {}
 		if not isinstance(p, dict):

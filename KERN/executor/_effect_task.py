@@ -319,6 +319,7 @@ def _task_lifecycle_context(task: Task, context: dict[str, Any], worker_id: str 
 	if worker_id:
 		ctx["self_id"] = str(worker_id)
 	ctx["task_id"] = str(task.task_id)
+	ctx["_interaction_origin"] = "task_lifecycle"
 	ctx.setdefault("target_id", str(task.target_entity_id or ""))
 	params = getattr(task, "parameters", {}) or {}
 	if isinstance(params, dict) and params:
@@ -708,6 +709,7 @@ def execute_finish_task(executor: Any, ws: Any, _data: dict[str, Any], context: 
 		return executor_error("FinishTask: task not found")
 	if isinstance(context, dict):
 		context.setdefault("target_id", str(getattr(task, "target_entity_id", "") or ""))
+		context["_interaction_origin"] = "task_lifecycle"
 		params = getattr(task, "parameters", {}) or {}
 		if isinstance(params, dict) and params:
 			base_params = context.get("parameters", {}) or {}

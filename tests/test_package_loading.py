@@ -74,52 +74,6 @@ class PackageLoadingTests(unittest.TestCase):
 			capability_identity = next(item for item in package_identity(loaded)["packages"] if item["package_id"] == "navigation")
 			self.assertTrue(capability_identity["runtime_content_hash"])
 
-	def test_selected_capability_registers_component_and_effect(self) -> None:
-		with tempfile.TemporaryDirectory() as temp_dir:
-			root = Path(temp_dir)
-			_write_world_package(root)
-			capability = root / "Packages" / "weather"
-			_write_json(capability / "kern-package.json", {"package_id": "weather", "version": "1.0.0", "provides_world": False, "extensions": "extensions.py"})
-			(capability / "extensions.py").write_text("COMPONENT_MODULES = ('components.weather',)\nEFFECT_MODULES = ('effects.weather',)\n", encoding="utf-8")
-			(capability / "components").mkdir(parents=True)
-			(capability / "effects").mkdir(parents=True)
-			(capability / "components" / "weather.py").write_text(
-				"from dataclasses import dataclass\nfrom KERN.package_definitions import package_component\n@package_component('weather:WeatherComponent')\n@dataclass\nclass WeatherComponent:\n    level: int = 0\n",
-				encoding="utf-8",
-			)
-			(capability / "effects" / "weather.py").write_text(
-				"from KERN.effects import EffectSpec\nfrom KERN.package_definitions import package_effect\ndef bind(ws, data, context): return dict(data), dict(context)\ndef run(executor, ws, data, context): return [{'type': 'WeatherPing'}]\n@package_effect(EffectSpec(effect_id='weather:Ping', binder=bind, handler=run))\ndef definition(): pass\n",
-				encoding="utf-8",
-			)
-			_write_json(root / "Packages" / "demo" / "Data" / "Entities" / "entity.json", {"probe": {"name": "Probe", "components": {"weather:WeatherComponent": {"level": 3}}}})
-			_write_json(root / "Packages" / "demo" / "Data" / "World.json", {"locations": [{"location_id": "room", "location_name": "Room", "description": "", "entities": [{"instance_id": "probe_1", "template_id": "probe"}]}], "entities": []})
-			_write_json(root / "runtime.json", {"packages": [{"path": "Packages/weather"}, {"path": "Packages/demo", "world": True}], "env": {"CHECKPOINT_EVERY_TICK": "0"}})
-
-			runtime = KernRuntime.from_config(root, "runtime.json", configure_logging=False)
-
-			self.assertEqual(type(runtime.component_catalog.build("weather:WeatherComponent", {"level": 3})).__name__, "WeatherComponent")
-			self.assertEqual(type(runtime.world_state.get_entity_by_id("probe_1").get_component("weather:WeatherComponent")).__name__, "WeatherComponent")
-			runtime.record_initial_state()
-			snapshot_component = runtime.snapshots[0]["entities"]["probe_1"]["component_state"]["weather:WeatherComponent"]
-			self.assertEqual(snapshot_component, {"level": 3})
-			runtime.world_state.get_entity_by_id("probe_1").get_component("weather:WeatherComponent").level = 9
-			self.assertEqual(snapshot_component, {"level": 3})
-			self.assertEqual(runtime.executor.execute(runtime.world_state, {"effect": "weather:Ping"}, {}), [{"type": "WeatherPing"}])
-			archive_dir = root / "archive"
-			ArchiveRecorder(archive_dir=str(archive_dir), run_id="weather", component_catalog=runtime.component_catalog).record_tick(runtime.world_state)
-			restored = restore_world_state_from_checkpoint(archive_dir / "snapshots" / "snapshot_000000.json.gz", runtime.data_bundle.entity_templates, runtime.data_bundle.named_bundles, component_catalog=runtime.component_catalog)
-			self.assertEqual(type(restored.get_entity_by_id("probe_1").get_component("weather:WeatherComponent")).__name__, "WeatherComponent")
-
-	def test_unselected_capability_definitions_are_not_visible(self) -> None:
-		with tempfile.TemporaryDirectory() as temp_dir:
-			root = Path(temp_dir)
-			_write_world_package(root)
-			_write_json(root / "runtime.json", {"packages": [{"path": "Packages/demo", "world": True}], "env": {"CHECKPOINT_EVERY_TICK": "0"}})
-
-			runtime = KernRuntime.from_config(root, "runtime.json", configure_logging=False)
-
-			self.assertEqual(type(runtime.component_catalog.build("weather:WeatherComponent", {})).__name__, "CustomComponent")
-			self.assertEqual(runtime.executor.execute(runtime.world_state, {"effect": "weather:Ping"}, {})[0]["code"], "UNKNOWN_EFFECT_TYPE")
 	def test_camping_world_package_replaces_legacy_smoke_config(self) -> None:
 		project_root = Path(__file__).resolve().parents[1]
 

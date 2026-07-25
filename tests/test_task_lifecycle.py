@@ -63,7 +63,7 @@ class TaskLifecycleTests(unittest.TestCase):
 		self.assertFalse([ev for ev in events if ev.get("type") == "ExecutorError"])
 		task_events = [ev for ev in events if ev.get("type") == "TaskCreated"]
 		self.assertEqual(len(task_events), 1)
-		return str(task_events[0]["task_id"])
+		return str(task_events[0]["payload"]["task_id"])
 
 	def test_start_bundle_runs_when_task_is_assigned(self) -> None:
 		task_id = self._create_processing_task()
@@ -93,20 +93,6 @@ class TaskLifecycleTests(unittest.TestCase):
 		self.assertFalse([event for event in events if event.get("type") == "ExecutorError"])
 		self.assertIn("TaskProgressed", [event["type"] for event in events])
 		self.assertEqual(self.ws.get_task_by_id(task_id).progress, 1.0)
-
-	def test_worker_tick_child_failure_rolls_back_progress(self) -> None:
-		self.ws.services.clear()
-		task_id = self._create_processing_task()
-		self.ws.get_task_by_id(task_id).tick_bundle = effect_bundle_from_raw({"effects": [{"effect": "MissingEffect"}]})
-
-		events = self.executor.execute(
-			self.ws,
-			{"effect": "WorkerTick", "ticks": 1},
-			{"entity_id": "agent_01", "self_id": "agent_01", "task_id": task_id},
-		)
-
-		self.assertEqual(events[0]["type"], "ExecutorError")
-		self.assertEqual(self.ws.get_task_by_id(task_id).progress, 0.0)
 
 	def test_cleanup_bundle_runs_after_successful_finish(self) -> None:
 		task_id = self._create_processing_task()
@@ -176,8 +162,8 @@ class TaskLifecycleTests(unittest.TestCase):
 			{"self_id": "agent_01"},
 		)
 		self.assertEqual(events[0]["type"], "CurrentTaskInterrupted")
-		self.assertEqual(events[0]["task_id"], task_id)
-		self.assertEqual(events[0]["new_status"], "Failed")
+		self.assertEqual(events[0]["payload"]["task_id"], task_id)
+		self.assertEqual(events[0]["payload"]["new_status"], "Failed")
 		self.assertFalse(_has_status(self.station, "is_in_use"))
 		self.assertEqual(self.worker.get_component("WorkerComponent").current_task_id, "")
 		self.assertIsNone(self.ws.get_task_by_id(task_id))

@@ -99,9 +99,7 @@ EVENT_FIELDS: dict[str, set[str]] = {
 	"ResourcesExchanged": {"type", "source_id", "target_id", "mode", "money_delta", "items_processed", "items_produced_templates"},
 	"SimulationAbortRequested": {"type", "reason", "detail", "severity", "stop", "actor_id"},
 	"MetaActionApplied": {"type", "entity_id", "action_type", "params", "changed"},
-	"DetailsAttached": {"type", "detail_type", "entity_id"},
 	"InteractionRecorded": {"type", "actor_id", "target_id", "verb", "status", "recipe_id"},
-	"InteractionDetailsUpdated": {"type", "seq", "actor_id"},
 	"MemoryPatched": {"type", "entity_id"},
 	"MemoryNoteAdded": {"type", "entity_id"},
 	"EventEmitted": {"type", "event_type", "payload"},
@@ -643,7 +641,10 @@ def _validate_event_field(ctx: LintContext, event_type: str, field: str, where: 
 	if not field or not event_type:
 		return
 	known = EVENT_FIELDS.get(str(event_type), set())
-	if known and field not in known:
+	field_name = field[len("payload.") :] if field.startswith("payload.") else field
+	if field.startswith("input."):
+		return
+	if known and field_name not in known:
 		ctx.warn(where, f"event field '{field}' is not known for event '{event_type}'")
 
 
@@ -791,8 +792,6 @@ def _validate_effect_required_fields(ctx: LintContext, eff: str, effect: dict[st
 					ctx.error(where, "ApplyToQuery limit must be non-negative")
 			except Exception:
 				ctx.error(where, "ApplyToQuery limit must be integer")
-	if eff == "AgentControlTick" and "max_actions_in_tick" not in effect:
-		ctx.error(where, "AgentControlTick missing max_actions_in_tick")
 	if eff == "WorkerTick" and "ticks" not in effect:
 		ctx.error(where, "WorkerTick missing ticks")
 	if eff == "ApplyMetaAction":
@@ -801,12 +800,6 @@ def _validate_effect_required_fields(ctx: LintContext, eff: str, effect: dict[st
 				ctx.error(where, f"ApplyMetaAction missing {key}")
 		if "params" in effect and not isinstance(effect.get("params"), dict):
 			ctx.error(where, "ApplyMetaAction params must be object")
-	if eff == "AttachDetails":
-		detail_type = str(effect.get("detail_type", "") or "").strip()
-		if detail_type not in {"entity", "entity_recipe", "interrupt_preset"}:
-			ctx.error(where, "AttachDetails detail_type must be entity/entity_recipe/interrupt_preset")
-		if detail_type in {"entity", "entity_recipe"} and not _has_nonempty_value(effect, "target"):
-			ctx.error(where, f"AttachDetails({detail_type}) missing target")
 	if eff == "EmitEvent":
 		if not _has_nonempty_value(effect, "event_type"):
 			ctx.error(where, "EmitEvent missing event_type")
@@ -1077,9 +1070,11 @@ def _validate_reactions(ctx: LintContext) -> None:
 			seen.add(rid)
 		event_type = str(rule.get("on_event", "") or "").strip()
 		if not event_type:
-			ctx.warn(where, "rule has no on_event and may match all events")
-		elif event_type not in EVENT_FIELDS:
+			ctx.error(where, "rule requires on_event")
+		elif event_type not in EVENT_FIELDS and not ctx.effect_catalog.contains(event_type):
 			ctx.warn(where, f"on_event is not in known event catalog: {event_type}")
+		if "on_effect" in rule:
+			ctx.error(where, "on_effect is not supported; match the default Effect-ID event with on_event")
 		_validate_condition(ctx, rule.get("selector", {}) or {}, f"{where}.selector", event_type)
 		_validate_condition(ctx, rule.get("condition", {}) or {}, f"{where}.condition", event_type)
 		_validate_bundle(ctx, rule.get("bundle", {}), f"{where}.bundle")

@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+from ..dynamic_text import DynamicTextError
+from ..execution_errors import KernFailure
 from .condition_evaluator import ConditionEvaluator
 from ..interaction.narrative import render_interaction_narrative
 
@@ -20,11 +22,10 @@ class TriggerSystem:
 			return []
 		ctx = dict(context or {})
 		event_type = str(event.get("type", "") or "")
-		effect_type = str(event.get("effect", "") or "")
-		event_entity_id = str(event.get("entity_id", "") or "")
+		payload = dict(event.get("payload", {}) or {}) if isinstance(event.get("payload", {}), dict) else {}
+		event_entity_id = str(payload.get("entity_id", "") or "")
 		base_ctx = dict(ctx)
 		base_ctx["event"] = dict(event)
-		base_ctx["effect"] = effect_type
 		base_ctx["effect_input"] = dict(event.get("input", {}) or {}) if isinstance(event.get("input", {}), dict) else {}
 		base_ctx["event_entity_id"] = event_entity_id
 		if event_entity_id and not str(base_ctx.get("self_id", "") or ""):
@@ -34,14 +35,19 @@ class TriggerSystem:
 		requests: list[dict[str, Any]] = []
 		for rule in list(self.rules or []):
 			if not isinstance(rule, dict):
-				continue
+				raise KernFailure("REACTION_RULE_INVALID", "reaction rule must be an object", origin="reaction", phase="rule_validation")
 			if not bool(rule.get("enabled", True)):
 				continue
 			on_event = str(rule.get("on_event", "") or "")
-			if on_event and on_event != event_type:
-				continue
-			on_effect = str(rule.get("on_effect", "") or "")
-			if on_effect and on_effect != effect_type:
+			if not on_event or "on_effect" in rule:
+				raise KernFailure(
+					"REACTION_RULE_INVALID",
+					"reaction rule requires on_event and must not define on_effect",
+					origin="reaction",
+					phase="rule_validation",
+					context={"reaction_rule_id": str(rule.get("id", "") or "")},
+				)
+			if on_event != event_type:
 				continue
 			rule_id = str(rule.get("id", "") or "")
 			selector = rule.get("selector", {}) or {}
@@ -58,18 +64,23 @@ class TriggerSystem:
 			req_ctx["reaction_verb"] = reaction_verb
 			narrative_template = str(rule.get("narrative_success", "") or "").strip()
 			compiled_bundle = dict(bundle) if isinstance(bundle, dict) else {}
-			effects = [
-				item
-				for item in list(compiled_bundle.get("effects", []) or [])
-				if not (isinstance(item, dict) and str(item.get("effect", "") or "") == "RecordInteraction")
-			]
+			effects = list(compiled_bundle.get("effects", []) or [])
 			if narrative_template:
-				narrative = render_interaction_narrative(
-					ws,
-					narrative_template,
-					req_ctx,
-					values={"event_type": event_type, "reaction_id": rule_id},
-				)
+				try:
+					narrative = render_interaction_narrative(
+						ws,
+						narrative_template,
+						req_ctx,
+						values={"event_type": event_type, "reaction_id": rule_id},
+					)
+				except DynamicTextError as exc:
+					raise KernFailure(
+						"REACTION_NARRATIVE_RENDER_FAILED",
+						str(exc),
+						origin="reaction",
+						phase="narrative_render",
+						context={"reaction_rule_id": rule_id, "trigger_event_type": event_type},
+					) from exc
 				effects.insert(
 					0,
 					{
@@ -79,6 +90,7 @@ class TriggerSystem:
 						"target_id": str(req_ctx.get("target_id", "") or req_ctx.get("event_entity_id", "") or ""),
 						"status": "success",
 						"reason": "",
+						"interaction_origin": "reaction_narrative",
 						"extra": {
 							"narrative": narrative,
 							"interaction_type": "reaction",

@@ -7,6 +7,7 @@
 - 仓库根目录 `AGENTS.md`：给 Codex 的项目级指导。记录稳定架构约束、当前迁移状态和验证命令；它不是工作日志。
 - `scenario_package_migration_plan.md`：Package 组合、扩展发现、archive identity 与运行时 snapshot 的当前契约。
 - `runtime_composition_and_external_lifecycle_plan.md`：已实施的 runtime 组合和外部 runtime 生命周期契约；其下一阶段仍需单独规划。
+- `turn_action_reaction_design.md`：Turn、Action、Effect/Event、Reaction、同 tick rejection 重试及 interaction 感知的目标设计；其中感知 inbox 已实施，TurnScheduler 和统一 Event 模型尚未实施。
 - `architecture_followup_p2.md`：尚未实施的 Package 扩展模块进程级缓存事项及其触发条件。
 
 ## 通用参考
