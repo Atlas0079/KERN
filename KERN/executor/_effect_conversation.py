@@ -1,14 +1,13 @@
 from __future__ import annotations
 
-import random
-import uuid
 from typing import Any
+from uuid import uuid4
 
 from ..dynamic_text import DynamicTextError, render_dynamic_text
 from ..execution_errors import executor_error
-from ..log_manager import get_logger
-from ..agent_workflow.provider_routing import resolve_workflow_provider
+from ..interaction.conversation import ConversationEngine, ConversationRequest
 from ._effect_binder import _base_bind, _require_int, _require_param, _resolve_param_token
+from ._effect_child_bundle import run_child_bundle
 
 
 def _bind_start_conversation(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -19,197 +18,69 @@ def _bind_start_conversation(_ws: Any, effect_data: dict[str, Any], context: dic
 
 
 def execute_start_conversation(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
-	logger = get_logger()
-	services = getattr(ws, "services", {}) or {}
-	state = ws.runtime_state
-	log_full = state.dialogue_log_full
-	self_id = str((context or {}).get("self_id", "") or "")
-	location = ws.get_location_of_entity(self_id) if self_id else None
+	initiator_id = str((context or {}).get("self_id", "") or "")
+	location = ws.get_location_of_entity(initiator_id) if initiator_id else None
 	if location is None:
-		return [{"type": "ConversationSkipped", "reason": "location_missing", "self_id": self_id}]
+		return [{"type": "ConversationCompleted", "conversation_id": "", "skipped_reason": "location_missing", "utterance_count": 0}]
 	location_id = str(location.location_id)
-	limit_default = state.dialogue_budget_limit_per_location
-	used_map = state.dialogue_budget_used_per_location
-	used = int(used_map.get(location_id, 0) or 0)
-	if used >= limit_default:
-		return [{"type": "ConversationSkipped", "reason": "budget_exhausted", "location_id": location_id, "used": used, "limit": limit_default}]
-	max_req = int(data.get("max_utterances_per_tick", 4) or 4)
-	remaining_budget = max(0, limit_default - used)
-	remaining_rounds = min(max_req, remaining_budget)
-	if remaining_rounds <= 0:
-		return [{"type": "ConversationSkipped", "reason": "budget_exhausted", "location_id": location_id, "used": used, "limit": limit_default}]
-	participants: list[str] = []
-	for eid in list(location.entities_in_location):
-		ent = ws.get_entity_by_id(str(eid))
-		if ent is None:
-			continue
-		ctrl = ent.get_component("AgentControlComponent")
-		if ctrl is None:
-			continue
-		if not bool(getattr(ctrl, "enabled", True)):
-			continue
-		participants.append(str(ent.entity_id))
-	if len(participants) < 2:
-		return [{"type": "ConversationSkipped", "reason": "no_participants", "location_id": location_id}]
+	state = ws.runtime_state
+	limit = int(state.dialogue_budget_limit_per_location)
+	used = int(state.dialogue_budget_used_per_location.get(location_id, 0) or 0)
+	remaining = max(0, limit - used)
+	requested = max(0, int(data.get("max_utterances_per_tick", 0) or 0))
+	max_utterances = min(requested, remaining)
 	try:
 		opening_text = render_dynamic_text(ws, context, data.get("opening_text", "")).strip()
 	except DynamicTextError as exc:
 		return executor_error(f"StartConversation.opening_text: {exc}")
-	others = [p for p in participants if p != self_id]
-	random.shuffle(others)
-	if self_id and self_id in participants:
-		participants = [self_id] + others
-	else:
-		participants = others
-	conversation_id = f"conv_{uuid.uuid4().hex[:12]}"
-	events: list[dict[str, Any]] = [
-		{
-			"type": "ConversationStarted",
-			"conversation_id": conversation_id,
-			"location_id": location_id,
-			"participants": list(participants),
-			"budget_limit": int(limit_default),
-			"budget_used_before": int(used),
-		}
-	]
 
-	def _build_perception_for_dialogue(speaker_id: str, spoken_so_far: int, transcript: list[dict[str, Any]]) -> dict[str, Any]:
-		from ..agent_workflow.observer import build_agent_perception
-		from ..agent_workflow.full_ws_view_builder import build_full_ws_view
-		full_ws_view = build_full_ws_view(ws, speaker_id, "", {})
-		perception = build_agent_perception(full_ws_view, speaker_id)
-		engine = services.get("interaction_engine")
-		if engine is not None and hasattr(engine, "recipe_db") and isinstance(getattr(engine, "recipe_db"), dict):
-			perception["recipe_db"] = dict(getattr(engine, "recipe_db"))
-		used_now = int(used + spoken_so_far)
-		perception["can_start_conversation_here"] = bool(used_now < limit_default)
-		perception["tick"] = int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
-		perception["conversation_transcript"] = [dict(x) for x in list(transcript or [])]
-		return dict(perception)
-
-	def _resolve_provider_and_name(speaker_id: str) -> tuple[Any, str]:
-		ent = ws.get_entity_by_id(speaker_id)
-		ctrl = ent.get_component("AgentControlComponent") if ent is not None else None
-		provider = resolve_workflow_provider(services, ctrl)
-		speaker_name = str(getattr(ent, "entity_name", "") or speaker_id) if ent is not None else speaker_id
-		if ent is not None and hasattr(ent, "get_component"):
-			agent_setting = ent.get_component("AgentSetting")
-			if agent_setting is not None:
-				speaker_name = str(getattr(agent_setting, "agent_name", "") or speaker_name)
-		return provider, speaker_name
-
-	def _record_spoken_line(speaker_id: str, speaker_name: str, line: str, utterance_index: int, transcript: list[dict[str, Any]]) -> None:
-		transcript.append(
-			{
-				"utterance_index": int(utterance_index),
-				"speaker_id": speaker_id,
-				"speaker_name": speaker_name,
-				"text": line,
-				"pass": False,
-			}
-		)
-		logger.warn(
-			"dialogue",
-			"spoken",
-			context={
-				"conversation_id": conversation_id,
-				"location_id": location_id,
-				"speaker_id": speaker_id,
-				"utterance_index": int(utterance_index),
-				"text": line,
-			},
-		)
-		events.append(
-			{
-				"type": "ConversationSpoken",
-				"conversation_id": conversation_id,
-				"speaker_id": speaker_id,
-				"location_id": location_id,
-				"text": line,
-				"utterance_index": int(utterance_index),
-			}
-		)
-
-	spoken_count = 0
-	transcript: list[dict[str, Any]] = []
-	utterance_count = 0
-	if self_id and opening_text:
-		_initiator_provider, initiator_name = _resolve_provider_and_name(self_id)
-		_record_spoken_line(self_id, initiator_name, opening_text, utterance_count, transcript)
-		utterance_count += 1
-		spoken_count += 1
-
-	if utterance_count < remaining_rounds:
-		for speaker_id in [p for p in participants if p != self_id]:
-			if utterance_count >= remaining_rounds:
-				break
-			provider, speaker_name = _resolve_provider_and_name(speaker_id)
-			if provider is None or not hasattr(provider, "decide_dialogue"):
-				continue
-			perception = _build_perception_for_dialogue(speaker_id, utterance_count, transcript)
-			line = str(
-				provider.decide_dialogue(
-					perception=perception,
-					conversation_context={
-						"conversation_id": conversation_id,
-						"location_id": location_id,
-						"participants": list(participants),
-						"utterance_index": int(utterance_count),
-						"max_utterances_per_tick": int(remaining_rounds),
-						"transcript": [dict(x) for x in list(transcript or [])],
-						"dialogue_phase": "join_decision",
-						"initiator_id": self_id,
-					},
-					self_id=speaker_id,
-				)
-				or ""
-			).strip()
-			if (not line) or (line.upper() == "PASS"):
-				continue
-			_record_spoken_line(speaker_id, speaker_name, line, utterance_count, transcript)
-			utterance_count += 1
-			spoken_count += 1
-
-	used_map[location_id] = used + spoken_count
-	events.append(
-		{
-			"type": "ConversationEnded",
-			"conversation_id": conversation_id,
-			"location_id": location_id,
-			"utterance_count": int(utterance_count),
-			"spoken_count": int(spoken_count),
-			"budget_used_after": int(used_map[location_id]),
-			"budget_limit": int(limit_default),
-			"transcript": list(transcript),
-			"joined_participants": [str(x.get("speaker_id", "") or "") for x in list(transcript) if isinstance(x, dict)],
-		}
+	conversation_id = f"conv_{uuid4().hex[:12]}"
+	result = ConversationEngine().conduct(
+		ws,
+		ConversationRequest(conversation_id, initiator_id, location_id, opening_text, max_utterances),
 	)
-	if spoken_count <= 0:
-		logger.warn(
-			"dialogue",
-			"no_speech",
-			context={
-				"conversation_id": conversation_id,
-				"location_id": location_id,
-				"participants": list(participants),
-				"utterance_count": int(utterance_count),
-				"budget_limit": int(limit_default),
-				"budget_used_before": int(used),
-				"budget_used_after": int(used_map[location_id]),
-				"transcript": list(transcript),
-			},
-		)
-	elif log_full:
-		logger.warn(
-			"dialogue",
-			"transcript",
-			context={
-				"conversation_id": conversation_id,
-				"location_id": location_id,
-				"participants": list(participants),
-				"utterance_count": int(utterance_count),
-				"spoken_count": int(spoken_count),
-				"transcript": list(transcript),
-			},
-		)
-	return events
+	child_events: list[dict[str, Any]] = []
+	if result.utterances:
+		bundle = {
+			"effects": [
+				{
+					"effect": "RecordInteraction",
+					"actor_id": utterance.speaker_id,
+					"verb": "Say",
+					"target_id": "",
+					"status": "success",
+					"reason": "",
+					"interaction_origin": "conversation",
+					"extra": {
+						"is_dialogue": True,
+						"speech": utterance.text,
+						"conversation_id": result.conversation_id,
+						"utterance_index": int(utterance.utterance_index),
+						"participants": list(result.participants),
+					},
+				}
+				for utterance in result.utterances
+			]
+		}
+		child_events = run_child_bundle(executor, ws, bundle, dict(context or {})).events
+		state.dialogue_budget_used_per_location[location_id] = used + len(result.utterances)
+
+	interaction_ids = [
+		str((event.get("payload", {}) or {}).get("interaction_id", "") or "")
+		for event in child_events
+		if isinstance(event, dict) and str(event.get("type", "") or "") == "InteractionRecorded"
+	]
+	return [
+		*child_events,
+		{
+			"type": "ConversationCompleted",
+			"conversation_id": result.conversation_id,
+			"location_id": result.location_id,
+			"participants": list(result.participants),
+			"interaction_ids": [item for item in interaction_ids if item],
+			"utterance_count": len(result.utterances),
+			"skipped_reason": result.skipped_reason,
+			"budget_used_after": int(state.dialogue_budget_used_per_location.get(location_id, used) or 0),
+			"budget_limit": limit,
+		},
+	]

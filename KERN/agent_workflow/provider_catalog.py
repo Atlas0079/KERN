@@ -4,9 +4,14 @@ import json
 from typing import Any
 
 from .llm_action_provider import build_default_llm_provider
+from .trace import LLMTraceRecorder
 
 
-def build_workflow_provider_catalog(config: dict[str, Any] | None = None) -> tuple[Any, dict[str, Any]]:
+def build_workflow_provider_catalog(
+	config: dict[str, Any] | None = None,
+	*,
+	trace_recorder: LLMTraceRecorder | None = None,
+) -> tuple[Any, dict[str, Any]]:
 	"""Build the default workflow plus named LLM workflows from runtime config.
 
 	`LLM_PROFILES_JSON` is a JSON object keyed by stable, scenario-facing profile
@@ -15,7 +20,7 @@ def build_workflow_provider_catalog(config: dict[str, Any] | None = None) -> tup
 	base runtime configuration for that profile only.
 	"""
 	base_config = dict(config or {})
-	default_provider = build_default_llm_provider(base_config)
+	default_provider = build_default_llm_provider(base_config, trace_recorder=trace_recorder)
 	raw = str(base_config.get("LLM_PROFILES_JSON", "") or "").strip()
 	if not raw:
 		return default_provider, {}
@@ -37,5 +42,5 @@ def build_workflow_provider_catalog(config: dict[str, Any] | None = None) -> tup
 			if value is None:
 				continue
 			profile_config[str(key)] = json.dumps(value, ensure_ascii=False) if isinstance(value, (dict, list)) else str(value)
-		named[profile_id] = build_default_llm_provider(profile_config)
+		named[profile_id] = build_default_llm_provider(profile_config, trace_recorder=trace_recorder)
 	return default_provider, named

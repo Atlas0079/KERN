@@ -25,6 +25,9 @@ file. Source code is the final authority.
 
 - Decision code, workflows, recipes, and reactions do not mutate `WorldState`
   directly. They produce effect bundles; `WorldExecutor` owns world writes.
+- Agent dialogue uses the separate `DialoguePolicy` interface. A bounded
+  conversation generates its transcript before one child bundle writes each
+  utterance through `RecordInteraction`; Event logs are not Agent memory.
 - An effect is validated and normalized by its binder before its handler runs.
   Add a core effect through `KERN.effects.EffectSpec`, binder, handler, and
   focused tests together.
@@ -66,6 +69,11 @@ template JSON <-> live component object <-> checkpoint JSON
 executor, and archive. Runtime assembly freezes both before execution. A catalog
 must not be mutated while a runtime is running.
 
+LLM network retry is request-scoped. Timeout, connection, 429, and 5xx failures
+use bounded exponential backoff; exhaustion is terminal. There is no cross-tick
+LLM cooldown. Optional full LLM traces are run artifacts, not world state or
+checkpoints.
+
 ## Package composition migration status
 
 Phases 0–7 are complete:
@@ -96,10 +104,12 @@ Scenario code is not sandboxed and has the same process permissions as KERN.
 - `KERN/component_catalog/`: component specifications and codecs.
 - `KERN/effects/`: effect specifications and catalog.
 - `KERN/executor/`: binders, handlers, transactions, rollback.
-- `KERN/interaction/`: recipe matching and ActionIntent-to-bundle compilation.
+- `KERN/interaction/`: recipe matching, ActionIntent-to-bundle compilation, and
+  bounded conversation generation.
 - `KERN/sim/`: reaction settlement, active-turn scheduling, and turn execution.
 - `KERN/query/`: condition predicates and path resolution.
-- `KERN/agent_workflow/`: perception, memory patching, workflow contracts, registries, and provider adapters.
+- `KERN/agent_workflow/`: perception, memory patching, workflow/dialogue
+  contracts, registries, provider adapters, and LLM traces.
 - `KERN/external_runtime.py` and `KERN/external_runtimes/`: explicit adapters
   for state outside `WorldState`.
 - `KERN/failure_report.py`: run-scoped failure evidence and the single

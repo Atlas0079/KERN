@@ -86,6 +86,11 @@ interaction 的 Effect。Handler 会根据交互发生时的世界状态确定�
 `tick`、`time_str` 和 `interaction_id` 的快照写入其 `PerceptionComponent.interaction_inbox`。
 该写入与 interaction log 属于同一个 Bundle 事务。
 
+对话中的每句实际发言都是 `verb=Say`、`is_dialogue=true` 的 `RecordInteraction`。同一对话用
+`conversation_id` 和 `utterance_index` 排序。`ConversationCompleted` Event 只保存参与者、
+interaction IDs 和计数，不复制 transcript。Conversation provider 在所有 interaction 写入前
+完成；任一 provider 或 child interaction 失败时，整段对话不会留下部分可感知记录。
+
 ## Failure 报告
 
 每次 Runtime 最多写一份：

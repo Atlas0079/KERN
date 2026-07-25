@@ -165,7 +165,6 @@
       ],
       "match": "all"
     },
-    "narrative_success": "{actor}开始了一段对话",
     "narrative_fail": "{actor}想发起对话，但失败了：{reason}",
     "process": {
       "required_progress": 0

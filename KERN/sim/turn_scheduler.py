@@ -7,18 +7,26 @@ from ..agent_workflow.interrupt_runtime import check_if_interrupt_is_needed
 from ..agent_workflow.provider_routing import resolve_workflow_provider
 from ..execution_errors import KernFailure
 from ..models.components import AgentWakePolicyComponent, resolve_enabled_controller_component
+from ..agent_workflow.trace import LLMTraceRecorder
 from .turn_runner import TurnContext, TurnRunner
 
 
 class TurnScheduler:
 	"""Grant deterministic active turns; action execution belongs to TurnRunner."""
 
-	def __init__(self, *, max_actions_per_turn: int = 99, max_replans_per_turn: int = 5) -> None:
+	def __init__(
+		self,
+		*,
+		max_actions_per_turn: int = 99,
+		max_replans_per_turn: int = 5,
+		trace_recorder: LLMTraceRecorder | None = None,
+	) -> None:
 		self.max_actions_per_turn = max(1, int(max_actions_per_turn))
 		self.max_replans_per_turn = max(0, int(max_replans_per_turn))
 		self.runner = TurnRunner(
 			max_actions_per_turn=self.max_actions_per_turn,
 			max_replans_per_turn=self.max_replans_per_turn,
+			trace_recorder=trace_recorder,
 		)
 
 	def run_active_phase(self, ws: Any, settlement: Any) -> None:

@@ -74,6 +74,12 @@ TurnStart
 动作是 `ActionFeedback(status="rejected")`；provider、contract、Effect 或 Reaction 失败是
 terminal `KernFailure`。action 和 replan 数量分别受 runtime budget 限制。
 
+对话使用独立的 `DialoguePolicy` seam。`StartConversation` 在单个 tick 内建立稳定参与者顺序，
+先只读世界并生成有界 transcript；全部 provider 调用成功后，再通过一个 child bundle 将每句
+发言写成 `RecordInteraction(verb="Say")`。每句发言进入 `interaction_log` 和同地点 Agent 的
+`interaction_inbox`。机器 Event 只保留 `InteractionRecorded`、`ConversationCompleted` 和默认
+`StartConversation` 记录。任意 provider 或 interaction 写入失败都会使整段对话不留下部分状态。
+
 ## 4. Bundle、Event 与 Reaction
 
 一个 EffectBundle 是一个世界事务。Executor 在执行前验证 Effect ID 和外部副作用顺序，
@@ -109,6 +115,10 @@ Reaction Bundle 是新的事务；此前成功的 Reaction 不因后续 Reaction
 - run archive：`run_archive.v1` manifest、周期 snapshot 和逐 tick delta，可重建指定 tick；
 - `failure.json`：一次 runtime 的开发者失败证据，与世界 checkpoint 和事务分离。
 
+显式启用 `LLM_TRACE_MODE=full` 时，runtime 还会在 checkpoint 输出目录旁写入独立的压缩
+LLM trace。trace 不属于 `WorldState` 或 checkpoint，可以按 tick 和 Agent 查看精确请求、输出
+及 Action feedback。
+
 archive 和 checkpoint 写入 `package_identity.v2`，恢复时验证所选 Package 的实际加载 artifact。
 
 ## 6. 外部状态边界
@@ -129,10 +139,9 @@ receipt、commit、rollback 和 checkpoint 生命周期通知。详细契约见
 | `KERN/component_catalog/` | ComponentSpec、codec 和转换 catalog |
 | `KERN/effects/` | EffectSpec、core definitions 和 effect catalog |
 | `KERN/executor/` | Binder、Handler、Bundle 事务和世界回滚 |
-| `KERN/interaction/` | Recipe 匹配和 ActionIntent 编译 |
+| `KERN/interaction/` | Recipe 匹配、ActionIntent 编译和有界 ConversationEngine |
 | `KERN/sim/` | Reaction settlement、turn 调度和 turn 执行 |
-| `KERN/agent_workflow/` | 决策视图、记忆 patch、workflow contract 和 provider adapter |
+| `KERN/agent_workflow/` | 决策视图、记忆 patch、Workflow/DialoguePolicy contract、provider adapter 和 LLM trace |
 | `KERN/query/` | condition predicate 和路径解析 |
 | `KERN/external_runtime.py` | 外部 adapter 路由与生命周期协议 |
 | `KERN/failure_report.py` | 单次 runtime 的失败证据 |
-

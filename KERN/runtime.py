@@ -9,6 +9,7 @@ from uuid import uuid4
 from .agent_workflow.provider_catalog import build_workflow_provider_catalog
 from .agent_workflow.registry import WorkflowRegistry
 from .agent_workflow.simple_policy import SimplePolicyActionProvider
+from .agent_workflow.trace import LLMTraceRecorder
 from .agent_workflow.view_profile import normalize_workflow_view_profile
 from .sim.turn_scheduler import TurnScheduler
 from .component_catalog import ComponentCatalog, build_core_component_catalog
@@ -174,6 +175,7 @@ class KernRuntime:
 	loaded_packages: LoadedPackages | None = None
 	configured_max_ticks: int = 100
 	workflow_view_profile: dict[str, Any] = field(default_factory=dict)
+	llm_trace_recorder: LLMTraceRecorder | None = None
 	failure_report_writer: FailureReportWriter | None = None
 	is_terminal: bool = False
 	terminal_error: str = ""
@@ -318,9 +320,14 @@ class KernRuntime:
 			)
 			ws = result.world_state
 
+		default_checkpoint_dir = root / "checkpoints" / (world_json_name or "default")
+		checkpoint_dir_env = _cfg_get(cfg, "CHECKPOINT_DIR", "")
+		resolved_checkpoint_dir = checkpoint_dir_env if checkpoint_dir_env else str(default_checkpoint_dir)
+		trace_recorder = LLMTraceRecorder.from_config(cfg, Path(resolved_checkpoint_dir) / "llm_traces")
+
 		use_llm = _cfg_bool(cfg, "USE_LLM", False)
 		if use_llm:
-			action_provider, action_providers = build_workflow_provider_catalog(cfg)
+			action_provider, action_providers = build_workflow_provider_catalog(cfg, trace_recorder=trace_recorder)
 		else:
 			action_provider, action_providers = SimplePolicyActionProvider(), {}
 		max_ticks_env = _cfg_get(cfg, "MAX_TICKS", "")
@@ -328,8 +335,6 @@ class KernRuntime:
 		default_max_ticks_no_llm = _cfg_int(cfg, "MAX_TICKS_DEFAULT_NO_LLM", 65)
 		configured_max_ticks = int(max_ticks_env) if max_ticks_env else (default_max_ticks_llm if use_llm else default_max_ticks_no_llm)
 
-		default_checkpoint_dir = root / "checkpoints" / (world_json_name or "default")
-		checkpoint_dir_env = _cfg_get(cfg, "CHECKPOINT_DIR", "")
 		return cls(
 			world_state=ws,
 			interaction_engine=InteractionEngine(recipe_db=bundle.recipes),
@@ -350,11 +355,12 @@ class KernRuntime:
 			dialogue_budget_limit_per_location=_cfg_int(cfg, "DIALOGUE_BUDGET_LIMIT_PER_LOCATION", 4),
 			workflow_contract_on_error="fail_fast",
 			checkpoint_enabled=_cfg_bool(cfg, "CHECKPOINT_EVERY_TICK", True),
-			checkpoint_dir=checkpoint_dir_env if checkpoint_dir_env else str(default_checkpoint_dir),
+			checkpoint_dir=resolved_checkpoint_dir,
 			checkpoint_include_logs=_cfg_bool(cfg, "CHECKPOINT_INCLUDE_LOGS", True),
 			checkpoint_snapshot_interval_ticks=_cfg_int(cfg, "CHECKPOINT_SNAPSHOT_INTERVAL_TICKS", 60),
 			dialogue_log_full=_cfg_bool(cfg, "DIALOGUE_LOG_FULL", False),
 			workflow_view_profile=workflow_view_profile,
+			llm_trace_recorder=trace_recorder,
 			project_root=root,
 			config_path=resolved_config_path,
 			runtime_config=dict(cfg),
@@ -676,6 +682,7 @@ class KernRuntime:
 			TurnScheduler(
 				max_actions_per_turn=self.max_actions_per_turn,
 				max_replans_per_turn=self.max_replans_per_turn,
+				trace_recorder=self.llm_trace_recorder,
 			).run_active_phase(ws, settlement)
 
 		events_in_tick_records: list[dict[str, Any]] = []

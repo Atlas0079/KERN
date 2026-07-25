@@ -6,13 +6,16 @@ import traceback
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 from ..execution_errors import KernFailure
 from ..failure_report import FailureEvidence
 from ..log_manager import get_logger
 from ..llm.openai_compat_client import DualModelLLM, OpenAICompatClient, LLMRequestError
 from ..llm.gemini_client import GeminiClient
+from .dialogue import DialogueFrame, Pass, Speak
 from .observer import build_agent_perception
+from .trace import LLMTraceRecorder
 from .workflow_contract import (
 	build_action_plan_decision,
 	build_end_turn_decision,
@@ -470,16 +473,12 @@ class LLMActionProvider:
 	grounder_template_path: Path = _repo_root() / "docs" / "scenario_authoring" / "LLMContext_Grounder.md"
 	dialogue_template_path: Path = _repo_root() / "docs" / "scenario_authoring" / "LLMContext_Dialogue.md"
 	debug: bool = False
-	consecutive_failures: int = 0
-	cooldown_until_tick: int = -1
-	last_cooldown_warn_tick: int = -1
 	focus_agent_id: str = ""
 	focus_log_prompts: bool = False
 	focus_log_perception: bool = True
-	llm_failure_threshold: int = 3
-	llm_failure_cooldown_ticks: int = 60
 	llm_debug_view: str = ""
 	failure_evidence: FailureEvidence = field(default_factory=FailureEvidence)
+	trace_recorder: LLMTraceRecorder | None = None
 
 	def _new_failure_context(
 		self,
@@ -496,6 +495,7 @@ class LLMActionProvider:
 			return None
 		client = getattr(self.llm, "client", None)
 		return {
+			"trace_id": uuid4().hex,
 			"context_type": str(context_type or "llm_decision"),
 			"actor_id": str(actor_id or ""),
 			"tick": int(tick or 0),
@@ -511,6 +511,15 @@ class LLMActionProvider:
 			"perception": dict(perception or {}),
 			"attempts": [],
 		}
+
+	def _persist_trace(self, context: dict[str, Any] | None, status: str) -> str:
+		if not isinstance(context, dict):
+			return ""
+		context["status"] = str(status or "")
+		trace_id = str(context.get("trace_id", "") or "")
+		if self.trace_recorder is not None:
+			self.trace_recorder.record(context)
+		return trace_id
 
 	def _failure_request(self, *, model: str, temperature: float, messages: list[dict[str, Any]]) -> dict[str, Any]:
 		return {
@@ -606,42 +615,6 @@ Output rules:
 4. Do not narrate actions.
 """
 
-	def _failure_threshold(self) -> int:
-		try:
-			v = int(self.llm_failure_threshold)
-		except Exception:
-			v = 3
-		return max(1, v)
-
-	def _cooldown_ticks(self) -> int:
-		try:
-			v = int(self.llm_failure_cooldown_ticks)
-		except Exception:
-			v = 60
-		return max(0, v)
-
-	def _on_llm_failure(self, logger: Any, self_id: str, tick: int | None, stage: str, error: str) -> None:
-		self.consecutive_failures = int(self.consecutive_failures) + 1
-		logger.warn("llm", f"{stage}_request_failed", context={"self_id": self_id, "error": str(error)})
-		threshold = self._failure_threshold()
-		if self.consecutive_failures < threshold:
-			return
-		cooldown = self._cooldown_ticks()
-		base_tick = int(tick or 0)
-		self.cooldown_until_tick = int(base_tick + cooldown)
-		logger.warn(
-			"llm",
-			"request_cooldown",
-			context={
-				"self_id": self_id,
-				"stage": stage,
-				"consecutive_failures": int(self.consecutive_failures),
-				"threshold": int(threshold),
-				"cooldown_ticks": int(cooldown),
-				"cooldown_until_tick": int(self.cooldown_until_tick),
-			},
-		)
-
 	def _is_focus_agent(self, self_id: str) -> bool:
 		fid = str(self.focus_agent_id or "").strip()
 		return bool(fid) and str(self_id or "").strip() == fid
@@ -695,6 +668,7 @@ Output rules:
 				failure_context=failure_context,
 			)
 		except KernFailure:
+			self._persist_trace(failure_context, "failed")
 			raise
 		except GroundingUngroundable as e:
 			self._record_failure_evidence(
@@ -704,6 +678,7 @@ Output rules:
 				summary=str(e.reason),
 				details={"reason": str(e.reason)},
 			)
+			self._persist_trace(failure_context, "failed")
 			raise KernFailure(
 				"WORKFLOW_GROUNDING_UNGROUNDED",
 				str(e.reason),
@@ -719,6 +694,7 @@ Output rules:
 				summary=str(e),
 				details={"error_type": type(e).__name__, "error": str(e), "traceback": traceback.format_exc()},
 			)
+			self._persist_trace(failure_context, "failed")
 			raise KernFailure(
 				"WORKFLOW_OUTPUT_PARSE_FAILED",
 				str(e),
@@ -734,6 +710,7 @@ Output rules:
 				summary=str(e),
 				details={"error_type": type(e).__name__, "error": str(e), "traceback": traceback.format_exc()},
 			)
+			self._persist_trace(failure_context, "failed")
 			raise KernFailure(
 				"WORKFLOW_DECIDE_RUNTIME_ERROR",
 				str(e),
@@ -742,7 +719,8 @@ Output rules:
 				context={"actor_id": str(actor_id or ""), "failure_evidence": failure_context or {}},
 			) from e
 		if not list(actions or []):
-			return build_end_turn_decision(meta={"provider": "llm_workflow", "reason": "no_actions"})
+			trace_id = self._persist_trace(failure_context, "completed")
+			return build_end_turn_decision(meta={"provider": "llm_workflow", "reason": "no_actions", "llm_trace_id": trace_id})
 		memory_notes: list[dict[str, Any]] = []
 		for item in list(actions or []):
 			if isinstance(item, dict) and str(item.get("_workflow_note_type", "") or "") == "ungroundable":
@@ -754,7 +732,10 @@ Output rules:
 		]
 		if failure_context is not None:
 			failure_context["actions"] = [dict(item) for item in action_plan]
-		meta = {"provider": "llm_workflow", "memory_notes": memory_notes} if memory_notes else {"provider": "llm_workflow"}
+		trace_id = self._persist_trace(failure_context, "completed")
+		meta = {"provider": "llm_workflow", "llm_trace_id": trace_id}
+		if memory_notes:
+			meta["memory_notes"] = memory_notes
 		if not action_plan:
 			return build_end_turn_decision(meta=meta)
 		return build_action_plan_decision(
@@ -862,16 +843,6 @@ Output rules:
 			tick_i = int(tick) if tick is not None else None
 		except Exception:
 			tick_i = None
-		if tick_i is not None and int(self.cooldown_until_tick) > int(tick_i):
-			if int(self.last_cooldown_warn_tick) != int(tick_i):
-				self.last_cooldown_warn_tick = int(tick_i)
-				logger.warn(
-					"llm",
-					"request_skipped_in_cooldown",
-					context={"self_id": self_id, "tick": int(tick_i), "cooldown_until_tick": int(self.cooldown_until_tick)},
-				)
-			return []
-
 		available_verbs_list, available_verbs_with_duration, allowed_verbs = _build_available_verbs(
 			recipe_db, visible_entities, inventory, reachable_locations, can_start_conversation_here
 		)
@@ -1019,7 +990,7 @@ Output rules:
 				summary=str(e),
 				details={"error_type": type(e).__name__, "error": str(e), "traceback": traceback.format_exc()},
 			)
-			self._on_llm_failure(logger, self_id, tick_i, "planner", str(e))
+			logger.warn("llm", "planner_request_failed", context={"self_id": self_id, "error": str(e)})
 			raise KernFailure(
 				"LLM_PLANNER_REQUEST_FAILED",
 				str(e),
@@ -1117,7 +1088,7 @@ Output rules:
 				summary=str(e),
 				details={"error_type": type(e).__name__, "error": str(e), "traceback": traceback.format_exc()},
 			)
-			self._on_llm_failure(logger, self_id, tick_i, "grounder", str(e))
+			logger.warn("llm", "grounder_request_failed", context={"self_id": self_id, "error": str(e)})
 			raise KernFailure(
 				"LLM_GROUNDER_REQUEST_FAILED",
 				str(e),
@@ -1125,7 +1096,6 @@ Output rules:
 				phase="grounder_request",
 				context={"actor_id": str(self_id or ""), "tick": int(tick_i), "failure_evidence": failure_context or {}},
 			) from e
-		self.consecutive_failures = 0
 		if bool(self.debug) or logger.enabled("debug", "llm"):
 			logger.debug("llm", "grounder_raw", context={"self_id": self_id, "raw": raw})
 		self._focus_log(logger, "focus_grounder_raw", self_id, {"self_id": self_id, "raw": raw})
@@ -1406,6 +1376,7 @@ Output rules:
 				summary=str(exc),
 				details={"error_type": type(exc).__name__, "error": str(exc), "traceback": traceback.format_exc()},
 			)
+			self._persist_trace(dialogue_context, "failed")
 			raise KernFailure(
 				"LLM_DIALOGUE_REQUEST_FAILED",
 				str(exc),
@@ -1416,14 +1387,39 @@ Output rules:
 		if dialogue_context is not None:
 			dialogue_context["attempts"][0]["dialogue"]["response"] = line
 		line = _sanitize_dialogue_output(line)
+		if dialogue_context is not None:
+			dialogue_context["output"] = line
+		self._persist_trace(dialogue_context, "completed")
 		self._focus_log(logger, "focus_dialogue_output", self_id, {"self_id": self_id, "line": line})
 		return str(line or "PASS")
+
+	def decide_utterance(self, frame: DialogueFrame):
+		line = self.decide_dialogue(
+			perception=dict(frame.perception),
+			conversation_context={
+				"conversation_id": frame.conversation_id,
+				"location_id": frame.location_id,
+				"participants": list(frame.participants),
+				"utterance_index": int(frame.utterance_index),
+				"max_utterances_per_tick": int(frame.utterance_index + frame.remaining_utterances),
+				"transcript": [dict(item) for item in frame.transcript],
+				"dialogue_phase": "join_decision",
+				"initiator_id": frame.initiator_id,
+			},
+			self_id=frame.speaker_id,
+		)
+		text = str(line or "").strip()
+		return Pass() if not text or text.upper() == "PASS" else Speak(text)
 
 	# _validate_actions removed
 
 
 
-def build_default_llm_provider(config: dict[str, Any] | None = None) -> LLMActionProvider:
+def build_default_llm_provider(
+	config: dict[str, Any] | None = None,
+	*,
+	trace_recorder: LLMTraceRecorder | None = None,
+) -> LLMActionProvider:
 	"""
 	Construct default two-layer LLM provider with provided model names.
 	"""
@@ -1435,12 +1431,6 @@ def build_default_llm_provider(config: dict[str, Any] | None = None) -> LLMActio
 	def _cfg_bool(key: str, default: bool = False) -> bool:
 		v = _cfg(key, "1" if default else "0").lower()
 		return v in {"1", "true", "yes", "on"}
-	def _cfg_int(key: str, default: int) -> int:
-		raw = _cfg(key, str(default))
-		try:
-			return int(raw)
-		except Exception:
-			return int(default)
 	def _cfg_json(key: str) -> dict[str, Any]:
 		raw = _cfg(key, "")
 		if not raw:
@@ -1485,8 +1475,7 @@ def build_default_llm_provider(config: dict[str, Any] | None = None) -> LLMActio
 		focus_agent_id=_cfg("LLM_FOCUS_AGENT_ID", ""),
 		focus_log_prompts=_cfg_bool("LLM_FOCUS_LOG_PROMPTS", False),
 		focus_log_perception=_cfg_bool("LLM_FOCUS_LOG_PERCEPTION", True),
-		llm_failure_threshold=_cfg_int("LLM_FAILURE_THRESHOLD", 3),
-		llm_failure_cooldown_ticks=_cfg_int("LLM_FAILURE_COOLDOWN_TICKS", 60),
 		llm_debug_view=_cfg("LLM_DEBUG_VIEW", ""),
+		trace_recorder=trace_recorder,
 	)
 

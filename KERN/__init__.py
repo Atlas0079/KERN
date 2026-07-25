@@ -5,18 +5,33 @@ from __future__ import annotations
 from .external_runtime import ExternalRuntimeAdapter, ExternalRuntimeBridge
 from .execution_errors import KernFailure
 from .effect_record import EffectEvent
-from .agent_workflow import ActionFeedback, DecisionFrame, EndTurn, SubmitAction, TurnStart, WorkflowRegistry
+from .agent_workflow import (
+	ActionFeedback,
+	DecisionFrame,
+	DialogueFrame,
+	DialoguePolicy,
+	EndTurn,
+	Pass,
+	Speak,
+	SubmitAction,
+	TurnStart,
+	WorkflowRegistry,
+)
 from .runtime import KernRuntime
 
 __all__ = [
 	"ActionFeedback",
 	"DecisionFrame",
+	"DialogueFrame",
+	"DialoguePolicy",
 	"EffectEvent",
 	"EndTurn",
 	"ExternalRuntimeAdapter",
 	"ExternalRuntimeBridge",
 	"KernFailure",
 	"KernRuntime",
+	"Pass",
+	"Speak",
 	"SubmitAction",
 	"TurnStart",
 	"WorkflowRegistry",

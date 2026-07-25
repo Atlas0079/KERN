@@ -23,13 +23,15 @@ class _ActionPlanTurnSession:
 	provider: Any
 	start: TurnStart
 	pending_actions: list[dict[str, Any]] = field(default_factory=list)
+	pending_action_meta: dict[str, Any] = field(default_factory=dict)
 
 	def next_step(self, frame: DecisionFrame) -> WorkflowStep:
 		feedback = frame.previous_action
 		if feedback is not None and feedback.status == "rejected":
 			self.pending_actions.clear()
+			self.pending_action_meta.clear()
 		if self.pending_actions:
-			return SubmitAction(intent=self.pending_actions.pop(0))
+			return SubmitAction(intent=self.pending_actions.pop(0), meta=dict(self.pending_action_meta))
 
 		try:
 			workflow_view = getattr(frame, "_legacy_workflow_view", None)
@@ -72,6 +74,8 @@ class _ActionPlanTurnSession:
 		if str(decision.get("type", "") or "") == "end_turn":
 			return EndTurn(meta=meta)
 		self.pending_actions = [dict(item) for item in list(decision.get("actions", []) or [])]
+		trace_id = str(meta.get("llm_trace_id", "") or "").strip()
+		self.pending_action_meta = {"llm_trace_id": trace_id} if trace_id else {}
 		return SubmitAction(intent=self.pending_actions.pop(0), meta=meta)
 
 

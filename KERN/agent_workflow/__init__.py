@@ -5,7 +5,19 @@ Agent workflow layer:
 """
 
 from .contracts import ActionFeedback, DecisionFrame, EndTurn, SubmitAction, TurnStart
+from .dialogue import DialogueFrame, DialoguePolicy, Pass, Speak
 from .registry import WorkflowRegistry
 
-__all__ = ["ActionFeedback", "DecisionFrame", "EndTurn", "SubmitAction", "TurnStart", "WorkflowRegistry"]
+__all__ = [
+	"ActionFeedback",
+	"DecisionFrame",
+	"DialogueFrame",
+	"DialoguePolicy",
+	"EndTurn",
+	"Pass",
+	"Speak",
+	"SubmitAction",
+	"TurnStart",
+	"WorkflowRegistry",
+]
 

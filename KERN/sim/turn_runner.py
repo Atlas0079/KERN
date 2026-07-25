@@ -7,6 +7,7 @@ from ..agent_workflow.context_builder import DecisionContextBuilder
 from ..agent_workflow.contracts import ActionFeedback, EndTurn, SubmitAction, TurnStart
 from ..execution_errors import KernFailure
 from ..interaction.action_resolver import resolve_action_intent
+from ..agent_workflow.trace import LLMTraceRecorder
 
 
 @dataclass
@@ -29,10 +30,12 @@ class TurnRunner:
 		max_actions_per_turn: int,
 		max_replans_per_turn: int,
 		context_builder: DecisionContextBuilder | None = None,
+		trace_recorder: LLMTraceRecorder | None = None,
 	) -> None:
 		self.max_actions_per_turn = max(1, int(max_actions_per_turn))
 		self.max_replans_per_turn = max(0, int(max_replans_per_turn))
 		self.context_builder = context_builder or DecisionContextBuilder()
+		self.trace_recorder = trace_recorder
 
 	def run(
 		self,
@@ -121,6 +124,7 @@ class TurnRunner:
 				return
 
 			action = dict(step.intent or {})
+			trace_id = str(step.meta.get("llm_trace_id", "") or "").strip()
 			action_id = f"tick:{turn.tick}:turn:{turn.turn_index}:attempt:{turn.attempts}"
 			turn.attempts += 1
 			before_task_id = self._current_task_id(ws, turn.actor_id)
@@ -137,6 +141,7 @@ class TurnRunner:
 					rejection_code=str(rejection.get("code", "ACTION_REJECTED") or "ACTION_REJECTED"),
 					message=str(rejection.get("message", "action rejected") or "action rejected"),
 				)
+				self._record_action_trace(trace_id, feedback)
 				if self._abort_requested(ws):
 					return
 				if turn.replans > self.max_replans_per_turn:
@@ -166,6 +171,7 @@ class TurnRunner:
 			settlement.execute_bundle(dict(resolved.get("bundle", {}) or {}), context)
 			turn.actions_committed += 1
 			feedback = ActionFeedback(action_id=action_id, intent=action, status="committed")
+			self._record_action_trace(trace_id, feedback)
 			if self._abort_requested(ws) or not is_turn_eligible(ws, turn.actor_id):
 				return
 			after_task_id = self._current_task_id(ws, turn.actor_id)
@@ -176,6 +182,18 @@ class TurnRunner:
 	@staticmethod
 	def _abort_requested(ws: Any) -> bool:
 		return bool(getattr(getattr(ws, "runtime_state", None), "abort_requested", False))
+
+	def _record_action_trace(self, trace_id: str, feedback: ActionFeedback) -> None:
+		if self.trace_recorder is None or not str(trace_id or "").strip():
+			return
+		self.trace_recorder.record_action_result(
+			trace_id,
+			action_id=feedback.action_id,
+			intent=feedback.intent,
+			status=feedback.status,
+			rejection_code=feedback.rejection_code,
+			message=feedback.message,
+		)
 
 	@staticmethod
 	def _current_task_id(ws: Any, actor_id: str) -> str:

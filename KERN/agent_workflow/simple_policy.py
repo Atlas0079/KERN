@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from .dialogue import DialogueFrame, Pass
 from .observer import build_agent_perception
 from .workflow_contract import build_action_plan_decision, build_end_turn_decision
 
@@ -43,3 +44,6 @@ class SimplePolicyActionProvider:
 
 	def decide_dialogue(self, perception: dict[str, Any], conversation_context: dict[str, Any], self_id: str | None = None) -> str:
 		return "PASS"
+
+	def decide_utterance(self, _frame: DialogueFrame):
+		return Pass()
