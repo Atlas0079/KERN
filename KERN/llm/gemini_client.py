@@ -159,7 +159,9 @@ class GeminiClient:
 						"provider": "gemini",
 					},
 				)
-			except (URLError, TimeoutError, json.JSONDecodeError) as e:
+			except json.JSONDecodeError as e:
+				raise LLMRequestError(f"invalid gemini response json: {e}") from e
+			except (URLError, TimeoutError, ConnectionError) as e:
 				last_err = e
 				if attempt >= max_retries:
 					raise LLMRequestError(f"Gemini request failed after {attempt + 1}/{max_retries + 1} attempts: {e}") from e

@@ -43,25 +43,33 @@ class PassDialoguePolicy:
 		return Pass()
 
 
+def dialogue_frame_to_legacy_context(frame: DialogueFrame) -> dict[str, Any]:
+	return {
+		"conversation_id": frame.conversation_id,
+		"location_id": frame.location_id,
+		"participants": list(frame.participants),
+		"utterance_index": int(frame.utterance_index),
+		"max_utterances_per_tick": int(frame.utterance_index + frame.remaining_utterances),
+		"transcript": [dict(item) for item in frame.transcript],
+		"dialogue_phase": "join_decision",
+		"initiator_id": frame.initiator_id,
+	}
+
+
+def legacy_dialogue_step(raw: Any) -> DialogueStep:
+	text = str(raw or "").strip()
+	return Pass() if not text or text.upper() == "PASS" else Speak(text)
+
+
 @dataclass
 class LegacyDialoguePolicyAdapter:
 	provider: Any
 
 	def decide_utterance(self, frame: DialogueFrame) -> DialogueStep:
-		context = {
-			"conversation_id": frame.conversation_id,
-			"location_id": frame.location_id,
-			"participants": list(frame.participants),
-			"utterance_index": int(frame.utterance_index),
-			"max_utterances_per_tick": int(frame.utterance_index + frame.remaining_utterances),
-			"transcript": [dict(item) for item in frame.transcript],
-			"dialogue_phase": "join_decision",
-			"initiator_id": frame.initiator_id,
-		}
 		try:
 			raw = self.provider.decide_dialogue(
 				perception=dict(frame.perception),
-				conversation_context=context,
+				conversation_context=dialogue_frame_to_legacy_context(frame),
 				self_id=frame.speaker_id,
 			)
 		except KernFailure:
@@ -74,8 +82,7 @@ class LegacyDialoguePolicyAdapter:
 				phase="dialogue",
 				context={"speaker_id": frame.speaker_id, "conversation_id": frame.conversation_id},
 			) from exc
-		text = str(raw or "").strip()
-		return Pass() if not text or text.upper() == "PASS" else Speak(text)
+		return legacy_dialogue_step(raw)
 
 
 def as_dialogue_policy(provider: Any) -> DialoguePolicy:
@@ -95,4 +102,6 @@ __all__ = [
 	"PassDialoguePolicy",
 	"Speak",
 	"as_dialogue_policy",
+	"dialogue_frame_to_legacy_context",
+	"legacy_dialogue_step",
 ]

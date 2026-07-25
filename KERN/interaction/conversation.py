@@ -47,6 +47,8 @@ class ConversationEngine:
 		if location is None:
 			return ConversationResult(request.conversation_id, request.location_id, (), skipped_reason="location_missing")
 		participants = self._participants(ws, location, request.initiator_id)
+		if request.initiator_id not in participants:
+			return ConversationResult(request.conversation_id, request.location_id, participants, skipped_reason="initiator_ineligible")
 		if len(participants) < 2:
 			return ConversationResult(request.conversation_id, request.location_id, participants, skipped_reason="no_participants")
 		limit = max(0, int(request.max_utterances))

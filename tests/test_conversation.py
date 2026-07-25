@@ -8,6 +8,7 @@ from KERN.agent_workflow.registry import WorkflowRegistry
 from KERN.execution_errors import KernFailure
 from KERN.executor.executor import WorldExecutor
 from KERN.interaction.engine import InteractionEngine
+from KERN.interaction.conversation import ConversationEngine, ConversationRequest
 from KERN.interaction.action_resolver import resolve_action_intent
 from KERN.models.components import AgentControlComponent, MemoryComponent, PerceptionComponent
 from KERN.models.entity import Entity
@@ -79,6 +80,29 @@ def _conversation_world(*, failing_b: bool = False):
 
 
 class ConversationTests(unittest.TestCase):
+	def test_negative_utterance_limit_is_rejected_by_the_binder(self) -> None:
+		ws, settlement, _policies = _conversation_world()
+
+		with self.assertRaisesRegex(KernFailure, "max_utterances_per_tick"):
+			settlement.execute_bundle(
+				{"effects": [{"effect": "StartConversation", "max_utterances_per_tick": -1, "opening_text": "Opening"}]},
+				{"self_id": "initiator", "actor_id": "initiator"},
+			)
+
+		self.assertEqual(ws.interaction_log, [])
+
+	def test_ineligible_initiator_does_not_create_an_inconsistent_transcript(self) -> None:
+		ws, _settlement, _policies = _conversation_world()
+		observer = Entity(entity_id="observer", template_id="Observer", entity_name="observer")
+		ws.register_entity(observer)
+		ws.get_location_by_id("room").add_entity_id("observer")
+
+		result = ConversationEngine().conduct(ws, ConversationRequest("conv", "observer", "room", "Opening", 4))
+
+		self.assertEqual(result.skipped_reason, "initiator_ineligible")
+		self.assertEqual(result.utterances, ())
+		self.assertNotIn("observer", result.participants)
+
 	def test_conversation_records_stable_ordered_utterances_as_interactions(self) -> None:
 		ws, settlement, policies = _conversation_world()
 

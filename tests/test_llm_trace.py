@@ -94,6 +94,8 @@ class LLMTraceTests(unittest.TestCase):
 			self.assertEqual(payload["actor_id"], "camper_organizer")
 			self.assertEqual(payload["actions"][0]["verb"], "Observe")
 			self.assertEqual(payload["action_results"][0]["status"], "committed")
+			self.assertGreaterEqual(payload["attempts"][0]["planner"]["duration_ms"], 0)
+			self.assertGreaterEqual(payload["attempts"][0]["grounder"]["duration_ms"], 0)
 
 
 if __name__ == "__main__":

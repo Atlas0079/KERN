@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import time
 import traceback
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -13,7 +14,7 @@ from ..failure_report import FailureEvidence
 from ..log_manager import get_logger
 from ..llm.openai_compat_client import DualModelLLM, OpenAICompatClient, LLMRequestError
 from ..llm.gemini_client import GeminiClient
-from .dialogue import DialogueFrame, Pass, Speak
+from .dialogue import DialogueFrame, dialogue_frame_to_legacy_context, legacy_dialogue_step
 from .observer import build_agent_perception
 from .trace import LLMTraceRecorder
 from .workflow_contract import (
@@ -975,6 +976,7 @@ Output rules:
 				}
 			logger.trace("llm", "planner_prompt", context=context_data)
 
+		planner_started = time.perf_counter()
 		try:
 			planner_raw = self.llm.planner_text(
 				messages=planner_messages,
@@ -982,7 +984,7 @@ Output rules:
 			).strip()
 		except LLMRequestError as e:
 			if failure_attempt is not None:
-				failure_attempt["planner"]["error"] = str(e)
+				failure_attempt["planner"].update({"error": str(e), "duration_ms": round((time.perf_counter() - planner_started) * 1000, 3)})
 			self._record_failure_evidence(
 				failure_context,
 				kind="infrastructure",
@@ -1000,7 +1002,14 @@ Output rules:
 			) from e
 		planner_thought, intent = self._parse_planner_output(planner_raw)
 		if failure_attempt is not None:
-			failure_attempt["planner"].update({"response": planner_raw, "thought": planner_thought, "intent": intent})
+			failure_attempt["planner"].update(
+				{
+					"response": planner_raw,
+					"thought": planner_thought,
+					"intent": intent,
+					"duration_ms": round((time.perf_counter() - planner_started) * 1000, 3),
+				}
+			)
 		if bool(self.debug) or logger.enabled("debug", "llm"):
 			logger.debug("llm", "planner_thought", context={"self_id": self_id, "thought": planner_thought})
 			logger.debug("llm", "planner_intent", context={"self_id": self_id, "intent": intent})
@@ -1073,6 +1082,7 @@ Output rules:
 			},
 		)
 
+		grounder_started = time.perf_counter()
 		try:
 			raw = self.llm.grounder_text(
 				messages=grounder_messages,
@@ -1080,7 +1090,7 @@ Output rules:
 			).strip()
 		except LLMRequestError as e:
 			if failure_attempt is not None:
-				failure_attempt["grounder"]["error"] = str(e)
+				failure_attempt["grounder"].update({"error": str(e), "duration_ms": round((time.perf_counter() - grounder_started) * 1000, 3)})
 			self._record_failure_evidence(
 				failure_context,
 				kind="infrastructure",
@@ -1102,7 +1112,7 @@ Output rules:
 
 		# 1. Parse Failure -> System Error (Raise Exception)
 		if failure_attempt is not None:
-			failure_attempt["grounder"]["response"] = raw
+			failure_attempt["grounder"].update({"response": raw, "duration_ms": round((time.perf_counter() - grounder_started) * 1000, 3)})
 		actions = self._parse_actions(raw)
 		if failure_attempt is not None:
 			failure_attempt["grounder"]["actions"] = [dict(item) for item in list(actions or []) if isinstance(item, dict)]
@@ -1361,6 +1371,7 @@ Output rules:
 				"perception": dict(perception or {}) if bool(self.focus_log_perception) else {},
 			},
 		)
+		dialogue_started = time.perf_counter()
 		try:
 			line = self.llm.planner_text(
 				messages=dialogue_messages,
@@ -1368,7 +1379,9 @@ Output rules:
 			).strip()
 		except Exception as exc:
 			if dialogue_context is not None:
-				dialogue_context["attempts"][0]["dialogue"]["error"] = str(exc)
+				dialogue_context["attempts"][0]["dialogue"].update(
+					{"error": str(exc), "duration_ms": round((time.perf_counter() - dialogue_started) * 1000, 3)}
+				)
 			self._record_failure_evidence(
 				dialogue_context,
 				kind="infrastructure" if isinstance(exc, LLMRequestError) else "llm_output",
@@ -1385,7 +1398,9 @@ Output rules:
 				context={"actor_id": str(self_id or ""), "failure_evidence": dialogue_context or {}},
 			) from exc
 		if dialogue_context is not None:
-			dialogue_context["attempts"][0]["dialogue"]["response"] = line
+			dialogue_context["attempts"][0]["dialogue"].update(
+				{"response": line, "duration_ms": round((time.perf_counter() - dialogue_started) * 1000, 3)}
+			)
 		line = _sanitize_dialogue_output(line)
 		if dialogue_context is not None:
 			dialogue_context["output"] = line
@@ -1396,20 +1411,10 @@ Output rules:
 	def decide_utterance(self, frame: DialogueFrame):
 		line = self.decide_dialogue(
 			perception=dict(frame.perception),
-			conversation_context={
-				"conversation_id": frame.conversation_id,
-				"location_id": frame.location_id,
-				"participants": list(frame.participants),
-				"utterance_index": int(frame.utterance_index),
-				"max_utterances_per_tick": int(frame.utterance_index + frame.remaining_utterances),
-				"transcript": [dict(item) for item in frame.transcript],
-				"dialogue_phase": "join_decision",
-				"initiator_id": frame.initiator_id,
-			},
+			conversation_context=dialogue_frame_to_legacy_context(frame),
 			self_id=frame.speaker_id,
 		)
-		text = str(line or "").strip()
-		return Pass() if not text or text.upper() == "PASS" else Speak(text)
+		return legacy_dialogue_step(line)
 
 	# _validate_actions removed
 

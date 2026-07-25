@@ -6,13 +6,15 @@ from uuid import uuid4
 from ..dynamic_text import DynamicTextError, render_dynamic_text
 from ..execution_errors import executor_error
 from ..interaction.conversation import ConversationEngine, ConversationRequest
-from ._effect_binder import _base_bind, _require_int, _require_param, _resolve_param_token
+from ._effect_binder import BindError, _base_bind, _require_int, _require_param, _resolve_param_token
 from ._effect_child_bundle import run_child_bundle
 
 
 def _bind_start_conversation(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
 	effect_type, params, ctx = _base_bind(effect_data, context)
 	max_utterances = _require_int(params, effect_type, "max_utterances_per_tick", ctx)
+	if max_utterances < 0:
+		raise BindError(effect_type, ["max_utterances_per_tick"])
 	opening_text = str(_resolve_param_token(_require_param(params, effect_type, "opening_text"), ctx) or "")
 	return {"effect": effect_type, "max_utterances_per_tick": max_utterances, "opening_text": opening_text}, ctx
 
@@ -27,7 +29,7 @@ def execute_start_conversation(executor: Any, ws: Any, data: dict[str, Any], con
 	limit = int(state.dialogue_budget_limit_per_location)
 	used = int(state.dialogue_budget_used_per_location.get(location_id, 0) or 0)
 	remaining = max(0, limit - used)
-	requested = max(0, int(data.get("max_utterances_per_tick", 0) or 0))
+	requested = int(data.get("max_utterances_per_tick", 0) or 0)
 	max_utterances = min(requested, remaining)
 	try:
 		opening_text = render_dynamic_text(ws, context, data.get("opening_text", "")).strip()
