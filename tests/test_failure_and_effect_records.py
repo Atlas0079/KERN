@@ -9,8 +9,9 @@ from KERN.execution_errors import KernFailure
 from KERN.failure_report import FailureReportWriter
 from KERN.executor.executor import WorldExecutor
 from KERN.interaction.engine import InteractionEngine
-from KERN.agent_workflow.runtime import resolve_action_intent
-from KERN.agent_workflow.llm_action_provider import LLMActionProvider
+from KERN.interaction.action_resolver import resolve_action_intent
+from KERN.agent_workflow.contracts import DecisionFrame
+from KERN.agent_workflow.llm_action_provider import LLMWorkflow
 from KERN.llm.openai_compat_client import LLMRequestError
 from KERN.models.components import PerceptionComponent, TagComponent
 from KERN.models.components.memory import MemoryComponent
@@ -24,19 +25,12 @@ from KERN.agent_workflow.full_ws_view_builder import build_full_ws_view
 
 class FailureAndEffectRecordTests(unittest.TestCase):
 	class _FailingLLM:
-		class _Client:
-			base_url = "https://example.test"
-			api_prefix = "/v1"
+		base_url = "https://example.test"
+		api_prefix = "/v1"
 
-		client = _Client()
-		planner_model = "planner"
-		grounder_model = "grounder"
-		request_extra = {"seed": 1}
-
-		def planner_text(self, **_kwargs):
-			raise LLMRequestError("planner unavailable")
-
-		def grounder_text(self, **_kwargs):
+		def chat_text(self, *, model: str, **_kwargs):
+			if model == "planner":
+				raise LLMRequestError("planner unavailable")
 			return "[]"
 
 	def test_action_rejection_is_a_value_and_does_not_write_world_logs(self) -> None:
@@ -56,22 +50,21 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 		self.assertEqual(ws.interaction_log, [])
 
 	def test_llm_failure_keeps_raw_failure_evidence(self) -> None:
-		provider = LLMActionProvider(llm=self._FailingLLM())
-		view = {
-			"full_ws_view": {
-				"tick": 1,
-				"entities": [{"id": "agent", "location_id": "room", "name": "Agent", "tags": []}],
-				"locations": [{"id": "room", "name": "Room", "entities": ["agent"], "environment": {}}],
-				"paths": [],
-				"event_delta": [],
-				"recent_interactions": [],
-			}
-		}
+		provider = LLMWorkflow(
+			providers={"main": self._FailingLLM()},
+			roles={
+				"planner": {"provider_id": "main", "model": "planner", "request_extra": {"seed": 1}},
+				"grounder": {"provider_id": "main", "model": "grounder"},
+				"dialogue": {"provider_id": "main", "model": "dialogue"},
+			},
+		)
+		frame = DecisionFrame(actor_id="agent", reason="tick", mode_context={}, perception={"tick": 1, "location": {"id": "room"}}, action_catalog={})
 		with self.assertRaises(KernFailure) as caught:
-			provider.decide(view, {}, "agent", "tick", {})
+			provider._decide_frame(frame)
 		self.assertEqual(caught.exception.code, "LLM_PLANNER_REQUEST_FAILED")
 		self.assertEqual(caught.exception.origin, "llm")
 		self.assertEqual(caught.exception.context["failure_evidence"]["attempts"][0]["planner"]["request"]["model"], "planner")
+		self.assertEqual(caught.exception.context["failure_evidence"]["attempts"][0]["planner"]["request"]["request_extra"], {"seed": 1})
 
 	def test_bound_dynamic_input_is_recorded_after_success(self) -> None:
 		ws = WorldState()
@@ -137,7 +130,17 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 				phase="effect_execution",
 				context={"request_secret": "developer-visible-value"},
 			)
-			first = writer.write_failure(exc, tick=3, context={"raw_prompt": "keep this"})
+			first = writer.write_failure(
+				exc,
+				tick=3,
+				context={
+					"raw_prompt": "keep this",
+					"runtime_config": {
+						"LLM_API_KEY": "top-secret",
+						"nested": {"authorization": "Bearer secret", "model": "planner"},
+					},
+				},
+			)
 			second = writer.write_failure(KernFailure("SECOND", "ignored"))
 
 			self.assertEqual(first, second)
@@ -145,6 +148,9 @@ class FailureAndEffectRecordTests(unittest.TestCase):
 			self.assertEqual(payload["failure"]["code"], "BROKEN_EFFECT")
 			self.assertEqual(payload["failure"]["context"]["request_secret"], "developer-visible-value")
 			self.assertEqual(payload["runtime_context"]["raw_prompt"], "keep this")
+			self.assertEqual(payload["runtime_context"]["runtime_config"]["LLM_API_KEY"], "top-secret")
+			self.assertEqual(payload["runtime_context"]["runtime_config"]["nested"]["authorization"], "Bearer secret")
+			self.assertEqual(payload["runtime_context"]["runtime_config"]["nested"]["model"], "planner")
 
 	def test_reaction_consumes_only_successful_effect_record(self) -> None:
 		ws = WorldState()

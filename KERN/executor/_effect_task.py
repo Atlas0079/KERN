@@ -493,8 +493,7 @@ def execute_create_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 	host_entity = target
 	host = host_entity.get_component("TaskHostComponent")
 	if not isinstance(host, TaskHostComponent):
-		host = TaskHostComponent()
-		host_entity.add_component("TaskHostComponent", host)
+		return executor_error("CreateTask: target has no TaskHostComponent")
 	
 	verb = str(recipe.get("verb", ""))
 	task = Task(task_type=verb, target_entity_id=target.entity_id)
@@ -559,13 +558,15 @@ def execute_create_task(executor: Any, ws: Any, data: dict[str, Any], context: d
 	
 	if worker_id:
 		worker_ent = ws.get_entity_by_id(worker_id)
-		if worker_ent:
-			worker = worker_ent.get_component("WorkerComponent")
-			if isinstance(worker, WorkerComponent):
-				ok, activation_events = _activate_task(executor, ws, task, worker, worker_id, context, "TaskAssigned")
-				events.extend(activation_events)
-				if not ok:
-					_remove_task_from_host_and_world(ws, task, context)
+		if worker_ent is None:
+			return executor_error(f"CreateTask: assigned worker not found: {worker_id}")
+		worker = worker_ent.get_component("WorkerComponent")
+		if not isinstance(worker, WorkerComponent):
+			return executor_error(f"CreateTask: assigned worker has no WorkerComponent: {worker_id}")
+		ok, activation_events = _activate_task(executor, ws, task, worker, worker_id, context, "TaskAssigned")
+		events.extend(activation_events)
+		if not ok:
+			_remove_task_from_host_and_world(ws, task, context)
 
 	return events
 

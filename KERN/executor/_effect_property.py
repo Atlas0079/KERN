@@ -209,8 +209,7 @@ def execute_add_tag(executor: Any, ws: Any, data: dict[str, Any], context: dict[
 		return executor_error("AddTag: tag missing")
 	tag_comp = target.get_component("TagComponent")
 	if not isinstance(tag_comp, TagComponent):
-		tag_comp = TagComponent(tags=[])
-		target.add_component("TagComponent", tag_comp)
+		return executor_error("AddTag: TagComponent missing")
 	if tag_name not in tag_comp.tags:
 		tag_comp.tags.append(tag_name)
 	return [{"type": "TagAdded", "entity_id": target.entity_id, "tag": tag_name}]
@@ -226,7 +225,7 @@ def execute_remove_tag(executor: Any, ws: Any, data: dict[str, Any], context: di
 		return executor_error("RemoveTag: tag missing")
 	tag_comp = target.get_component("TagComponent")
 	if not isinstance(tag_comp, TagComponent):
-		return [{"type": "TagRemoved", "entity_id": target.entity_id, "tag": tag_name, "removed": False}]
+		return executor_error("RemoveTag: TagComponent missing")
 	if tag_name in tag_comp.tags:
 		tag_comp.tags.remove(tag_name)
 		return [{"type": "TagRemoved", "entity_id": target.entity_id, "tag": tag_name, "removed": True}]

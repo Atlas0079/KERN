@@ -43,65 +43,23 @@ class PassDialoguePolicy:
 		return Pass()
 
 
-def dialogue_frame_to_legacy_context(frame: DialogueFrame) -> dict[str, Any]:
-	return {
-		"conversation_id": frame.conversation_id,
-		"location_id": frame.location_id,
-		"participants": list(frame.participants),
-		"utterance_index": int(frame.utterance_index),
-		"max_utterances_per_tick": int(frame.utterance_index + frame.remaining_utterances),
-		"transcript": [dict(item) for item in frame.transcript],
-		"dialogue_phase": "join_decision",
-		"initiator_id": frame.initiator_id,
-	}
-
-
-def legacy_dialogue_step(raw: Any) -> DialogueStep:
-	text = str(raw or "").strip()
-	return Pass() if not text or text.upper() == "PASS" else Speak(text)
-
-
-@dataclass
-class LegacyDialoguePolicyAdapter:
-	provider: Any
-
-	def decide_utterance(self, frame: DialogueFrame) -> DialogueStep:
-		try:
-			raw = self.provider.decide_dialogue(
-				perception=dict(frame.perception),
-				conversation_context=dialogue_frame_to_legacy_context(frame),
-				self_id=frame.speaker_id,
-			)
-		except KernFailure:
-			raise
-		except Exception as exc:
-			raise KernFailure(
-				"DIALOGUE_POLICY_EXCEPTION",
-				str(exc),
-				origin="workflow",
-				phase="dialogue",
-				context={"speaker_id": frame.speaker_id, "conversation_id": frame.conversation_id},
-			) from exc
-		return legacy_dialogue_step(raw)
-
-
 def as_dialogue_policy(provider: Any) -> DialoguePolicy:
 	if provider is not None and callable(getattr(provider, "decide_utterance", None)):
 		return provider
-	if provider is not None and callable(getattr(provider, "decide_dialogue", None)):
-		return LegacyDialoguePolicyAdapter(provider)
-	return PassDialoguePolicy()
+	raise KernFailure(
+		"DIALOGUE_POLICY_MISSING",
+		"workflow must implement DialoguePolicy.decide_utterance()",
+		origin="workflow",
+		phase="dialogue",
+	)
 
 
 __all__ = [
 	"DialogueFrame",
 	"DialoguePolicy",
 	"DialogueStep",
-	"LegacyDialoguePolicyAdapter",
 	"Pass",
 	"PassDialoguePolicy",
 	"Speak",
 	"as_dialogue_policy",
-	"dialogue_frame_to_legacy_context",
-	"legacy_dialogue_step",
 ]

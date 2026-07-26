@@ -38,7 +38,9 @@ class WorldSettlementTests(unittest.TestCase):
 	def test_query_child_events_keep_their_own_context_for_reactions(self) -> None:
 		ws = WorldState()
 		for entity_id in ("outer", "first", "second"):
-			ws.register_entity(Entity(entity_id=entity_id, template_id="Thing", entity_name=entity_id))
+			entity = Entity(entity_id=entity_id, template_id="Thing", entity_name=entity_id)
+			entity.add_component("TagComponent", TagComponent())
+			ws.register_entity(entity)
 		trigger = TriggerSystem(
 			rules=[
 				{

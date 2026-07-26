@@ -123,7 +123,7 @@ class TurnRunner:
 			if isinstance(step, EndTurn):
 				return
 
-			action = dict(step.intent or {})
+			action = dict(step.intent)
 			trace_id = str(step.meta.get("llm_trace_id", "") or "").strip()
 			action_id = f"tick:{turn.tick}:turn:{turn.turn_index}:attempt:{turn.attempts}"
 			turn.attempts += 1
@@ -166,9 +166,9 @@ class TurnRunner:
 					phase="action_resolution",
 				)
 
-			context = dict(resolved.get("context", {}) or {})
+			context = dict(resolved["context"])
 			context.update({"action_id": action_id, "turn_id": turn.turn_id})
-			settlement.execute_bundle(dict(resolved.get("bundle", {}) or {}), context)
+			settlement.execute_bundle(dict(resolved["bundle"]), context)
 			turn.actions_committed += 1
 			feedback = ActionFeedback(action_id=action_id, intent=action, status="committed")
 			self._record_action_trace(trace_id, feedback)
@@ -181,7 +181,7 @@ class TurnRunner:
 
 	@staticmethod
 	def _abort_requested(ws: Any) -> bool:
-		return bool(getattr(getattr(ws, "runtime_state", None), "abort_requested", False))
+		return bool(ws.runtime_state.abort_requested)
 
 	def _record_action_trace(self, trace_id: str, feedback: ActionFeedback) -> None:
 		if self.trace_recorder is None or not str(trace_id or "").strip():
@@ -197,8 +197,8 @@ class TurnRunner:
 
 	@staticmethod
 	def _current_task_id(ws: Any, actor_id: str) -> str:
-		entity = ws.get_entity_by_id(actor_id) if hasattr(ws, "get_entity_by_id") else None
-		worker = entity.get_component("WorkerComponent") if entity is not None and hasattr(entity, "get_component") else None
+		entity = ws.get_entity_by_id(actor_id)
+		worker = entity.get_component("WorkerComponent") if entity is not None else None
 		return str(getattr(worker, "current_task_id", "") or "") if worker is not None else ""
 
 	@staticmethod

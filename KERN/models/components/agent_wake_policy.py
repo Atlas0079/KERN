@@ -42,36 +42,20 @@ class AgentWakePolicyComponent:
 
 	@staticmethod
 	def from_template_data(component_data: dict[str, Any]) -> "AgentWakePolicyComponent":
-		rules_raw = component_data.get("rules", []) if isinstance(component_data, dict) else []
-		ruleset: list[Any] = []
-
-		for rd in rules_raw:
-			if not isinstance(rd, dict):
-				continue
-			rule_type = str(rd.get("type", "") or "").strip()
-			if not rule_type:
-				continue
-			item = dict(rd)
-			item["type"] = rule_type
-			try:
-				item["priority"] = int(item.get("priority", 999999))
-			except Exception:
-				item["priority"] = 999999
-			ruleset.append(item)
-
+		ruleset = [
+			{
+				**dict(rule),
+				"type": str(rule.get("type", "") or "").strip(),
+				"priority": int(rule.get("priority", 999999)),
+			}
+			for rule in component_data.get("rules", [])
+		]
 		ruleset.sort(key=lambda r: int((r or {}).get("priority", 999999)))
-		active_interrupt_preset_id = str((component_data or {}).get("active_interrupt_preset_id", "") or "")
-		interrupt_presets = (component_data or {}).get("interrupt_presets", {}) or {}
-		interrupt_preset_descriptions = (component_data or {}).get("interrupt_preset_descriptions", {}) or {}
-		if not isinstance(interrupt_presets, dict):
-			interrupt_presets = {}
-		if not isinstance(interrupt_preset_descriptions, dict):
-			interrupt_preset_descriptions = {}
 		return AgentWakePolicyComponent(
 			ruleset=ruleset,
-			active_interrupt_preset_id=active_interrupt_preset_id,
-			interrupt_presets=dict(interrupt_presets),
-			interrupt_preset_descriptions={str(k): str(v or "") for k, v in dict(interrupt_preset_descriptions).items()},
+			active_interrupt_preset_id=str(component_data.get("active_interrupt_preset_id", "") or ""),
+			interrupt_presets=dict(component_data.get("interrupt_presets", {}) or {}),
+			interrupt_preset_descriptions=dict(component_data.get("interrupt_preset_descriptions", {}) or {}),
 		)
 
 

@@ -17,6 +17,7 @@ from KERN.models.components import MemoryComponent
 from KERN.models.entity import Entity
 from KERN.models.location import Location
 from KERN.models.world_state import WorldState
+from KERN.runtime import KernRuntime
 
 
 def _world() -> WorldState:
@@ -31,6 +32,16 @@ def _world() -> WorldState:
 
 
 class ArchiveTests(unittest.TestCase):
+	def test_explicit_missing_restore_source_is_rejected(self) -> None:
+		with tempfile.TemporaryDirectory() as temp_dir:
+			root = Path(temp_dir)
+			with self.assertRaisesRegex(FileNotFoundError, "restore file not found"):
+				resolve_checkpoint_file(str(root / "missing.json.gz"), "")
+			with self.assertRaisesRegex(FileNotFoundError, "restore directory has no snapshots"):
+				resolve_checkpoint_file("", str(root))
+			with self.assertRaisesRegex(ValueError, "only one"):
+				resolve_checkpoint_file(str(root / "missing.json.gz"), str(root))
+
 	def test_list_append_diff_round_trips(self) -> None:
 		before = {"entities": {"agent_01": {"memory": [{"tick": 1, "text": "a"}]}}}
 		after = {"entities": {"agent_01": {"memory": [{"tick": 1, "text": "a"}, {"tick": 2, "text": "b"}]}}}
@@ -86,6 +97,36 @@ class ArchiveTests(unittest.TestCase):
 			self.assertEqual(restored.game_time.total_ticks, 0)
 			self.assertGreaterEqual(restored._event_seq, 1)
 			self.assertEqual(len(restored.entities), 1)
+
+	def test_runtime_rejects_restore_output_that_would_overwrite_the_source_archive(self) -> None:
+		project_root = Path(__file__).resolve().parents[1]
+		with tempfile.TemporaryDirectory() as td:
+			base_runtime = KernRuntime.from_config(
+				project_root,
+				"runtime_config.camping.package.smoke.json",
+				validate=False,
+				configure_logging=False,
+				overrides={"CHECKPOINT_EVERY_TICK": "0"},
+			)
+			recorder = ArchiveRecorder(archive_dir=td, run_id="restore_run", snapshot_interval_ticks=1, include_logs=True)
+			recorder.record_tick(base_runtime.world_state)
+			snapshot = next((Path(td) / "snapshots").glob("snapshot_*.json.gz"))
+
+			with self.assertRaisesRegex(ValueError, "CHECKPOINT_DIR must differ"):
+				KernRuntime.from_config(
+					project_root,
+					"runtime_config.camping.package.smoke.json",
+					validate=False,
+					configure_logging=False,
+					overrides={
+						"CHECKPOINT_RESTORE_DIR": td,
+						"CHECKPOINT_DIR": td,
+						"CHECKPOINT_EVERY_TICK": "1",
+					},
+				)
+
+			self.assertTrue(snapshot.exists())
+			self.assertTrue((Path(td) / "manifest.json").exists())
 
 
 if __name__ == "__main__":

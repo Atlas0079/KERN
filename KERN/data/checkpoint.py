@@ -16,21 +16,29 @@ GLOBAL_LOG_FILE_NAME = "simulation_log.json"
 
 def resolve_checkpoint_file(checkpoint_file: str, checkpoint_dir: str) -> Path | None:
 	file_raw = str(checkpoint_file or "").strip()
+	dir_raw = str(checkpoint_dir or "").strip()
+	if file_raw and dir_raw:
+		raise ValueError("configure only one of CHECKPOINT_RESTORE_FILE or CHECKPOINT_RESTORE_DIR")
 	if file_raw:
 		p = Path(file_raw)
-		return p if p.exists() else None
-	dir_raw = str(checkpoint_dir or "").strip()
+		if not p.exists():
+			raise FileNotFoundError(f"checkpoint restore file not found: {p}")
+		if not p.is_file():
+			raise ValueError(f"checkpoint restore path is not a file: {p}")
+		return p
 	if not dir_raw:
 		return None
 	dir_path = Path(dir_raw)
-	if not dir_path.exists() or not dir_path.is_dir():
-		return None
+	if not dir_path.exists():
+		raise FileNotFoundError(f"checkpoint restore directory not found: {dir_path}")
+	if not dir_path.is_dir():
+		raise ValueError(f"checkpoint restore path is not a directory: {dir_path}")
 	archive_snapshot_dir = dir_path / "snapshots"
 	if archive_snapshot_dir.exists() and archive_snapshot_dir.is_dir():
 		archive_candidates = sorted(list(archive_snapshot_dir.glob("snapshot_*.json.gz")))
 		if archive_candidates:
 			return archive_candidates[-1]
-	return None
+	raise FileNotFoundError(f"checkpoint restore directory has no snapshots: {dir_path}")
 
 
 def resolve_global_log_file(checkpoint_dir: str | Path) -> Path:
@@ -238,21 +246,21 @@ def _load_history_log_rows(checkpoint_path: Path, checkpoint_meta: dict[str, Any
 		return []
 	try:
 		payload = json.loads(log_path.read_text(encoding="utf-8"))
-	except Exception:
-		return []
+	except (OSError, json.JSONDecodeError) as exc:
+		raise ValueError(f"checkpoint history log is unreadable: {log_path}") from exc
 	if not isinstance(payload, dict):
-		return []
+		raise ValueError(f"checkpoint history log must be an object: {log_path}")
 	meta = payload.get("meta", {}) or {}
 	if str(meta.get("run_id", "") or "").strip() != run_id:
-		return []
+		raise ValueError(f"checkpoint history log run_id does not match checkpoint: {log_path}")
 	tick_limit = int((checkpoint_meta or {}).get("tick", 0) or 0)
 	rows = payload.get("log", []) or []
 	if not isinstance(rows, list):
-		return []
+		raise ValueError(f"checkpoint history log entries must be a list: {log_path}")
 	out: list[dict[str, Any]] = []
 	for row in rows:
 		if not isinstance(row, dict):
-			continue
+			raise ValueError(f"checkpoint history log entry must be an object: {log_path}")
 		if int(row.get("tick", 0) or 0) > tick_limit:
 			continue
 		out.append(dict(row))

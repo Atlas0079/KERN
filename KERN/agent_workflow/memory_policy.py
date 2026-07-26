@@ -11,13 +11,13 @@ def _safe_str(value: Any) -> str:
 
 
 def _memory_from_raw(raw: dict[str, Any]) -> MemoryComponent:
-	data = dict(raw or {}) if isinstance(raw, dict) else {}
+	data = dict(raw)
 	return MemoryComponent(
-		short_term_queue=[dict(item) for item in list(data.get("short_term_queue", []) or []) if isinstance(item, dict)],
+		short_term_queue=[dict(item) for item in list(data.get("short_term_queue", []) or [])],
 		short_term_max_entries=int(data.get("short_term_max_entries", 30) or 30),
-		mid_term_prep_queue=[dict(item) for item in list(data.get("mid_term_prep_queue", []) or []) if isinstance(item, dict)],
+		mid_term_prep_queue=[dict(item) for item in list(data.get("mid_term_prep_queue", []) or [])],
 		mid_term_prep_max_entries=int(data.get("mid_term_prep_max_entries", 50) or 50),
-		mid_term_queue=[dict(item) for item in list(data.get("mid_term_queue", []) or []) if isinstance(item, dict)],
+		mid_term_queue=[dict(item) for item in list(data.get("mid_term_queue", []) or [])],
 		mid_term_max_entries=int(data.get("mid_term_max_entries", 20) or 20),
 		last_mid_term_summary_tick=int(data.get("last_mid_term_summary_tick", -1) or -1),
 		mid_term_summary_cooldown_ticks=int(data.get("mid_term_summary_cooldown_ticks", 15) or 15),
@@ -26,9 +26,7 @@ def _memory_from_raw(raw: dict[str, Any]) -> MemoryComponent:
 
 def _top_topics(items: list[dict[str, Any]], max_count: int = 3) -> list[str]:
 	counter: dict[str, int] = {}
-	for item in list(items or []):
-		if not isinstance(item, dict):
-			continue
+	for item in items:
 		topic = _safe_str(item.get("topic")).strip()
 		if topic:
 			counter[topic] = int(counter.get(topic, 0) or 0) + 1
@@ -39,8 +37,6 @@ def _top_topics(items: list[dict[str, Any]], max_count: int = 3) -> list[str]:
 def _build_entities_index(full_ws_view: dict[str, Any]) -> dict[str, dict[str, Any]]:
 	out: dict[str, dict[str, Any]] = {}
 	for item in list(full_ws_view.get("entities", []) or []):
-		if not isinstance(item, dict):
-			continue
 		entity_id = _safe_str(item.get("id"))
 		if entity_id:
 			out[entity_id] = dict(item)
@@ -86,7 +82,7 @@ def build_memory_patch(
 	actor_id: str,
 	min_importance: float = 0.45,
 ) -> dict[str, Any] | None:
-	view = dict(full_ws_view or {}) if isinstance(full_ws_view, dict) else {}
+	view = dict(full_ws_view)
 	entities = _build_entities_index(view)
 	actor = entities.get(_safe_str(actor_id), {})
 	if not actor:
@@ -95,7 +91,6 @@ def build_memory_patch(
 	interaction_inbox = [
 		dict(item)
 		for item in list(view.get("interaction_inbox", []) or [])
-		if isinstance(item, dict)
 	]
 
 	notes: list[dict[str, Any]] = []
@@ -116,10 +111,10 @@ def build_memory_patch(
 	clear_mid_term_prep = False
 	now_tick = int(view.get("tick", 0) or 0)
 	if memory.should_summarize_mid_term(now_tick):
-		prep_items = [dict(item) for item in list(memory.mid_term_prep_queue or []) if isinstance(item, dict)]
+		prep_items = [dict(item) for item in list(memory.mid_term_prep_queue)]
 		if prep_items:
 			topics = _top_topics(prep_items, 3)
-			ticks = [int((item or {}).get("tick", 0) or 0) for item in prep_items]
+			ticks = [int(item.get("tick", 0) or 0) for item in prep_items]
 			mid_term_summaries.append(
 				{
 					"summary": f"阶段记忆摘要：记录{len(prep_items)}条，关键主题：{', '.join(topics) if topics else 'general'}。",

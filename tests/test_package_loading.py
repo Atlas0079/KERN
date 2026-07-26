@@ -259,6 +259,8 @@ class PackageLoadingTests(unittest.TestCase):
 			changed = load_packages_from_config(root, root / "runtime.json")
 			with self.assertRaisesRegex(ValueError, "package identity"):
 				verify_checkpoint_identity(meta, changed)
+			with self.assertRaisesRegex(ValueError, "package_identity.v2 metadata is required"):
+				verify_checkpoint_identity({}, second)
 
 
 if __name__ == "__main__":

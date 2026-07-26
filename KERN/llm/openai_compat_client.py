@@ -179,9 +179,8 @@ class OpenAICompatClient:
 				except Exception:
 					err_body = ""
 				msg = f"LLM HTTPError {getattr(e, 'code', '')}: {getattr(e, 'reason', '')} body={err_body}"
-				# 4xx usually not retryable; 5xx/429 retryable
 				code = int(getattr(e, "code", 0) or 0)
-				if code and 400 <= code < 500 and code not in [429]:
+				if code != 429 and not 500 <= code < 600:
 					raise LLMRequestError(f"{msg} attempts={attempt + 1}/{max_retries + 1}") from e
 				if attempt >= max_retries:
 					raise LLMRequestError(f"{msg} attempts={attempt + 1}/{max_retries + 1}") from e
@@ -250,43 +249,3 @@ class OpenAICompatClient:
 		if content is None:
 			content = ""
 		return str(content)
-
-
-@dataclass
-class DualModelLLM:
-	"""
-	Simple wrapper for Two-Layer LLM: Support different model names for planner/grounder.
-
-	Explanation:
-	- model name is completely custom (Depends on model ID supported by third-party platform).
-	"""
-
-	client: ChatClient
-	planner_model: str
-	grounder_model: str
-	request_extra: dict[str, Any] | None = None
-
-	def planner_text(self, messages: list[dict[str, Any]], temperature: float = 0.4, max_tokens: int | None = None) -> str:
-		return self.client.chat_text(
-			messages=messages,
-			model=str(self.planner_model),
-			temperature=float(temperature),
-			max_tokens=max_tokens,
-			extra=dict(self.request_extra or {}),
-		)
-
-	def grounder_text(
-		self,
-		messages: list[dict[str, Any]],
-		temperature: float = 0.2,
-		max_tokens: int | None = None,
-		response_format: dict[str, Any] | None = None,
-	) -> str:
-		return self.client.chat_text(
-			messages=messages,
-			model=str(self.grounder_model),
-			temperature=float(temperature),
-			max_tokens=max_tokens,
-			response_format=response_format,
-			extra=dict(self.request_extra or {}),
-		)

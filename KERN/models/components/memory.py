@@ -16,10 +16,7 @@ class MemoryComponent:
 	mid_term_summary_cooldown_ticks: int = 15
 
 	def _normalize_importance(self, value: float) -> float:
-		try:
-			v = float(value)
-		except Exception:
-			v = 0.5
+		v = float(value)
 		if v < 0:
 			return 0.0
 		if v > 1:
@@ -30,7 +27,7 @@ class MemoryComponent:
 		tick = int(entry.get("tick", 0) or 0)
 		content = str(entry.get("content", entry.get("text", "")) or "").strip()
 		if not content:
-			return {}
+			raise ValueError("memory entry content is required")
 		time_str = str(entry.get("time_str", "") or "")
 		entry_type = str(entry.get("type", "observation") or "observation")
 		topic = str(entry.get("topic", "") or "")
@@ -38,8 +35,7 @@ class MemoryComponent:
 		location_id = str(entry.get("location_id", "") or "")
 		actor_id = str(entry.get("actor_id", "") or "")
 		target_id = str(entry.get("target_id", "") or "")
-		tags_raw = entry.get("tags", []) or []
-		tags = [str(x) for x in list(tags_raw)] if isinstance(tags_raw, list) else []
+		tags = [str(x) for x in list(entry.get("tags", []) or [])]
 		decay_rate = self._normalize_importance(float(entry.get("decay_rate", 0.08 if importance < 0.2 else 0.02) or 0.0))
 		current_weight = self._normalize_importance(float(entry.get("current_weight", importance) or 0.0))
 		created_tick = int(entry.get("created_tick", tick) or tick)
@@ -65,23 +61,15 @@ class MemoryComponent:
 		return out
 
 	def _entry_score(self, entry: dict[str, Any], current_tick: int) -> float:
-		try:
-			weight = float(entry.get("current_weight", entry.get("importance", 0.5)) or 0.0)
-		except Exception:
-			weight = 0.5
-		try:
-			decay = float(entry.get("decay_rate", 0.02) or 0.02)
-		except Exception:
-			decay = 0.02
+		weight = float(entry.get("current_weight", entry.get("importance", 0.5)) or 0.0)
+		decay = float(entry.get("decay_rate", 0.02) or 0.02)
 		age = max(0, int(current_tick or 0) - int(entry.get("last_accessed_tick", entry.get("tick", 0)) or 0))
 		return weight - decay * age
 
 	def prune_to_tick(self, current_tick: int) -> None:
 		min_score = 0.05
 		kept: list[dict[str, Any]] = []
-		for entry in list(self.short_term_queue or []):
-			if not isinstance(entry, dict):
-				continue
+		for entry in list(self.short_term_queue):
 			score = self._entry_score(entry, current_tick)
 			if score < min_score:
 				continue
@@ -90,33 +78,26 @@ class MemoryComponent:
 		self.short_term_queue = kept
 
 	def per_tick(self, ws: Any, _entity_id: str, _ticks_per_minute: int) -> None:
-		tick = int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
+		tick = int(ws.game_time.total_ticks)
 		self.prune_to_tick(tick)
 
 	def add_short_term(self, entry: dict[str, Any]) -> None:
-		norm = self._normalize_entry(entry if isinstance(entry, dict) else {})
-		if not norm:
-			return
+		norm = self._normalize_entry(entry)
 		self.short_term_queue.append(norm)
 		self.prune_to_tick(int(norm.get("tick", 0) or 0))
 		limit = int(self.short_term_max_entries or 0)
 		while limit > 0 and len(self.short_term_queue) > limit:
 			scored = [
 				(self._entry_score(item, int(norm.get("tick", 0) or 0)), idx, item)
-				for idx, item in enumerate(list(self.short_term_queue or []))
-				if isinstance(item, dict)
+				for idx, item in enumerate(list(self.short_term_queue))
 			]
-			if not scored:
-				break
 			_score, idx, evicted = min(scored, key=lambda x: (float(x[0]), int(x[1])))
 			self.short_term_queue.pop(idx)
 			if float(evicted.get("importance", 0.0) or 0.0) >= 0.45:
 				self.add_mid_term_prep(evicted)
 
 	def add_mid_term_prep(self, entry: dict[str, Any]) -> None:
-		norm = self._normalize_entry(entry if isinstance(entry, dict) else {})
-		if not norm:
-			return
+		norm = self._normalize_entry(entry)
 		self.mid_term_prep_queue.append(norm)
 		limit = int(self.mid_term_prep_max_entries or 0)
 		if limit > 0 and len(self.mid_term_prep_queue) > limit:
@@ -162,17 +143,13 @@ class MemoryComponent:
 		)
 
 	def short_term_text(self, max_items: int = 10) -> str:
-		items = list(self.short_term_queue or [])
+		items = list(self.short_term_queue)
 		if not items:
 			return ""
 		items = items[-int(max_items or 10) :]
 		lines: list[str] = []
 		for e in items:
-			if not isinstance(e, dict):
-				continue
 			content = str(e.get("content", "") or "").strip()
-			if not content:
-				continue
 			tick = int(e.get("tick", 0) or 0)
 			time_str = str(e.get("time_str", "") or "").strip()
 			imp = float(e.get("importance", 0.5) or 0.5)
@@ -183,17 +160,13 @@ class MemoryComponent:
 		return "\n".join(lines)
 
 	def to_summary_text(self, max_items: int = 4) -> str:
-		items = list(self.mid_term_queue or [])
+		items = list(self.mid_term_queue)
 		if not items:
 			return ""
 		items = items[-int(max_items or 4) :]
 		lines: list[str] = []
 		for e in items:
-			if not isinstance(e, dict):
-				continue
 			txt = str(e.get("summary", "") or "").strip()
-			if not txt:
-				continue
 			t0 = int(e.get("tick_start", 0) or 0)
 			t1 = int(e.get("tick_end", 0) or 0)
 			lines.append(f"- [tick {t0}-{t1}] {txt}")

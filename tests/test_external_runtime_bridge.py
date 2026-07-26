@@ -13,6 +13,7 @@ from KERN.interaction.engine import InteractionEngine
 from KERN.models.entity import Entity
 from KERN.models.location import Location
 from KERN.models.world_state import WorldState
+from KERN.package import package_identity
 from KERN.runtime import KernRuntime
 
 
@@ -198,7 +199,13 @@ class ExternalRuntimeBridgeTests(unittest.TestCase):
 				configure_logging=False,
 				overrides={"CHECKPOINT_EVERY_TICK": "0"},
 			)
-			recorder = ArchiveRecorder(archive_dir=td, run_id="restore_run", snapshot_interval_ticks=1, include_logs=True)
+			recorder = ArchiveRecorder(
+				archive_dir=td,
+				run_id="restore_run",
+				snapshot_interval_ticks=1,
+				include_logs=True,
+				package_identity={"package_identity": package_identity(base_runtime.loaded_packages)},
+			)
 			recorder.record_tick(base_runtime.world_state)
 			adapter = CheckpointExternalRuntime()
 
@@ -226,7 +233,13 @@ class ExternalRuntimeBridgeTests(unittest.TestCase):
 				configure_logging=False,
 				overrides={"CHECKPOINT_EVERY_TICK": "0"},
 			)
-			recorder = ArchiveRecorder(archive_dir=td, run_id="restore_run", snapshot_interval_ticks=1, include_logs=True)
+			recorder = ArchiveRecorder(
+				archive_dir=td,
+				run_id="restore_run",
+				snapshot_interval_ticks=1,
+				include_logs=True,
+				package_identity={"package_identity": package_identity(base_runtime.loaded_packages)},
+			)
 			recorder.record_tick(base_runtime.world_state)
 
 			with self.assertRaises(RuntimeError):
@@ -238,6 +251,42 @@ class ExternalRuntimeBridgeTests(unittest.TestCase):
 					overrides={"CHECKPOINT_RESTORE_DIR": td, "CHECKPOINT_EVERY_TICK": "0"},
 					external_runtimes={"social": CheckpointExternalRuntime(fail=True)},
 				)
+
+	def test_restore_output_conflict_is_rejected_before_external_restore(self) -> None:
+		project_root = Path(__file__).resolve().parents[1]
+		with tempfile.TemporaryDirectory() as td:
+			base_runtime = KernRuntime.from_config(
+				project_root,
+				"runtime_config.camping.package.smoke.json",
+				validate=False,
+				configure_logging=False,
+				overrides={"CHECKPOINT_EVERY_TICK": "0"},
+			)
+			recorder = ArchiveRecorder(
+				archive_dir=td,
+				run_id="restore_run",
+				snapshot_interval_ticks=1,
+				include_logs=True,
+				package_identity={"package_identity": package_identity(base_runtime.loaded_packages)},
+			)
+			recorder.record_tick(base_runtime.world_state)
+			adapter = CheckpointExternalRuntime()
+
+			with self.assertRaisesRegex(ValueError, "CHECKPOINT_DIR must differ"):
+				KernRuntime.from_config(
+					project_root,
+					"runtime_config.camping.package.smoke.json",
+					validate=False,
+					configure_logging=False,
+					overrides={
+						"CHECKPOINT_RESTORE_DIR": td,
+						"CHECKPOINT_DIR": td,
+						"CHECKPOINT_EVERY_TICK": "1",
+					},
+					external_runtimes={"social": adapter},
+				)
+
+			self.assertEqual(adapter.restored, [])
 
 
 if __name__ == "__main__":

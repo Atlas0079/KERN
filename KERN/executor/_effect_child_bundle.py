@@ -39,7 +39,10 @@ def _attach_child_context(events: Any, context: dict[str, Any]) -> list[dict[str
 		if not isinstance(event, dict):
 			continue
 		clean = dict(event)
-		if not isinstance(clean.get(EVENT_CONTEXT_KEY), dict):
+		embedded_context = clean.get("context", {})
+		if not isinstance(clean.get(EVENT_CONTEXT_KEY), dict) and not (
+			isinstance(embedded_context, dict) and embedded_context
+		):
 			clean[EVENT_CONTEXT_KEY] = dict(context or {})
 		wrapped.append(clean)
 	return wrapped

@@ -143,7 +143,7 @@ class GeminiClient:
 					err_body = ""
 				msg = f"Gemini HTTPError {getattr(e, 'code', '')}: {getattr(e, 'reason', '')} body={err_body}"
 				code = int(getattr(e, "code", 0) or 0)
-				if code and 400 <= code < 500 and code not in [429]:
+				if code != 429 and not 500 <= code < 600:
 					raise LLMRequestError(f"{msg} attempts={attempt + 1}/{max_retries + 1}") from e
 				if attempt >= max_retries:
 					raise LLMRequestError(f"{msg} attempts={attempt + 1}/{max_retries + 1}") from e

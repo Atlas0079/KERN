@@ -46,8 +46,8 @@ class WorldSettlement:
 		is_nested_execution = bool(self._bundle_event_frames)
 		result_events = self._execute_bundle_events(bundle_data, context)
 		if is_nested_execution:
-			return SettlementResult(events=[dict(event) for event in result_events if isinstance(event, dict)])
-		return self._process_events(result_events, dict(context or {}), reaction_depth=0)
+			return SettlementResult(events=[dict(event) for event in result_events])
+		return self._process_events(result_events, dict(context), reaction_depth=0)
 
 	def _execute_bundle_events(self, bundle_data: Any, context: dict[str, Any]) -> list[dict[str, Any]]:
 		try:
@@ -66,23 +66,22 @@ class WorldSettlement:
 			result_events = self.executor.execute_bundle(self.ws, bundle, context)
 		finally:
 			self._bundle_event_frames.pop()
-		combined_events = [dict(event) for event in child_events + list(result_events or []) if isinstance(event, dict)]
+		combined_events = [dict(event) for event in child_events + list(result_events)]
 		if self._bundle_event_frames:
 			self._bundle_event_frames[-1].extend(combined_events)
 		return combined_events
 
 	def publish_event(self, event: dict[str, Any], context: dict[str, Any]) -> SettlementResult:
-		return self._process_events([event], dict(context or {}), reaction_depth=0)
+		return self._process_events([event], dict(context), reaction_depth=0)
 
 	def publish_events(self, events: list[dict[str, Any]], context: dict[str, Any] | None = None) -> SettlementResult:
-		return self._process_events(list(events or []), dict(context or {}), reaction_depth=0)
+		return self._process_events(list(events), dict(context or {}), reaction_depth=0)
 
 	def _process_events(self, events: list[dict[str, Any]], context: dict[str, Any], reaction_depth: int) -> SettlementResult:
 		result = SettlementResult()
 		queue: deque[_QueuedEvent] = deque()
-		for event in list(events or []):
-			if isinstance(event, dict):
-				self._publish_to_queue(queue, result, event, context, reaction_depth)
+		for event in events:
+			self._publish_to_queue(queue, result, event, context, reaction_depth)
 
 		while queue:
 			if bool(getattr(getattr(self.ws, "runtime_state", None), "abort_requested", False)):
@@ -91,9 +90,9 @@ class WorldSettlement:
 			if self.trigger_system is None:
 				continue
 			requests = self.trigger_system.build_reaction_effects(self.ws, item.event, item.context)
-			for request in list(requests or []):
+			for request in requests:
 				next_depth = int(item.reaction_depth) + 1
-				rctx = dict(request.get("context", {}) or {})
+				rctx = dict(request["context"])
 				if next_depth > self.max_reaction_depth:
 					raise KernFailure(
 						"REACTION_DEPTH_EXCEEDED",
@@ -108,7 +107,7 @@ class WorldSettlement:
 						},
 					)
 				try:
-					reaction_events = self._execute_bundle_events(request.get("bundle", {}) or {}, rctx)
+					reaction_events = self._execute_bundle_events(request["bundle"], rctx)
 				except KernFailure as exc:
 					exc.add_context(
 						reaction_rule_id=str(rctx.get("reaction_rule_id", "") or ""),
@@ -116,9 +115,8 @@ class WorldSettlement:
 						reaction_depth=int(next_depth),
 					)
 					raise
-				for reaction_event in list(reaction_events or []):
-					if isinstance(reaction_event, dict):
-						self._publish_to_queue(queue, result, reaction_event, rctx, next_depth)
+				for reaction_event in reaction_events:
+					self._publish_to_queue(queue, result, reaction_event, rctx, next_depth)
 		return result
 
 	def _publish_to_queue(
@@ -138,7 +136,7 @@ class WorldSettlement:
 		elif isinstance(embedded_context, dict) and embedded_context:
 			clean_context = dict(embedded_context)
 		else:
-			clean_context = dict(context or {})
+			clean_context = dict(context)
 		if not is_envelope:
 			event_type = str(clean.pop("type", "") or "")
 			clean = build_runtime_event(event_type, clean, clean_context)
@@ -149,5 +147,4 @@ class WorldSettlement:
 	def _record_event(self, event: dict[str, Any], context: dict[str, Any], result: SettlementResult) -> None:
 		clean = dict(event)
 		result.events.append(clean)
-		if hasattr(self.ws, "record_event"):
-			self.ws.record_event(clean, context)
+		self.ws.record_event(clean, context)

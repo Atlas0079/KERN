@@ -18,24 +18,20 @@ class TriggerSystem:
 		return
 
 	def build_reaction_effects(self, ws: Any, event: dict[str, Any], context: dict[str, Any] | None) -> list[dict[str, Any]]:
-		if not isinstance(event, dict):
-			return []
 		ctx = dict(context or {})
-		event_type = str(event.get("type", "") or "")
-		payload = dict(event.get("payload", {}) or {}) if isinstance(event.get("payload", {}), dict) else {}
+		event_type = str(event["type"])
+		payload = dict(event["payload"])
 		event_entity_id = str(payload.get("entity_id", "") or "")
 		base_ctx = dict(ctx)
 		base_ctx["event"] = dict(event)
-		base_ctx["effect_input"] = dict(event.get("input", {}) or {}) if isinstance(event.get("input", {}), dict) else {}
+		base_ctx["effect_input"] = dict(event.get("input", {}))
 		base_ctx["event_entity_id"] = event_entity_id
 		if event_entity_id and not str(base_ctx.get("self_id", "") or ""):
 			base_ctx["self_id"] = event_entity_id
 		if event_entity_id and not str(base_ctx.get("target_id", "") or ""):
 			base_ctx["target_id"] = event_entity_id
 		requests: list[dict[str, Any]] = []
-		for rule in list(self.rules or []):
-			if not isinstance(rule, dict):
-				raise KernFailure("REACTION_RULE_INVALID", "reaction rule must be an object", origin="reaction", phase="rule_validation")
+		for rule in self.rules:
 			if not bool(rule.get("enabled", True)):
 				continue
 			on_event = str(rule.get("on_event", "") or "")
@@ -50,20 +46,20 @@ class TriggerSystem:
 			if on_event != event_type:
 				continue
 			rule_id = str(rule.get("id", "") or "")
-			selector = rule.get("selector", {}) or {}
-			condition = rule.get("condition", {}) or {}
-			if not self.evaluator.evaluate(ws, selector if isinstance(selector, dict) else {}, base_ctx):
+			selector = rule.get("selector", {})
+			condition = rule.get("condition", {})
+			if not self.evaluator.evaluate(ws, selector, base_ctx):
 				continue
-			if not self.evaluator.evaluate(ws, condition if isinstance(condition, dict) else {}, base_ctx):
+			if not self.evaluator.evaluate(ws, condition, base_ctx):
 				continue
-			bundle = rule.get("bundle", {}) or {}
+			bundle = rule["bundle"]
 			req_ctx = dict(base_ctx)
 			req_ctx["reaction_rule_id"] = rule_id
 			req_ctx["reaction_trigger_event_type"] = event_type
 			reaction_verb = str(rule.get("reaction_verb", "") or "").strip() or rule_id
 			req_ctx["reaction_verb"] = reaction_verb
 			narrative_template = str(rule.get("narrative_success", "") or "").strip()
-			compiled_bundle = dict(bundle) if isinstance(bundle, dict) else {}
+			compiled_bundle = dict(bundle)
 			effects = list(compiled_bundle.get("effects", []) or [])
 			if narrative_template:
 				try:

@@ -82,16 +82,14 @@ Package 装配完成后生成固定的 `package_identity.v2`。identity 只覆�
 恢复兼容规则如下：
 
 - `package_identity.v2` 按当前 artifact identity 精确验证；
-- 历史顶层 v1 metadata 按旧的 Package 目录 `.json` / `.py` hash 规则验证；
-- 没有 Package metadata 的 checkpoint 进入 legacy restore 路径。
+- checkpoint 必须包含精确匹配的 `package_identity.v2`；历史 v1 identity 和缺少
+  Package metadata 的 checkpoint 会被拒绝。
 
 ## Runtime snapshot
 
 `KernRuntime.snapshots` 使用 `runtime_snapshot.v2`：
 
-- `component_state` 是全部组件经过当前 `ComponentCatalog.serialize()` 产生的 canonical 状态；
-- `components` 只是 Creature、Worker 和 Container 的兼容展示投影。
+- `component_state` 是全部组件经过当前 `ComponentCatalog.serialize()` 产生的 canonical 状态。
 
 复杂组件由各自 codec 序列化。snapshot 不保存 Python Handler、codec、catalog 或
 `WorldState.services`。
-

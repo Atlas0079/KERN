@@ -16,10 +16,9 @@ def resolve_workflow_provider(
 	providers = service_map.get("action_providers", {}) or {}
 	if not isinstance(providers, dict):
 		providers = {}
-	for provider_id in (
-		str(requested_provider_id or "").strip(),
-		str(getattr(controller, "provider_id", "") or "").strip(),
-	):
-		if provider_id and provider_id in providers:
+	requested_id = str(requested_provider_id or "").strip()
+	controller_id = str(getattr(controller, "provider_id", "") or "").strip()
+	for provider_id in (requested_id, controller_id):
+		if provider_id:
 			return providers[provider_id]
 	return service_map.get("default_action_provider")

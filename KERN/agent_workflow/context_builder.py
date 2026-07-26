@@ -29,16 +29,12 @@ def _build_workflow_view(ws: Any, actor_id: str, reason: str, mode_context: dict
 
 
 def _workflow_action_catalog(ws: Any) -> dict[str, Any]:
-	services = getattr(ws, "services", {}) or {}
-	interaction_engine = services.get("interaction_engine")
-	if interaction_engine is None or not hasattr(interaction_engine, "recipe_db"):
-		return {}
-	recipe_db = getattr(interaction_engine, "recipe_db", {}) or {}
-	return dict(recipe_db) if isinstance(recipe_db, dict) else {}
+	interaction_engine = ws.services["interaction_engine"]
+	return dict(interaction_engine.recipe_db)
 
 
 def _execute_memory_patch(ws: Any, actor_id: str, patch: dict[str, Any]) -> None:
-	execute = (getattr(ws, "services", {}) or {}).get("execute")
+	execute = ws.services["execute"]
 	if not callable(execute):
 		raise KernFailure(
 			"WORKFLOW_MEMORY_PATCH_APPLY_FAILED",
@@ -53,13 +49,9 @@ def _execute_memory_patch(ws: Any, actor_id: str, patch: dict[str, Any]) -> None
 				{
 					"effect": "ApplyMemoryPatch",
 					"target": actor_id,
-					"notes": [dict(item) for item in list(patch.get("notes", []) or []) if isinstance(item, dict)],
-					"consume_interaction_ids": [
-						str(item)
-						for item in list(patch.get("consume_interaction_ids", []) or [])
-						if str(item or "").strip()
-					],
-					"mid_term_summaries": [dict(item) for item in list(patch.get("mid_term_summaries", []) or []) if isinstance(item, dict)],
+					"notes": [dict(item) for item in patch.get("notes", [])],
+					"consume_interaction_ids": [str(item) for item in patch.get("consume_interaction_ids", [])],
+					"mid_term_summaries": [dict(item) for item in patch.get("mid_term_summaries", [])],
 					"clear_mid_term_prep": bool(patch.get("clear_mid_term_prep", False)),
 				}
 			]
@@ -69,9 +61,9 @@ def _execute_memory_patch(ws: Any, actor_id: str, patch: dict[str, Any]) -> None
 
 
 def _normalized_memory_notes(ws: Any, actor_id: str, meta: dict[str, Any]) -> list[dict[str, Any]]:
-	tick = int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
+	tick = int(ws.game_time.total_ticks)
 	normalized: list[dict[str, Any]] = []
-	for note in [dict(item) for item in list((meta or {}).get("memory_notes", []) or []) if isinstance(item, dict)]:
+	for note in [dict(item) for item in meta.get("memory_notes", [])]:
 		content = str(note.get("content", note.get("text", "")) or "").strip()
 		if not content:
 			continue

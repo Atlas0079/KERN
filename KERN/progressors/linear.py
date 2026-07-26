@@ -6,22 +6,12 @@ from typing import Any
 from ..sim.condition_evaluator import ConditionEvaluator
 
 
-def _read_number_from_component(component: Any, prop_name: str, default: float = 0.0) -> float:
+def _read_number_from_component(component: Any, prop_name: str) -> float:
 	if component is None:
-		return float(default)
-
-	if hasattr(component, "data") and isinstance(getattr(component, "data"), dict):
-		val = component.data.get(prop_name, default)
-		try:
-			return float(val)
-		except Exception:
-			return float(default)
-
-	val = getattr(component, prop_name, default)
-	try:
-		return float(val)
-	except Exception:
-		return float(default)
+		raise ValueError(f"LinearProgressor: component is missing for read.{prop_name}")
+	if hasattr(component, "data") and isinstance(component.data, dict):
+		return _as_number(component.data[prop_name], f"read.{prop_name}")
+	return _as_number(getattr(component, prop_name), f"read.{prop_name}")
 
 
 def _as_number(value: Any, field_name: str) -> float:
@@ -44,7 +34,6 @@ def _resolve_term_value(ws: Any, ctx: dict[str, Any], term: dict[str, Any], fiel
 	target_ref = str(read.get("target", "self") or "self")
 	component_name = str(read.get("component", "") or "").strip()
 	property_name = str(read.get("property", "") or "").strip()
-	default_value = read.get("default", 0.0)
 	if not component_name:
 		raise ValueError(f"LinearProgressor: {field_prefix}.read.component is required")
 	if not property_name:
@@ -52,9 +41,9 @@ def _resolve_term_value(ws: Any, ctx: dict[str, Any], term: dict[str, Any], fiel
 	from ..entity_ref_resolver import resolve_entity
 	target_entity = resolve_entity(ws, target_ref, ctx, allow_literal=True)
 	if target_entity is None:
-		return _as_number(default_value, f"{field_prefix}.read.default")
-	component = target_entity.get_component(component_name) if hasattr(target_entity, "get_component") else None
-	return _read_number_from_component(component, property_name, _as_number(default_value, f"{field_prefix}.read.default"))
+		raise ValueError(f"LinearProgressor: {field_prefix}.read.target not found: {target_ref}")
+	component = target_entity.get_component(component_name)
+	return _read_number_from_component(component, property_name)
 
 
 def _validate_term(term: Any, field_prefix: str) -> dict[str, Any]:
@@ -74,7 +63,7 @@ class LinearProgressor:
 	evaluator: ConditionEvaluator = field(default_factory=ConditionEvaluator)
 
 	def compute_progress_delta(self, ws: Any, agent_id: str, task: Any, ticks: int) -> float:
-		params = getattr(task, "progressor_params", {}) or {}
+		params = task.progressor_params
 		if not isinstance(params, dict):
 			raise ValueError("LinearProgressor: progressor_params must be object")
 		if "progress_contributors" in params:
@@ -92,10 +81,10 @@ class LinearProgressor:
 			raise ValueError("LinearProgressor: clamp must be object")
 
 		ctx = {
-			"self_id": str(agent_id or ""),
-			"target_id": str(getattr(task, "target_entity_id", "") or ""),
-			"task_id": str(getattr(task, "task_id", "") or ""),
-			"parameters": dict(getattr(task, "parameters", {}) or {}),
+			"self_id": str(agent_id),
+			"target_id": str(task.target_entity_id),
+			"task_id": str(task.task_id),
+			"parameters": dict(task.parameters),
 		}
 
 		delta = base

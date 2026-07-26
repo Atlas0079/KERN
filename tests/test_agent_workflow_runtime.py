@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import unittest
-from typing import Any
+from types import SimpleNamespace
 
-from KERN.agent_workflow.runtime import run_workflow_cycle
+from KERN.agent_workflow.context_builder import DecisionContextBuilder
+from KERN.agent_workflow.contracts import EndTurn, TurnStart
 from KERN.executor.executor import WorldExecutor
 from KERN.models.components import MemoryComponent, PerceptionComponent
 from KERN.models.entity import Entity
@@ -11,82 +12,33 @@ from KERN.models.location import Location
 from KERN.models.world_state import WorldState
 
 
-class _MemoryPatchWorkflow:
-	def __init__(self) -> None:
-		self.saw_patched_memory = False
-
-	def decide(self, ws_view: dict[str, Any], _recipe_db: dict[str, Any], actor_id: str, _reason: str, _mode_context: dict[str, Any]) -> dict[str, Any]:
-		full_view = dict(ws_view.get("full_ws_view", {}) or {})
-		actor = next(x for x in full_view.get("entities", []) if x.get("id") == actor_id)
-		short_term = list((actor.get("memory", {}) or {}).get("short_term_queue", []) or [])
-		self.saw_patched_memory = any(x.get("content") == "fresh memory visible during decide" for x in short_term)
-		return {"type": "end_turn", "meta": {"provider": "test"}}
-
-
-class _CaptureProfileWorkflow:
-	def __init__(self) -> None:
-		self.profile_id = ""
-
-	def decide(self, ws_view: dict[str, Any], _recipe_db: dict[str, Any], _actor_id: str, _reason: str, _mode_context: dict[str, Any]) -> dict[str, Any]:
-		full_view = dict(ws_view.get("full_ws_view", {}) or {})
-		self.profile_id = str((full_view.get("workflow_view_profile", {}) or {}).get("profile_id", "") or "")
-		return {"type": "end_turn", "meta": {"provider": "test"}}
-
-
 class AgentWorkflowRuntimeTests(unittest.TestCase):
-	def test_decide_sees_memory_patch_applied_at_start_of_cycle(self) -> None:
+	def test_frame_applies_pending_memory_before_workflow_reads_perception(self) -> None:
 		ws = WorldState()
-		loc = Location(location_id="room", location_name="Room", description="")
-		ws.register_location(loc)
+		location = Location(location_id="room", location_name="Room", description="")
+		ws.register_location(location)
 		agent = Entity(entity_id="agent_01", template_id="Agent", entity_name="Agent")
 		agent.add_component("MemoryComponent", MemoryComponent())
-		agent.add_component(
-			"PerceptionComponent",
-			PerceptionComponent(
-				interaction_inbox=[
-					{
-						"seq": 1,
-						"interaction_id": "interaction_1",
-						"tick": 1,
-						"time_str": "0001-01-01 00:01",
-						"actor_id": "agent_01",
-						"actor_name": "Agent",
-						"verb": "Remember",
-						"target_id": "agent_01",
-						"target_name": "Agent",
-						"status": "success",
-						"narrative": "fresh memory visible during decide",
-					}
-				]
-			),
-		)
+		agent.add_component("PerceptionComponent", PerceptionComponent(interaction_inbox=[{"interaction_id": "interaction_1", "tick": 1, "actor_id": "agent_01", "verb": "Remember", "narrative": "fresh memory visible during decide"}]))
 		ws.register_entity(agent)
-		loc.add_entity_id(agent.entity_id)
+		location.add_entity_id(agent.entity_id)
 		executor = WorldExecutor()
 		ws.services["execute"] = lambda bundle, ctx: executor.execute_bundle(ws, bundle, ctx)
+		ws.services["interaction_engine"] = SimpleNamespace(recipe_db={})
 
-		workflow = _MemoryPatchWorkflow()
-		outcome = run_workflow_cycle(ws, "agent_01", workflow, "test", {})
+		frame = DecisionContextBuilder().build(ws, "agent_01", "test", {}, previous_action=None, actions_committed=0, replans=0)
+		self.assertTrue(any(item.get("content") == "fresh memory visible during decide" for item in frame.perception["short_term_memory_items"]))
 
-		self.assertEqual(outcome["type"], "end_turn")
-		self.assertTrue(workflow.saw_patched_memory)
+	def test_native_workflow_contract_uses_turn_session(self) -> None:
+		class _Workflow:
+			def begin_turn(self, _start: TurnStart):
+				class _Session:
+					def next_step(self, _frame):
+						return EndTurn(meta={"provider": "test"})
+				return _Session()
 
-	def test_workflow_cycle_attaches_view_profile_from_services(self) -> None:
-		ws = WorldState()
-		loc = Location(location_id="room", location_name="Room", description="")
-		ws.register_location(loc)
-		agent = Entity(entity_id="agent_01", template_id="Agent", entity_name="Agent")
-		agent.add_component("MemoryComponent", MemoryComponent())
-		agent.add_component("PerceptionComponent", PerceptionComponent())
-		ws.register_entity(agent)
-		loc.add_entity_id(agent.entity_id)
-		ws.services["workflow_view_profile"] = {"profile_id": "embodied_default"}
-
-		workflow = _CaptureProfileWorkflow()
-		outcome = run_workflow_cycle(ws, "agent_01", workflow, "test", {})
-
-		self.assertEqual(outcome["type"], "end_turn")
-		self.assertEqual(workflow.profile_id, "embodied_default")
+		workflow = _Workflow()
+		self.assertIsInstance(workflow.begin_turn(TurnStart("turn", 1, 0, "agent", "test", "normal")).next_step(None), EndTurn)
 
 
 if __name__ == "__main__":

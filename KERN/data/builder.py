@@ -27,11 +27,11 @@ class BuildResult:
 
 
 
-def _int_or_default(value: Any, default: int) -> int:
+def _int_value(value: Any, field_name: str) -> int:
 	try:
 		return int(value)
-	except Exception:
-		return int(default)
+	except (TypeError, ValueError) as exc:
+		raise ValueError(f"{field_name} must be an integer: {value!r}") from exc
 
 
 def _attach_tasks_from_snapshot(
@@ -40,14 +40,18 @@ def _attach_tasks_from_snapshot(
 	snapshot: dict[str, Any],
 	component_catalog: ComponentCatalog,
 ) -> None:
-	overrides = snapshot.get("component_overrides", {}) or {}
+	overrides = snapshot.get("component_overrides", {})
 	if not isinstance(overrides, dict):
+		raise ValueError("entity component_overrides must be an object")
+	host_patch = overrides.get("TaskHostComponent")
+	if host_patch is None:
 		return
-	host_patch = overrides.get("TaskHostComponent", {}) or {}
 	if not isinstance(host_patch, dict):
-		return
-	tasks_raw = host_patch.get("tasks", {}) or {}
-	if not isinstance(tasks_raw, dict) or not tasks_raw:
+		raise ValueError("TaskHostComponent override must be an object")
+	tasks_raw = host_patch.get("tasks", {})
+	if not isinstance(tasks_raw, dict):
+		raise ValueError("TaskHostComponent.tasks must be an object")
+	if not tasks_raw:
 		return
 	host = host_entity.get_component("TaskHostComponent")
 	if not isinstance(host, TaskHostComponent):
@@ -70,38 +74,38 @@ def build_world_state(
 	ws = WorldState()
 	ws.named_bundles = named_bundles or {}
 	world_state_data = bundle_world.get("world_state", {})
-	ws.game_time.total_ticks = int(world_state_data.get("current_tick", 0))
-	ws.game_time.set_tick0_datetime(str(world_state_data.get("tick0_datetime", DEFAULT_TICK0_DATETIME) or DEFAULT_TICK0_DATETIME))
+	if not isinstance(world_state_data, dict):
+		raise ValueError("world_state must be an object")
+	ws.game_time.total_ticks = _int_value(world_state_data.get("current_tick", 0), "world_state.current_tick")
+	ws.game_time.set_tick0_datetime(str(world_state_data.get("tick0_datetime", DEFAULT_TICK0_DATETIME)))
 
 	for scope_data in list(bundle_world.get("environment_scopes", []) or []):
 		if not isinstance(scope_data, dict):
-			continue
-		scope_id = str(scope_data.get("scope_id", "") or "").strip()
+			raise ValueError("environment_scopes entries must be objects")
+		scope_id = str(scope_data.get("scope_id", "")).strip()
 		if not scope_id:
-			continue
+			raise ValueError("environment scope missing scope_id")
 		location_ids = [
 			str(item).strip()
 			for item in list(scope_data.get("location_ids", []) or [])
 			if str(item).strip()
 		]
-		fields = scope_data.get("fields", {}) or {}
+		fields = scope_data.get("fields", {})
 		if not isinstance(fields, dict):
-			fields = {}
+			raise ValueError(f"environment scope {scope_id}.fields must be an object")
 		conditions = [str(item) for item in list(scope_data.get("conditions", []) or []) if str(item)]
 		expire_raw = scope_data.get("condition_expire_at_tick", {}) or {}
 		expire_map: dict[str, int] = {}
-		if isinstance(expire_raw, dict):
-			for key, value in expire_raw.items():
-				try:
-					expire_map[str(key)] = int(value)
-				except Exception:
-					continue
+		if not isinstance(expire_raw, dict):
+			raise ValueError(f"environment scope {scope_id}.condition_expire_at_tick must be an object")
+		for key, value in expire_raw.items():
+			expire_map[str(key)] = _int_value(value, f"environment scope {scope_id}.condition_expire_at_tick.{key}")
 		ws.register_environment_scope(
 			EnvironmentScope(
 				scope_id=scope_id,
 				scope_type=str(scope_data.get("scope_type", "region") or "region"),
 				location_ids=location_ids,
-				priority=_int_or_default(scope_data.get("priority", 0), 0),
+			priority=_int_value(scope_data.get("priority", 0), f"environment scope {scope_id}.priority"),
 				fields=dict(fields),
 				conditions=conditions,
 				condition_expire_at_tick=expire_map,
@@ -110,14 +114,16 @@ def build_world_state(
 
 	# 1) Register locations first
 	for loc_data in bundle_world.get("locations", []):
+		if not isinstance(loc_data, dict):
+			raise ValueError("locations entries must be objects")
 		loc_id = str(loc_data.get("location_id", "")).strip()
 		if not loc_id:
-			continue
+			raise ValueError("location missing location_id")
 		loc = Location(
 			location_id=loc_id,
 			location_name=str(loc_data.get("location_name", "Unnamed Location")),
 			description=str(loc_data.get("description", "")),
-			light_level=_int_or_default(loc_data.get("light_level", 2), 2),
+			light_level=_int_value(loc_data.get("light_level", 2), f"location {loc_id}.light_level"),
 		)
 		ws.register_location(loc)
 
@@ -144,18 +150,18 @@ def build_world_state(
 		loc_id = str(loc_data.get("location_id", "")).strip()
 		loc = ws.get_location_by_id(loc_id)
 		if loc is None:
-			continue
+			raise ValueError(f"location {loc_id} was not registered")
 
 		for snapshot in loc_data.get("entities", []):
 			if not isinstance(snapshot, dict):
-				continue
+				raise ValueError(f"location {loc_id}.entities entries must be objects")
 			parent_id = str(snapshot.get("parent_container", "") or "").strip()
 			if parent_id:
 				raise ValueError(f"location root entity must not define parent_container: {snapshot.get('instance_id', '')}")
 			template_id = snapshot.get("template_id")
 			instance_id = snapshot.get("instance_id")
 			if not template_id or not instance_id:
-				continue
+				raise ValueError(f"location {loc_id} entity missing template_id or instance_id")
 
 			ent = create_entity_from_template(
 				template_id=str(template_id),
@@ -172,11 +178,11 @@ def build_world_state(
 
 	for snapshot in list(bundle_world.get("entities", []) or []):
 		if not isinstance(snapshot, dict):
-			continue
+			raise ValueError("entities entries must be objects")
 		template_id = snapshot.get("template_id")
 		instance_id = snapshot.get("instance_id")
 		if not template_id or not instance_id:
-			continue
+			raise ValueError("nested entity missing template_id or instance_id")
 		ent = create_entity_from_template(
 			template_id=str(template_id),
 			instance_id=str(instance_id),
@@ -196,7 +202,7 @@ def build_world_state(
 
 		child = ws.get_entity_by_id(entity_id)
 		if child is None:
-			continue
+			raise ValueError(f"nested entity '{entity_id}' was not registered")
 
 		parent_entity = ws.get_entity_by_id(parent_id)
 		if parent_entity is not None:
@@ -246,7 +252,7 @@ def build_world_state(
 	# 2.6) Restore initial tasks from archive
 	for tdata in list(bundle_world.get("tasks", []) or []):
 		if not isinstance(tdata, dict):
-			continue
+			raise ValueError("tasks entries must be objects")
 
 		task_id = str(tdata.get("task_id", "") or "").strip()
 		if not task_id:
@@ -343,12 +349,12 @@ def create_entity_from_template(
 	ent = Entity(
 		entity_id=instance_id,
 		template_id=template_id,
-		entity_name=str(template.get("name", "Unnamed Entity")),
+		entity_name=str(template["name"]),
 	)
 
-	components_data = template.get("components", {}) or {}
+	components_data = template.get("components", {})
 	if not isinstance(components_data, dict):
-		components_data = {}
+		raise ValueError(f"template components must be an object: {template_id}")
 
 	for comp_name, comp_data in components_data.items():
 		ent.add_component(comp_name, catalog.build(comp_name, comp_data))
@@ -374,10 +380,10 @@ def apply_component_overrides(
 	catalog = component_catalog or build_core_component_catalog()
 	for component_name, patch in dict(overrides or {}).items():
 		if not isinstance(patch, dict):
-			continue
+			raise ValueError(f"component override must be an object: {component_name}")
 		component = entity.get_component(component_name)
 		if component is None:
-			continue
+			raise ValueError(f"component override targets missing component: {component_name}")
 		try:
 			updated = catalog.apply_snapshot(
 				component_name,

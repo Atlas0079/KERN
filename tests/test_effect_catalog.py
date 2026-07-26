@@ -5,7 +5,6 @@ from pathlib import Path
 import unittest
 
 from KERN.data.loader import load_data_bundle
-from KERN.effect_contract import EFFECT_SPECS
 from KERN.effects import EffectCatalog, EffectResolutionError, EffectSpec, build_core_effect_catalog
 from KERN.executor.executor import WorldExecutor
 from KERN.models.world_state import WorldState
@@ -69,10 +68,6 @@ class EffectCatalogTests(unittest.TestCase):
 
 		with self.assertRaisesRegex(EffectResolutionError, "test:Broken.*binder.*missing.effect.module"):
 			catalog.resolve_binder("test:Broken")
-
-	def test_legacy_effect_specs_are_deeply_read_only(self) -> None:
-		with self.assertRaises(TypeError):
-			EFFECT_SPECS["InvokeBundle"]["module"] = "changed"
 
 	def test_all_core_effects_resolve_binder_and_handler(self) -> None:
 		catalog = build_core_effect_catalog()

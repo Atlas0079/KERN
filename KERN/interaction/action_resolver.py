@@ -108,7 +108,17 @@ def resolve_action_intent(ws: Any, actor_id: str, reason: str, action: dict[str,
 						"reason": str(reason or ""),
 						"interrupt_source": "manual_yield",
 						"is_voluntary": True,
-					}
+					},
+					{
+						"effect": "RecordInteraction",
+						"actor_id": actor_id,
+						"verb": "YieldCurrentTask",
+						"target_id": actor_id,
+						"status": "success",
+						"reason": str(reason or ""),
+						"interaction_origin": "workflow_action",
+						"extra": {"task_id": task_id, "action_intent": dict(cmd)},
+					},
 				]
 			},
 			"context": {"self_id": actor_id, "actor_id": actor_id, "task_id": task_id, "verb": verb},

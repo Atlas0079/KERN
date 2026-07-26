@@ -7,6 +7,7 @@ from KERN.agent_workflow.observer import build_agent_perception
 from KERN.agent_workflow.simple_policy import SimplePolicyActionProvider
 from KERN.data.builder import build_world_state
 from KERN.executor.executor import WorldExecutor
+from KERN.effect_record import build_runtime_event
 from KERN.interaction.engine import InteractionEngine
 from KERN.models.components import AgentControlComponent, TagComponent
 from KERN.models.entity import Entity
@@ -127,13 +128,13 @@ class EnvironmentScopeTests(unittest.TestCase):
 		]
 		requests = trigger.build_reaction_effects(
 			ws,
-			{"type": "WorldTickAdvanced", "total_ticks": 10, "time": "0001-01-01 00:10"},
+			build_runtime_event("WorldTickAdvanced", {"total_ticks": 10, "time": "0001-01-01 00:10"}),
 			{},
 		)
 		executor = WorldExecutor()
 		events = []
 		for request in requests:
-			events.extend(executor.execute_bundle(ws, request.get("bundle", {}), request.get("context", {})))
+			events.extend(executor.execute_bundle(ws, request["bundle"], request["context"]))
 
 		self.assertFalse(evaluate_predicate(ws, {"type": "environment_has_condition", "scope_id": "region", "condition_id": "foggy"}, {}))
 		self.assertIn("EnvironmentConditionExpired", {str(event.get("type", "")) for event in events})

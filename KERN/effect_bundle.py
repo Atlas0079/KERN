@@ -12,13 +12,13 @@ class EffectBundle:
 		return not bool(self.effects)
 
 	def to_dict(self) -> dict[str, Any]:
-		out: dict[str, Any] = {"effects": [dict(x) for x in list(self.effects or []) if isinstance(x, dict)]}
+		out: dict[str, Any] = {"effects": [dict(x) for x in self.effects]}
 		return out
 
 
 def effect_bundle_from_raw(raw: Any) -> EffectBundle:
 	if isinstance(raw, EffectBundle):
-		return EffectBundle(effects=[dict(x) for x in list(raw.effects or []) if isinstance(x, dict)])
+		return EffectBundle(effects=[dict(x) for x in raw.effects])
 	if not isinstance(raw, dict):
 		raise ValueError("effect bundle must be an object")
 	effects = raw.get("effects", []) or []

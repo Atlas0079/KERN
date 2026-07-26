@@ -35,6 +35,7 @@ runtime_config.companion_robot*.json
 
 # Runtime artifacts
 checkpoints/
+failures/
 Saves/
 video/
 KERN/external_runtimes/social_profiles/

@@ -8,7 +8,7 @@ from KERN.agent_workflow.contracts import EndTurn, SubmitAction
 from KERN.execution_errors import KernFailure
 from KERN.executor.executor import WorldExecutor
 from KERN.interaction.engine import InteractionEngine
-from KERN.models.components import AgentControlComponent, AgentWakePolicyComponent, MemoryComponent, PerceptionComponent, TagComponent, WorkerComponent
+from KERN.models.components import AgentControlComponent, AgentWakePolicyComponent, MemoryComponent, PerceptionComponent, TagComponent, TaskHostComponent, WorkerComponent
 from KERN.models.entity import Entity
 from KERN.models.location import Location
 from KERN.models.world_state import WorldState
@@ -22,9 +22,22 @@ class _SequenceWorkflow:
 		self.decisions = list(decisions)
 		self.mode_contexts: list[dict[str, Any]] = []
 
-	def decide(self, _view, _recipes, _actor_id, _reason, mode_context):
-		self.mode_contexts.append(dict(mode_context or {}))
-		return self.decisions.pop(0)
+	def begin_turn(self, _start):
+		workflow = self
+		class _Session:
+			pending: list[dict[str, Any]] = []
+			def next_step(self, frame):
+				workflow.mode_contexts.append(dict(frame.mode_context))
+				if frame.previous_action is not None and frame.previous_action.status == "rejected":
+					self.pending.clear()
+				if self.pending:
+					return SubmitAction(self.pending.pop(0))
+				decision = workflow.decisions.pop(0)
+				if decision["type"] == "end_turn":
+					return EndTurn()
+				self.pending = [dict(item) for item in decision["actions"]]
+				return SubmitAction(self.pending.pop(0))
+		return _Session()
 
 
 def _world(workflow: Any, recipes: dict[str, Any], reactions: list[dict[str, Any]] | None = None) -> tuple[WorldState, WorldSettlement]:
@@ -37,6 +50,7 @@ def _world(workflow: Any, recipes: dict[str, Any], reactions: list[dict[str, Any
 	actor.add_component("MemoryComponent", MemoryComponent())
 	actor.add_component("PerceptionComponent", PerceptionComponent())
 	actor.add_component("TagComponent", TagComponent())
+	actor.add_component("TaskHostComponent", TaskHostComponent())
 	actor.add_component("WorkerComponent", WorkerComponent())
 	ws.register_entity(actor)
 	location.add_entity_id(actor.entity_id)
@@ -198,7 +212,8 @@ class TurnSchedulerTests(unittest.TestCase):
 
 		tags = ws.get_entity_by_id("agent").get_all_tags()
 		self.assertEqual(tags, ["keep", "recover"])
-		self.assertEqual(workflow.mode_contexts[1]["rejection"]["code"], "TARGET_MISSING")
+		rejections = [context["rejection"] for context in workflow.mode_contexts if context.get("rejection")]
+		self.assertEqual(rejections[0]["code"], "TARGET_MISSING")
 		self.assertEqual(ws.interaction_log[-1]["interaction_origin"], "action_rejection")
 		self.assertEqual(ws.interaction_log[-1]["action_id"], "tick:0:turn:0:attempt:1")
 
@@ -271,11 +286,15 @@ class TurnSchedulerTests(unittest.TestCase):
 			def __init__(self) -> None:
 				self.saw_bystander_tick = False
 
-			def decide(self, view, _recipes, _actor_id, _reason, _mode_context):
-				entities = list((view.get("full_ws_view", {}) or {}).get("entities", []) or [])
-				bystander = next(item for item in entities if item.get("id") == "bystander")
-				self.saw_bystander_tick = "passive_tick_complete" in list(bystander.get("tags", []) or [])
-				return {"type": "end_turn"}
+			def begin_turn(self, _start):
+				workflow = self
+				class _Session:
+					def next_step(self, frame):
+						entities = list(frame.perception.get("entities", []) or [])
+						bystander = next(item for item in entities if item.get("id") == "bystander")
+						workflow.saw_bystander_tick = "passive_tick_complete" in list(bystander.get("tags", []) or [])
+						return EndTurn()
+				return _Session()
 
 		workflow = _InspectWorkflow()
 		ws, _settlement = _world(workflow, {})

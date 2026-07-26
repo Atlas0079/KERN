@@ -37,22 +37,13 @@ def _get_creature_nutrition(ws: Any, agent_id: str) -> tuple[float | None, float
 		ensure()
 	cur = getattr(creature, "current_nutrition", None)
 	max_nut = getattr(creature, "max_nutrition", None)
-	try:
-		cur_f = float(cur) if cur is not None else None
-	except Exception:
-		cur_f = None
-	try:
-		max_f = float(max_nut) if max_nut is not None else None
-	except Exception:
-		max_f = None
+	cur_f = float(cur) if cur is not None else None
+	max_f = float(max_nut) if max_nut is not None else None
 	return (cur_f, max_f)
 
 
 def _normalize_threshold_value(raw: Any, max_nutrition: float | None) -> float | None:
-	try:
-		v = float(raw)
-	except Exception:
-		return None
+	v = float(raw)
 	if max_nutrition is None:
 		return v
 	if 0 < v <= 1.0:
@@ -82,18 +73,9 @@ def _check_low_nutrition_with_latch(ws: Any, agent_id: str, wake_policy: Any, ru
 			rt["latched"] = False
 		return InterruptResult(interrupt=False, reason="", rule_type="LowNutrition", priority=int(getattr(rule, "priority", 10)))
 
-	cooldown_ticks = 0
-	if isinstance(params, dict):
-		try:
-			cooldown_ticks = int(params.get("cooldown_ticks", 0) or 0)
-		except Exception:
-			cooldown_ticks = 0
+	cooldown_ticks = int(params.get("cooldown_ticks", 0) or 0)
 
-	last_fire = rt.get("last_fire_tick", -10**18)
-	try:
-		last_fire_i = int(last_fire)
-	except Exception:
-		last_fire_i = -10**18
+	last_fire_i = int(rt.get("last_fire_tick", -10**18))
 
 	if cooldown_ticks > 0 and (int(now_tick) - int(last_fire_i)) < int(cooldown_ticks):
 		return InterruptResult(interrupt=False, reason="", rule_type="LowNutrition", priority=int(getattr(rule, "priority", 10)))
@@ -110,26 +92,15 @@ def _check_low_nutrition_with_latch(ws: Any, agent_id: str, wake_policy: Any, ru
 
 def _rule_from_data(rule_data: dict[str, Any]) -> Any | None:
 	rule_type = str((rule_data or {}).get("type", "") or "").strip()
-	priority_raw = (rule_data or {}).get("priority", 999999)
-	try:
-		priority = int(priority_raw)
-	except Exception:
-		priority = 999999
+	priority = int((rule_data or {}).get("priority", 999999))
 	if rule_type == "NoActiveTask":
 		return NoActiveTaskRule(priority=priority)
 	if rule_type == "LowNutrition":
 		threshold_raw = (rule_data or {}).get("nutrition_threshold", (rule_data or {}).get("threshold", 30))
-		try:
-			threshold = float(threshold_raw)
-		except Exception:
-			threshold = 30.0
+		threshold = float(threshold_raw)
 		return LowNutritionRule(priority=priority, nutrition_threshold=threshold)
 	if rule_type == "PerceptionChange":
-		cd_raw = (rule_data or {}).get("cooldown_ticks", 2)
-		try:
-			cooldown_ticks = int(cd_raw)
-		except Exception:
-			cooldown_ticks = 2
+		cooldown_ticks = int((rule_data or {}).get("cooldown_ticks", 2))
 		return PerceptionChangeRule(
 			priority=priority,
 			cooldown_ticks=cooldown_ticks,
@@ -137,17 +108,13 @@ def _rule_from_data(rule_data: dict[str, Any]) -> Any | None:
 			trigger_on_agent_left=bool((rule_data or {}).get("trigger_on_agent_left", True)),
 		)
 	if rule_type == "CorpseSighted":
-		cd_raw = (rule_data or {}).get("cooldown_ticks", 0)
-		try:
-			cooldown_ticks = int(cd_raw)
-		except Exception:
-			cooldown_ticks = 0
+		cooldown_ticks = int((rule_data or {}).get("cooldown_ticks", 0))
 		return CorpseSightedRule(
 			priority=priority,
 			trigger_on_new_corpse=bool((rule_data or {}).get("trigger_on_new_corpse", True)),
 			cooldown_ticks=cooldown_ticks,
 		)
-	return None
+	raise ValueError(f"unknown interrupt rule type: {rule_type!r}")
 
 
 def check_if_interrupt_is_needed(ws: Any, agent_id: str, wake_policy: Any) -> InterruptResult:
@@ -163,8 +130,6 @@ def check_if_interrupt_is_needed(ws: Any, agent_id: str, wake_policy: Any) -> In
 		rule = item
 		if isinstance(item, dict):
 			rule = _rule_from_data(item)
-		if rule is None:
-			continue
 		if has_task and isinstance(rule, NoActiveTaskRule):
 			continue
 		if isinstance(rule, LowNutritionRule):

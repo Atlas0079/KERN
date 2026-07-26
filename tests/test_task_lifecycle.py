@@ -3,10 +3,15 @@ from __future__ import annotations
 import unittest
 
 from KERN.effect_bundle import effect_bundle_from_raw
+from KERN.execution_errors import KernFailure
 from KERN.executor.executor import WorldExecutor
-from KERN.models.components import StatusComponent, WorkerComponent
+from KERN.interaction.action_resolver import resolve_action_intent
+from KERN.interaction.engine import InteractionEngine
+from KERN.models.components import StatusComponent, TaskHostComponent, WorkerComponent
 from KERN.models.entity import Entity
 from KERN.models.world_state import WorldState
+from KERN.sim.trigger_system import TriggerSystem
+from KERN.sim.world_settlement import WorldSettlement
 
 
 def _has_status(ent: Entity, status_id: str) -> bool:
@@ -22,6 +27,7 @@ class TaskLifecycleTests(unittest.TestCase):
 		self.worker.add_component("WorkerComponent", WorkerComponent())
 		self.station = Entity(entity_id="station_01", template_id="Station", entity_name="Station")
 		self.station.add_component("StatusComponent", StatusComponent())
+		self.station.add_component("TaskHostComponent", TaskHostComponent())
 		self.ws.register_entity(self.worker)
 		self.ws.register_entity(self.station)
 		self.ws.services["execute"] = lambda bundle, ctx: self.executor.execute_bundle(self.ws, bundle, ctx)
@@ -64,6 +70,12 @@ class TaskLifecycleTests(unittest.TestCase):
 		task_events = [ev for ev in events if ev.get("type") == "TaskCreated"]
 		self.assertEqual(len(task_events), 1)
 		return str(task_events[0]["payload"]["task_id"])
+
+	def test_create_task_requires_target_task_host_component(self) -> None:
+		self.station.components.pop("TaskHostComponent")
+
+		with self.assertRaisesRegex(KernFailure, "CreateTask: target has no TaskHostComponent"):
+			self._create_processing_task()
 
 	def test_start_bundle_runs_when_task_is_assigned(self) -> None:
 		task_id = self._create_processing_task()
@@ -148,6 +160,30 @@ class TaskLifecycleTests(unittest.TestCase):
 		self.assertEqual(events[0]["type"], "TaskResumed")
 		self.assertTrue(_has_status(self.station, "is_in_use"))
 		self.assertEqual(self.worker.get_component("WorkerComponent").current_task_id, task_id)
+
+	def test_yield_current_task_records_an_agent_visible_interaction(self) -> None:
+		task_id = self._create_processing_task()
+		self.ws.services["interaction_engine"] = InteractionEngine(recipe_db={})
+		resolved = resolve_action_intent(
+			self.ws,
+			"agent_01",
+			"respond to interrupt",
+			{"verb": "YieldCurrentTask", "parameters": {}},
+		)
+		settlement = WorldSettlement(
+			ws=self.ws,
+			executor=self.executor,
+			trigger_system=TriggerSystem(),
+			max_reaction_depth=4,
+		)
+
+		settlement.execute_bundle(resolved["bundle"], resolved["context"])
+
+		self.assertEqual(self.worker.get_component("WorkerComponent").current_task_id, "")
+		self.assertEqual(self.ws.get_task_by_id(task_id).task_status, "Paused")
+		self.assertEqual(len(self.ws.interaction_log), 1)
+		self.assertEqual(self.ws.interaction_log[0]["verb"], "YieldCurrentTask")
+		self.assertEqual(self.ws.interaction_log[0]["task_id"], task_id)
 
 	def test_interrupt_current_task_marks_status_and_cleans_up(self) -> None:
 		task_id = self._create_processing_task()

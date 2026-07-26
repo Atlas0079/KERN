@@ -36,7 +36,11 @@ class DataclassCodec:
 		self.prepare_patch = prepare_patch
 
 	def build(self, raw: Any) -> Any:
-		data = self.prepare(raw) if self.prepare is not None else dict(raw or {}) if isinstance(raw, dict) else {}
+		if raw is None:
+			raw = {}
+		if not isinstance(raw, dict):
+			raise ValueError(f"{self.component_type.__name__} data must be an object")
+		data = self.prepare(raw) if self.prepare is not None else dict(raw)
 		return self.component_type(**data)
 
 	def serialize(self, component: Any) -> dict[str, Any]:
@@ -48,28 +52,28 @@ class DataclassCodec:
 	def apply_snapshot(self, component: Any, patch: dict[str, Any], *, restore_container_items: bool = True) -> Any:
 		data = self.prepare_patch(dict(patch or {})) if self.prepare_patch is not None else dict(patch or {})
 		for key, value in data.items():
-			if hasattr(component, key):
-				setattr(component, key, value)
+			if not hasattr(component, key):
+				raise ValueError(f"{self.component_type.__name__} has no field: {key}")
+			setattr(component, key, value)
 		return component
 class ContainerCodec:
 	def build(self, raw: Any) -> ContainerComponent:
-		data = dict(raw or {}) if isinstance(raw, dict) else {}
-		slots_raw = data.get("slots", {}) or {}
+		if raw is None:
+			raw = {}
+		if not isinstance(raw, dict):
+			raise ValueError("ContainerComponent data must be an object")
+		data = dict(raw)
+		slots_raw = dict(data.get("slots", {}) or {})
 		slots: dict[str, ContainerSlot] = {}
-		if isinstance(slots_raw, dict):
-			for slot_id, slot_raw in slots_raw.items():
-				slot_data = dict(slot_raw or {}) if isinstance(slot_raw, dict) else {}
-				if isinstance(slot_data.get("config"), dict):
-					config = dict(slot_data.get("config") or {})
-					items = [str(item) for item in list(slot_data.get("items", []) or [])]
-				else:
-					config = dict(slot_data)
-					items = []
-				config.setdefault("capacity_volume", 999.0)
-				config.setdefault("capacity_count", 999)
-				config.setdefault("accepted_tags", [])
-				config.setdefault("transparent", False)
-				slots[str(slot_id)] = ContainerSlot(config=config, items=items)
+		for slot_id, slot_raw in slots_raw.items():
+			slot_data = dict(slot_raw or {})
+			if "config" in slot_data:
+				config = dict(slot_data.get("config") or {})
+				items = list(slot_data.get("items", []) or [])
+			else:
+				config = dict(slot_data)
+				items = []
+			slots[str(slot_id)] = ContainerSlot(config=config, items=items)
 		return ContainerComponent(slots=slots)
 
 	def serialize(self, component: ContainerComponent) -> dict[str, Any]:
@@ -91,25 +95,23 @@ class ContainerCodec:
 		restore_container_items: bool = True,
 	) -> ContainerComponent:
 		slots_patch = patch.get("slots", None)
-		if not isinstance(slots_patch, dict):
+		if slots_patch is None:
 			return component
-		for slot_id, slot_patch in slots_patch.items():
-			if not isinstance(slot_patch, dict):
-				continue
+		for slot_id, slot_patch in dict(slots_patch).items():
+			slot_patch = dict(slot_patch)
 			sid = str(slot_id)
 			if sid not in component.slots:
 				component.slots[sid] = ContainerSlot(config={}, items=[])
-			if isinstance(slot_patch.get("config"), dict):
-				component.slots[sid].config.update(dict(slot_patch.get("config") or {}))
-			if restore_container_items and isinstance(slot_patch.get("items"), list):
-				component.slots[sid].items = [str(item) for item in list(slot_patch.get("items") or [])]
+			if "config" in slot_patch:
+				component.slots[sid].config.update(dict(slot_patch["config"]))
+			if restore_container_items and "items" in slot_patch:
+				component.slots[sid].items = list(slot_patch["items"])
 		return component
 
 
-def _serialize_wake_policy_rule(rule: Any) -> dict[str, Any] | None:
+def _serialize_wake_policy_rule(rule: Any) -> dict[str, Any]:
 	if isinstance(rule, dict):
-		rule_type = str(rule.get("type", "") or "").strip()
-		return {str(key): serialize_value(value) for key, value in rule.items()} if rule_type else None
+		return {str(key): serialize_value(value) for key, value in rule.items()}
 	rule_class = str(getattr(getattr(rule, "__class__", None), "__name__", "") or "")
 	priority = int(getattr(rule, "priority", 999) or 999)
 	if rule_class == "LowNutritionRule":
@@ -125,20 +127,20 @@ def _serialize_wake_policy_rule(rule: Any) -> dict[str, Any] | None:
 		return {"type": "CorpseSighted", "priority": priority, "trigger_on_new_corpse": bool(getattr(rule, "trigger_on_new_corpse", True))}
 	if rule_class == "NoActiveTaskRule":
 		return {"type": "NoActiveTask", "priority": priority}
-	return None
+	raise ValueError(f"unsupported wake policy rule: {rule_class}")
 
 
 class AgentWakePolicyCodec:
 	def build(self, raw: Any) -> AgentWakePolicyComponent:
-		data = dict(raw or {}) if isinstance(raw, dict) else {}
+		data = dict(raw or {})
 		component = AgentWakePolicyComponent.from_template_data(data)
-		if isinstance(data.get("interrupt_runtime_state"), dict):
-			component.interrupt_runtime_state = dict(data.get("interrupt_runtime_state") or {})
+		if "interrupt_runtime_state" in data:
+			component.interrupt_runtime_state = dict(data["interrupt_runtime_state"])
 		component._runtime_preset_id = str(data.get("_runtime_preset_id", "") or "")
 		return component
 
 	def serialize(self, component: AgentWakePolicyComponent) -> dict[str, Any]:
-		rules = [serialized for rule in list(component.ruleset or []) if (serialized := _serialize_wake_policy_rule(rule)) is not None]
+		rules = [_serialize_wake_policy_rule(rule) for rule in list(component.ruleset or [])]
 		return {
 			"rules": rules,
 			"active_interrupt_preset_id": str(component.active_interrupt_preset_id or ""),
@@ -156,40 +158,56 @@ class AgentWakePolicyCodec:
 		restore_container_items: bool = True,
 	) -> AgentWakePolicyComponent:
 		data = self.serialize(component)
-		if isinstance(patch.get("rules", patch.get("ruleset")), list):
-			data["rules"] = [dict(item) for item in list(patch.get("rules", patch.get("ruleset")) or []) if isinstance(item, dict)]
+		if "rules" in patch:
+			data["rules"] = [dict(item) for item in patch["rules"]]
 		for key in ("active_interrupt_preset_id", "_runtime_preset_id"):
 			if key in patch:
 				data[key] = str(patch.get(key, "") or "")
 		for key in ("interrupt_presets", "interrupt_preset_descriptions", "interrupt_runtime_state"):
-			if isinstance(patch.get(key), dict):
-				data[key] = dict(patch.get(key) or {})
+			if key in patch:
+				data[key] = dict(patch[key])
 		return self.build(data)
 
 
 def task_from_dict(raw: dict[str, Any]) -> Task:
-	task = Task(task_id=str(raw.get("task_id", "") or ""), task_type=str(raw.get("task_type", "") or ""))
+	required = (
+		"task_id",
+		"task_type",
+		"target_entity_id",
+		"progress",
+		"required_progress",
+		"multiple_entity",
+		"assigned_agent_ids",
+		"task_status",
+		"parameters",
+		"progressor_id",
+		"progressor_params",
+		"start_bundle",
+		"tick_bundle",
+		"cleanup_bundle",
+		"completion_bundle",
+	)
+	missing = [key for key in required if key not in raw]
+	if missing:
+		raise ValueError(f"task data missing fields: {', '.join(missing)}")
+	task = Task(task_id=str(raw["task_id"]), task_type=str(raw["task_type"]))
 	task.action_type = str(raw.get("action_type", task.action_type) or task.action_type)
-	task.target_entity_id = str(raw.get("target_entity_id", "") or "")
-	task.progress = float(raw.get("progress", 0.0) or 0.0)
-	task.required_progress = float(raw.get("required_progress", task.required_progress) or task.required_progress)
-	task.multiple_entity = bool(raw.get("multiple_entity", False))
-	assigned = raw.get("assigned_agent_ids", []) or []
-	if isinstance(assigned, list):
-		task.assigned_agent_ids = [str(item) for item in assigned]
-	task.task_status = str(raw.get("task_status", task.task_status) or task.task_status)
-	if isinstance(raw.get("parameters"), dict):
-		task.parameters = dict(raw.get("parameters") or {})
-	task.progressor_id = str(raw.get("progressor_id", "") or "")
-	progressor_params = raw.get("progressor_params", {}) or {}
-	if isinstance(progressor_params, dict):
-		if "progress_contributors" in progressor_params:
-			raise ValueError("task progressor_params.progress_contributors is removed; use add_terms/mul_terms")
-		task.progressor_params = dict(progressor_params)
-	task.start_bundle = effect_bundle_from_raw(raw.get("start_bundle", {}) or {"effects": []})
-	task.tick_bundle = effect_bundle_from_raw(raw.get("tick_bundle", {}) or {"effects": []})
-	task.cleanup_bundle = effect_bundle_from_raw(raw.get("cleanup_bundle", {}) or {"effects": []})
-	task.completion_bundle = effect_bundle_from_raw(raw.get("completion_bundle", {}) or {"effects": []})
+	task.target_entity_id = str(raw["target_entity_id"])
+	task.progress = float(raw["progress"])
+	task.required_progress = float(raw["required_progress"])
+	task.multiple_entity = bool(raw["multiple_entity"])
+	task.assigned_agent_ids = [str(item) for item in raw["assigned_agent_ids"]]
+	task.task_status = str(raw["task_status"])
+	task.parameters = dict(raw["parameters"])
+	task.progressor_id = str(raw["progressor_id"])
+	progressor_params = dict(raw["progressor_params"])
+	if "progress_contributors" in progressor_params:
+		raise ValueError("task progressor_params.progress_contributors is removed; use add_terms/mul_terms")
+	task.progressor_params = progressor_params
+	task.start_bundle = effect_bundle_from_raw(raw["start_bundle"])
+	task.tick_bundle = effect_bundle_from_raw(raw["tick_bundle"])
+	task.cleanup_bundle = effect_bundle_from_raw(raw["cleanup_bundle"])
+	task.completion_bundle = effect_bundle_from_raw(raw["completion_bundle"])
 	return task
 
 
@@ -216,15 +234,17 @@ def serialize_task(task: Task) -> dict[str, Any]:
 
 class TaskHostCodec:
 	def build(self, raw: Any) -> TaskHostComponent:
+		if raw is None:
+			raw = {}
+		if not isinstance(raw, dict):
+			raise ValueError("TaskHostComponent data must be an object")
 		component = TaskHostComponent()
-		tasks_raw = (raw or {}).get("tasks", {}) if isinstance(raw, dict) else {}
-		if isinstance(tasks_raw, dict):
-			for task_id, task_raw in tasks_raw.items():
-				payload = dict(task_raw) if isinstance(task_raw, dict) else {}
-				payload.setdefault("task_id", str(task_id))
-				task = task_from_dict(payload)
-				if task.task_id:
-					component.tasks[task.task_id] = task
+		for task_id, task_raw in dict(raw.get("tasks", {}) or {}).items():
+			payload = dict(task_raw)
+			if "task_id" not in payload:
+				raise ValueError(f"task data missing task_id: {task_id}")
+			task = task_from_dict(payload)
+			component.tasks[task.task_id] = task
 		return component
 
 	def serialize(self, component: TaskHostComponent) -> dict[str, Any]:
@@ -237,8 +257,8 @@ class TaskHostCodec:
 		*,
 		restore_container_items: bool = True,
 	) -> TaskHostComponent:
-		if isinstance(patch.get("tasks"), dict):
-			component.tasks = self.build({"tasks": patch.get("tasks")}).tasks
+		if "tasks" in patch:
+			component.tasks = self.build({"tasks": patch["tasks"]}).tasks
 		return component
 
 

@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-from .agent_workflow.provider_catalog import build_workflow_provider_catalog
+from .agent_workflow.provider_catalog import build_workflow_catalog
 from .agent_workflow.registry import WorkflowRegistry
 from .agent_workflow.simple_policy import SimplePolicyActionProvider
 from .agent_workflow.trace import LLMTraceRecorder
@@ -58,17 +58,17 @@ def _load_runtime_config(project_root: Path, config_path: str = "") -> tuple[dic
 	if not resolved.exists():
 		raise FileNotFoundError(f"runtime config not found: {resolved}")
 	raw = json.loads(resolved.read_text(encoding="utf-8"))
-	if not isinstance(raw, dict):
-		raise ValueError(f"runtime config must be object with key 'env': {resolved}")
-	env_raw = raw.get("env")
-	if not isinstance(env_raw, dict):
-		raise ValueError(f"runtime config must use {{'env': {{...}}}} format: {resolved}")
-	out: dict[str, str] = {}
-	for k, v in dict(env_raw).items():
-		key = str(k or "").strip()
-		if not key or v is None:
-			continue
-		out[key] = str(v)
+	env_raw = raw["env"]
+	out = {str(key).strip(): str(value) for key, value in env_raw.items()}
+	if "llm_providers" in raw or "workflows" in raw or "default_workflow_id" in raw:
+		out["LLM_WORKFLOW_CONFIG_JSON"] = json.dumps(
+			{
+				"llm_providers": raw["llm_providers"],
+				"workflows": raw["workflows"],
+				"default_workflow_id": raw["default_workflow_id"],
+			},
+			ensure_ascii=False,
+		)
 	return out, resolved
 
 
@@ -82,11 +82,7 @@ def _cfg_bool(cfg: dict[str, str], key: str, default: bool = False) -> bool:
 
 
 def _cfg_int(cfg: dict[str, str], key: str, default: int) -> int:
-	raw = _cfg_get(cfg, key, str(default))
-	try:
-		return int(raw)
-	except Exception:
-		return int(default)
+	return int(_cfg_get(cfg, key, str(default)))
 
 
 def _resolve_config_relative_path(project_root: Path, config_path: Path, value: str) -> Path:
@@ -107,9 +103,7 @@ def _build_workflow_view_profile(project_root: Path, config_path: Path, cfg: dic
 	if profile_path_raw:
 		profile_path = _resolve_config_relative_path(project_root, config_path, profile_path_raw)
 		data = json.loads(profile_path.read_text(encoding="utf-8"))
-		if not isinstance(data, dict):
-			raise ValueError(f"WORKFLOW_VIEW_PROFILE_JSON must be a JSON object: {profile_path}")
-		override = data
+		override = dict(data)
 		if not profile_id:
 			profile_id = str(data.get("profile_id", "") or "")
 	return normalize_workflow_view_profile(profile_id, override)
@@ -163,7 +157,6 @@ class KernRuntime:
 	checkpoint_snapshot_interval_ticks: int = 60
 	dialogue_log_full: bool = False
 	dialogue_budget_limit_per_location: int = 4
-	workflow_contract_on_error: str = "fail_fast"
 	last_stop_info: dict[str, Any] = field(default_factory=dict)
 	run_id: str = ""
 	archive_recorder: ArchiveRecorder | None = None
@@ -183,7 +176,9 @@ class KernRuntime:
 
 	def __post_init__(self) -> None:
 		if self.workflow_registry is None:
-			self.workflow_registry = WorkflowRegistry.from_legacy(self.action_provider, self.action_providers)
+			self.workflow_registry = WorkflowRegistry(self.action_provider)
+			for workflow_id, workflow in self.action_providers.items():
+				self.workflow_registry.register(workflow_id, workflow)
 		self.workflow_registry.freeze()
 		catalog = self.component_catalog or getattr(self.executor, "component_catalog", None) or build_core_component_catalog()
 		catalog.freeze()
@@ -270,6 +265,18 @@ class KernRuntime:
 		effect_catalog = loaded_packages.effect_catalog
 		component_catalog = loaded_packages.component_catalog
 		restore_path = resolve_checkpoint_file(_cfg_get(cfg, "CHECKPOINT_RESTORE_FILE", ""), _cfg_get(cfg, "CHECKPOINT_RESTORE_DIR", ""))
+		default_checkpoint_dir = root / "checkpoints" / (world_json_name or "default")
+		checkpoint_dir_env = _cfg_get(cfg, "CHECKPOINT_DIR", "")
+		resolved_checkpoint_dir = checkpoint_dir_env if checkpoint_dir_env else str(default_checkpoint_dir)
+		if restore_path is not None and _cfg_bool(cfg, "CHECKPOINT_EVERY_TICK", True):
+			output_root = Path(resolved_checkpoint_dir).resolve()
+			restore_file = Path(restore_path).resolve()
+			try:
+				restore_file.relative_to(output_root)
+			except ValueError:
+				pass
+			else:
+				raise ValueError("CHECKPOINT_DIR must differ from the checkpoint restore source directory")
 		external_runtime_map = dict(external_runtimes or {})
 		external_runtime_bridge = ExternalRuntimeBridge(external_runtime_map)
 		workflow_view_profile = _build_workflow_view_profile(root, resolved_config_path, cfg)
@@ -320,20 +327,19 @@ class KernRuntime:
 			)
 			ws = result.world_state
 
-		default_checkpoint_dir = root / "checkpoints" / (world_json_name or "default")
-		checkpoint_dir_env = _cfg_get(cfg, "CHECKPOINT_DIR", "")
-		resolved_checkpoint_dir = checkpoint_dir_env if checkpoint_dir_env else str(default_checkpoint_dir)
 		trace_recorder = LLMTraceRecorder.from_config(cfg, Path(resolved_checkpoint_dir) / "llm_traces")
 
 		use_llm = _cfg_bool(cfg, "USE_LLM", False)
 		if use_llm:
-			action_provider, action_providers = build_workflow_provider_catalog(cfg, trace_recorder=trace_recorder)
+			workflow_config_raw = _cfg_get(cfg, "LLM_WORKFLOW_CONFIG_JSON")
+			if not workflow_config_raw:
+				raise ValueError("USE_LLM=1 requires top-level llm_providers, workflows, and default_workflow_id")
+			action_provider, action_providers = build_workflow_catalog(json.loads(workflow_config_raw), trace_recorder=trace_recorder)
 		else:
 			action_provider, action_providers = SimplePolicyActionProvider(), {}
-		max_ticks_env = _cfg_get(cfg, "MAX_TICKS", "")
 		default_max_ticks_llm = _cfg_int(cfg, "MAX_TICKS_DEFAULT_LLM", 15)
 		default_max_ticks_no_llm = _cfg_int(cfg, "MAX_TICKS_DEFAULT_NO_LLM", 65)
-		configured_max_ticks = int(max_ticks_env) if max_ticks_env else (default_max_ticks_llm if use_llm else default_max_ticks_no_llm)
+		configured_max_ticks = _cfg_int(cfg, "MAX_TICKS", 0) if "MAX_TICKS" in cfg else (default_max_ticks_llm if use_llm else default_max_ticks_no_llm)
 
 		return cls(
 			world_state=ws,
@@ -350,10 +356,11 @@ class KernRuntime:
 			external_runtimes=external_runtime_map,
 			reaction_rules=list((bundle.reactions or {}).get("rules", []) or []),
 			max_trigger_depth=_cfg_int(cfg, "MAX_TRIGGER_DEPTH", 4),
+			# Intentional policy: a turn may contain a long sequence of immediate
+			# actions. LLM cost is controlled by scenario config, not a lower kernel cap.
 			max_actions_per_turn=_cfg_int(cfg, "MAX_ACTIONS_PER_TURN", 99),
 			max_replans_per_turn=_cfg_int(cfg, "MAX_REPLANS_PER_TURN", 5),
 			dialogue_budget_limit_per_location=_cfg_int(cfg, "DIALOGUE_BUDGET_LIMIT_PER_LOCATION", 4),
-			workflow_contract_on_error="fail_fast",
 			checkpoint_enabled=_cfg_bool(cfg, "CHECKPOINT_EVERY_TICK", True),
 			checkpoint_dir=resolved_checkpoint_dir,
 			checkpoint_include_logs=_cfg_bool(cfg, "CHECKPOINT_INCLUDE_LOGS", True),
@@ -574,6 +581,9 @@ class KernRuntime:
 		writer = self.failure_report_writer
 		if writer is None:
 			return
+		# Intentional product policy: failure.json is complete developer evidence.
+		# Preserve the original runtime config, including credentials; callers must
+		# treat the report as a sensitive run artifact. Do not redact it here.
 		writer.write_failure(
 			error,
 			tick=int(getattr(getattr(self.world_state, "game_time", None), "total_ticks", 0) or 0),
@@ -640,7 +650,6 @@ class KernRuntime:
 			dialogue_budget_limit_per_location=int(self.dialogue_budget_limit_per_location),
 			dialogue_budget_used_per_location={},
 			dialogue_log_full=bool(self.dialogue_log_full),
-			workflow_contract_on_error="fail_fast",
 			abort_requested=False,
 			abort_reason="",
 			abort_detail="",
@@ -686,9 +695,7 @@ class KernRuntime:
 			).run_active_phase(ws, settlement)
 
 		events_in_tick_records: list[dict[str, Any]] = []
-		for rec in list(getattr(ws, "event_log", []) or []):
-			if not isinstance(rec, dict):
-				continue
+		for rec in ws.event_log:
 			seq = int(rec.get("seq", 0) or 0)
 			if seq > int(start_event_seq):
 				events_in_tick_records.append(dict(rec))

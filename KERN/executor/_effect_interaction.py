@@ -25,6 +25,10 @@ def _bind_record_interaction(_ws: Any, effect_data: dict[str, Any], context: dic
 		extra = {}
 	extra = dict(extra)
 	extra.setdefault("interaction_origin", origin)
+	event_context = dict(ctx)
+	if actor_id:
+		event_context["self_id"] = actor_id
+		event_context["actor_id"] = actor_id
 	return {
 		"effect": effect_type,
 		"actor_id": actor_id,
@@ -36,7 +40,7 @@ def _bind_record_interaction(_ws: Any, effect_data: dict[str, Any], context: dic
 		"task_id": task_id,
 		"interaction_origin": origin,
 		"extra": extra,
-	}, ctx
+	}, event_context
 
 
 def execute_record_interaction(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:

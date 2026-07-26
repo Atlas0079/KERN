@@ -29,7 +29,9 @@ from .spec import ComponentSpec
 
 
 def _dict(raw: Any) -> dict[str, Any]:
-	return dict(raw or {}) if isinstance(raw, dict) else {}
+	if not isinstance(raw, dict):
+		raise ValueError("component data must be an object")
+	return dict(raw)
 
 
 def _agent_setting(raw: Any) -> dict[str, Any]:
@@ -57,6 +59,14 @@ def _logic_control(raw: Any) -> dict[str, Any]:
 	return {"enabled": bool(d.get("enabled", True)), "provider_id": str(d.get("provider_id", "logic") or "logic")}
 
 
+def _perception(raw: Any) -> dict[str, Any]:
+	d = _dict(raw)
+	return {
+		"enabled": bool(d.get("enabled", True)),
+		"interaction_inbox": [dict(item) for item in list(d.get("interaction_inbox", []) or [])],
+	}
+
+
 def _creature(raw: Any) -> dict[str, Any]:
 	d = _dict(raw)
 	return {
@@ -74,11 +84,11 @@ def _creature(raw: Any) -> dict[str, Any]:
 def _memory(raw: Any) -> dict[str, Any]:
 	d = _dict(raw)
 	return {
-		"short_term_queue": [dict(item) for item in list(d.get("short_term_queue", []) or []) if isinstance(item, dict)],
+		"short_term_queue": [dict(item) for item in list(d.get("short_term_queue", []) or [])],
 		"short_term_max_entries": int(d.get("short_term_max_entries", 25) or 25),
-		"mid_term_prep_queue": [dict(item) for item in list(d.get("mid_term_prep_queue", []) or []) if isinstance(item, dict)],
+		"mid_term_prep_queue": [dict(item) for item in list(d.get("mid_term_prep_queue", []) or [])],
 		"mid_term_prep_max_entries": int(d.get("mid_term_prep_max_entries", 50) or 50),
-		"mid_term_queue": [dict(item) for item in list(d.get("mid_term_queue", []) or []) if isinstance(item, dict)],
+		"mid_term_queue": [dict(item) for item in list(d.get("mid_term_queue", []) or [])],
 		"mid_term_max_entries": int(d.get("mid_term_max_entries", 20) or 20),
 		"last_mid_term_summary_tick": int(d.get("last_mid_term_summary_tick", -1) or -1),
 		"mid_term_summary_cooldown_ticks": int(d.get("mid_term_summary_cooldown_ticks", 15) or 15),
@@ -103,17 +113,10 @@ def _edible(raw: Any) -> dict[str, Any]:
 
 def _status(raw: Any) -> dict[str, Any]:
 	d = _dict(raw)
-	expire: dict[str, int] = {}
-	if isinstance(d.get("expire_at_tick"), dict):
-		for key, value in dict(d.get("expire_at_tick") or {}).items():
-			clean_key = str(key or "").strip()
-			if not clean_key:
-				continue
-			try:
-				expire[clean_key] = int(value)
-			except Exception:
-				continue
-	return {"statuses": [str(item) for item in list(d.get("statuses", []) or [])], "expire_at_tick": expire}
+	return {
+		"statuses": list(d.get("statuses", []) or []),
+		"expire_at_tick": {str(key): int(value) for key, value in dict(d.get("expire_at_tick", {}) or {}).items()},
+	}
 
 
 def _register(catalog: ComponentCatalog, component_id: str, component_type: type, codec) -> None:
@@ -144,14 +147,7 @@ def build_core_component_catalog() -> ComponentCatalog:
 		PerceptionComponent,
 		DataclassCodec(
 			PerceptionComponent,
-			lambda raw: {
-				"enabled": bool(_dict(raw).get("enabled", True)),
-				"interaction_inbox": [
-					dict(item)
-					for item in list(_dict(raw).get("interaction_inbox", []) or [])
-					if isinstance(item, dict)
-				],
-			},
+			lambda raw: _perception(raw),
 		),
 	)
 	_register(catalog, "StatusComponent", StatusComponent, DataclassCodec(StatusComponent, _status))
@@ -161,7 +157,7 @@ def build_core_component_catalog() -> ComponentCatalog:
 		TagComponent,
 		DataclassCodec(
 			TagComponent,
-			lambda raw: {"tags": [str(item) for item in list(_dict(raw).get("tags", []) or [])]},
+			lambda raw: {"tags": list(_dict(raw).get("tags", []) or [])},
 		),
 	)
 	_register(catalog, "TaskHostComponent", TaskHostComponent, TaskHostCodec())

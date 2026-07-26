@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..agent_workflow.action_plan_adapter import as_agent_workflow
 from ..agent_workflow.interrupt_runtime import check_if_interrupt_is_needed
 from ..agent_workflow.provider_routing import resolve_workflow_provider
 from ..execution_errors import KernFailure
@@ -81,7 +80,7 @@ class TurnScheduler:
 			ws,
 			settlement,
 			turn,
-			as_agent_workflow(provider),
+			provider,
 			reason=str(getattr(assessment, "reason", "") or ""),
 			mode=mode,
 			is_turn_eligible=self._is_turn_eligible,

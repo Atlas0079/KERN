@@ -120,6 +120,11 @@ class ConversationEngine:
 	@staticmethod
 	def _perception(ws: Any, speaker_id: str, transcript: list[ConversationUtterance]) -> dict[str, Any]:
 		full_view = build_full_ws_view(ws, speaker_id, "", {})
+		full_view["recent_interactions"] = [
+			dict(item)
+			for item in list(full_view.get("interaction_inbox", []) or [])
+			if isinstance(item, dict)
+		]
 		perception = build_agent_perception(full_view, speaker_id)
 		perception["conversation_transcript"] = [item.to_dict() for item in transcript]
 		return perception

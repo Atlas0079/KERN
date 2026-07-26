@@ -61,8 +61,7 @@ template JSON <-> live component object <-> checkpoint JSON
   cleanup, and completion effect bundles. Checkpoints preserve effect data, not
   Python handler code or a catalog itself.
 - `KernRuntime.snapshots` uses `runtime_snapshot.v2`. Its `component_state` is
-  the complete catalog-serialized state; `components` is a compatibility-only
-  core display projection.
+  the complete catalog-serialized state. There is no legacy component projection.
 
 `EffectCatalog` is runtime-scoped and shared by lint and executor.
 `ComponentCatalog` is runtime-scoped and shared by lint, build, restore,
@@ -91,9 +90,8 @@ declared by a selected Package's `extensions.py`, registers their marked
 definitions into current runtime catalogs, and freezes those catalogs before
 execution. `LoadedPackages` fixes a `package_identity.v2` from the manifest,
 actual loaded world-data files, and declared extension source files. Restore
-accepts that v2 identity, validates historical v1 directory-hash metadata with
-the old rule, and leaves checkpoints without Package metadata on the legacy
-path.
+requires that exact v2 identity. Historical v1 identities and checkpoints
+without Package metadata are rejected.
 
 Scenario code is not sandboxed and has the same process permissions as KERN.
 
@@ -134,8 +132,23 @@ a general expression language and does not recursively render values.
   delete user files without explicit scope.
 - Use UTF-8 for text reads and writes. On Windows, prefer `.venv\Scripts\python.exe`
   when the `python` command resolves to the Microsoft Store alias.
-- Reuse existing interfaces and contracts. Add behavior tests before changing a
-  seam or replacing compatibility behavior.
+- Reuse current interfaces and contracts. Add behavior tests before changing a
+  seam.
+- Do not use defensive programming for author-controlled configuration,
+  scenario data, Package data, or other hand-written inputs. Assume data follows
+  the current contract. If correct data can avoid a failure, do not add fallback
+  values, coercion, filtering, silent ignores, automatic repair, or duplicate
+  runtime guards for that failure.
+- Do not add or retain compatibility code in any form, including legacy schema
+  branches, deprecated field aliases, adapters for retired interfaces, old
+  projections, format detection, or compatibility-only exports.
+- When a kernel contract changes, update the repository's hand-written data,
+  configs, fixtures, and tests to the new contract. Do not preserve the old
+  contract in code.
+- Generated artifacts are disposable. When their schema or runtime contract
+  changes, delete and regenerate affected checkpoints, archives, snapshots,
+  traces, logs, and other generated outputs instead of migrating them or adding
+  readers for historical formats.
 - Tests are not authoritative; kernel contracts are authoritative. Correct
   tests are executable evidence of those contracts. Remove or rewrite tests
   that require behavior which violates an agreed kernel contract.

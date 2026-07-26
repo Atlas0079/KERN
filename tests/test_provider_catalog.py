@@ -4,7 +4,7 @@ import json
 import unittest
 from pathlib import Path
 
-from KERN.agent_workflow.provider_catalog import build_workflow_provider_catalog
+from KERN.agent_workflow.provider_catalog import build_workflow_catalog
 from KERN.agent_workflow.provider_routing import resolve_workflow_provider
 from KERN.agent_workflow.registry import WorkflowRegistry
 from KERN.models.components import AgentControlComponent
@@ -21,7 +21,8 @@ class ProviderRoutingTests(unittest.TestCase):
 
 		self.assertIs(resolve_workflow_provider(services, controller, "explicit"), explicit_provider)
 		self.assertIs(resolve_workflow_provider(services, controller), controller_provider)
-		self.assertIs(resolve_workflow_provider(services, AgentControlComponent(provider_id="missing")), default)
+		with self.assertRaises(KeyError):
+			resolve_workflow_provider(services, AgentControlComponent(provider_id="missing"))
 
 	def test_registered_none_does_not_fall_back_to_default(self) -> None:
 		services = {"default_action_provider": object(), "action_providers": {"disabled": None}}
@@ -41,44 +42,68 @@ class ProviderRoutingTests(unittest.TestCase):
 		services = {"workflow_registry": registry}
 
 		self.assertIs(resolve_workflow_provider(services, AgentControlComponent(provider_id="named")), named)
-		self.assertIs(resolve_workflow_provider(services, AgentControlComponent(provider_id="missing")), default)
+		with self.assertRaises(KeyError):
+			resolve_workflow_provider(services, AgentControlComponent(provider_id="missing"))
 		with self.assertRaisesRegex(RuntimeError, "frozen"):
 			registry.register("late", object())
 
 
 class ProviderCatalogTests(unittest.TestCase):
-	def test_named_profile_overrides_default_llm_settings(self) -> None:
-		profiles = {
-			"fast_social": {
-				"LLM_PROVIDER": "openai_compat",
-				"LLM_PLANNER_MODEL": "fast-planner",
-				"LLM_GROUNDER_MODEL": "fast-grounder",
-			}
+	def _workflow_config(self) -> dict:
+		return {
+			"llm_providers": {
+				"main": {
+					"protocol": "openai_compat",
+					"base_url": "https://example.test",
+					"api_prefix": "/v1",
+					"api_key": "test-key",
+				}
+			},
+			"workflows": {
+				"default": {
+					"kind": "llm",
+					"roles": {
+						"planner": {"provider_id": "main", "model": "default-planner"},
+						"grounder": {"provider_id": "main", "model": "default-grounder"},
+						"dialogue": {"provider_id": "main", "model": "default-dialogue"},
+					},
+				},
+				"fast_social": {
+					"kind": "llm",
+					"roles": {
+						"planner": {"provider_id": "main", "model": "fast-planner"},
+						"grounder": {"provider_id": "main", "model": "fast-grounder"},
+						"dialogue": {"provider_id": "main", "model": "fast-dialogue"},
+					},
+				},
+			},
+			"default_workflow_id": "default",
 		}
-		default, named = build_workflow_provider_catalog(
-			{"LLM_PROVIDER": "openai_compat", "LLM_PLANNER_MODEL": "default-planner", "LLM_GROUNDER_MODEL": "default-grounder", "LLM_PROFILES_JSON": json.dumps(profiles)}
-		)
 
-		self.assertEqual(default.llm.planner_model, "default-planner")
-		self.assertEqual(named["fast_social"].llm.planner_model, "fast-planner")
-		self.assertEqual(named["fast_social"].llm.grounder_model, "fast-grounder")
+	def test_named_workflow_binds_provider_and_role_models(self) -> None:
+		default, named = build_workflow_catalog(self._workflow_config())
 
-	def test_invalid_profile_document_is_rejected(self) -> None:
-		with self.assertRaisesRegex(ValueError, "LLM_PROFILES_JSON"):
-			build_workflow_provider_catalog({"LLM_PROFILES_JSON": "[]"})
+		self.assertEqual(default.roles["planner"]["model"], "default-planner")
+		self.assertEqual(default.roles["grounder"]["model"], "default-grounder")
+		self.assertEqual(default.roles["dialogue"]["model"], "default-dialogue")
+		self.assertEqual(named["fast_social"].roles["planner"]["model"], "fast-planner")
+		self.assertEqual(named["fast_social"].roles["grounder"]["model"], "fast-grounder")
 
 	def test_runtime_registers_named_llm_profile(self) -> None:
-		profiles = {"fast_social": {"LLM_PROVIDER": "openai_compat", "LLM_PLANNER_MODEL": "fast-planner"}}
 		runtime = KernRuntime.from_config(
 			Path(__file__).resolve().parents[1],
 			"runtime_config.camping.package.smoke.json",
 			validate=False,
 			configure_logging=False,
-			overrides={"USE_LLM": "1", "CHECKPOINT_EVERY_TICK": "0", "LLM_PROFILES_JSON": json.dumps(profiles)},
+			overrides={
+				"USE_LLM": "1",
+				"CHECKPOINT_EVERY_TICK": "0",
+				"LLM_WORKFLOW_CONFIG_JSON": json.dumps(self._workflow_config()),
+			},
 		)
 
 		self.assertIn("fast_social", runtime.action_providers)
-		self.assertEqual(runtime.action_providers["fast_social"].llm.planner_model, "fast-planner")
+		self.assertEqual(runtime.action_providers["fast_social"].roles["planner"]["model"], "fast-planner")
 
 	def test_from_config_accepts_custom_workflow_registry(self) -> None:
 		custom = object()

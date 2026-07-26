@@ -78,6 +78,14 @@ class LLMRetryTests(unittest.TestCase):
 		self.assertEqual(urlopen.call_count, 1)
 		sleep.assert_not_called()
 
+		urlopen.reset_mock()
+		sleep.reset_mock()
+		urlopen.side_effect = _http_error(302)
+		with self.assertRaisesRegex(LLMRequestError, "302"):
+			client.chat_text([{"role": "user", "content": "hi"}], "model")
+		self.assertEqual(urlopen.call_count, 1)
+		sleep.assert_not_called()
+
 	@patch("KERN.llm.openai_compat_client.time.sleep")
 	@patch("KERN.llm.openai_compat_client.urlopen")
 	def test_openai_compat_exhaustion_raises_after_configured_retries(self, urlopen, sleep) -> None:
@@ -111,6 +119,18 @@ class LLMRetryTests(unittest.TestCase):
 		self.assertEqual(text, "recovered")
 		self.assertEqual(urlopen.call_count, 2)
 		sleep.assert_called_once_with(0.25)
+
+	@patch("KERN.llm.gemini_client.time.sleep")
+	@patch("KERN.llm.gemini_client.urlopen")
+	def test_gemini_does_not_retry_redirect_http_error(self, urlopen, sleep) -> None:
+		urlopen.side_effect = _http_error(302)
+		client = GeminiClient(base_url="https://example.test", api_key="key", max_retries=2)
+
+		with self.assertRaisesRegex(LLMRequestError, "302"):
+			client.chat_text([{"role": "user", "content": "hi"}], "model")
+
+		self.assertEqual(urlopen.call_count, 1)
+		sleep.assert_not_called()
 
 	@patch("KERN.llm.gemini_client.time.sleep")
 	@patch("KERN.llm.gemini_client.urlopen")

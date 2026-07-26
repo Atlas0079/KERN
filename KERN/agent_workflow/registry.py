@@ -36,24 +36,14 @@ class WorkflowRegistry:
 		self._frozen = True
 
 	def resolve(self, controller: Any | None, requested_workflow_id: str = "") -> Any:
-		for workflow_id in (
-			str(requested_workflow_id or "").strip(),
-			str(getattr(controller, "provider_id", "") or "").strip(),
-		):
-			if workflow_id and workflow_id in self._workflows:
+		requested_id = str(requested_workflow_id or "").strip()
+		controller_id = str(getattr(controller, "provider_id", "") or "").strip()
+		for workflow_id in (requested_id, controller_id):
+			if workflow_id:
 				return self._workflows[workflow_id]
 		return self._default_workflow
 
 	def workflow_ids(self) -> frozenset[str]:
 		return frozenset(self._workflows)
-
-	@classmethod
-	def from_legacy(cls, default_workflow: Any, workflows: dict[str, Any] | None = None) -> "WorkflowRegistry":
-		registry = cls(default_workflow)
-		for workflow_id, workflow in dict(workflows or {}).items():
-			if str(workflow_id or "").strip():
-				registry.register(str(workflow_id), workflow)
-		return registry
-
 
 __all__ = ["WorkflowRegistry"]

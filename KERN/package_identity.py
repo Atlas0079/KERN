@@ -54,25 +54,8 @@ def verify_checkpoint_identity(meta: dict[str, Any], loaded: "LoadedPackages") -
 	"""Reject a checkpoint when its versioned Package identity differs."""
 	stored = meta.get("package_identity")
 	if stored is None:
-		if any(key in meta for key in ("packages", "effect_ids", "component_ids")):
-			expected = _build_v1_identity(loaded)
-			actual = {key: meta[key] for key in ("packages", "effect_ids", "component_ids") if key in meta}
-			if actual != expected:
-				raise ValueError("checkpoint package identity does not match the selected package composition")
-		return
+		raise ValueError("checkpoint package_identity.v2 metadata is required")
 	if not isinstance(stored, dict) or stored.get("schema_version") != IDENTITY_SCHEMA_VERSION:
 		raise ValueError("checkpoint package identity schema is unsupported")
 	if stored != loaded.runtime_identity:
 		raise ValueError("checkpoint package identity does not match the selected package composition")
-
-
-def _build_v1_identity(loaded: "LoadedPackages") -> dict[str, object]:
-	packages: list[dict[str, object]] = []
-	for package in loaded.packages:
-		digest = hashlib.sha256()
-		for path in sorted(path for path in package.root.rglob("*") if path.is_file() and path.suffix in {".json", ".py"}):
-			digest.update(path.relative_to(package.root).as_posix().encode("utf-8"))
-			digest.update(b"\0")
-			digest.update(path.read_bytes())
-		packages.append({"package_id": package.manifest.package_id, "version": package.manifest.version, "content_hash": digest.hexdigest(), "world": bool(package.world_selected)})
-	return {"packages": packages, "effect_ids": sorted(loaded.effect_catalog.effect_ids()), "component_ids": sorted(loaded.component_catalog.component_ids())}

@@ -43,6 +43,19 @@ VPN, create a local SSH tunnel:
 ssh -N -L 8080:127.0.0.1:8080 BA24204058@edison
 ```
 
-Set KERN's `LLM_BASE_URL` to `http://127.0.0.1:8080`, `LLM_API_PREFIX` to
-`/v1`, and explicitly set both model names. The gateway is an external runtime
-service; it does not alter KERN world transactions.
+Point an `openai_compat` entry in `llm_providers` at the tunnel:
+
+```json
+"llm_providers": {
+  "local_gateway": {
+    "protocol": "openai_compat",
+    "base_url": "http://127.0.0.1:8080",
+    "api_prefix": "/v1",
+    "api_key": "local"
+  }
+}
+```
+
+Bind workflow roles to `local_gateway` and explicitly set each model name. The
+gateway is an external runtime service; it does not alter KERN world
+transactions.

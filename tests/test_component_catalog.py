@@ -232,7 +232,12 @@ class ComponentCatalogTests(unittest.TestCase):
 						"target_entity_id": "fire_1",
 						"progress": 2,
 						"required_progress": 5,
+						"multiple_entity": False,
+						"assigned_agent_ids": [],
+						"task_status": "Inactive",
+						"parameters": {},
 						"progressor_id": "Linear",
+						"progressor_params": {},
 						"start_bundle": {"effects": [{"effect": "AddTag", "target": "self", "tag": "started"}]},
 						"tick_bundle": {"effects": [{"effect": "EmitEvent", "event_type": "Cooking"}]},
 						"cleanup_bundle": {"effects": [{"effect": "RemoveTag", "target": "self", "tag": "started"}]},
@@ -249,13 +254,22 @@ class ComponentCatalogTests(unittest.TestCase):
 		self.assertEqual(rebuilt.get_task("task_1").completion_bundle.effects[0]["event_type"], "Cooked")
 		self.assertEqual(catalog.serialize("TaskHostComponent", rebuilt), serialized)
 
+	def test_task_host_codec_requires_complete_task_data(self) -> None:
+		catalog = build_core_component_catalog()
+
+		with self.assertRaisesRegex(ValueError, "task data missing fields"):
+			catalog.build(
+				"TaskHostComponent",
+				{"tasks": {"task_1": {"task_id": "task_1", "task_type": "Cook"}}},
+			)
+
 	def test_stateful_core_dataclasses_preserve_values(self) -> None:
 		catalog = build_core_component_catalog()
 		cases = {
 			"MemoryComponent": {
 				"short_term_queue": [{"content": "remember", "tick": 3}],
 			},
-			"StatusComponent": {"statuses": ["wet"], "expire_at_tick": {"wet": "15"}},
+			"StatusComponent": {"statuses": ["wet"], "expire_at_tick": {"wet": 15}},
 		}
 
 		for component_id, raw in cases.items():

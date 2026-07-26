@@ -118,6 +118,12 @@ class ConversationTests(unittest.TestCase):
 		self.assertEqual(len(conversation_ids), 1)
 		self.assertTrue(all(item["verb"] == "Say" and item["is_dialogue"] for item in ws.interaction_log))
 		self.assertEqual([item["speaker_id"] for item in policies["b"].frames[0].transcript], ["initiator", "speaker_a"])
+		interaction_events = [record for record in ws.event_log if record["event"]["type"] == "InteractionRecorded"]
+		self.assertEqual([record["actor_id"] for record in interaction_events], ["initiator", "speaker_a", "speaker_b"])
+		self.assertEqual(
+			[record["event"]["context"]["self_id"] for record in interaction_events],
+			["initiator", "speaker_a", "speaker_b"],
+		)
 
 		for entity_id in ("initiator", "speaker_a", "speaker_b"):
 			inbox = ws.get_entity_by_id(entity_id).get_component("PerceptionComponent").interaction_inbox
@@ -132,6 +138,25 @@ class ConversationTests(unittest.TestCase):
 		self.assertNotIn("ConversationStarted", event_types)
 		self.assertNotIn("ConversationSpoken", event_types)
 		self.assertNotIn("ConversationEnded", event_types)
+
+	def test_dialogue_perception_includes_unconsumed_interactions(self) -> None:
+		ws, _settlement, policies = _conversation_world()
+		ws.get_entity_by_id("speaker_a").get_component("PerceptionComponent").interaction_inbox.append(
+			{
+				"interaction_id": "prior_1",
+				"actor_id": "initiator",
+				"actor_name": "initiator",
+				"verb": "Signal",
+				"status": "success",
+				"narrative": "initiator signalled",
+			}
+		)
+
+		ConversationEngine().conduct(ws, ConversationRequest("conv", "initiator", "room", "Opening", 2))
+
+		perception = policies["a"].frames[0].perception
+		self.assertEqual([item["interaction_id"] for item in perception["recent_interactions"]], ["prior_1"])
+		self.assertIn("initiator signalled", perception["recent_interactions_text"])
 
 	def test_pass_does_not_record_an_utterance_or_consume_budget(self) -> None:
 		ws, settlement, policies = _conversation_world()

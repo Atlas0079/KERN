@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from typing import Any
-
 from .component_catalog import ComponentCatalog
 from .models.world_state import WorldState
 
@@ -28,7 +26,6 @@ class RuntimeSnapshotBuilder:
 				"name": entity.entity_name,
 				"location_id": location.location_id if location else None,
 				"component_state": component_state,
-				"components": self._core_display_projection(ws, entity),
 			}
 
 		locations = {
@@ -46,31 +43,3 @@ class RuntimeSnapshotBuilder:
 			"events": [deepcopy(dict(event)) for event in events_in_tick],
 			"interactions": [deepcopy(item) for item in interactions],
 		}
-
-	@staticmethod
-	def _core_display_projection(ws: WorldState, entity: Any) -> dict[str, object]:
-		components: dict[str, object] = {}
-		creature = entity.get_component("CreatureComponent")
-		if creature:
-			components["CreatureComponent"] = {
-				"nutrition": getattr(creature, "current_nutrition", 0),
-				"energy": getattr(creature, "current_energy", 0),
-				"state": getattr(creature, "current_state", "Idle"),
-			}
-		worker = entity.get_component("WorkerComponent")
-		if worker:
-			task_id = getattr(worker, "current_task_id", "")
-			task = ws.get_task_by_id(task_id) if task_id else None
-			components["WorkerComponent"] = {
-				"current_task_id": task_id,
-				"current_action_desc": str(getattr(task, "task_type", "") or ""),
-			}
-		container = entity.get_component("ContainerComponent")
-		if container and hasattr(container, "slots"):
-			components["ContainerComponent"] = {
-				"slots": {
-					str(slot_id): {"items": list(getattr(slot, "items", []) or []), "config": dict(getattr(slot, "config", {}) or {})}
-					for slot_id, slot in container.slots.items()
-				}
-			}
-		return components

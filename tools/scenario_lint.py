@@ -469,10 +469,6 @@ def _validate_bundle(ctx: LintContext, bundle: Any, where: str) -> None:
 		ctx.error(where, "bundle must be object")
 		return
 	effects = bundle.get("effects", []) or []
-	if "react_per_effect" in bundle and not isinstance(bundle.get("react_per_effect"), bool):
-		ctx.error(f"{where}.react_per_effect", "bundle.react_per_effect must be bool")
-	elif "react_per_effect" in bundle:
-		ctx.warn(f"{where}.react_per_effect", "bundle.react_per_effect is deprecated and ignored; bundle events are published after transaction commit")
 	if not isinstance(effects, list):
 		ctx.error(where, "bundle.effects must be list")
 		return

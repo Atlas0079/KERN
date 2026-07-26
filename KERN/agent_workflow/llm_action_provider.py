@@ -12,15 +12,10 @@ from uuid import uuid4
 from ..execution_errors import KernFailure
 from ..failure_report import FailureEvidence
 from ..log_manager import get_logger
-from ..llm.openai_compat_client import DualModelLLM, OpenAICompatClient, LLMRequestError
-from ..llm.gemini_client import GeminiClient
-from .dialogue import DialogueFrame, dialogue_frame_to_legacy_context, legacy_dialogue_step
-from .observer import build_agent_perception
+from ..llm.openai_compat_client import LLMRequestError
+from .contracts import AgentTurnSession, DecisionFrame, EndTurn, SubmitAction, TurnStart
+from .dialogue import DialogueFrame, Pass, Speak
 from .trace import LLMTraceRecorder
-from .workflow_contract import (
-	build_action_plan_decision,
-	build_end_turn_decision,
-)
 
 
 class GroundingUngroundable(Exception):
@@ -458,7 +453,7 @@ def _build_recipe_hints(recipe_db: dict[str, Any], allowed_verbs: set[str]) -> t
 
 
 @dataclass
-class LLMActionProvider:
+class LLMWorkflow:
 	"""
 	Two-Layer LLM Action Generator:
 	- Planner: Output high-level natural language intent
@@ -469,7 +464,8 @@ class LLMActionProvider:
 	- The machine-readable event log is not part of the Agent workflow view.
 	"""
 
-	llm: DualModelLLM
+	providers: dict[str, Any]
+	roles: dict[str, dict[str, Any]]
 	planner_template_path: Path = _repo_root() / "docs" / "scenario_authoring" / "LLMContext_Planner.md"
 	grounder_template_path: Path = _repo_root() / "docs" / "scenario_authoring" / "LLMContext_Grounder.md"
 	dialogue_template_path: Path = _repo_root() / "docs" / "scenario_authoring" / "LLMContext_Dialogue.md"
@@ -480,6 +476,38 @@ class LLMActionProvider:
 	llm_debug_view: str = ""
 	failure_evidence: FailureEvidence = field(default_factory=FailureEvidence)
 	trace_recorder: LLMTraceRecorder | None = None
+
+	def _ask(self, role: str, **kwargs: Any) -> str:
+		binding = self._role_binding(role)
+		request_extra = dict(binding.get("request_extra", {}) or {})
+		call_kwargs = dict(kwargs)
+		if request_extra:
+			call_kwargs["extra"] = {**request_extra, **dict(call_kwargs.get("extra", {}) or {})}
+		return self._role_client(role).chat_text(model=self._role_model(role), **call_kwargs)
+
+	def _role_binding(self, role: str) -> dict[str, Any]:
+		return dict(self.roles[str(role)])
+
+	def _role_model(self, role: str) -> str:
+		return str(self._role_binding(role)["model"])
+
+	def _role_client(self, role: str) -> Any:
+		return self.providers[str(self._role_binding(role)["provider_id"])]
+
+	def _role_request_extra(self, role: str) -> dict[str, Any]:
+		return dict(self._role_binding(role).get("request_extra", {}) or {})
+
+	def _role_provider_context(self, role: str) -> dict[str, Any]:
+		binding = self._role_binding(role)
+		client = self._role_client(role)
+		return {
+			"provider_id": str(binding["provider_id"]),
+			"type": str(type(client).__name__),
+			"model": str(binding["model"]),
+			"base_url": str(getattr(client, "base_url", "") or ""),
+			"api_prefix": str(getattr(client, "api_prefix", "") or ""),
+			"request_extra": self._role_request_extra(role),
+		}
 
 	def _new_failure_context(
 		self,
@@ -494,7 +522,6 @@ class LLMActionProvider:
 		recorder = self.failure_evidence
 		if recorder is None or not recorder.enabled:
 			return None
-		client = getattr(self.llm, "client", None)
 		return {
 			"trace_id": uuid4().hex,
 			"context_type": str(context_type or "llm_decision"),
@@ -503,11 +530,9 @@ class LLMActionProvider:
 			"location_id": str(location_id or ""),
 			"reason": str(reason or ""),
 			"provider": {
-				"type": str(type(client).__name__) if client is not None else str(type(self.llm).__name__),
-				"planner_model": str(getattr(self.llm, "planner_model", "") or ""),
-				"grounder_model": str(getattr(self.llm, "grounder_model", "") or ""),
-				"base_url": str(getattr(client, "base_url", "") or ""),
-				"api_prefix": str(getattr(client, "api_prefix", "") or ""),
+				"planner": self._role_provider_context("planner"),
+				"grounder": self._role_provider_context("grounder"),
+				"dialogue": self._role_provider_context("dialogue"),
 			},
 			"perception": dict(perception or {}),
 			"attempts": [],
@@ -517,19 +542,19 @@ class LLMActionProvider:
 		if not isinstance(context, dict):
 			return ""
 		context["status"] = str(status or "")
-		trace_id = str(context.get("trace_id", "") or "")
-		if self.trace_recorder is not None:
-			self.trace_recorder.record(context)
-		return trace_id
+		if self.trace_recorder is None:
+			return ""
+		return self.trace_recorder.record(context)
 
-	def _failure_request(self, *, model: str, temperature: float, messages: list[dict[str, Any]]) -> dict[str, Any]:
+	def _failure_request(self, *, role: str, temperature: float, messages: list[dict[str, Any]]) -> dict[str, Any]:
 		return {
-			"model": str(model or ""),
+			"provider_id": str(self._role_binding(role)["provider_id"]),
+			"model": self._role_model(role),
 			"temperature": float(temperature),
 			"max_tokens": None,
 			"response_format": None,
 			"messages": [dict(item) for item in messages],
-			"request_extra": dict(getattr(self.llm, "request_extra", {}) or {}),
+			"request_extra": self._role_request_extra(role),
 		}
 
 	def _record_failure_evidence(
@@ -588,12 +613,19 @@ INTENT: <1-3句，给Grounder使用的实际意图，必须可执行>
 
 **输出约束（关键）：**
 1. 如果 Planner 意图可以落地，必须输出一个 JSON 数组，数组元素是 Action 对象。
-2. Action 对象格式为：`{"verb": "verb", "parameters": {}}`，并且在需要时可以包含 `"target_id"`。
-3. 只能使用“可用动词列表”中的动词。
-4. 对于非 meta 动词，通常需要提供 `target_id`，且必须来自“可见实体列表”或“背包列表”；但 Talk 是例外（不得提供 target_id）。对于 meta 动词，你不得提供 `target_id`（系统会自动填充为你自己）。
-5. 对于耗时动作，它必须是序列中的最后一个动作（因为会触发 Task 并占用行动权）。
-6. 不要在 JSON 外层添加任何 Markdown 标签（如 ```json），只输出纯 JSON 字符串。
-7. 如果 Planner 意图无法用当前可用动词和可见/背包实体落地，输出 `{"type":"ungroundable","reason":"<具体原因>"}`。reason 必须说明缺少哪个动作、目标或参数约束，不要硬凑不存在的动作。
+2. Action 对象格式固定为：`{"verb": "<可用动词>", "target_id": "<目标id>", "parameters": {}}`。
+3. 普通动作默认都需要 `verb + target_id + parameters`。没有额外参数时也必须写 `"parameters": {}`。
+4. meta 动作或 Talk 等特殊动作按下方“动词特定参数规则”执行。
+5. 禁止输出 tuple/list 风格动作，例如 `["OpenContainer", {"target_id":"camp_storage"}]` 是错误格式。
+6. 正确示例：`[{"verb":"OpenContainer","target_id":"camp_storage","parameters":{}}]`
+7. 正确示例：`[{"verb":"Travel","target_id":"camper_organizer","parameters":{"to_location_id":"forest"}}]`
+8. 正确示例：`[{"verb":"Talk","parameters":{"text":"我们先清点物资，再分头行动。"}}]`
+9. 正确示例：`[{"verb":"InspectInterruptPresets","parameters":{}}]`
+10. 只能使用“可用动词列表”中的动词。
+11. 对于非 meta 动词，通常需要提供 `target_id`，且必须来自“可见实体列表”或“背包列表”；但 Talk 是例外（不得提供 target_id）。对于 meta 动词，你不得提供 `target_id`（系统会自动填充为你自己）。
+12. 对于耗时动作，它必须是序列中的最后一个动作（因为会触发 Task 并占用行动权）。
+13. 不要在 JSON 外层添加任何 Markdown 标签（如 ```json），只输出纯 JSON 字符串。
+14. 如果 Planner 意图无法用当前可用动词和可见/背包实体落地，输出 `{"type":"ungroundable","reason":"<具体原因>"}`。reason 必须说明缺少哪个动作、目标或参数约束，不要硬凑不存在的动作。
 
 **动词特定参数规则（重要）：**
 - SwitchInterruptPreset（meta）：parameters 必须包含 `{"preset_id": "<available_interrupt_presets 中的一个>"}`，且不得提供 target_id。
@@ -627,45 +659,29 @@ Output rules:
 			return
 		logger.warn("llm", str(event), context=dict(context or {}))
 
-	def decide(
-		self,
-		ws_view: Any,
-		recipe_db: dict[str, Any] | None,
-		actor_id: str,
-		reason: str,
-		mode_context: dict[str, Any] | None = None,
-	) -> dict[str, Any]:
-		view_payload = dict(ws_view or {}) if isinstance(ws_view, dict) else {}
-		full_ws_view = dict(view_payload.get("full_ws_view", {}) or {}) if isinstance(view_payload.get("full_ws_view", {}), dict) else {}
-		if not full_ws_view:
-			raise KernFailure(
-				"WORKFLOW_INPUT_MISSING_FULL_WS_VIEW",
-				"ws_view.full_ws_view is required",
-				origin="workflow",
-				phase="decision_input",
-				context={"actor_id": str(actor_id or "")},
-			)
-		perception = build_agent_perception(full_ws_view, str(actor_id))
-		recipe_db_view = dict(recipe_db or {}) if isinstance(recipe_db, dict) else {}
-		mode_ctx = dict(mode_context or view_payload.get("mode_context", {}) or {})
-		if mode_ctx:
-			perception["mode_context"] = dict(mode_ctx)
-		perception["interrupt_reason"] = str(reason or "")
+	def begin_turn(self, _start: TurnStart) -> AgentTurnSession:
+		return _LLMTurnSession(self)
+
+	def _decide_frame(self, frame: DecisionFrame) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+		perception = dict(frame.perception)
+		recipe_db_view = dict(frame.action_catalog)
+		perception["mode_context"] = dict(frame.mode_context)
+		perception["interrupt_reason"] = str(frame.reason or "")
 		location = dict(perception.get("location", {}) or {}) if isinstance(perception.get("location", {}), dict) else {}
 		failure_context = self._new_failure_context(
 			context_type="llm_decision",
-			actor_id=str(actor_id),
+			actor_id=str(frame.actor_id),
 			tick=int(perception.get("tick", 0) or 0),
 			location_id=str(location.get("id", "") or ""),
 			perception=perception,
-			reason=str(reason or ""),
+			reason=str(frame.reason or ""),
 		)
 		try:
 			actions = self._decide_actions_from_perception(
 				perception,
 				recipe_db_view,
-				reason,
-				str(actor_id),
+				frame.reason,
+				frame.actor_id,
 				failure_context=failure_context,
 			)
 		except KernFailure:
@@ -685,7 +701,7 @@ Output rules:
 				str(e.reason),
 				origin="llm",
 				phase="grounding",
-				context={"actor_id": str(actor_id or ""), "failure_evidence": failure_context or {}},
+				context={"actor_id": str(frame.actor_id or ""), "failure_evidence": failure_context or {}},
 			) from e
 		except ValueError as e:
 			self._record_failure_evidence(
@@ -701,7 +717,7 @@ Output rules:
 				str(e),
 				origin="llm",
 				phase="grounder_parse",
-				context={"actor_id": str(actor_id or ""), "failure_evidence": failure_context or {}},
+				context={"actor_id": str(frame.actor_id or ""), "failure_evidence": failure_context or {}},
 			) from e
 		except Exception as e:
 			self._record_failure_evidence(
@@ -717,15 +733,15 @@ Output rules:
 				str(e),
 				origin="llm",
 				phase="workflow_decide",
-				context={"actor_id": str(actor_id or ""), "failure_evidence": failure_context or {}},
+				context={"actor_id": str(frame.actor_id or ""), "failure_evidence": failure_context or {}},
 			) from e
 		if not list(actions or []):
 			trace_id = self._persist_trace(failure_context, "completed")
-			return build_end_turn_decision(meta={"provider": "llm_workflow", "reason": "no_actions", "llm_trace_id": trace_id})
+			return [], {"provider": "llm_workflow", "reason": "no_actions", "llm_trace_id": trace_id}
 		memory_notes: list[dict[str, Any]] = []
 		for item in list(actions or []):
 			if isinstance(item, dict) and str(item.get("_workflow_note_type", "") or "") == "ungroundable":
-				memory_notes.append(self._build_ungroundable_memory_note(str(item.get("reason", "") or ""), full_ws_view))
+				memory_notes.append(self._build_ungroundable_memory_note(str(item.get("reason", "") or ""), perception))
 		action_plan = [
 			dict(x)
 			for x in list(actions or [])
@@ -738,14 +754,11 @@ Output rules:
 		if memory_notes:
 			meta["memory_notes"] = memory_notes
 		if not action_plan:
-			return build_end_turn_decision(meta=meta)
-		return build_action_plan_decision(
-			actions=action_plan,
-			meta=meta,
-		)
+			return [], meta
+		return action_plan, meta
 
-	def _build_ungroundable_memory_note(self, reason: str, full_ws_view: dict[str, Any]) -> dict[str, Any]:
-		tick = int((full_ws_view or {}).get("tick", 0) or 0) if isinstance(full_ws_view, dict) else 0
+	def _build_ungroundable_memory_note(self, reason: str, perception: dict[str, Any]) -> dict[str, Any]:
+		tick = int((perception or {}).get("tick", 0) or 0)
 		return {
 			"tick": tick,
 			"type": "note",
@@ -920,7 +933,7 @@ Output rules:
 				"attempt": len(list(failure_context.get("attempts", []) or [])) + 1,
 				"planner": {
 					"request": self._failure_request(
-						model=str(getattr(self.llm, "planner_model", "") or ""),
+						role="planner",
 						temperature=1,
 						messages=planner_messages,
 					),
@@ -978,7 +991,8 @@ Output rules:
 
 		planner_started = time.perf_counter()
 		try:
-			planner_raw = self.llm.planner_text(
+			planner_raw = self._ask(
+				"planner",
 				messages=planner_messages,
 				temperature=1,
 			).strip()
@@ -1052,7 +1066,7 @@ Output rules:
 		if failure_attempt is not None:
 			failure_attempt["grounder"] = {
 				"request": self._failure_request(
-					model=str(getattr(self.llm, "grounder_model", "") or ""),
+					role="grounder",
 					temperature=1,
 					messages=grounder_messages,
 				)
@@ -1084,7 +1098,8 @@ Output rules:
 
 		grounder_started = time.perf_counter()
 		try:
-			raw = self.llm.grounder_text(
+			raw = self._ask(
+				"grounder",
 				messages=grounder_messages,
 				temperature=1,
 			).strip()
@@ -1159,15 +1174,29 @@ Output rules:
 			return text
 
 		def _from_loaded(value: Any) -> list[dict[str, Any]] | None:
-			# Preferred shape: top-level list[dict]
 			if isinstance(value, list):
-				out = [dict(item) for item in value if isinstance(item, dict)]
+				out: list[dict[str, Any]] = []
+				for idx, item in enumerate(value):
+					if not isinstance(item, dict):
+						raise ValueError(f"[LLM] Grounder action[{idx}] must be an object")
+					action = dict(item)
+					verb = str(action.get("verb", "") or "").strip()
+					if not verb:
+						raise ValueError(f"[LLM] Grounder action[{idx}].verb is required")
+					if "parameters" not in action:
+						raise ValueError(f"[LLM] Grounder action[{idx}].parameters is required")
+					if not isinstance(action["parameters"], dict):
+						raise ValueError(f"[LLM] Grounder action[{idx}].parameters must be an object")
+					action["verb"] = verb
+					action["parameters"] = dict(action["parameters"])
+					out.append(action)
 				return out
 			# The grounder contract is a top-level list; only ungroundable uses an object.
 			if isinstance(value, dict):
 				dtype = str(value.get("type", "") or "").strip().lower()
 				if dtype == "ungroundable":
 					raise GroundingUngroundable(str(value.get("reason", "") or "Planner intent cannot be grounded with current actions."))
+				raise ValueError("[LLM] Grounder output must be a JSON array of action objects")
 			return None
 
 		def _extract_code_fence_bodies(s: str) -> list[str]:
@@ -1228,7 +1257,7 @@ Output rules:
 				return None
 			try:
 				loaded = json.loads(text)
-			except Exception:
+			except json.JSONDecodeError:
 				return None
 			return _from_loaded(loaded)
 
@@ -1260,7 +1289,7 @@ Output rules:
 		raw_excerpt = s if len(s) <= 1200 else (s[:1200] + "...<truncated>")
 		raise ValueError(f"[LLM] Invalid JSON output from Grounder: {raw_excerpt}")
 
-	def decide_dialogue(self, perception: dict[str, Any], conversation_context: dict[str, Any], self_id: str | None = None) -> str:
+	def _decide_dialogue(self, perception: dict[str, Any], mode_context: dict[str, Any], self_id: str) -> str:
 		def _sanitize_dialogue_output(raw: str) -> str:
 			s = str(raw or "").strip()
 			if not s:
@@ -1287,7 +1316,7 @@ Output rules:
 
 		logger = get_logger()
 		self_id = str(self_id or perception.get("self_id", "") or "")
-		perception = _with_mode_context(perception if isinstance(perception, dict) else {}, "dialogue", conversation_context if isinstance(conversation_context, dict) else {})
+		perception = _with_mode_context(perception, "dialogue", mode_context)
 		agent_context = _build_agent_context(perception, self_id)
 		loc = agent_context.get("location", {}) or {}
 		loc_id = str((loc or {}).get("id", "") or "")
@@ -1350,7 +1379,7 @@ Output rules:
 					"attempt": 1,
 					"dialogue": {
 						"request": self._failure_request(
-							model=str(getattr(self.llm, "planner_model", "") or ""),
+							role="dialogue",
 							temperature=1,
 							messages=dialogue_messages,
 						),
@@ -1367,13 +1396,14 @@ Output rules:
 				"self_id": self_id,
 				"system_prompt": self.DIALOGUE_SYSTEM_PROMPT.strip(),
 				"user_prompt": dialogue_prompt,
-				"conversation_context": dict(conversation_context or {}),
+				"mode_context": dict(mode_context),
 				"perception": dict(perception or {}) if bool(self.focus_log_perception) else {},
 			},
 		)
 		dialogue_started = time.perf_counter()
 		try:
-			line = self.llm.planner_text(
+			line = self._ask(
+				"dialogue",
 				messages=dialogue_messages,
 				temperature=1,
 			).strip()
@@ -1409,78 +1439,57 @@ Output rules:
 		return str(line or "PASS")
 
 	def decide_utterance(self, frame: DialogueFrame):
-		line = self.decide_dialogue(
-			perception=dict(frame.perception),
-			conversation_context=dialogue_frame_to_legacy_context(frame),
-			self_id=frame.speaker_id,
-		)
-		return legacy_dialogue_step(line)
+		mode_context = {
+			"conversation_id": frame.conversation_id,
+			"location_id": frame.location_id,
+			"participants": list(frame.participants),
+			"utterance_index": int(frame.utterance_index),
+			"max_utterances_per_tick": int(frame.utterance_index + frame.remaining_utterances),
+			"transcript": [dict(item) for item in frame.transcript],
+			"dialogue_phase": "join_decision",
+			"initiator_id": frame.initiator_id,
+		}
+		line = self._decide_dialogue(dict(frame.perception), mode_context, frame.speaker_id)
+		return Pass() if line.upper() == "PASS" else Speak(line)
 
-	# _validate_actions removed
+
+
+@dataclass
+class _LLMTurnSession:
+	workflow: LLMWorkflow
+	pending_actions: list[dict[str, Any]] = field(default_factory=list)
+	meta: dict[str, Any] = field(default_factory=dict)
+	initialized: bool = False
+
+	def next_step(self, frame: DecisionFrame):
+		if not self.initialized:
+			self.pending_actions, self.meta = self.workflow._decide_frame(frame)
+			self.initialized = True
+		if self.pending_actions:
+			return SubmitAction(intent=self.pending_actions.pop(0), meta=dict(self.meta))
+		return EndTurn(meta=dict(self.meta))
 
 
 
-def build_default_llm_provider(
-	config: dict[str, Any] | None = None,
+def build_llm_workflow(
+	client: Any,
 	*,
+	planner_model: str,
+	grounder_model: str,
+	dialogue_model: str | None = None,
+	provider_id: str = "default",
 	trace_recorder: LLMTraceRecorder | None = None,
-) -> LLMActionProvider:
-	"""
-	Construct default two-layer LLM provider with provided model names.
-	"""
-	cfg = dict(config or {})
-	def _cfg(key: str, default: str = "") -> str:
-		if key in cfg and cfg.get(key) is not None:
-			return str(cfg.get(key) or "").strip()
-		return str(default or "").strip()
-	def _cfg_bool(key: str, default: bool = False) -> bool:
-		v = _cfg(key, "1" if default else "0").lower()
-		return v in {"1", "true", "yes", "on"}
-	def _cfg_json(key: str) -> dict[str, Any]:
-		raw = _cfg(key, "")
-		if not raw:
-			return {}
-		try:
-			data = json.loads(raw)
-		except Exception:
-			return {}
-		return dict(data) if isinstance(data, dict) else {}
-
-	timeout_env = _cfg("LLM_TIMEOUT_SECONDS", "")
-	retries_env = _cfg("LLM_MAX_RETRIES", "")
-	backoff_env = _cfg("LLM_RETRY_BACKOFF_SECONDS", "")
-	provider = _cfg("LLM_PROVIDER", "").lower() or "openai_compat"
-	if provider == "gemini":
-		client = GeminiClient(
-			base_url=_cfg("GEMINI_BASE_URL", "") or "https://generativelanguage.googleapis.com",
-			api_prefix=_cfg("GEMINI_API_PREFIX", "") or "/v1beta",
-			api_key=_cfg("GEMINI_API_KEY", "") or "REPLACE_ME",
-			timeout_seconds=int(timeout_env) if timeout_env else 60,
-			max_retries=int(retries_env) if retries_env else 2,
-			retry_backoff_seconds=float(backoff_env) if backoff_env else 1.0,
-		)
-		planner_model = _cfg("LLM_PLANNER_MODEL", "") or "gemini-1.5-pro"
-		grounder_model = _cfg("LLM_GROUNDER_MODEL", "") or "gemini-1.5-flash"
-	else:
-		client = OpenAICompatClient(
-			base_url=_cfg("LLM_BASE_URL", "") or "https://api.aabao.top",
-			api_prefix=_cfg("LLM_API_PREFIX", "") or "/v1",
-			api_key=_cfg("LLM_API_KEY", "") or "REPLACE_ME",
-			timeout_seconds=int(timeout_env) if timeout_env else 60,
-			max_retries=int(retries_env) if retries_env else 2,
-			retry_backoff_seconds=float(backoff_env) if backoff_env else 1.0,
-		)
-		planner_model = _cfg("LLM_PLANNER_MODEL", "") or "gemini-3-pro-preview"
-		grounder_model = _cfg("LLM_GROUNDER_MODEL", "") or "gemini-3-flash-preview"
-	request_extra = _cfg_json("LLM_REQUEST_EXTRA_JSON")
-	llm = DualModelLLM(client=client, planner_model=planner_model, grounder_model=grounder_model, request_extra=request_extra)
-	return LLMActionProvider(
-		llm=llm,
-		debug=False,
-		focus_agent_id=_cfg("LLM_FOCUS_AGENT_ID", ""),
-		focus_log_prompts=_cfg_bool("LLM_FOCUS_LOG_PROMPTS", False),
-		focus_log_perception=_cfg_bool("LLM_FOCUS_LOG_PERCEPTION", True),
-		llm_debug_view=_cfg("LLM_DEBUG_VIEW", ""),
+) -> LLMWorkflow:
+	clean_provider_id = str(provider_id).strip()
+	if not clean_provider_id:
+		raise ValueError("provider_id must not be blank")
+	return LLMWorkflow(
+		providers={clean_provider_id: client},
+		roles={
+			"planner": {"provider_id": clean_provider_id, "model": str(planner_model)},
+			"grounder": {"provider_id": clean_provider_id, "model": str(grounder_model)},
+			"dialogue": {"provider_id": clean_provider_id, "model": str(dialogue_model or planner_model)},
+		},
 		trace_recorder=trace_recorder,
 	)
 

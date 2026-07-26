@@ -11,16 +11,15 @@ from KERN.runtime import KernRuntime
 
 
 class _SuccessfulLLM:
-	planner_model = "planner"
-	grounder_model = "grounder"
-	request_extra = {}
-	client = None
+	base_url = "https://example.test"
+	api_prefix = "/v1"
 
-	def planner_text(self, **_kwargs):
-		return "THOUGHT: observe\nINTENT: observe the organizer"
-
-	def grounder_text(self, **_kwargs):
-		return '[{"verb":"Observe","target_id":"camper_organizer","parameters":{}}]'
+	def chat_text(self, *, model: str, **_kwargs):
+		if model == "planner":
+			return "THOUGHT: observe\nINTENT: observe the organizer"
+		if model == "grounder":
+			return '[{"verb":"Observe","target_id":"camper_organizer","parameters":{}}]'
+		return "PASS"
 
 
 class LLMTraceTests(unittest.TestCase):
@@ -65,6 +64,11 @@ class LLMTraceTests(unittest.TestCase):
 			recorder.record({"trace_id": "trace_1", "actor_id": "agent", "tick": 1})
 			self.assertEqual(list(Path(td).iterdir()), [])
 
+	def test_filtered_trace_does_not_publish_an_unresolvable_trace_id(self) -> None:
+		with tempfile.TemporaryDirectory() as td:
+			recorder = LLMTraceRecorder(mode="full", output_dir=Path(td), agent_ids=frozenset({"other"}))
+			self.assertEqual(recorder.record({"trace_id": "trace_1", "actor_id": "agent", "tick": 1}), "")
+
 	def test_runtime_trace_captures_provider_context_and_committed_feedback(self) -> None:
 		with tempfile.TemporaryDirectory() as td:
 			runtime = KernRuntime.from_config(
@@ -77,12 +81,35 @@ class LLMTraceTests(unittest.TestCase):
 					"CHECKPOINT_EVERY_TICK": "0",
 					"CHECKPOINT_DIR": td,
 					"MAX_ACTIONS_PER_TURN": "1",
+					"LLM_WORKFLOW_CONFIG_JSON": json.dumps(
+						{
+							"llm_providers": {
+								"main": {
+									"protocol": "openai_compat",
+									"base_url": "https://example.test",
+									"api_prefix": "/v1",
+									"api_key": "test-key",
+								}
+							},
+							"workflows": {
+								"default": {
+									"kind": "llm",
+									"roles": {
+										"planner": {"provider_id": "main", "model": "planner"},
+										"grounder": {"provider_id": "main", "model": "grounder"},
+										"dialogue": {"provider_id": "main", "model": "dialogue"},
+									},
+								}
+							},
+							"default_workflow_id": "default",
+						}
+					),
 					"LLM_TRACE_MODE": "full",
 					"LLM_TRACE_AGENT_IDS": "camper_organizer",
 					"LLM_TRACE_TICKS": "1",
 				},
 			)
-			runtime.action_provider.llm = _SuccessfulLLM()
+			runtime.action_provider.providers["main"] = _SuccessfulLLM()
 			runtime.is_running = True
 
 			runtime.step()
