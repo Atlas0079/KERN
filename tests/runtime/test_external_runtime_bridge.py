@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import tempfile
 import unittest
@@ -190,7 +190,7 @@ class ExternalRuntimeBridgeTests(unittest.TestCase):
 				runtime.advance_ticks(1)
 
 	def test_from_config_restore_notifies_external_runtime_before_runtime_construction(self) -> None:
-		project_root = Path(__file__).resolve().parents[1]
+		project_root = Path(__file__).resolve().parents[2]
 		with tempfile.TemporaryDirectory() as td:
 			base_runtime = KernRuntime.from_config(
 				project_root,
@@ -224,7 +224,7 @@ class ExternalRuntimeBridgeTests(unittest.TestCase):
 			self.assertEqual(adapter.restored[0]["tick"], 0)
 
 	def test_from_config_restore_failure_interrupts(self) -> None:
-		project_root = Path(__file__).resolve().parents[1]
+		project_root = Path(__file__).resolve().parents[2]
 		with tempfile.TemporaryDirectory() as td:
 			base_runtime = KernRuntime.from_config(
 				project_root,
@@ -253,7 +253,7 @@ class ExternalRuntimeBridgeTests(unittest.TestCase):
 				)
 
 	def test_restore_output_conflict_is_rejected_before_external_restore(self) -> None:
-		project_root = Path(__file__).resolve().parents[1]
+		project_root = Path(__file__).resolve().parents[2]
 		with tempfile.TemporaryDirectory() as td:
 			base_runtime = KernRuntime.from_config(
 				project_root,

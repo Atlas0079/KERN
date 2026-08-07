@@ -1,3 +1,6 @@
 """Concrete external runtime adapters bundled with KERN."""
 
-__all__: list[str] = []
+from .empty import EmptyExternalRuntime
+from .social_platform import SQLiteSocialPlatform
+
+__all__ = ["EmptyExternalRuntime", "SQLiteSocialPlatform"]

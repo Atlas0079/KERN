@@ -1,6 +1,6 @@
-# KERN 当前架构
+# KERN 当前架构与内核契约
 
-本文描述当前代码的运行边界。实现与本文冲突时，以 `KERN/` 下的实现为准。
+本文描述当前代码的运行边界和稳定契约。实现与本文冲突时，以 `KERN/` 下的实现为准。
 
 ## 1. 权威运行链
 
@@ -25,7 +25,36 @@ runtime config / Package selection
 4. 校验数据，随后构建 `WorldState`，或验证 Package identity 后恢复 checkpoint；
 5. 装配 executor、interaction engine、workflow registry、reaction system、archive 和 failure writer。
 
-Package 格式、扩展发现与 artifact identity 见 `package_composition.md`。
+Package 路径必须位于 project root 内，Package ID 不得重复。manifest 文件固定为 Package
+根目录的 `kern-package.json`。world Package 必须声明 `provides_world: true` 和完整 world
+data；capability Package 不能提供 world 文件，但可以组合 recipe、reaction、named bundle、
+Effect、Component 和 codec。
+
+有扩展代码时，入口固定为 Package 根目录的 `extensions.py`：
+
+```python
+EFFECT_MODULES = ("effects.weather",)
+COMPONENT_MODULES = ("components.weather",)
+```
+
+loader 只导入入口声明的 Package-local 模块，并只注册其中带 `@package_effect` 或
+`@package_component` 标记的定义。组件和 codec 先注册，Effect 后注册。Package definition
+ID 必须使用所属 Package 的命名空间。
+
+Package 装配完成后生成固定的 `package_identity.v2`。identity 只覆盖本次 runtime 实际读取
+或导入的 artifact：
+
+- 每个选中 Package 的 `kern-package.json`；
+- 实际加载的 world、entity、recipe、reaction 和 bundle JSON；
+- 已声明的 `extensions.py` 和实际导入的 Package-local Python 模块；
+- 冻结后的 Effect ID 与 Component ID 清单。
+
+已加载 artifact 改变时，v2 checkpoint 恢复会失败。历史 v1 identity 和缺少 Package metadata
+的 checkpoint 会被拒绝。当前可运行 world Package 是 `Packages/Camping`，其他历史场景不参与
+Package 加载。
+
+普通 Package Component 必须是纯数据 dataclass，默认使用 `DataclassCodec`。需要特殊转换时，
+Package 必须显式提供 codec。
 
 ## 2. 状态与行为边界
 
@@ -97,7 +126,32 @@ Reaction 使用确定性 FIFO：同一 Event 的规则按配置顺序执行，�
 Reaction Bundle 是新的事务；此前成功的 Reaction 不因后续 Reaction 失败而回滚。深度超限、
 绑定失败或执行失败都会抛出 `KernFailure` 并终止 runtime。
 
-更完整的失败和 Event 字段见 `failure_and_effect_record_contract.md`。
+`ActionRejected` 表示 Decision 产生的意图符合 schema，但当前世界没有可执行路径，例如没有
+匹配 Recipe、目标不存在或 condition 不满足。它是正常 Action 结果，不写错误 Event，不终止
+runtime，也不进入 Reaction FIFO。
+
+`KernFailure` 表示 KERN、Package、Provider 或运行环境未能履行契约。稳定字段包括：
+
+```text
+code
+message
+origin
+phase
+context
+cause / traceback
+```
+
+Executor、Binder、Workflow、Reaction、Persistence 和 External runtime 的 Failure 都通过
+Python exception 传播。Bundle 在异常路径恢复快照，Runtime 在公开执行入口捕获第一次
+Failure，并最多写一份 `<checkpoint_dir>/failure.json`。报告保留完整开发者证据，包括原始异常链、
+traceback、规范化 Effect 输入、Decision、LLM 上下文和执行身份；报告写入失败不会覆盖原始
+Failure。
+
+Recipe 和 Reaction 只有在定义 `narrative_success` 时，才由编译器自动生成一条 interaction
+记录。作者仍可在 Bundle 中显式放置任意数量的 `RecordInteraction`；交互是否重复由 Bundle
+作者负责。`RecordInteraction` 写入时一次性提供交互文本和可感知数据，Handler 根据交互发生时
+的世界状态确定感知者，并把包含 `tick`、`time_str` 和 `interaction_id` 的快照写入
+`PerceptionComponent.interaction_inbox`。该写入与 interaction log 属于同一个 Bundle 事务。
 
 ## 5. 组件转换与持久化
 
@@ -125,9 +179,39 @@ archive 和 checkpoint 写入 `package_identity.v2`，恢复时验证所选 Pack
 
 外部系统不属于 `WorldState` 快照，世界回滚不能撤销已经发生的外部写入。扩展 Effect 必须
 通过 `EffectSpec.side_effect` 声明 `world`、`external_transactional`、
-`external_compensatable` 或 `external_irreversible`。Executor 与 `ExternalRuntimeBridge` 负责
-receipt、commit、rollback 和 checkpoint 生命周期通知。详细契约见
-`external_runtime_contract.md`。
+`external_compensatable` 或 `external_irreversible`。
+
+| 值 | 语义 |
+| --- | --- |
+| `world` | 只写 `WorldState` |
+| `external_transactional` | adapter 拥有真正的回滚能力 |
+| `external_compensatable` | adapter 使用 receipt 执行补偿 |
+| `external_irreversible` | 仅在其他 Effect 成功后执行，且必须位于 Bundle 最后一项 |
+
+不可逆 Effect 延迟到最外层 Bundle 的其他 Effect 成功后运行。它的失败仍会使世界事务回滚，
+但已经发生的外部结果不能由 KERN 撤销。
+
+外部 adapter 的基础调用接口是：
+
+```python
+def invoke(operation: str, payload: dict, context: dict) -> list[dict]: ...
+```
+
+需要 receipt 时可以实现：
+
+```python
+def invoke_with_receipt(operation: str, payload: dict, context: dict):
+    return events, receipt
+```
+
+Bridge 支持 `start`、`close`、`checkpoint_restore`、`checkpoint_save`、`bundle_commit` 和
+`bundle_rollback` 六个 lifecycle phase。adapter 分别通过 `start`、`close`、
+`restore_checkpoint`、`save_checkpoint`、`commit_bundle` 和 `rollback_bundle` 选择性实现这些
+回调。最外层 Bundle 共享一个 external transaction ID；child bundle 的 receipt 汇总到该事务。世界失败时，Executor 先恢复
+`WorldState`，再发送 rollback；世界 Effect 和延期的不可逆 Effect 成功后发送 commit。
+
+checkpoint archive 与外部 checkpoint 不是一个原子事务。KERN archive 可能已经写入，随后外部
+`checkpoint_save` 才失败；调用方必须把这种情况视为失败运行，不能假定两侧已经一致。
 
 ## 7. 模块所有权
 

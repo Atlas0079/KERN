@@ -47,6 +47,15 @@ def build_runtime_identity(loaded: "LoadedPackages") -> dict[str, object]:
 		"packages": packages,
 		"effect_ids": sorted(loaded.effect_catalog.effect_ids()),
 		"component_ids": sorted(loaded.component_catalog.component_ids()),
+		"external_runtime_provider_ids": sorted(loaded.external_runtime_catalog.provider_ids()),
+		"external_runtime_instances": [
+			{
+				"runtime_id": instance.runtime_id,
+				"provider": instance.provider_id,
+				"options": dict(instance.options),
+			}
+			for instance in loaded.external_runtime_instances
+		],
 	}
 
 

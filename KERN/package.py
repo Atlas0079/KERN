@@ -14,7 +14,8 @@ from typing import Any
 from .data.loader import DataBundle, LoadedDataBundle, load_data_bundle_with_sources, load_json
 from .component_catalog import ComponentCatalog, build_core_component_catalog
 from .effects import EffectCatalog, build_core_effect_catalog
-from .package_definitions import marked_component_spec, marked_effect_spec
+from .external_runtime_catalog import ExternalRuntimeCatalog, ExternalRuntimeInstanceSpec, parse_external_runtime_instances
+from .package_definitions import marked_component_spec, marked_effect_spec, marked_external_runtime_spec
 from .package_identity import build_runtime_identity
 
 
@@ -51,6 +52,8 @@ class LoadedPackages:
 	data_bundle: DataBundle
 	effect_catalog: EffectCatalog
 	component_catalog: ComponentCatalog
+	external_runtime_catalog: ExternalRuntimeCatalog
+	external_runtime_instances: tuple[ExternalRuntimeInstanceSpec, ...]
 	runtime_identity: dict[str, object]
 
 
@@ -124,9 +127,15 @@ def load_packages_from_config(
 		raise ValueError(f"world package has no data declaration: {world_package.manifest.package_id}")
 	effect_catalog = build_core_effect_catalog()
 	component_catalog = build_core_component_catalog()
-	extension_sources = _register_package_extensions(tuple(loaded), effect_catalog, component_catalog)
+	external_runtime_catalog = ExternalRuntimeCatalog()
+	extension_sources = _register_package_extensions(tuple(loaded), effect_catalog, component_catalog, external_runtime_catalog)
 	effect_catalog.freeze()
 	component_catalog.freeze()
+	external_runtime_catalog.freeze()
+	external_runtime_instances = parse_external_runtime_instances(raw.get("external_runtimes"))
+	for instance in external_runtime_instances:
+		if not external_runtime_catalog.contains(instance.provider_id):
+			raise ValueError(f"external runtime provider is not registered: {instance.provider_id}")
 	loaded_data, capability_data_sources = _load_composed_data(tuple(loaded), world_package)
 	resolved_packages: list[LoadedPackage] = []
 	for package in loaded:
@@ -138,7 +147,7 @@ def load_packages_from_config(
 		artifacts.extend((_relative_package_path(package, path), "extension_module") for path in extension_sources.get(package.root, ()))
 		resolved_packages.append(replace(package, artifact_paths=tuple(artifacts)))
 	resolved_world_package = next(package for package in resolved_packages if package.world_selected)
-	partial = LoadedPackages(tuple(resolved_packages), resolved_world_package, loaded_data.bundle, effect_catalog, component_catalog, {})
+	partial = LoadedPackages(tuple(resolved_packages), resolved_world_package, loaded_data.bundle, effect_catalog, component_catalog, external_runtime_catalog, external_runtime_instances, {})
 	return replace(partial, runtime_identity=build_runtime_identity(partial))
 
 
@@ -146,13 +155,14 @@ def _register_package_extensions(
 	packages: tuple[LoadedPackage, ...],
 	effect_catalog: EffectCatalog,
 	component_catalog: ComponentCatalog,
+	external_runtime_catalog: ExternalRuntimeCatalog,
 ) -> dict[Path, tuple[Path, ...]]:
-	loaded_modules: list[tuple[LoadedPackage, tuple[types.ModuleType, ...], tuple[types.ModuleType, ...]]] = []
+	loaded_modules: list[tuple[LoadedPackage, tuple[types.ModuleType, ...], tuple[types.ModuleType, ...], tuple[types.ModuleType, ...]]] = []
 	sources: dict[Path, tuple[Path, ...]] = {}
 	for package in packages:
 		extension = str(package.manifest.extensions or "").strip()
 		if not extension:
-			loaded_modules.append((package, (), ()))
+			loaded_modules.append((package, (), (), ()))
 			sources[package.root] = ()
 			continue
 		entry = package.root / extension
@@ -162,22 +172,28 @@ def _register_package_extensions(
 		entry_module = _load_extension_entry(prefix, entry, package.root)
 		component_modules = _import_declared_modules(entry_module, "COMPONENT_MODULES", prefix, package)
 		effect_modules = _import_declared_modules(entry_module, "EFFECT_MODULES", prefix, package)
-		loaded_modules.append((package, component_modules, effect_modules))
+		external_runtime_modules = _import_declared_modules(entry_module, "EXTERNAL_RUNTIME_MODULES", prefix, package)
+		loaded_modules.append((package, component_modules, effect_modules, external_runtime_modules))
 		sources[package.root] = tuple(
 			Path(str(module.__file__)).resolve()
-			for module in (entry_module, *component_modules, *effect_modules)
+			for module in (entry_module, *component_modules, *effect_modules, *external_runtime_modules)
 			if str(getattr(module, "__file__", "") or "").strip()
 		)
-	for package, component_modules, _effect_modules in loaded_modules:
+	for package, component_modules, _effect_modules, _external_runtime_modules in loaded_modules:
 		for module in component_modules:
 			for spec in _marked_specs(module, marked_component_spec):
 				_component_id_for_package(spec.component_id, package)
 				component_catalog.register(replace(spec, origin=package.manifest.package_id))
-	for package, _component_modules, effect_modules in loaded_modules:
+	for package, _component_modules, effect_modules, _external_runtime_modules in loaded_modules:
 		for module in effect_modules:
 			for spec in _marked_specs(module, marked_effect_spec):
 				_component_id_for_package(spec.effect_id, package)
 				effect_catalog.register(_package_effect_spec(spec, package))
+	for package, _component_modules, _effect_modules, external_runtime_modules in loaded_modules:
+		for module in external_runtime_modules:
+			for spec in _marked_specs(module, marked_external_runtime_spec):
+				_component_id_for_package(spec.provider_id, package)
+				external_runtime_catalog.register(replace(spec, origin=package.manifest.package_id))
 	return sources
 
 
@@ -280,8 +296,8 @@ def _load_manifest(package_root: Path) -> PackageManifest:
 	data = _parse_data(package_root, data_raw, require_world=provides_world) if data_raw is not None else None
 	if provides_world and data is None:
 		raise ValueError(f"world package manifest requires data: {path}")
-	if not provides_world and data is not None and (data.world or data.entities or data.reactions):
-		raise ValueError(f"capability package data may declare only recipes and bundles: {path}")
+	if not provides_world and data is not None and (data.world or data.entities):
+		raise ValueError(f"capability package data may declare only recipes, reactions, and bundles: {path}")
 	return PackageManifest(package_id, version, provides_world, data, extensions)
 
 
@@ -350,10 +366,11 @@ def _load_composed_data(
 	packages: tuple[LoadedPackage, ...],
 	world_package: LoadedPackage,
 ) -> tuple[LoadedDataBundle, dict[Path, tuple[Path, ...]]]:
-	"""Compose capability recipes/bundles ahead of the selected world's data."""
+	"""Compose capability recipes/reactions/bundles ahead of the selected world's data."""
 	world_data = _load_world_data(world_package)
 	capability_sources: dict[Path, tuple[Path, ...]] = {}
 	capability_recipes: dict[str, Any] = {}
+	capability_reaction_rules: list[dict[str, Any]] = []
 	capability_bundles: dict[str, Any] = {}
 	for package in packages:
 		if package is world_package or package.manifest.data is None:
@@ -367,6 +384,13 @@ def _load_composed_data(
 				raise ValueError(f"capability recipes must be an object: {path}")
 			_duplicate_package_data("recipe", capability_recipes, value, package)
 			capability_recipes.update(value)
+			sources.append(path.resolve())
+		for relative in data.reactions:
+			path = package.root / "Data" / relative
+			value = load_json(path)
+			if not isinstance(value, dict) or not isinstance(value.get("rules"), list):
+				raise ValueError(f"capability reactions must be an object with rules array: {path}")
+			capability_reaction_rules.extend(dict(rule) for rule in value["rules"] if isinstance(rule, dict))
 			sources.append(path.resolve())
 		for relative in data.bundles:
 			path = package.root / "Data" / relative
@@ -384,7 +408,7 @@ def _load_composed_data(
 			bundle=DataBundle(
 				entity_templates=world_data.bundle.entity_templates,
 				recipes={**capability_recipes, **world_data.bundle.recipes},
-				reactions=world_data.bundle.reactions,
+				reactions={"rules": [*capability_reaction_rules, *list((world_data.bundle.reactions or {}).get("rules", []) or [])]},
 				world=world_data.bundle.world,
 				named_bundles={**capability_bundles, **world_data.bundle.named_bundles},
 			),

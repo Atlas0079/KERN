@@ -209,6 +209,12 @@ class ExternalRuntimeBridge:
 	def restore_checkpoint(self, context: dict[str, Any] | None = None) -> list[dict[str, Any]]:
 		return self._notify_lifecycle("checkpoint_restore", context or {})
 
+	def start(self, context: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+		return self._notify_lifecycle("start", context or {})
+
+	def close(self, context: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+		return self._notify_lifecycle("close", context or {})
+
 	def save_checkpoint(self, context: dict[str, Any] | None = None) -> list[dict[str, Any]]:
 		return self._notify_lifecycle("checkpoint_save", context or {})
 
@@ -220,6 +226,8 @@ class ExternalRuntimeBridge:
 
 	def _notify_lifecycle(self, phase: str, context: dict[str, Any]) -> list[dict[str, Any]]:
 		method_names = {
+			"start": "start",
+			"close": "close",
 			"checkpoint_save": "save_checkpoint",
 			"checkpoint_restore": "restore_checkpoint",
 			"bundle_commit": "commit_bundle",

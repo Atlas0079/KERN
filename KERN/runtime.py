@@ -172,6 +172,7 @@ class KernRuntime:
 	failure_report_writer: FailureReportWriter | None = None
 	is_terminal: bool = False
 	terminal_error: str = ""
+	external_runtimes_closed: bool = False
 	snapshot_builder: RuntimeSnapshotBuilder | None = field(default=None, init=False, repr=False)
 
 	def __post_init__(self) -> None:
@@ -278,7 +279,39 @@ class KernRuntime:
 			else:
 				raise ValueError("CHECKPOINT_DIR must differ from the checkpoint restore source directory")
 		external_runtime_map = dict(external_runtimes or {})
+		for instance in loaded_packages.external_runtime_instances:
+			if instance.runtime_id in external_runtime_map:
+				raise ValueError(f"external runtime supplied twice: {instance.runtime_id}")
+			spec = loaded_packages.external_runtime_catalog.require(instance.provider_id)
+			factory_context = {
+				"project_root": str(root),
+				"config_path": str(resolved_config_path),
+				"checkpoint_dir": str(resolved_checkpoint_dir),
+				"restore_path": str(restore_path or ""),
+				"runtime_id": instance.runtime_id,
+				"provider": instance.provider_id,
+			}
+			try:
+				adapter = spec.factory(dict(factory_context), dict(instance.options))
+			except Exception as exc:
+				raise KernFailure(
+					"EXTERNAL_RUNTIME_FACTORY_FAILED",
+					f"external runtime factory failed: {instance.runtime_id} ({exc})",
+					origin="external_runtime",
+					phase="factory",
+					context={"runtime_id": instance.runtime_id, "provider": instance.provider_id},
+				) from exc
+			if adapter is None:
+				raise KernFailure(
+					"EXTERNAL_RUNTIME_FACTORY_FAILED",
+					f"external runtime factory returned None: {instance.runtime_id}",
+					origin="external_runtime",
+					phase="factory",
+					context={"runtime_id": instance.runtime_id, "provider": instance.provider_id},
+				)
+			external_runtime_map[instance.runtime_id] = adapter
 		external_runtime_bridge = ExternalRuntimeBridge(external_runtime_map)
+		external_runtime_bridge.start({"project_root": str(root), "config_path": str(resolved_config_path), "checkpoint_dir": str(resolved_checkpoint_dir)})
 		workflow_view_profile = _build_workflow_view_profile(root, resolved_config_path, cfg)
 		if restore_path is not None:
 			checkpoint_meta = load_checkpoint_meta(restore_path)
@@ -563,6 +596,14 @@ class KernRuntime:
 
 	def stop(self) -> None:
 		self.is_running = False
+
+	def close(self) -> None:
+		"""Release external runtime resources after the caller has finished the run."""
+		if self.external_runtimes_closed:
+			return
+		bridge = ExternalRuntimeBridge(dict(self.external_runtimes or {}))
+		bridge.close(self._build_checkpoint_context("close"))
+		self.external_runtimes_closed = True
 
 	def _mark_failure(self, error: BaseException) -> None:
 		self.is_terminal = True

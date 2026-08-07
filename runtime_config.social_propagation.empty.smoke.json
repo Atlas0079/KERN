@@ -1,0 +1,18 @@
+{
+  "packages": [
+    { "path": "Packages/SocialPropagation" },
+    { "path": "Packages/Camping", "world": true }
+  ],
+  "external_runtimes": [
+    {
+      "runtime_id": "social_platform",
+      "provider": "social_propagation:empty_platform",
+      "options": {}
+    }
+  ],
+  "env": {
+    "USE_LLM": "0",
+    "MAX_TICKS": "1",
+    "CHECKPOINT_EVERY_TICK": "0"
+  }
+}

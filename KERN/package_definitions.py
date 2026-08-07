@@ -5,10 +5,12 @@ from typing import Any, Callable
 
 from .component_catalog import ComponentSpec, DataclassCodec
 from .effects import EffectSpec
+from .external_runtime_catalog import ExternalRuntimeSpec
 
 
 _EFFECT_ATTR = "__kern_package_effect_spec__"
 _COMPONENT_ATTR = "__kern_package_component_spec__"
+_EXTERNAL_RUNTIME_ATTR = "__kern_package_external_runtime_spec__"
 
 
 def package_effect(spec: EffectSpec) -> Callable[[Any], Any]:
@@ -39,6 +41,18 @@ def package_component(component_id: str, *, codec: Any = None, version: str = "1
 	return decorate
 
 
+def package_external_runtime(spec: ExternalRuntimeSpec) -> Callable[[Any], Any]:
+	"""Mark one module-level definition as a Package external runtime declaration."""
+	if not isinstance(spec, ExternalRuntimeSpec):
+		raise TypeError("package_external_runtime requires an ExternalRuntimeSpec")
+
+	def decorate(definition: Any) -> Any:
+		setattr(definition, _EXTERNAL_RUNTIME_ATTR, spec)
+		return definition
+
+	return decorate
+
+
 def marked_effect_spec(value: Any) -> EffectSpec | None:
 	spec = getattr(value, _EFFECT_ATTR, None)
 	return spec if isinstance(spec, EffectSpec) else None
@@ -47,3 +61,8 @@ def marked_effect_spec(value: Any) -> EffectSpec | None:
 def marked_component_spec(value: Any) -> ComponentSpec | None:
 	spec = getattr(value, _COMPONENT_ATTR, None)
 	return spec if isinstance(spec, ComponentSpec) else None
+
+
+def marked_external_runtime_spec(value: Any) -> ExternalRuntimeSpec | None:
+	spec = getattr(value, _EXTERNAL_RUNTIME_ATTR, None)
+	return spec if isinstance(spec, ExternalRuntimeSpec) else None
