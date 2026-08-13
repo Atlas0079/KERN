@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import sqlite3
+from dataclasses import dataclass
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Iterator
@@ -11,18 +13,127 @@ from typing import Any, Iterator
 SCHEMA_VERSION = "social_platform.v3"
 MAX_FEED_ITEMS = 8
 MAX_REPOST_ITEMS = 3
+MAX_HOT_ITEMS = 3
 ORIGINAL_SOURCE_KINDS = frozenset({"followed_author", "interest_match", "hot"})
+
+
+@dataclass(frozen=True)
+class FeedRecommendationContext:
+	account_id: str
+	tick: int
+	page_limit: int
+
+
+def _feed_sort_key(card: dict[str, Any]) -> tuple[Any, ...]:
+	return (-float(card["score"]), -int(card["_source_tick"]), str(card["post_id"]), str(card["source_account_id"]))
+
+
+def _stable_unit_interval(*parts: Any) -> float:
+	payload = "\x1f".join(str(part) for part in parts)
+	digest = hashlib.sha256(payload.encode("utf-8")).digest()
+	return int.from_bytes(digest[:8], "big") / float(1 << 64)
+
+
+class HybridFeedRecommender:
+	"""Default replaceable strategy for selecting one feed page from platform candidates."""
+
+	version = "hybrid_feed.v1"
+	channels = ("repost", "interest", "hot", "explore")
+	base_channel_weights = {
+		"repost": 1.75,
+		"interest": 1.60,
+		"hot": 1.25,
+		"explore": 0.90,
+	}
+
+	def select_page(self, context: FeedRecommendationContext, *, original_cards: list[dict[str, Any]], repost_cards: list[dict[str, Any]]) -> list[dict[str, Any]]:
+		selected: list[dict[str, Any]] = []
+		selected_post_ids: set[str] = set()
+		channel_counts = {channel: 0 for channel in self.channels}
+		while len(selected) < context.page_limit:
+			choices: list[tuple[float, str, dict[str, Any]]] = []
+			for channel in self.channels:
+				candidate = self._best_candidate(channel, context, original_cards, repost_cards, selected_post_ids, channel_counts)
+				if candidate is None:
+					continue
+				choices.append((self._channel_score(channel, candidate, context, len(selected), channel_counts[channel]), channel, candidate))
+			if not choices:
+				break
+			_, channel, card = max(choices, key=lambda item: (item[0], -self.channels.index(item[1]), str(item[2]["post_id"])))
+			selected.append(card)
+			selected_post_ids.add(str(card["post_id"]))
+			channel_counts[channel] += 1
+		return selected
+
+	def _best_candidate(
+		self,
+		channel: str,
+		context: FeedRecommendationContext,
+		original_cards: list[dict[str, Any]],
+		repost_cards: list[dict[str, Any]],
+		selected_post_ids: set[str],
+		channel_counts: dict[str, int],
+	) -> dict[str, Any] | None:
+		if channel == "repost":
+			if channel_counts[channel] >= min(MAX_REPOST_ITEMS, context.page_limit):
+				return None
+			candidates = [card for card in repost_cards if str(card["post_id"]) not in selected_post_ids]
+			return min(candidates, key=_feed_sort_key) if candidates else None
+		if channel == "interest":
+			candidates = [
+				card for card in original_cards
+				if str(card["post_id"]) not in selected_post_ids
+				and (float(card.get("_interest_score", 0.0)) > 0.0 or card.get("source_kind") == "followed_author")
+			]
+			return min(candidates, key=_feed_sort_key) if candidates else None
+		if channel == "hot":
+			if channel_counts[channel] >= min(MAX_HOT_ITEMS, context.page_limit):
+				return None
+			candidates = [
+				card for card in original_cards
+				if str(card["post_id"]) not in selected_post_ids and float(card.get("_engagement_score", 0.0)) > 0.0
+			]
+			return min(candidates, key=lambda card: (bool(card.get("previously_exposed")), -float(card.get("_hot_score", 0.0)), *_feed_sort_key(card))) if candidates else None
+		if channel == "explore":
+			candidates = [card for card in original_cards if str(card["post_id"]) not in selected_post_ids]
+			return min(candidates, key=lambda card: self._explore_sort_key(card, context)) if candidates else None
+		raise ValueError(f"unsupported feed recommendation channel: {channel}")
+
+	def _channel_score(self, channel: str, card: dict[str, Any], context: FeedRecommendationContext, slot: int, selected_from_channel: int) -> float:
+		base = self.base_channel_weights[channel]
+		if channel == "repost":
+			signal = min(2.5, max(0.0, float(card["score"])) / 3.0)
+		elif channel == "interest":
+			signal = min(1.5, max(0.0, float(card.get("_interest_score", 0.0))) + (0.4 if card.get("source_kind") == "followed_author" else 0.0))
+		elif channel == "hot":
+			signal = min(2.5, max(0.0, float(card.get("_hot_score", 0.0))) / 6.0)
+		else:
+			signal = 0.35 + min(0.75, slot * 0.08)
+		if card.get("previously_exposed"):
+			signal *= 0.2
+		damping = 1.0 / (1.0 + 1.25 * selected_from_channel)
+		jitter = 0.85 + 0.30 * _stable_unit_interval(self.version, context.account_id, context.tick, context.page_limit, slot, channel)
+		return base * (1.0 + signal) * damping * jitter
+
+	def _explore_sort_key(self, card: dict[str, Any], context: FeedRecommendationContext) -> tuple[Any, ...]:
+		return (
+			bool(card.get("previously_exposed")),
+			float(card.get("_interest_score", 0.0)) > 0.0 or card.get("source_kind") == "followed_author",
+			_stable_unit_interval(self.version, "explore", context.account_id, context.tick, context.page_limit, card["post_id"]),
+			str(card["post_id"]),
+		)
 
 
 class SQLiteSocialPlatform:
 	"""Standalone deterministic model of a feed-based social platform."""
 
-	def __init__(self, database_path: str | Path, *, checkpoint_dir: str | Path | None = None) -> None:
+	def __init__(self, database_path: str | Path, *, checkpoint_dir: str | Path | None = None, recommender: Any | None = None) -> None:
 		self.database_path = Path(database_path).resolve()
 		self.checkpoint_dir = Path(checkpoint_dir).resolve() if checkpoint_dir else self.database_path.parent / "checkpoints"
 		self.database_path.parent.mkdir(parents=True, exist_ok=True)
 		self._transaction_id = ""
 		self._transaction_connection: sqlite3.Connection | None = None
+		self.recommender = recommender or HybridFeedRecommender()
 		self._initialize_schema()
 
 	def _connect(self) -> sqlite3.Connection:
@@ -313,19 +424,14 @@ class SQLiteSocialPlatform:
 				for row in repost_rows if str(row["post_id"]) in posts_by_id
 			]
 
-		selected_reposts: list[dict[str, Any]] = []
-		for card in sorted(repost_cards, key=self._feed_sort_key):
-			if card["post_id"] in {item["post_id"] for item in selected_reposts}:
-				continue
-			selected_reposts.append(card)
-			if len(selected_reposts) >= min(MAX_REPOST_ITEMS, page_limit):
-				break
-		selected_ids = {item["post_id"] for item in selected_reposts}
-		selected_originals = [card for card in sorted(original_cards, key=self._feed_sort_key) if card["post_id"] not in selected_ids][:(page_limit - len(selected_reposts))]
-		page = [*selected_reposts, *selected_originals]
+		page = self.recommender.select_page(
+			FeedRecommendationContext(account_id=account, tick=current_tick, page_limit=page_limit),
+			original_cards=original_cards,
+			repost_cards=repost_cards,
+		)
 		for position, card in enumerate(page):
 			card["position"] = position
-			card.pop("_source_tick", None)
+			self._strip_internal_card_fields(card)
 		return page
 
 	def open_feed_session(self, account_id: str, *, tick: int, limit: int, transaction_id: str = "") -> dict[str, Any]:
@@ -384,21 +490,40 @@ class SQLiteSocialPlatform:
 
 	@staticmethod
 	def _feed_sort_key(card: dict[str, Any]) -> tuple[Any, ...]:
-		return (-float(card["score"]), -int(card["_source_tick"]), str(card["post_id"]), str(card["source_account_id"]))
+		return _feed_sort_key(card)
+
+	@staticmethod
+	def _strip_internal_card_fields(card: dict[str, Any]) -> None:
+		for key in list(card):
+			if key.startswith("_"):
+				card.pop(key, None)
 
 	def _original_card(self, post: sqlite3.Row, topics: list[str], hashtags: list[str], interests: dict[str, float], followed: set[str], seen: set[str], repost_counts: dict[str, int], like_counts: dict[str, int], comment_counts: dict[str, int], liked: set[str], reposted: set[str], tick: int) -> dict[str, Any]:
 		post_id = str(post["post_id"])
 		author_id = str(post["author_id"])
 		interest_score = sum(interests.get(topic, 0.0) for topic in topics)
 		is_followed = author_id in followed
-		score = 2.0 * interest_score + 1.5 * float(is_followed) + 1.0 / (1.0 + max(0, tick - int(post["created_tick"]))) + 0.5 * repost_counts.get(post_id, 0)
-		return self._card(post, hashtags, post_id, "original", author_id, None, None, "followed_author" if is_followed else "interest_match" if interest_score else "hot", author_id, "recommended", score, seen, repost_counts, like_counts, comment_counts, liked, reposted, int(post["created_tick"]))
+		freshness = 1.0 / (1.0 + max(0, tick - int(post["created_tick"])))
+		engagement_score = 3.0 * repost_counts.get(post_id, 0) + 1.5 * comment_counts.get(post_id, 0) + 0.5 * like_counts.get(post_id, 0)
+		score = 2.0 * interest_score + 1.5 * float(is_followed) + freshness + 0.5 * repost_counts.get(post_id, 0)
+		card = self._card(post, hashtags, post_id, "original", author_id, None, None, "followed_author" if is_followed else "interest_match" if interest_score else "hot", author_id, "recommended", score, seen, repost_counts, like_counts, comment_counts, liked, reposted, int(post["created_tick"]))
+		card["_interest_score"] = interest_score
+		card["_engagement_score"] = engagement_score
+		card["_hot_score"] = engagement_score + freshness
+		return card
 
 	def _repost_card(self, post: sqlite3.Row, repost: sqlite3.Row, topics: list[str], hashtags: list[str], interests: dict[str, float], seen: set[str], repost_counts: dict[str, int], like_counts: dict[str, int], comment_counts: dict[str, int], liked: set[str], reposted: set[str], tick: int) -> dict[str, Any]:
 		post_id = str(post["post_id"])
 		reposted_tick = int(repost["created_tick"])
-		score = 2.0 * sum(interests.get(topic, 0.0) for topic in topics) + 1.5 + 1.0 / (1.0 + max(0, tick - reposted_tick)) + 0.5 * repost_counts.get(post_id, 0)
-		return self._card(post, hashtags, post_id, "repost", str(post["author_id"]), str(repost["account_id"]), reposted_tick, "followed_repost", str(repost["account_id"]), "reposts", score, seen, repost_counts, like_counts, comment_counts, liked, reposted, reposted_tick)
+		interest_score = sum(interests.get(topic, 0.0) for topic in topics)
+		freshness = 1.0 / (1.0 + max(0, tick - reposted_tick))
+		engagement_score = 3.0 * repost_counts.get(post_id, 0) + 1.5 * comment_counts.get(post_id, 0) + 0.5 * like_counts.get(post_id, 0)
+		score = 2.0 * interest_score + 1.5 + freshness + 0.5 * repost_counts.get(post_id, 0)
+		card = self._card(post, hashtags, post_id, "repost", str(post["author_id"]), str(repost["account_id"]), reposted_tick, "followed_repost", str(repost["account_id"]), "reposts", score, seen, repost_counts, like_counts, comment_counts, liked, reposted, reposted_tick)
+		card["_interest_score"] = interest_score
+		card["_engagement_score"] = engagement_score
+		card["_hot_score"] = engagement_score + freshness
+		return card
 
 	@staticmethod
 	def _card(post: sqlite3.Row, hashtags: list[str], post_id: str, item_kind: str, author_id: str, reposter_id: str | None, reposted_tick: int | None, source_kind: str, source_account: str, section: str, score: float, seen: set[str], repost_counts: dict[str, int], like_counts: dict[str, int], comment_counts: dict[str, int], liked: set[str], reposted: set[str], source_tick: int) -> dict[str, Any]:
@@ -667,4 +792,4 @@ class SQLiteSocialPlatform:
 		return ("accounts", "posts", "follows", "feed_sessions", "exposures", "reposts", "likes", "comments")
 
 
-__all__ = ["SQLiteSocialPlatform"]
+__all__ = ["FeedRecommendationContext", "HybridFeedRecommender", "SQLiteSocialPlatform"]

@@ -18,6 +18,7 @@ PROFILE_SCHEMA = "social_profile.v4"
 SCHEDULE_SCHEMA = "social_activation_schedule.v1"
 MANIFEST_SCHEMA = "sea_level_social_generation.v1"
 BIG_FIVE_FIELDS = ("openness", "conscientiousness", "extraversion", "agreeableness", "neuroticism")
+BACKGROUND_POST_COUNT = 200
 
 SCIENCE_EXPANSION = {
 	"climate_risk": ("climate_risk", "sea_level", "extreme_weather"),
@@ -93,7 +94,7 @@ def load_study_config(path: Path) -> dict[str, Any]:
 	config = _load_json(path)
 	_exact(
 		config,
-		{"schema_version", "study_id", "study_seed", "population", "simulation", "platform", "network", "activation", "interest_mapping", "recommendation", "conditions"},
+		{"schema_version", "study_id", "study_seed", "population", "simulation", "platform", "network", "activation", "interest_mapping", "conditions"},
 		"study config",
 	)
 	if config["schema_version"] != STUDY_SCHEMA:
@@ -107,7 +108,7 @@ def load_study_config(path: Path) -> dict[str, Any]:
 	_exact(config["simulation"], {"tick_count", "feed_limit", "max_actions_per_turn", "max_replans_per_turn"}, "simulation")
 	_positive_int(config["simulation"]["tick_count"], "simulation.tick_count")
 	if config["simulation"]["feed_limit"] != 8:
-		raise ValueError("simulation.feed_limit must be 8 for social recommendation v1")
+		raise ValueError("simulation.feed_limit must be 8 for the current social feed runtime")
 	_exact(config["platform"], {"runtime_id", "institution_account_id", "institution_display_name", "background_posts_path"}, "platform")
 	network = _exact(
 		config["network"],
@@ -478,11 +479,13 @@ def build_world(profiles: list[dict[str, Any]], backgrounds: dict[str, str], sch
 
 def _load_background_posts(path: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
 	payload = _load_json(path)
-	_exact(payload, {"schema_version", "publishers", "posts"}, "background posts catalog")
+	allowed = {"schema_version", "generation", "publishers", "posts"}
+	if not isinstance(payload, dict) or set(payload).difference(allowed) or not {"schema_version", "publishers", "posts"} <= set(payload):
+		raise ValueError("background posts catalog has invalid fields")
 	if payload["schema_version"] != "social_background_posts.v1":
 		raise ValueError("unsupported background posts schema")
-	if not isinstance(payload["publishers"], list) or not isinstance(payload["posts"], list) or len(payload["posts"]) != 40:
-		raise ValueError("background catalog must contain publishers and exactly 40 posts")
+	if not isinstance(payload["publishers"], list) or not isinstance(payload["posts"], list) or len(payload["posts"]) != BACKGROUND_POST_COUNT:
+		raise ValueError(f"background catalog must contain publishers and exactly {BACKGROUND_POST_COUNT} posts")
 	publisher_ids = {item["account_id"] for item in payload["publishers"]}
 	posts: list[dict[str, Any]] = []
 	for index, raw in enumerate(payload["posts"]):

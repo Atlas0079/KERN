@@ -64,7 +64,7 @@ candidate score = interest_match(P, B)
 1. 保持 SQLite runtime 的确定性：`recommend_feed` 只读，`record_feed_exposure`、`like`、`comment`、`repost` 是显式写操作。
 2. 转发只写 `reposts(account_id, post_id)`，不复制原帖；feed 卡片记录 `source_account_id`，曝光也记录同一来源。
 3. 加入点赞、评论和转发，但首个主要因变量仍设为“首次曝光后的转发”。点赞/评论可作为可见互动信号和次要结果，避免一开始让三类行为共同驱动复杂反馈。
-4. 将 `population/network/recommendation/narrative/activation/seed` 纳入 study config，并把每轮 feed 候选、最终曝光、互动和指标写入 archive。
+4. 将 `population/network/narrative/activation/seed` 纳入 study config，并把每轮 feed 候选、最终曝光、互动和指标写入 archive。
 5. 在完成 100 人闭环及其回归测试前，不引入百万级目标或实时 LLM 全员逐 tick 调用；后者会混淆计算预算、调度假设和传播机制。
 
 ## 来源与边界

@@ -8,13 +8,21 @@ from pathlib import Path
 from KERN.external_runtimes.social_platform import SQLiteSocialPlatform
 
 
-def _post(post_id: str, *, author: str = "author", tick: int = 0, condition_id: str = "background") -> dict:
+def _post(
+	post_id: str,
+	*,
+	author: str = "author",
+	tick: int = 0,
+	condition_id: str = "background",
+	ranking_topics: list[str] | None = None,
+	display_hashtags: list[str] | None = None,
+) -> dict:
 	return {
 		"account_id": author,
 		"post_id": post_id,
 		"text": f"Risk information {post_id}",
-		"ranking_topics": ["risk"],
-		"display_hashtags": ["风险信息"],
+		"ranking_topics": list(ranking_topics or ["risk"]),
+		"display_hashtags": list(display_hashtags or ["风险信息"]),
 		"condition_id": condition_id,
 		"tick": tick,
 	}
@@ -196,6 +204,73 @@ class SQLiteSocialPlatformTests(unittest.TestCase):
 			self.assertLessEqual(sum(item["section"] == "reposts" for item in feed), 3)
 			self.assertEqual(len({item["post_id"] for item in feed}), len(feed))
 			self.assertEqual([item["position"] for item in feed], list(range(len(feed))))
+
+	def test_hybrid_recommender_mixes_reposts_interest_hot_and_exploration_deterministically(self) -> None:
+		with tempfile.TemporaryDirectory() as temp_dir:
+			platform = SQLiteSocialPlatform(Path(temp_dir) / "platform.sqlite")
+			seed = {
+				"accounts": [
+					{"account_id": "reader", "display_name": "Reader", "interests": {"risk": 1.0}},
+					{"account_id": "friend", "display_name": "Friend", "interests": {"risk": 1.0}},
+					{"account_id": "interest_author", "display_name": "Interest", "interests": {"risk": 1.0}},
+					{"account_id": "hot_author", "display_name": "Hot", "interests": {"culture": 1.0}},
+					*[
+						{"account_id": f"explore_author_{index}", "display_name": f"Explore {index}", "interests": {"daily": 1.0}}
+						for index in range(4)
+					],
+					*[
+						{"account_id": f"booster_{index}", "display_name": f"Booster {index}", "interests": {"culture": 1.0}}
+						for index in range(4)
+					],
+				],
+				"posts": [
+					_post("interest_0", author="interest_author", ranking_topics=["risk"]),
+					_post("interest_1", author="interest_author", ranking_topics=["risk"]),
+					_post("repost_target", author="interest_author", ranking_topics=["risk"]),
+					_post("hot_post", author="hot_author", ranking_topics=["culture"], display_hashtags=["文化"]),
+					*[
+						_post(f"explore_{index}", author=f"explore_author_{index}", ranking_topics=["daily"], display_hashtags=["日常"])
+						for index in range(4)
+					],
+				],
+				"follows": [{"follower_id": "reader", "followee_id": "friend", "tick": 0}],
+			}
+			platform.seed(seed)
+			friend_card = _card(_open(platform, "friend", tick=0), "repost_target")
+			platform.repost("friend", "repost_target", source_exposure_id=friend_card["exposure_id"], tick=0)
+			for index in range(4):
+				hot_card = _card(_open(platform, f"booster_{index}", tick=0), "hot_post")
+				platform.like(f"booster_{index}", "hot_post", source_exposure_id=hot_card["exposure_id"], tick=0)
+				if index < 2:
+					platform.comment(f"booster_{index}", "hot_post", source_exposure_id=hot_card["exposure_id"], text="worth reading", tick=0)
+					platform.repost(f"booster_{index}", "hot_post", source_exposure_id=hot_card["exposure_id"], tick=0)
+
+			first = platform.recommend_feed("reader", tick=1, limit=8)
+			second = platform.recommend_feed("reader", tick=1, limit=8)
+			post_ids = [item["post_id"] for item in first]
+
+			self.assertEqual(post_ids, [item["post_id"] for item in second])
+			self.assertEqual(len(post_ids), len(set(post_ids)))
+			self.assertTrue(any(item["feed_item_kind"] == "repost" and item["post_id"] == "repost_target" for item in first))
+			self.assertTrue(any(post_id.startswith("interest_") for post_id in post_ids))
+			self.assertIn("hot_post", post_ids)
+			self.assertTrue(any(post_id.startswith("explore_") for post_id in post_ids))
+			self.assertFalse(any(key.startswith("_") for item in first for key in item))
+
+	def test_platform_can_use_a_custom_recommender_strategy(self) -> None:
+		class FirstOriginalRecommender:
+			def select_page(self, context: object, *, original_cards: list[dict], repost_cards: list[dict]) -> list[dict]:
+				return original_cards[:1]
+
+		with tempfile.TemporaryDirectory() as temp_dir:
+			platform = SQLiteSocialPlatform(Path(temp_dir) / "platform.sqlite", recommender=FirstOriginalRecommender())
+			seed = _seed()
+			seed["posts"].append(_post("second_post"))
+			platform.seed(seed)
+
+			feed = platform.recommend_feed("reader", tick=0, limit=8)
+
+			self.assertEqual([item["post_id"] for item in feed], ["risk_post"])
 
 	def test_previously_exposed_post_scores_zero_and_sessions_preserve_repeated_exposures(self) -> None:
 		with tempfile.TemporaryDirectory() as temp_dir:

@@ -242,6 +242,21 @@ class SocialPlatformWorkflowTests(unittest.TestCase):
 		self.assertIsInstance(end, EndTurn)
 		self.assertEqual(len(client.calls), 2)
 		request_text = json.dumps(client.calls[0], ensure_ascii=False)
+		system_prompt = client.calls[0]["messages"][0]["content"]
+		first_request = json.loads(client.calls[0]["messages"][1]["content"])
+		self.assertIsNone(client.calls[0]["response_format"])
+		self.assertIn("我就是以下这个社交平台用户", system_prompt)
+		self.assertIn("我是一名关注公共议题的研究人员。", system_prompt)
+		self.assertIn("openness=0.80", system_prompt)
+		self.assertIn("休息时间", system_prompt)
+		self.assertIn("do_nothing 表示我看过后继续划走", system_prompt)
+		self.assertIn("like 表示我愿意留下一个轻量的公开反馈", system_prompt)
+		self.assertIn("comment 表示我有一句具体的话想当场说出来", system_prompt)
+		self.assertIn("repost 表示我想把这条内容转给自己的社交圈看", system_prompt)
+		self.assertNotIn("profile", first_request)
+		self.assertEqual(first_request["schema_version"], "social_decision_page_context.v1")
+		self.assertEqual(first_request["actor_id"], "agent_001")
+		self.assertEqual(first_request["allowed_action_post_ids"], ["background_001", "experiment_001"])
 		self.assertNotIn("must-not-reach-llm", request_text)
 		self.assertNotIn("hidden-world-entity", request_text)
 		self.assertNotIn("private_topic", request_text)
@@ -450,6 +465,78 @@ class SocialPlatformWorkflowTests(unittest.TestCase):
 			session.next_step(ws, _frame(_committed(browse.intent)))
 
 		self.assertEqual(raised.exception.code, "WORKFLOW_OUTPUT_PARSE_FAILED")
+
+	def test_social_decision_accepts_json_object_inside_code_fence(self) -> None:
+		response = '```json\n{"actions":[],"decision_summary":"暂不互动。"}\n```'
+		workflow, client, ws = self._workflow(active=True, response=response)
+		session = workflow.begin_turn(ws, _turn_start())
+		browse = session.next_step(ws, _frame())
+
+		step = session.next_step(ws, _frame(_committed(browse.intent)))
+
+		self.assertIsInstance(step, EndTurn)
+		self.assertEqual(step.meta["decision_summary"], "暂不互动。")
+		self.assertEqual(len(client.calls), 1)
+
+	def test_social_decision_prefers_whole_fenced_json_over_nested_action_object(self) -> None:
+		response = (
+			"```json\n"
+			"{\n"
+			'  "actions": [\n'
+			"    {\n"
+			'      "post_id": "background_001",\n'
+			'      "action": "like"\n'
+			"    }\n"
+			"  ],\n"
+			'  "decision_summary": "看到"学习新软件时先完成一个小项目"这条很有共鸣，先点个赞。"\n'
+			"}\n"
+			"```"
+		)
+		workflow, client, ws = self._workflow(active=True, response=response)
+		session = workflow.begin_turn(ws, _turn_start())
+		browse = session.next_step(ws, _frame())
+
+		step = session.next_step(ws, _frame(_committed(browse.intent)))
+
+		self.assertIsInstance(step, SubmitAction)
+		self.assertEqual(step.intent, {"verb": "LikeSocialPost", "target_id": "phone_001", "parameters": {"post_id": "background_001"}})
+		self.assertEqual(len(client.calls), 1)
+
+	def test_social_decision_extracts_json_object_from_mixed_text(self) -> None:
+		response = '我的判断如下：{"actions":[],"decision_summary":"看过了，先不操作。"}'
+		workflow, client, ws = self._workflow(active=True, response=response)
+		session = workflow.begin_turn(ws, _turn_start())
+		browse = session.next_step(ws, _frame())
+
+		step = session.next_step(ws, _frame(_committed(browse.intent)))
+
+		self.assertIsInstance(step, EndTurn)
+		self.assertEqual(step.meta["decision_summary"], "看过了，先不操作。")
+		self.assertEqual(len(client.calls), 1)
+
+	def test_empty_social_decision_response_retries_before_parse(self) -> None:
+		response = json.dumps({"actions": [], "decision_summary": "第三次正常返回。"}, ensure_ascii=False)
+		workflow, client, ws = self._workflow(active=True, response=["", "   ", response])
+		session = workflow.begin_turn(ws, _turn_start())
+		browse = session.next_step(ws, _frame())
+
+		step = session.next_step(ws, _frame(_committed(browse.intent)))
+
+		self.assertIsInstance(step, EndTurn)
+		self.assertEqual(step.meta["decision_summary"], "第三次正常返回。")
+		self.assertEqual(len(client.calls), 3)
+
+	def test_empty_social_decision_response_fails_after_retries(self) -> None:
+		workflow, client, ws = self._workflow(active=True, response=["", " ", "\n"])
+		session = workflow.begin_turn(ws, _turn_start())
+		browse = session.next_step(ws, _frame())
+
+		with self.assertRaises(KernFailure) as raised:
+			session.next_step(ws, _frame(_committed(browse.intent)))
+
+		self.assertEqual(raised.exception.code, "SOCIAL_WORKFLOW_EMPTY_RESPONSE")
+		self.assertEqual(raised.exception.context["attempts"], 3)
+		self.assertEqual(len(client.calls), 3)
 
 	def test_invisible_post_is_a_terminal_output_contract_failure(self) -> None:
 		response = json.dumps(

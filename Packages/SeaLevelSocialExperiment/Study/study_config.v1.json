@@ -53,15 +53,6 @@
       "general_knowledge": 0.1
     }
   },
-  "recommendation": {
-    "version": "social_recommendation.v1",
-    "topic_interest_weight": 2.0,
-    "source_follow_boost": 1.5,
-    "freshness_numerator": 1.0,
-    "repost_engagement_weight": 0.5,
-    "max_feed_items": 8,
-    "max_repost_items": 3
-  },
   "conditions": [
     {
       "condition_id": "sea_level_consequence_focus",

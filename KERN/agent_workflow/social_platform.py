@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field
 from typing import Any, Mapping, Protocol
 from uuid import uuid4
@@ -28,6 +29,160 @@ _PUBLIC_CARD_FIELDS = (
 	"viewer_has_liked",
 	"viewer_has_reposted",
 )
+_PAGE_DECISION_EMPTY_RESPONSE_MAX_ATTEMPTS = 3
+
+
+def _parse_page_decision_output(response_text: str) -> dict[str, Any]:
+	def _try_load_object(candidate: str) -> dict[str, Any] | None:
+		text = str(candidate or "").strip()
+		if not text:
+			return None
+		try:
+			loaded = json.loads(text)
+		except json.JSONDecodeError:
+			return None
+		if not isinstance(loaded, dict):
+			raise ValueError("social workflow response JSON must be an object")
+		return loaded
+
+	def _code_fence_bodies(text: str) -> list[str]:
+		out: list[str] = []
+		for match in re.finditer(r"```[ \t]*(?:json|JSON)?[ \t]*\r?\n([\s\S]*?)\r?\n?[ \t]*```", text):
+			body = str(match.group(1) or "").strip()
+			if body:
+				out.append(body)
+		return out
+
+	def _balanced_span_from(text: str, start: int, open_ch: str, close_ch: str) -> str | None:
+		if start < 0 or start >= len(text) or text[start] != open_ch:
+			return None
+		depth = 1
+		in_str = False
+		escape = False
+		j = start + 1
+		while j < len(text):
+			ch = text[j]
+			if in_str:
+				if escape:
+					escape = False
+				elif ch == "\\":
+					escape = True
+				elif ch == '"':
+					in_str = False
+				j += 1
+				continue
+			if ch == '"':
+				in_str = True
+			elif ch == open_ch:
+				depth += 1
+			elif ch == close_ch:
+				depth -= 1
+				if depth == 0:
+					return text[start : j + 1]
+			j += 1
+		return None
+
+	def _balanced_object_spans(text: str) -> list[str]:
+		out: list[str] = []
+		n = len(text)
+		i = 0
+		while i < n:
+			if text[i] != "{":
+				i += 1
+				continue
+			span = _balanced_span_from(text, i, "{", "}")
+			if span is not None:
+				out.append(span)
+			i += 1
+		return out
+
+	def _field_value_start(text: str, field_name: str) -> int:
+		match = re.search(rf'"{re.escape(field_name)}"\s*:\s*', text)
+		return int(match.end()) if match else -1
+
+	def _decode_loose_json_string(value: str) -> str:
+		out: list[str] = []
+		escape = False
+		for ch in str(value):
+			if ch == '"' and not escape:
+				out.append(r"\"")
+			else:
+				out.append(ch)
+			if escape:
+				escape = False
+			elif ch == "\\":
+				escape = True
+		try:
+			return str(json.loads('"' + "".join(out) + '"'))
+		except json.JSONDecodeError:
+			return str(value)
+
+	def _loose_string_field(text: str, field_name: str) -> str | None:
+		start = _field_value_start(text, field_name)
+		if start < 0 or start >= len(text) or text[start] != '"':
+			return None
+		i = start + 1
+		escape = False
+		while i < len(text):
+			ch = text[i]
+			if escape:
+				escape = False
+				i += 1
+				continue
+			if ch == "\\":
+				escape = True
+				i += 1
+				continue
+			if ch == '"':
+				j = i + 1
+				while j < len(text) and text[j] in " \t\r\n":
+					j += 1
+				if j >= len(text) or text[j] in ",}]":
+					return _decode_loose_json_string(text[start + 1 : i])
+			i += 1
+		return None
+
+	def _loose_contract_object(text: str) -> dict[str, Any] | None:
+		actions_start = _field_value_start(text, "actions")
+		if actions_start < 0 or actions_start >= len(text) or text[actions_start] != "[":
+			return None
+		actions_span = _balanced_span_from(text, actions_start, "[", "]")
+		if actions_span is None:
+			return None
+		try:
+			actions = json.loads(actions_span)
+		except json.JSONDecodeError:
+			return None
+		summary = _loose_string_field(text, "decision_summary")
+		if summary is None:
+			return None
+		return {"actions": actions, "decision_summary": summary}
+
+	raw = str(response_text or "").strip()
+	fenced = _code_fence_bodies(raw)
+	candidates: list[str] = [raw, *fenced]
+	seen: set[str] = set()
+	for candidate in candidates:
+		text = str(candidate or "").strip()
+		if not text or text in seen:
+			continue
+		seen.add(text)
+		loaded = _try_load_object(text)
+		if loaded is not None:
+			return loaded
+		loose = _loose_contract_object(text)
+		if loose is not None:
+			return loose
+	for candidate in _balanced_object_spans(raw):
+		text = str(candidate or "").strip()
+		if not text or text in seen:
+			continue
+		seen.add(text)
+		loaded = _try_load_object(text)
+		if loaded is not None:
+			return loaded
+	excerpt = raw if len(raw) <= 1200 else raw[:1200] + "...<truncated>"
+	raise ValueError(f"social workflow response does not contain a valid JSON object: {excerpt}")
 
 
 class SocialActivationSchedule(Protocol):
@@ -362,7 +517,7 @@ class SocialPlatformWorkflow:
 				"messages": messages,
 				"temperature": float(self.temperature),
 				"max_tokens": int(self.max_tokens),
-				"response_format": {"type": "json_object"},
+				"response_format": None,
 				"extra": dict(self.request_extra),
 			},
 			"response_text": "",
@@ -384,7 +539,7 @@ class SocialPlatformWorkflow:
 			model=self.model,
 			temperature=float(self.temperature),
 			max_tokens=int(self.max_tokens),
-			response_format={"type": "json_object"},
+			response_format=None,
 			extra=dict(self.request_extra),
 		)
 
@@ -396,11 +551,11 @@ class SocialPlatformWorkflow:
 		card_by_id: dict[str, dict[str, Any]],
 		start: TurnStart,
 		binding: ActorPlatformBinding,
-	) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+		) -> tuple[list[dict[str, Any]], dict[str, Any]]:
 		trace["response_text"] = str(response_text)
 		try:
-			parsed = json.loads(str(response_text))
-		except json.JSONDecodeError as exc:
+			parsed = _parse_page_decision_output(str(response_text))
+		except ValueError as exc:
 			trace["error"] = {"code": "WORKFLOW_OUTPUT_PARSE_FAILED", "message": str(exc)}
 			self._record_trace(trace)
 			raise KernFailure(
@@ -440,22 +595,47 @@ class SocialPlatformWorkflow:
 		return [self._action_intent(binding.terminal_id, action) for action in actions], meta
 
 	def _request_page_decision_with_trace(self, trace: dict[str, Any], start: TurnStart, messages: list[dict[str, Any]]) -> str:
-		try:
-			return self.run_page_decision_request(messages)
-		except KernFailure:
-			raise
-		except Exception as exc:
-			trace["error"] = {"code": "SOCIAL_WORKFLOW_LLM_REQUEST_FAILED", "message": str(exc)}
-			self._record_trace(trace)
-			raise KernFailure(
-				"SOCIAL_WORKFLOW_LLM_REQUEST_FAILED",
-				str(exc),
-				origin="workflow",
-				phase="social_decision",
-				context={"actor_id": start.actor_id, "tick": start.tick},
-				category=ERROR_KIND_INFRASTRUCTURE,
-				cause=exc,
-			) from exc
+		empty_attempts: list[dict[str, Any]] = []
+		for attempt in range(_PAGE_DECISION_EMPTY_RESPONSE_MAX_ATTEMPTS):
+			try:
+				response_text = self.run_page_decision_request(messages)
+			except KernFailure:
+				raise
+			except Exception as exc:
+				if empty_attempts:
+					trace["empty_response_attempts"] = [dict(item) for item in empty_attempts]
+				trace["error"] = {"code": "SOCIAL_WORKFLOW_LLM_REQUEST_FAILED", "message": str(exc)}
+				self._record_trace(trace)
+				raise KernFailure(
+					"SOCIAL_WORKFLOW_LLM_REQUEST_FAILED",
+					str(exc),
+					origin="workflow",
+					phase="social_decision",
+					context={"actor_id": start.actor_id, "tick": start.tick},
+					category=ERROR_KIND_INFRASTRUCTURE,
+					cause=exc,
+				) from exc
+			if str(response_text or "").strip():
+				if empty_attempts:
+					trace["empty_response_attempts"] = [dict(item) for item in empty_attempts]
+				return str(response_text)
+			empty_attempts.append({"attempt": int(attempt + 1)})
+		trace["response_text"] = ""
+		trace["empty_response_attempts"] = [dict(item) for item in empty_attempts]
+		trace["error"] = {
+			"code": "SOCIAL_WORKFLOW_EMPTY_RESPONSE",
+			"message": "social workflow LLM response was empty after retries",
+			"attempts": int(_PAGE_DECISION_EMPTY_RESPONSE_MAX_ATTEMPTS),
+		}
+		self._record_trace(trace)
+		raise KernFailure(
+			"SOCIAL_WORKFLOW_EMPTY_RESPONSE",
+			"social workflow LLM response was empty after retries",
+			origin="workflow",
+			phase="social_decision",
+			context={"actor_id": start.actor_id, "tick": start.tick, "attempts": int(_PAGE_DECISION_EMPTY_RESPONSE_MAX_ATTEMPTS)},
+			category=ERROR_KIND_INFRASTRUCTURE,
+		)
 
 	def _decision_perception(
 		self,
@@ -611,14 +791,35 @@ class SocialPlatformWorkflow:
 		}
 
 	def _messages(self, perception: dict[str, Any]) -> list[dict[str, Any]]:
+		profile = dict(perception.get("profile", {}) or {}) if isinstance(perception.get("profile", {}), dict) else {}
+		big_five = dict(profile.get("big_five", {}) or {}) if isinstance(profile.get("big_five", {}), dict) else {}
+		big_five_text = ", ".join(
+			f"{field_name}={float(big_five[field_name]):.2f}"
+			for field_name in _BIG_FIVE_FIELDS
+			if field_name in big_five
+		)
+		profile_id = str(profile.get("profile_id", "") or "").strip()
+		background = str(profile.get("natural_language_background", "") or "").strip()
 		system = (
-			"你正在模拟一个社交平台用户。请依据人物背景、人格、自己的近期社交记忆和当前手机页面，"
-			"自然决定是否点赞、评论或转发。不要把人格维度机械地解释成固定行为，也不要假设页面之外的信息。"
-			"评论和转发文字应符合人物的第一人称表达。只返回一个 JSON 对象，不要输出解释性正文。\n"
+			"我就是以下这个社交平台用户；这不是第三方角色扮演材料，而是我的自我画像和稳定人格。"
+			"我的每个判断都要直接来自我的经历、性格、近期社交记忆和当前手机页面。\n\n"
+			f"我的 profile_id：{profile_id}\n"
+			f"我的自我画像：\n{background}\n"
+			f"我的人格五维（0-1，越高越明显）：{big_five_text}\n\n"
+			"现在是我的休息时间，我只是随手刷自己的社交平台推荐页"
+			"我会像平时一样快速扫过页面：大多数内容看过就划走，只有被自然触动时才公开互动。"
+			"我不会把人格维度机械地解释成固定行为，也不会假设页面之外的信息。"
+			"评论和转发文字必须符合我的第一人称表达。只返回一个 JSON 对象，不输出解释性正文。\n"
+			"可用行为含义："
+			"do_nothing 表示我看过后继续划走，不公开表达态度；这是默认且常见的选择，输出为空 actions。"
+			"like 表示我愿意留下一个轻量的公开反馈，通常是认同、共鸣、觉得有用或想稍后再看。"
+			"comment 表示我有一句具体的话想当场说出来，例如补充、质疑、提问、表达个人经验或情绪。"
+			"repost 表示我想把这条内容转给自己的社交圈看，或借它公开表达一个我愿意承担的立场；"
 			"输出契约：{\"actions\":[...],\"decision_summary\":\"一至三句决定摘要\"}。"
 			"每次只表达当前这一刻的自然浏览反应，actions 必须为空数组或只包含一个动作。"
-			"你不是在完成待办列表，也不需要系统性处理页面上的帖子；已经有一次轻微互动后，"
-			"如果当前页面状态和近期记忆没有自然激发新的强烈互动冲动，就返回空 actions。"
+			"如果我选择 do_nothing，就返回 {\"actions\":[],\"decision_summary\":\"我为什么划走\"}。"
+			"我不需要系统性处理页面上的帖子；已经有一次轻微互动后，如果当前页面状态和近期记忆"
+			"没有自然激发新的互动冲动，就返回空 actions。"
 			"like 动作只能是 {\"post_id\":\"页面中的ID\",\"action\":\"like\"}，不得包含 text。"
 			"comment 动作必须是 {\"post_id\":\"页面中的ID\",\"action\":\"comment\",\"text\":\"非空评论\"}。"
 			"repost 动作必须是 {\"post_id\":\"页面中的ID\",\"action\":\"repost\",\"text\":\"可为空\"}。"
@@ -631,6 +832,8 @@ class SocialPlatformWorkflow:
 			if isinstance(item, dict) and isinstance(item.get("post_id"), str)
 		]
 		request_perception = dict(perception)
+		request_perception.pop("profile", None)
+		request_perception["schema_version"] = "social_decision_page_context.v1"
 		request_perception["allowed_action_post_ids"] = allowed_ids
 		return [
 			{"role": "system", "content": system},

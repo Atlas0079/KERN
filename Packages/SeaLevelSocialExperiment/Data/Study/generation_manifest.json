@@ -2,7 +2,7 @@
   "schema_version": "sea_level_social_generation.v1",
   "study_id": "sea_level_narrative_propagation",
   "study_seed": "sea-level-study-2026-08-v1",
-  "study_config_sha256": "268e95e86932ffeebcb816fa70b0efd8182fb7759f6edd967990ebe767b10dd8",
+  "study_config_sha256": "fa45b1e7fd7fcb6de2cd04d8d373fef1957698a3221243f1d6cc474bbecb6b0c",
   "profile_input": {
     "path": "KERN/external_runtimes/social_profiles/high_education_300_v4.json",
     "sha256": "01a11c85dd630aaefa205b8fb7b9a86d7b7dd9a8ecea615c9d90bdb5d2455f08",
@@ -15,11 +15,11 @@
   },
   "background_posts_input": {
     "path": "Packages/SeaLevelSocialExperiment/Study/background_posts.v1.json",
-    "sha256": "5e1919dd8374b801355544ff51ebda740dc35c8ae446f589008c58fb21bea758",
-    "count": 40
+    "sha256": "c7bc64912127706e732c08dd48f0afb8ba6deca301e8b4293789493323114175",
+    "count": 200
   },
   "population_count": 300,
-  "account_count": 309,
+  "account_count": 341,
   "network_metrics": {
     "edge_count": 6095,
     "out_degree_mean": 20.316666666666666,
@@ -44,14 +44,14 @@
   "interest_projections_sha256": "2aa37ee085f5f0700aca5c08c9866279ceb8c94868c19f8aceed1723a96f3675",
   "follows_sha256": "bd75b5642c543a2525140353ff32be99428c6f759dc03fec73d8e83411746b49",
   "platform_seed_sha256": {
-    "sea_level_consequence_focus": "879178b266a4e81586503899dbc1ee185134f3ae2e7384b08ab49d8181ce9af6",
-    "sea_level_solution_focus": "6c1228b5d9d1edf76288cb1c3ad3b92df34c110837f6087ef5794e239b731819"
+    "sea_level_consequence_focus": "5603c0143531002bd6cfc6124c3e9dd1850507e698abc9354203fbe5421f61a5",
+    "sea_level_solution_focus": "df912c78227a08959420fac38688ec9af23c8e1de6d49ab7d6d96b921e5fa802"
   },
   "condition_ids": [
     "sea_level_consequence_focus",
     "sea_level_solution_focus"
   ],
-  "fingerprint": "9f8899079b46c9b33fdcf7d8431de632e96b9e1b1b6402fdfed313c733ccc614",
+  "fingerprint": "6f4def060e518147cccc8aabfcd86e00375669a345fa631d75962d7d90f03fec",
   "interest_projections": {
     "account_001": [
       {

@@ -14,6 +14,11 @@ from tools.generate_sea_level_social_experiment import (
 	load_study_config,
 	project_interests,
 )
+from tools.generate_sea_level_background_posts import (
+	POST_COUNT,
+	build_background_catalog,
+	build_source_cards,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -88,8 +93,8 @@ class SeaLevelSocialExperimentGenerationTests(unittest.TestCase):
 		self.assertNotEqual(left["condition_id"], right["condition_id"])
 		self.assertNotEqual(left["text"], right["text"])
 		self.assertNotEqual(left["display_hashtags"], right["display_hashtags"])
-		self.assertEqual(len(consequence["accounts"]), 309)
-		self.assertEqual(len(consequence["posts"]), 41)
+		self.assertEqual(len(consequence["accounts"]), 341)
+		self.assertEqual(len(consequence["posts"]), 201)
 		self.assertEqual(sum(row["followee_id"] == "earth_voice" for row in consequence["follows"]), 24)
 
 	def test_generated_seeds_are_accepted_by_social_platform_v3(self) -> None:
@@ -99,10 +104,49 @@ class SeaLevelSocialExperimentGenerationTests(unittest.TestCase):
 			with self.subTest(condition=condition), tempfile.TemporaryDirectory() as temp_dir:
 				platform = SQLiteSocialPlatform(Path(temp_dir) / "platform.sqlite")
 				platform.seed_from_file(PACKAGE_ROOT / "Data" / "Platform" / f"social_seed.{condition}.json")
-				self.assertEqual(platform.counts()["accounts"], 309)
-				self.assertEqual(platform.counts()["posts"], 41)
+				self.assertEqual(platform.counts()["accounts"], 341)
+				self.assertEqual(platform.counts()["posts"], 201)
 				self.assertEqual(platform.counts()["follows"], 6095)
 				platform.close()
+
+	def test_background_post_source_cards_are_deterministic_and_mixed(self) -> None:
+		profile_cards = [
+			{
+				"profile_id": f"social_profile_{index:03d}",
+				"agent_id": f"agent_{index:03d}",
+				"natural_language_background_excerpt": "我是一个普通用户，生活里有工作、家庭和兴趣。",
+				"big_five": {"openness": 0.6, "conscientiousness": 0.6, "extraversion": 0.4, "agreeableness": 0.5, "neuroticism": 0.4},
+			}
+			for index in range(1, 301)
+		]
+
+		left = build_source_cards(seed="unit-test", profile_cards=profile_cards)
+		right = build_source_cards(seed="unit-test", profile_cards=profile_cards)
+
+		self.assertEqual(left, right)
+		self.assertEqual(len(left["publishers"]), 40)
+		self.assertEqual(len(left["source_cards"]), POST_COUNT)
+		self.assertEqual(left["generation"]["bucket_counts"], {
+			"interest_hobby": 70,
+			"everyday_life": 55,
+			"community_public": 35,
+			"light_public_issue": 25,
+			"loose_social": 15,
+		})
+		self.assertTrue(all(card["author_basis"]["kind"] == "profile_inspired_background_user" for card in left["source_cards"]))
+		posts = [
+			{
+				"post_id": card["post_id"],
+				"account_id": card["account_id"],
+				"text": "这是一条用于测试的普通背景帖，围绕日常生活里的具体小事展开，语气平实，没有传播动员，也不讨论海平面。",
+				"ranking_topics": card["ranking_topics"],
+				"display_hashtags": card["display_hashtags"],
+			}
+			for card in left["source_cards"]
+		]
+		catalog = build_background_catalog(left["publishers"], posts, left)
+		self.assertEqual(catalog["schema_version"], "social_background_posts.v1")
+		self.assertEqual(len(catalog["posts"]), POST_COUNT)
 
 	def test_activation_schedule_is_bounded_complete_and_fingerprinted(self) -> None:
 		schedule = _read(PACKAGE_ROOT / "Data" / "Study" / "activation_schedule.json")
