@@ -1,0 +1,149 @@
+{
+  "schema_version": "social_profile_generation.v3",
+  "population_id": "general_chinese_social_adults",
+  "rule_set": "china_adult_social.v1",
+  "lifecycle_age_ranges": {
+    "student": [18, 26],
+    "early_career": [20, 34],
+    "family_formation": [24, 39],
+    "mid_career": [35, 49],
+    "late_career": [50, 59],
+    "retired": [60, 72]
+  },
+  "age_sampling": {
+    "student": {"mode": "uniform"},
+    "early_career": {"mode": "uniform"},
+    "family_formation": {"mode": "uniform"},
+    "mid_career": {"mode": "uniform"},
+    "late_career": {"mode": "uniform"},
+    "retired": {"mode": "uniform"}
+  },
+  "dimensions": {
+    "demographics.lifecycle_stage": {
+      "weights": {"student": 0.14, "early_career": 0.22, "family_formation": 0.20, "mid_career": 0.22, "late_career": 0.12, "retired": 0.10}
+    },
+    "demographics.gender": {
+      "weights": {"female": 0.5, "male": 0.5}
+    },
+    "education.highest_completed": {
+      "weights": {"middle_school": 0.07, "high_school": 0.17, "vocational": 0.15, "associate": 0.20, "bachelor": 0.32, "master": 0.08, "doctorate": 0.01},
+      "rules": [
+        {"rule_id": "education.younger_higher_study", "reason": "年轻生命周期提高专科、本科和硕士教育的相对权重", "when": {"lifecycle_stage": {"in": ["student", "early_career"]}}, "multipliers": {"associate": 1.25, "bachelor": 1.35, "master": 1.15}},
+        {"rule_id": "education.older_cohort", "reason": "较年长群体提高中学教育的相对权重", "when": {"age": {"gte": 50}}, "multipliers": {"middle_school": 1.4, "high_school": 1.3, "master": 0.7, "doctorate": 0.7}}
+      ]
+    },
+    "education.current_program": {
+      "weights": {"vocational": 0.15, "associate": 0.25, "bachelor": 0.42, "master": 0.15, "doctorate": 0.03}
+    },
+    "education.current_status": {
+      "weights": {"not_enrolled": 0.94, "continuing_education": 0.06}
+    },
+    "occupation.status": {
+      "weights": {"employed": 0.79, "flexible": 0.12, "unemployed": 0.09},
+      "rules": [
+        {"rule_id": "occupation.status.retired_stage", "reason": "退休阶段以退休状态为主，同时允许少量返聘和灵活就业", "when": {"lifecycle_stage": "retired"}, "replace_weights": {"retired": 0.86, "employed": 0.10, "flexible": 0.04}}
+      ]
+    },
+    "occupation.domain": {
+      "weights": {"service_retail": 0.14, "gig_flexible": 0.09, "office_admin": 0.15, "technical": 0.14, "creative_media": 0.09, "care_education": 0.11, "trades_manual": 0.11, "small_business": 0.10, "between_jobs": 0.07},
+      "rules": [
+        {"rule_id": "occupation.higher_education", "reason": "较高教育水平提高技术和办公室职业的相对权重", "when": {"education_level": {"in": ["bachelor", "master", "doctorate"]}}, "multipliers": {"technical": 1.7, "office_admin": 1.4, "creative_media": 1.2, "trades_manual": 0.55}},
+        {"rule_id": "occupation.secondary_or_vocational", "reason": "中学和职教背景提高服务业与技能职业的相对权重", "when": {"education_level": {"in": ["middle_school", "high_school", "vocational"]}}, "multipliers": {"trades_manual": 1.5, "service_retail": 1.3, "technical": 0.65}},
+        {"rule_id": "occupation.late_career", "reason": "职业后期提高稳定个体经营的相对权重", "when": {"lifecycle_stage": "late_career"}, "multipliers": {"small_business": 1.35, "between_jobs": 0.7}}
+      ]
+    },
+    "household.partnership": {
+      "weights": {"single": 0.20, "partnered": 0.08, "married": 0.58, "divorced_or_widowed": 0.14},
+      "rules": [
+        {"rule_id": "household.partnership.young", "reason": "25岁以下提高单身和恋爱状态的相对权重", "when": {"age": {"lt": 25}}, "replace_weights": {"single": 0.62, "partnered": 0.23, "married": 0.10, "divorced_or_widowed": 0.05}}
+      ]
+    },
+    "household.children": {
+      "weights": {"none": 1.0, "preschool": 0.28, "school_age": 0.38, "adult": 0.25},
+      "rules": [
+        {"rule_id": "household.children.partnered", "reason": "婚姻和既往婚姻提高有子女的相对权重", "when": {"partnership": {"in": ["married", "divorced_or_widowed"]}}, "multipliers": {"none": 0.65, "preschool": 1.5, "school_age": 1.5, "adult": 1.5}}
+      ]
+    },
+    "household.elder_support": {
+      "weights": {"none": 0.45, "occasional": 0.38, "substantial": 0.17},
+      "rules": [
+        {"rule_id": "household.elder_support.young", "reason": "25岁以下承担较多长辈支持的相对概率较低", "when": {"age": {"lt": 25}}, "multipliers": {"substantial": 0.35}}
+      ]
+    },
+    "household.family_burden": {
+      "weights": {"light": 0.55, "moderate": 0.35, "heavy": 0.10},
+      "rules": [
+        {"rule_id": "household.family_burden.dependents", "reason": "子女或较多长辈支持提高家庭责任", "when": {"has_dependents": true}, "replace_weights": {"light": 0.18, "moderate": 0.52, "heavy": 0.30}}
+      ]
+    },
+    "socioeconomic.housing": {
+      "weights": {"with_parents": 0.20, "shared_rental": 0.16, "solo_rental": 0.22, "partner_family_home": 0.0, "owned_home": 0.20, "temporary": 0.05},
+      "rules": [
+        {"rule_id": "housing.partnered", "reason": "有伴侣或已婚时允许并提高共同居住的相对权重", "when": {"partnership": {"in": ["partnered", "married"]}}, "replace_values": {"partner_family_home": 0.28}},
+        {"rule_id": "housing.older", "reason": "较年长群体提高自有住房并降低临时居住的相对权重", "when": {"age": {"gte": 45}}, "multipliers": {"owned_home": 1.9, "shared_rental": 0.5, "temporary": 0.5}}
+      ]
+    },
+    "socioeconomic.economic_pressure": {
+      "weights": {"severe": 0.09, "tight": 0.24, "manageable": 0.40, "comfortable": 0.21, "affluent": 0.06},
+      "rules": [
+        {"rule_id": "economy.income_instability", "reason": "无稳定职业收入时提高经济压力的相对权重", "when": {"occupation_status": {"in": ["unemployed", "student"]}}, "multipliers": {"severe": 2.0, "tight": 1.7, "comfortable": 0.35, "affluent": 0.15}},
+        {"rule_id": "economy.mid_career", "reason": "职业中期提高经济可管理状态的相对权重", "when": {"lifecycle_stage": "mid_career"}, "multipliers": {"manageable": 1.25, "comfortable": 1.15}}
+      ]
+    },
+    "socioeconomic.consumption_style": {
+      "weights": {"budget_optimizer": 1.0, "value_practical": 1.0, "experience_spender": 1.0, "status_aware": 1.0, "saver_investor": 1.0, "impulse_treats": 1.0}
+    }
+  },
+  "education_pathways": {
+    "field_weights": {
+      "computer_science": 0.18,
+      "engineering": 0.18,
+      "finance_economics": 0.15,
+      "humanities_social_science": 0.16,
+      "education": 0.11,
+      "health_life_science": 0.12,
+      "arts_design": 0.10
+    },
+    "transition_weights": {
+      "master": {"same": 0.72, "related": 0.20, "different": 0.08},
+      "doctorate": {"same": 0.82, "related": 0.15, "different": 0.03}
+    },
+    "related_fields": {
+      "computer_science": ["engineering", "finance_economics"],
+      "engineering": ["computer_science", "health_life_science"],
+      "finance_economics": ["computer_science", "humanities_social_science"],
+      "humanities_social_science": ["education", "finance_economics", "arts_design"],
+      "education": ["humanities_social_science", "health_life_science"],
+      "health_life_science": ["engineering", "education"],
+      "arts_design": ["humanities_social_science", "computer_science"]
+    }
+  },
+  "personality": {
+    "openness": {"alpha": 2.5, "beta": 2.5},
+    "conscientiousness": {"alpha": 2.5, "beta": 2.5},
+    "extraversion": {"alpha": 2.5, "beta": 2.5},
+    "agreeableness": {"alpha": 2.5, "beta": 2.5},
+    "neuroticism": {"alpha": 2.5, "beta": 2.5}
+  },
+  "details": {
+    "occupation_descriptions": {
+      "student": {"中职学生": 1.0, "大专生": 1.0, "本科生": 1.0, "硕士生": 1.0, "博士生": 1.0},
+      "service_retail": {"便利店店员": 1.0, "商场导购": 1.0, "咖啡店店长": 1.0, "餐饮服务员": 1.0, "客服专员": 1.0},
+      "gig_flexible": {"外卖骑手": 1.0, "网约车司机": 1.0, "自由接单设计师": 1.0, "兼职家教": 1.0, "平台接单维修工": 1.0},
+      "office_admin": {"行政助理": 1.0, "人事专员": 1.0, "运营专员": 1.0, "财务文员": 1.0, "项目协调员": 1.0},
+      "technical": {"后端开发工程师": 1.0, "数据分析师": 1.0, "测试工程师": 1.0, "机械维修技术员": 1.0, "网络运维": 1.0},
+      "creative_media": {"短视频剪辑师": 1.0, "平面设计师": 1.0, "摄影助理": 1.0, "自媒体编辑": 1.0, "直播运营": 1.0},
+      "care_education": {"幼儿园老师": 1.0, "社区社工": 1.0, "养老护理员": 1.0, "培训机构老师": 1.0, "托育中心助教": 1.0},
+      "trades_manual": {"水电维修工": 1.0, "木工": 1.0, "厨师": 1.0, "仓库叉车工": 1.0, "装修工": 1.0},
+      "small_business": {"小餐馆老板": 1.0, "社区杂货铺店主": 1.0, "网店店主": 1.0, "花店经营者": 1.0, "修车铺合伙人": 1.0},
+      "between_jobs": {"刚离职正在找工作": 1.0, "合同到期正在求职": 1.0, "照顾家人后准备重返职场": 1.0},
+      "retired": {"退休工人": 1.0, "退休教师": 1.0, "退休护士": 1.0, "半退休个体经营者": 1.0}
+    }
+  },
+  "interests": {
+    "practical": {"count_weights": {"2": 0.55, "3": 0.45}, "item_weights": {"home_cooking": 1.0, "walking_hiking": 1.0, "casual_fitness": 1.0, "gaming": 1.0, "crafts": 1.0, "community_events": 1.0, "reading": 1.0, "photography": 1.0, "gardening": 1.0, "parent_child": 1.0}},
+    "aspirational": {"count_weights": {"1": 0.55, "2": 0.45}, "item_weights": {"travel_watching": 1.0, "premium_tech_watching": 1.0, "home_design_watching": 1.0, "career_learning": 1.0, "financial_learning": 1.0, "culture_art": 1.0}},
+    "high_cost": {"count_weights": {"1": 1.0}, "inclusion_probability_by_economic_pressure": {"severe": 0.0, "tight": 0.0, "manageable": 0.0, "comfortable": 0.12, "affluent": 0.38}, "item_weights": {"frequent_travel": 1.0, "premium_technology": 1.0, "collecting": 1.0}},
+    "science_topics": {"count_weights": {"0": 1.0}, "item_weights": {"climate_risk": 1.0, "public_health": 1.0, "technology_society": 1.0, "environment": 1.0}}
+  }
+}

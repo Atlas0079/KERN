@@ -24,6 +24,7 @@ class ScreenComponent:
 	feed_items: list[dict[str, Any]] = field(default_factory=list)
 	current_post: dict[str, Any] | None = None
 	selected_post_id: str = ""
+	feed_session_id: int = 0
 	cursor: int = 0
 	updated_tick: int = -1
 	status_text: str = ""

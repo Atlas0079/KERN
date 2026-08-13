@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Local OpenAI-compatible gateway for multiple llama-server workers.
+"""Local OpenAI-compatible gateway for multiple model-server workers.
 
 The gateway is intentionally bound to loopback by default.  It routes each
-non-streaming request to the healthy worker with the fewest in-flight requests,
-then uses round-robin ordering to break ties.
+request to the healthy worker with the fewest in-flight requests, then uses
+round-robin ordering to break ties. Streaming responses are relayed as SSE.
 """
 
 from __future__ import annotations
@@ -114,6 +114,32 @@ class Gateway:
 				last_error = f"{worker.name} is unavailable: {error}"
 		return 503, "Service Unavailable", json.dumps({"error": {"message": last_error, "type": "gateway_error"}}).encode(), {"Content-Type": "application/json"}
 
+	def open_stream(self, method: str, path: str, body: bytes, headers: dict[str, str]) -> tuple[Worker, http.client.HTTPConnection, http.client.HTTPResponse] | None:
+		excluded: set[str] = set()
+		for _ in range(len(self.workers)):
+			worker = self.reserve_worker(excluded)
+			if worker is None:
+				break
+			excluded.add(worker.name)
+			try:
+				connection = http.client.HTTPConnection(worker.host, worker.port, timeout=self.timeout_seconds)
+				forward_headers = {
+					key: value
+					for key, value in headers.items()
+					if key.lower() not in {"host", "connection", "content-length"}
+				}
+				forward_headers["Host"] = f"{worker.host}:{worker.port}"
+				connection.request(method, path, body=body, headers=forward_headers)
+				response = connection.getresponse()
+				if response.status < 500:
+					return worker, connection, response
+				response.read()
+				connection.close()
+				self.release_worker(worker, healthy=False)
+			except (OSError, http.client.HTTPException):
+				self.release_worker(worker, healthy=False)
+		return None
+
 
 def make_handler(gateway: Gateway) -> type[BaseHTTPRequestHandler]:
 	class GatewayHandler(BaseHTTPRequestHandler):
@@ -130,6 +156,36 @@ def make_handler(gateway: Gateway) -> type[BaseHTTPRequestHandler]:
 			self.send_header("Connection", "close")
 			self.end_headers()
 			self.wfile.write(body)
+
+		def _stream(self, method: str, path: str, body: bytes, headers: dict[str, str]) -> None:
+			upstream = gateway.open_stream(method, path, body, headers)
+			if upstream is None:
+				self._send(
+					503,
+					"Service Unavailable",
+					b'{"error":{"message":"no healthy workers","type":"gateway_error"}}',
+					{"Content-Type": "application/json"},
+				)
+				return
+
+			worker, connection, response = upstream
+			healthy = False
+			try:
+				self.send_response(response.status, response.reason)
+				for key, value in response.getheaders():
+					if key.lower() not in {"connection", "content-length", "transfer-encoding"}:
+						self.send_header(key, value)
+				self.send_header("Connection", "close")
+				self.end_headers()
+				while chunk := response.read1(8192):
+					self.wfile.write(chunk)
+					self.wfile.flush()
+				healthy = response.status < 500
+			except (BrokenPipeError, ConnectionResetError, OSError, http.client.HTTPException):
+				pass
+			finally:
+				connection.close()
+				gateway.release_worker(worker, healthy=healthy)
 
 		def do_GET(self) -> None:  # noqa: N802
 			if self.path == "/health":
@@ -148,7 +204,7 @@ def make_handler(gateway: Gateway) -> type[BaseHTTPRequestHandler]:
 			except json.JSONDecodeError:
 				payload = {}
 			if payload.get("stream") is True:
-				self._send(400, "Bad Request", b'{"error":{"message":"streaming is not supported by this gateway"}}', {"Content-Type": "application/json"})
+				self._stream("POST", self.path, body, dict(self.headers))
 				return
 			status, reason, response_body, headers = gateway.forward("POST", self.path, body, dict(self.headers))
 			self._send(status, reason, response_body, headers)
@@ -162,9 +218,10 @@ def main() -> None:
 	parser.add_argument("--host", default="127.0.0.1")
 	parser.add_argument("--port", type=int, default=8080)
 	parser.add_argument("--timeout-seconds", type=float, default=180.0)
+	parser.add_argument("--failure-cooldown-seconds", type=float, default=5.0)
 	args = parser.parse_args()
 	workers = [Worker(name=f"worker-{index + 1}", url=url.strip()) for index, url in enumerate(args.workers.split(",")) if url.strip()]
-	gateway = Gateway(workers, timeout_seconds=args.timeout_seconds)
+	gateway = Gateway(workers, timeout_seconds=args.timeout_seconds, failure_cooldown_seconds=args.failure_cooldown_seconds)
 	server = ThreadingHTTPServer((args.host, args.port), make_handler(gateway))
 	print(f"gateway listening on http://{args.host}:{args.port} for {len(workers)} workers", flush=True)
 	server.serve_forever()

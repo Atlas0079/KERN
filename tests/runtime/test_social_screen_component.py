@@ -33,6 +33,7 @@ class SocialScreenComponentTests(unittest.TestCase):
 			],
 			"current_post": None,
 			"selected_post_id": "post_001",
+			"feed_session_id": 12,
 			"cursor": 8,
 			"updated_tick": 4,
 			"status_text": "",

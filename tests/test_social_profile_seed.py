@@ -1,277 +1,274 @@
 from __future__ import annotations
 
+from collections import Counter
+from copy import deepcopy
 import json
+from pathlib import Path
+import sys
 import tempfile
 import unittest
-from pathlib import Path
 
 from KERN.external_runtimes.social_profile_seed import (
-	SPECIFIC_OCCUPATION_WEIGHTS,
-	SocialProfileSampler,
+	DEFAULT_CONFIG_PATH,
+	GENERATOR_VERSION,
+	SCHEMA_VERSION,
+	SCIENCE_VIDEO_CONFIG_PATH,
+	GenerationSpec,
+	ProfileGenerationError,
+	default_generation_spec,
 	generate_social_profiles,
+	validate_population,
+	validate_profile,
 )
+from tools.generate_social_agent_backgrounds import _normalize_generated, _prompt, _source_card
 from tools.generate_social_profiles import main as generate_profiles_main
 from tools.social_profile_report import build_report_data
 
 
-class SocialProfileSeedTests(unittest.TestCase):
-	def test_same_seed_generates_same_profiles(self) -> None:
-		a = generate_social_profiles(count=5, seed="same")
-		b = generate_social_profiles(count=5, seed="same")
-		c = generate_social_profiles(count=5, seed="different")
-
+class SocialProfileV4Tests(unittest.TestCase):
+	def test_same_seed_and_spec_generate_identical_profiles(self) -> None:
+		a = generate_social_profiles(50, "same")
+		b = generate_social_profiles(50, "same")
+		c = generate_social_profiles(50, "different")
 		self.assertEqual(a, b)
 		self.assertNotEqual(a, c)
 
-	def test_science_video_audience_preset_is_restricted_but_structurally_varied(self) -> None:
-		profiles = generate_social_profiles(count=100, seed="science-video-audience", audience="science_video")
-		allowed_media = {"longform_reader", "podcast_audio", "news_commentary", "short_video_scroller", "visual_lifestyle"}
-		occupations = set()
+	def test_population_uses_exact_lifecycle_quotas(self) -> None:
+		profiles = generate_social_profiles(100, "quotas")
+		lifecycles = Counter(profile["demographics"]["lifecycle_stage"] for profile in profiles)
+		self.assertEqual(lifecycles, Counter({"early_career": 22, "mid_career": 22, "family_formation": 20, "student": 14, "late_career": 12, "retired": 10}))
+
+	def test_profile_has_single_source_of_facts_v2_shape(self) -> None:
+		profile = generate_social_profiles(1, "shape")[0]
+		self.assertEqual(profile["schema_version"], SCHEMA_VERSION)
+		self.assertEqual(profile["provenance"]["generator_version"], GENERATOR_VERSION)
+		self.assertIn(profile["demographics"]["gender"], {"female", "male"})
+		for section in ("demographics", "education", "occupation", "household", "socioeconomic", "personality", "interests"):
+			self.assertIsInstance(profile[section], dict)
+		self.assertNotIn("platform_behavior", profile)
+		for retired_key in ("sample", "specifics", "display", "audience_preset", "debug"):
+			self.assertNotIn(retired_key, profile)
+		self.assertEqual(validate_profile(profile), [])
+
+	def test_many_seeds_never_emit_hard_contract_violations(self) -> None:
+		spec = default_generation_spec()
+		for seed in range(10):
+			profiles = generate_social_profiles(500, seed, spec=spec)
+			self.assertEqual(validate_population(profiles, spec), [])
+
+	def test_lifecycle_education_occupation_and_children_are_coherent(self) -> None:
+		profiles = generate_social_profiles(2000, "lifecycle-contract")
+		program_priors = {
+			"vocational": {"middle_school", "high_school"},
+			"associate": {"middle_school", "high_school", "vocational"},
+			"bachelor": {"middle_school", "high_school", "vocational", "associate"},
+			"master": {"bachelor"},
+			"doctorate": {"master"},
+		}
 		for profile in profiles:
-			sample = profile["sample"]
-			self.assertEqual(profile["audience_preset"], "science_video")
-			self.assertIn(sample["education"], {"bachelor", "graduate"})
-			self.assertNotEqual(sample["age_band"], "18-24")
-			self.assertIn(sample["media_style"], allowed_media)
-			self.assertEqual(len(sample["science_video_topics"]), 2)
-			self.assertEqual(len(sample["science_video_topics"]), len(sample["specifics"]["science_video_topics"]))
-			occupations.add(sample["occupation_domain"])
-		self.assertGreaterEqual(len(occupations), 5)
+			demographics = profile["demographics"]
+			education = profile["education"]
+			occupation = profile["occupation"]
+			household = profile["household"]
+			if demographics["lifecycle_stage"] == "student":
+				self.assertEqual(education["current_status"], "enrolled")
+				self.assertIn(education["highest_completed"], program_priors[education["current_program"]])
+				self.assertEqual(occupation["status"], "student")
+				self.assertEqual(household["children"], "none")
+			else:
+				self.assertNotEqual(occupation["status"], "student")
+			age = demographics["age"]
+			minimum_age = {"none": 18, "preschool": 22, "school_age": 27, "adult": 40}[household["children"]]
+			self.assertGreaterEqual(age, minimum_age)
 
-	def test_profile_has_expected_fields_and_big_five_range(self) -> None:
-		profile = generate_social_profiles(count=1, seed="shape")[0]
-
-		for key in [
-			"profile_id",
-			"sample",
-			"display",
-			"summary_line",
-		]:
-			self.assertIn(key, profile)
-		self.assertNotIn("debug", profile)
-		self.assertFalse(any(str(k).endswith("_weights") for k in profile.keys()))
-
-		sample = profile["sample"]
-		for key in [
-			"platform_archetype",
-			"age_band",
-			"education",
-			"occupation_domain",
-			"economic_status",
-			"living_situation",
-			"social_style",
-			"media_style",
-			"consumption_style",
-			"practical_interests",
-			"aspirational_interests",
-			"high_cost_consumption_interests",
-			"family_profile",
-			"big_five",
-			"specifics",
-		]:
-			self.assertIn(key, sample)
-		family = sample["family_profile"]
-		for key in ["marital_status", "children_status", "parent_support", "family_burden", "labels"]:
-			self.assertIn(key, family)
-		for key in ["marital_status", "children_status", "parent_support", "family_burden"]:
-			self.assertTrue(str(family["labels"].get(key, "")).strip())
-		specifics = sample["specifics"]
-		self.assertIn("age", specifics)
-		self.assertIsInstance(specifics["age"], int)
-		age_ranges = {
-			"18-24": (18, 24),
-			"25-34": (25, 34),
-			"35-44": (35, 44),
-			"45-54": (45, 54),
-			"55+": (55, 72),
-		}
-		lo, hi = age_ranges[sample["age_band"]]
-		self.assertGreaterEqual(specifics["age"], lo)
-		self.assertLessEqual(specifics["age"], hi)
-		for key in ["education", "occupation", "living_situation", "media_habit", "consumption_habit"]:
-			self.assertTrue(str(specifics.get(key, "")).strip())
-		self.assertEqual(len(specifics["practical_interests"]), len(sample["practical_interests"]))
-		self.assertEqual(len(specifics["aspirational_interests"]), len(sample["aspirational_interests"]))
-		self.assertEqual(len(specifics["high_cost_consumption_interests"]), len(sample["high_cost_consumption_interests"]))
-
-		self.assertGreaterEqual(len(sample["practical_interests"]), 2)
-		self.assertGreaterEqual(len(sample["aspirational_interests"]), 1)
-		practical_ids = {x["id"] for x in sample["practical_interests"]}
-		aspirational_ids = {x["id"] for x in sample["aspirational_interests"]}
-		self.assertTrue(practical_ids.isdisjoint(aspirational_ids))
-
-		for value in sample["big_five"].values():
-			self.assertGreaterEqual(value, 0.0)
-			self.assertLessEqual(value, 1.0)
-			self.assertEqual(value, round(value, 1))
-		self.assertIn("经济状态", profile["summary_line"])
-
-	def test_young_age_can_bias_economic_weights_without_hard_exclusion(self) -> None:
-		profiles = generate_social_profiles(count=50, seed="young-bias", include_debug=True)
-		young = next(p for p in profiles if p["sample"]["age_band"] == "18-24")
-		weights = young["debug"]["weights"]["economic_status"]
-
-		self.assertGreater(weights["tight"], weights["affluent"])
-		self.assertGreater(weights["struggling"], weights["affluent"])
-		self.assertGreater(weights["affluent"], 0.0)
-		self.assertTrue(any(t["field"] == "economic_status" and t["source_value"] == "18-24" for t in young["debug"]["sampling_trace"]))
-
-	def test_platform_archetype_affects_age_and_media_weights(self) -> None:
-		profiles = generate_social_profiles(count=100, seed="platform-bias", include_debug=True)
-		lifestyle = next(p for p in profiles if p["sample"]["platform_archetype"] == "lifestyle_discovery")
-		lifestyle_age_weights = lifestyle["debug"]["weights"]["age_band"]
-		lifestyle_media_weights = lifestyle["debug"]["weights"]["media_style"]
-
-		self.assertGreater(lifestyle_age_weights["25-34"], lifestyle_age_weights["55+"])
-		self.assertGreater(lifestyle_media_weights["visual_lifestyle"], lifestyle_media_weights["news_commentary"])
-		self.assertTrue(any(t["field"] == "age_band" and t["source_field"] == "platform_archetype" for t in lifestyle["debug"]["sampling_trace"]))
-
-	def test_debug_is_opt_in(self) -> None:
-		plain = generate_social_profiles(count=1, seed="debug", include_debug=False)[0]
-		debug = generate_social_profiles(count=1, seed="debug", include_debug=True)[0]
-
-		self.assertNotIn("debug", plain)
-		self.assertIn("debug", debug)
-		self.assertEqual(plain["sample"], debug["sample"])
-		self.assertIn("economic_status", debug["debug"]["weights"])
-		self.assertIn("specific_occupation", debug["debug"]["weights"])
-		self.assertIn("specific_living_situation", debug["debug"]["weights"])
-		self.assertIn("specific_media_habit", debug["debug"]["weights"])
-		self.assertIn("high_cost_consumption_interests", debug["debug"]["weights"])
-		self.assertIn("family_marital_status", debug["debug"]["weights"])
-		self.assertIn("family_children_status", debug["debug"]["weights"])
-		self.assertIn("family_parent_support", debug["debug"]["weights"])
-		self.assertIn("family_family_burden", debug["debug"]["weights"])
-		self.assertTrue(debug["debug"]["sampling_trace"])
-
-	def test_specific_occupation_weights_follow_background(self) -> None:
-		profiles = generate_social_profiles(count=500, seed="specific-job-bias", include_debug=True)
-		candidate = next(
-			p
-			for p in profiles
-			if p["sample"]["occupation_domain"] == "service_retail"
-			and p["sample"]["education"] in {"bachelor", "graduate"}
-			and p["sample"]["economic_status"] in {"comfortable", "affluent"}
-		)
-		weights = candidate["debug"]["weights"]["specific_occupation"]
-
-		self.assertGreater(weights["咖啡店店长"], weights["便利店店员"])
-		self.assertGreater(weights["客服专员"], weights["餐饮服务员"])
-		self.assertTrue(any(t["field"] == "specific_occupation" for t in candidate["debug"]["sampling_trace"]))
-
-	def test_education_and_student_identity_are_logically_consistent(self) -> None:
-		profiles = generate_social_profiles(count=2000, seed="education-occupation-contract")
-		sampler = SocialProfileSampler(seed="contract-check")
-		completed_or_left_higher = {
-			"普通本科毕业",
-			"师范类本科毕业",
-			"计算机相关本科",
-			"财经类本科",
-			"艺术设计本科",
-			"民办本科毕业",
-			"硕士毕业",
-			"在职研究生毕业",
-			"专业硕士毕业",
-			"博士肄业后工作",
-			"海外硕士毕业",
-		}
-		student_allowed = {
-			"high_school": {"本科生", "大专生", "职业培训学员"},
-			"vocational": {"大专生", "职业培训学员"},
-			"some_college": {"本科生", "考研备考生", "刚毕业实习生", "职业培训学员"},
-			"self_taught": {"职业培训学员", "考研备考生"},
-		}
-
+	def test_science_video_config_shapes_only_background_facts(self) -> None:
+		spec = GenerationSpec.from_path(SCIENCE_VIDEO_CONFIG_PATH)
+		profiles = generate_social_profiles(100, "science", spec=spec)
 		for profile in profiles:
-			sample = profile["sample"]
-			specifics = sample["specifics"]
-			age = int(specifics["age"])
-			specific_education = str(specifics["education"])
-			education = str(sample["education"])
-			occupation_domain = str(sample["occupation_domain"])
-			specific_occupation = str(specifics["occupation"])
+			self.assertIn(profile["demographics"]["lifecycle_stage"], {"early_career", "family_formation", "mid_career", "late_career"})
+			self.assertIn(profile["education"]["highest_completed"], {"bachelor", "master", "doctorate"})
+			self.assertEqual(len(profile["interests"]["science_topics"]), 2)
+			self.assertNotIn("platform_behavior", profile)
+		self.assertEqual(validate_population(profiles, spec), [])
 
-			if age < 20:
-				self.assertNotIn(specific_education, completed_or_left_higher)
-			if age < 22:
-				self.assertNotIn(specific_education, {"硕士毕业", "在职研究生毕业", "专业硕士毕业", "博士肄业后工作", "海外硕士毕业"})
-			if education in {"bachelor", "graduate"} or specific_education in completed_or_left_higher:
-				self.assertNotEqual(occupation_domain, "student")
-			if occupation_domain == "student":
-				self.assertIn(specific_occupation, student_allowed[education])
-				context = dict(sample)
-				context["_specific_education"] = specific_education
-				allowed = sampler._filter_specific_occupation_weights(SPECIFIC_OCCUPATION_WEIGHTS["student"], context)
-				self.assertIn(specific_occupation, allowed)
-				if specific_education == "大专毕业":
-					self.assertNotEqual(specific_occupation, "大专生")
+	def test_high_education_high_cognition_population_contract(self) -> None:
+		config_path = DEFAULT_CONFIG_PATH.parent / "high_education_high_cognition.json"
+		spec = GenerationSpec.from_path(config_path)
+		profiles = generate_social_profiles(300, "high-education-contract", spec=spec)
+		self.assertTrue(all(profile["education"]["highest_completed"] in {"bachelor", "master", "doctorate"} for profile in profiles))
+		self.assertTrue(any(profile["education"]["highest_completed"] == "doctorate" for profile in profiles))
+		self.assertTrue(all("platform_behavior" not in profile for profile in profiles))
+		self.assertGreater(sum(profile["personality"]["openness"] for profile in profiles) / len(profiles), 0.62)
+		self.assertGreater(sum(profile["personality"]["conscientiousness"] for profile in profiles) / len(profiles), 0.62)
+		self.assertEqual(validate_population(profiles, spec), [])
 
-	def test_specific_values_are_condition_weighted(self) -> None:
-		profiles = generate_social_profiles(count=500, seed="specific-value-bias", include_debug=True)
-		older = next(p for p in profiles if p["sample"]["age_band"] == "55+" and p["sample"]["living_situation"] == "owned_home")
-		living_weights = older["debug"]["weights"]["specific_living_situation"]
-
-		self.assertGreater(living_weights["住在自有老房"], living_weights["住在贷款中的两居室"])
-		self.assertTrue(any(t["field"] == "specific_living_situation" for t in older["debug"]["sampling_trace"]))
-
-	def test_high_cost_consumption_is_separate_from_aspirational_interests(self) -> None:
-		profiles = generate_social_profiles(count=500, seed="high-cost-separation", include_debug=True)
-		tight = [p for p in profiles if p["sample"]["economic_status"] in {"struggling", "tight"}]
-		affluent = [p for p in profiles if p["sample"]["economic_status"] == "affluent"]
-		tight_high_cost = [p for p in tight if p["sample"]["high_cost_consumption_interests"]]
-		affluent_high_cost = [p for p in affluent if p["sample"]["high_cost_consumption_interests"]]
-		aspirational_watchers = [
-			p
-			for p in tight
-			if any(str(x.get("id", "")).endswith("_watching") for x in p["sample"]["aspirational_interests"])
+	def test_advanced_degrees_have_configured_field_continuity(self) -> None:
+		profiles = generate_social_profiles(4000, "education-continuity")
+		transitions = [
+			(previous["field"], current["field"])
+			for profile in profiles
+			for previous, current in zip(profile["education"]["history"], profile["education"]["history"][1:])
 		]
+		self.assertTrue(transitions)
+		self.assertGreater(sum(before == after for before, after in transitions) / len(transitions), 0.65)
+		self.assertTrue(any(before != after for before, after in transitions))
 
-		self.assertLessEqual(len(tight_high_cost), max(1, int(len(tight) * 0.08)))
-		self.assertGreaterEqual(len(aspirational_watchers), 1)
-		self.assertGreaterEqual(len(affluent_high_cost), 1)
+	def test_high_cost_interest_requires_financial_capacity(self) -> None:
+		profiles = generate_social_profiles(2000, "high-cost")
+		high_cost = [profile for profile in profiles if profile["interests"]["high_cost"]]
+		self.assertTrue(high_cost)
+		self.assertTrue(all(profile["socioeconomic"]["economic_pressure"] in {"comfortable", "affluent"} for profile in high_cost))
 
-	def test_family_rules_bias_implausible_combinations_down(self) -> None:
-		profiles = generate_social_profiles(count=500, seed="family-bias", include_debug=True)
-		young = next(p for p in profiles if p["sample"]["age_band"] == "18-24")
-		young_child_weights = young["debug"]["weights"]["family_children_status"]
-		student = next(p for p in profiles if p["sample"]["occupation_domain"] == "student")
-		student_marital_weights = student["debug"]["weights"]["family_marital_status"]
+	def test_audit_explains_candidates_and_soft_rules_without_changing_facts(self) -> None:
+		plain = generate_social_profiles(100, "audit", include_audit=False)
+		audited = generate_social_profiles(100, "audit", include_audit=True)
+		self.assertEqual([{k: v for k, v in p.items() if k != "audit"} for p in audited], plain)
+		steps = [step for profile in audited for step in profile["audit"]["sampling_steps"]]
+		self.assertTrue(all(step.get("selected") is not None for step in steps))
+		self.assertTrue(any(rule["rule_id"].startswith("occupation.") for step in steps for rule in step.get("soft_rules", [])))
+		self.assertTrue(any("eligible_weights" in step for step in steps))
 
-		self.assertGreater(young_child_weights["no_children"], young_child_weights["adult_children"])
-		self.assertGreater(student_marital_weights["single"], student_marital_weights["married"])
-		self.assertTrue(any(t["field"] == "children_status" for t in young["debug"]["sampling_trace"]))
-		self.assertTrue(any(t["field"] == "marital_status" for t in student["debug"]["sampling_trace"]))
+	def test_validator_rejects_mutated_invalid_facts(self) -> None:
+		profile = deepcopy(generate_social_profiles(100, "mutation")[0])
+		profile["demographics"]["age_band"] = "55+"
+		self.assertIn("age_band is not derived from age", validate_profile(profile))
+		profile = deepcopy(next(item for item in generate_social_profiles(100, "student-mutation") if item["demographics"]["lifecycle_stage"] == "student"))
+		profile["household"]["children"] = "adult"
+		issues = validate_profile(profile)
+		self.assertIn("student lifecycle cannot have dependent children in this population contract", issues)
+		profile = deepcopy(next(item for item in generate_social_profiles(500, "education-mutation") if item["education"]["highest_completed"] == "master"))
+		profile["education"]["description"] = "与轨迹冲突的硕士描述"
+		self.assertIn("education description is not derived from education history", validate_profile(profile))
 
-	def test_report_includes_calibration_data(self) -> None:
-		profiles = generate_social_profiles(count=100, seed="report-calibration")
-		data = build_report_data("report-calibration", profiles)
+	def test_invalid_config_keys_and_values_fail_loudly(self) -> None:
+		config = deepcopy(default_generation_spec().config)
+		config["unexpected"] = True
+		with self.assertRaises(ProfileGenerationError):
+			GenerationSpec.from_dict(config)
+		config = deepcopy(default_generation_spec().config)
+		config["dimensions"]["education.highest_completed"]["allowed"] = ["invented_level"]
+		with self.assertRaises(ProfileGenerationError):
+			GenerationSpec.from_dict(config)
 
-		self.assertEqual(data["count"], 100)
-		self.assertIn("target_comparison", data)
-		self.assertIn("platform_archetype", data["target_comparison"])
-		self.assertIn("flag_reason_counts", data)
-		self.assertIn("high_cost_consumption_interests", data["distributions"])
-		self.assertIn("family_marital_status", data["distributions"])
-		self.assertIn("family_children_status", data["distributions"])
-		self.assertIn("age_by_children", data["cross_tabs"])
+	def test_every_stochastic_dimension_can_be_shaped_by_population_config(self) -> None:
+		config = deepcopy(default_generation_spec().config)
+		config["population_id"] = "fully_shaped_test_population"
+		config["lifecycle_age_ranges"]["early_career"] = [28, 30]
+		config["age_sampling"]["early_career"] = {"mode": "weighted", "weights": {"28": 0.0, "29": 0.0, "30": 1.0}}
+		dimensions = config["dimensions"]
+		dimensions["demographics.lifecycle_stage"]["weights"] = {"student": 0, "early_career": 1, "family_formation": 0, "mid_career": 0, "late_career": 0, "retired": 0}
+		forced = {
+			"demographics.gender": "female",
+			"education.highest_completed": "bachelor",
+			"education.current_status": "not_enrolled",
+			"occupation.status": "employed",
+			"occupation.domain": "technical",
+			"household.partnership": "single",
+			"household.children": "none",
+			"household.elder_support": "none",
+			"household.family_burden": "light",
+			"socioeconomic.housing": "solo_rental",
+			"socioeconomic.economic_pressure": "manageable",
+			"socioeconomic.consumption_style": "budget_optimizer",
+		}
+		for field, value in forced.items():
+			dimensions[field]["allowed"] = [value]
+		for trait in config["personality"].values():
+			trait.update({"alpha": 100.0, "beta": 1.0})
+		config["education_pathways"]["field_weights"] = {
+			key: float(key == "computer_science")
+			for key in config["education_pathways"]["field_weights"]
+		}
+		config["details"]["occupation_descriptions"]["technical"] = {
+			key: float(key == "数据分析师")
+			for key in config["details"]["occupation_descriptions"]["technical"]
+		}
+		config["interests"]["practical"]["count_weights"] = {"1": 1.0}
+		config["interests"]["aspirational"]["count_weights"] = {"1": 1.0}
+		for kind, selected in (("practical", "reading"), ("aspirational", "career_learning")):
+			config["interests"][kind]["item_weights"] = {key: float(key == selected) for key in config["interests"][kind]["item_weights"]}
+		spec = GenerationSpec.from_dict(config)
+		profiles = generate_social_profiles(50, "fully-configured", spec=spec)
+		self.assertTrue(all(profile["demographics"]["age"] == 30 for profile in profiles))
+		self.assertTrue(all(profile["demographics"]["lifecycle_stage"] == "early_career" for profile in profiles))
+		for field, expected in forced.items():
+			section, key = field.split(".", 1)
+			self.assertTrue(all(profile[section][key] == expected for profile in profiles), field)
+		self.assertTrue(all(profile["interests"]["practical"][0]["id"] == "reading" for profile in profiles))
+		self.assertTrue(all(profile["interests"]["aspirational"][0]["id"] == "career_learning" for profile in profiles))
+		self.assertTrue(all(profile["education"]["description"] == "计算机与信息技术方向本科毕业" for profile in profiles))
+		self.assertTrue(all(profile["occupation"]["description"] == "数据分析师" for profile in profiles))
+		self.assertGreater(sum(profile["personality"]["openness"] for profile in profiles) / len(profiles), 0.9)
+		self.assertEqual(validate_population(profiles, spec), [])
+
+	def test_report_is_a_release_gate_and_contains_background_dimensions(self) -> None:
+		profiles = generate_social_profiles(100, "report")
+		data = build_report_data("report", profiles, spec=default_generation_spec())
+		self.assertEqual(data["release_gate"], {"status": "passed", "hard_violation_count": 0})
+		for field in ("lifecycle_stage", "gender", "education_completed", "occupation_domain", "economic_pressure"):
+			self.assertIn(field, data["distributions"])
+		for retired in ("information_posture", "interaction_style", "platform_archetype"):
+			self.assertNotIn(retired, data["distributions"])
+		self.assertEqual(set(data["personality_means"]), {"openness", "conscientiousness", "extraversion", "agreeableness", "neuroticism"})
 		self.assertEqual(len(data["samples"]), 100)
 
-	def test_cli_writes_utf8_json(self) -> None:
+	def test_source_card_has_only_validated_facts_and_grounding_contract(self) -> None:
+		profile = generate_social_profiles(1, "card")[0]
+		card = _source_card(profile)
+		fact_ids = [fact["fact_id"] for fact in card["facts"]]
+		self.assertEqual(card["schema_version"], "social_profile_source_card.v5")
+		self.assertIn("demographics.gender", fact_ids)
+		self.assertIn("personality.openness", fact_ids)
+		self.assertTrue(any(fact_id.startswith("interests.practical.") for fact_id in fact_ids))
+		self.assertNotIn("platform_behavior", fact_ids)
+		self.assertNotIn("generated_name", json.dumps(card, ensure_ascii=False))
+		prompt = _prompt(card)
+		self.assertIn("可以加入合理且低影响的衔接性细节", prompt[0]["content"])
+		self.assertIn("第一人称口吻", prompt[0]["content"])
+		self.assertIn("每个 fact_id 对应的元素都必须", prompt[1]["content"])
+		self.assertIn("合并或模糊类别", prompt[1]["content"])
+		self.assertIn("罕见、非典型", prompt[1]["content"])
+		self.assertIn("没有自己的子女但陪伴亲友或社区儿童", prompt[1]["content"])
+		self.assertNotIn("generated_name", json.dumps(prompt, ensure_ascii=False))
+		generated = {
+			"profile_id": card["profile_id"],
+			"natural_language_background": "我用第一人称表达全部画像元素。",
+			"covered_fact_ids": fact_ids,
+			"logic_issue_explanation": None,
+		}
+		normalized = _normalize_generated(card, generated)
+		self.assertEqual(normalized["covered_fact_ids"], fact_ids)
+		self.assertNotIn("generated_name", normalized)
+		self.assertIsNone(normalized["logic_issue_explanation"])
+		normalized = _normalize_generated(card, {**generated, "narrative_note": "合理扩写"})
+		self.assertEqual(normalized["model_extras"], {"narrative_note": "合理扩写"})
+		normalized = _normalize_generated(card, {**generated, "generated_name": "模型自发生成的姓名"})
+		self.assertEqual(normalized["model_extras"], {"generated_name": "模型自发生成的姓名"})
+		with_logic_issue = _normalize_generated(card, {**generated, "logic_issue_explanation": "两项事实无法同时成立。"})
+		self.assertEqual(with_logic_issue["logic_issue_explanation"], "两项事实无法同时成立。")
+		with self.assertRaises(ValueError):
+			_normalize_generated(card, {**generated, "covered_fact_ids": fact_ids[:-1]})
+		with self.assertRaises(ValueError):
+			_normalize_generated(card, {**generated, "natural_language_background": "这是第三人称背景。"})
+
+	def test_cli_writes_utf8_v2_population_envelope(self) -> None:
 		with tempfile.TemporaryDirectory() as td:
 			out_path = Path(td) / "profiles.json"
-			import sys
-
 			argv = list(sys.argv)
 			try:
-				sys.argv = ["generate_social_profiles.py", "--count", "3", "--seed", "cli", "--output", str(out_path)]
+				sys.argv = ["generate_social_profiles.py", "--count", "20", "--seed", "cli-v2", "--config", str(DEFAULT_CONFIG_PATH), "--include-audit", "--output", str(out_path)]
 				generate_profiles_main()
 			finally:
 				sys.argv = argv
-
 			data = json.loads(out_path.read_text(encoding="utf-8"))
-			self.assertEqual(data["count"], 3)
-			self.assertEqual(len(data["profiles"]), 3)
-			self.assertNotIn("llm_background_prompt", data["profiles"][0])
+			self.assertEqual(data["schema_version"], SCHEMA_VERSION)
+			self.assertEqual(data["generation"]["generator_version"], GENERATOR_VERSION)
+			self.assertEqual(data["generation"]["population_id"], "general_chinese_social_adults")
+			self.assertEqual(data["generation"]["config_sha256"], default_generation_spec().config_sha256)
+			self.assertIn("resolved_config", data["generation"])
+			self.assertEqual(data["generation"]["count"], 20)
+			self.assertEqual(len(data["profiles"]), 20)
+			self.assertIn("audit", data["profiles"][0])
 
 
 if __name__ == "__main__":

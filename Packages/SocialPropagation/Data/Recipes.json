@@ -1,0 +1,79 @@
+{
+  "social_browse_feed": {
+    "verb": "BrowseSocialFeed",
+    "planner_hint": "查看自己手机上的社交平台推荐页。页面最多显示 8 条内容，并记录这些内容已实际呈现给你。浏览后才能点赞、评论或转发当前页面中的帖子。",
+    "grounder_hint": "target_id 必须选择自己背包中带 social_media_terminal tag 且包含 social_propagation:ScreenComponent 的手机。不需要其他参数。",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {"type": "has_tag", "target": "target", "tag": "social_media_terminal"},
+        {"type": "has_component", "target": "target", "component": "social_propagation:ScreenComponent"},
+        {"type": "inventory_contains", "owner": "self", "item_ref": "target"}
+      ]
+    },
+    "process": {"required_progress": 0},
+    "bundle": {
+      "effects": [
+        {"effect": "social_propagation:RefreshFeed", "terminal": "target", "limit": 8}
+      ],
+      "record": {"mode": "auto", "target": "self"}
+    }
+  },
+  "social_repost_visible_post": {
+    "verb": "RepostSocialPost",
+    "planner_hint": "转发当前社交平台页面中实际可见的一条帖子。只能使用当前 tick 页面里的 post_id；可选 parameters.text 作为转发语。",
+    "grounder_hint": "target_id 选择自己的社交平台手机；parameters.post_id 必须来自该手机当前 feed_items；parameters.text 可选。",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {"type": "has_component", "target": "target", "component": "social_propagation:ScreenComponent"},
+        {"type": "inventory_contains", "owner": "self", "item_ref": "target"}
+      ]
+    },
+    "process": {"required_progress": 0},
+    "bundle": {
+      "effects": [
+        {"effect": "social_propagation:RepostVisiblePost", "terminal": "target", "post_id": "param:post_id", "text": "param:text"}
+      ],
+      "record": {"mode": "auto", "target": "self"}
+    }
+  },
+  "social_like_visible_post": {
+    "verb": "LikeSocialPost",
+    "planner_hint": "点赞当前社交平台页面中实际可见的一条帖子。同一账号对同一原帖只能点赞一次。",
+    "grounder_hint": "target_id 选择自己的社交平台手机；parameters.post_id 必须来自该手机当前 feed_items。",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {"type": "has_component", "target": "target", "component": "social_propagation:ScreenComponent"},
+        {"type": "inventory_contains", "owner": "self", "item_ref": "target"}
+      ]
+    },
+    "process": {"required_progress": 0},
+    "bundle": {
+      "effects": [
+        {"effect": "social_propagation:LikeVisiblePost", "terminal": "target", "post_id": "param:post_id"}
+      ],
+      "record": {"mode": "auto", "target": "self"}
+    }
+  },
+  "social_comment_visible_post": {
+    "verb": "CommentOnSocialPost",
+    "planner_hint": "在当前社交平台页面中实际可见的一条原帖下发表评论。评论直接属于原帖，不是新帖子，也不能回复其他评论。",
+    "grounder_hint": "target_id 选择自己的社交平台手机；parameters.post_id 必须来自当前 feed_items；parameters.text 必须是非空评论正文。",
+    "condition": {
+      "type": "all",
+      "conditions": [
+        {"type": "has_component", "target": "target", "component": "social_propagation:ScreenComponent"},
+        {"type": "inventory_contains", "owner": "self", "item_ref": "target"}
+      ]
+    },
+    "process": {"required_progress": 0},
+    "bundle": {
+      "effects": [
+        {"effect": "social_propagation:CommentOnVisiblePost", "terminal": "target", "post_id": "param:post_id", "text": "param:text"}
+      ],
+      "record": {"mode": "auto", "target": "self"}
+    }
+  }
+}

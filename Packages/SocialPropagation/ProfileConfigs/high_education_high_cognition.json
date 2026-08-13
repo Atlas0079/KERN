@@ -1,0 +1,83 @@
+{
+  "schema_version": "social_profile_generation.v3",
+  "extends": "general.json",
+  "population_id": "high_education_high_cognition",
+  "lifecycle_age_ranges": {
+    "student": [22, 28]
+  },
+  "dimensions": {
+    "demographics.lifecycle_stage": {
+      "weights": {
+        "student": 0.08,
+        "early_career": 0.24,
+        "family_formation": 0.24,
+        "mid_career": 0.28,
+        "late_career": 0.10,
+        "retired": 0.06
+      }
+    },
+    "education.highest_completed": {
+      "weights": {
+        "middle_school": 0.0,
+        "high_school": 0.0,
+        "vocational": 0.0,
+        "associate": 0.0,
+        "bachelor": 0.62,
+        "master": 0.30,
+        "doctorate": 0.08
+      },
+      "allowed": ["bachelor", "master", "doctorate"]
+    },
+    "occupation.domain": {
+      "weights": {
+        "service_retail": 0.04,
+        "gig_flexible": 0.03,
+        "office_admin": 0.20,
+        "technical": 0.28,
+        "creative_media": 0.12,
+        "care_education": 0.12,
+        "trades_manual": 0.03,
+        "small_business": 0.07,
+        "between_jobs": 0.02
+      }
+    }
+  },
+  "personality": {
+    "openness": {"alpha": 5.0, "beta": 2.0},
+    "conscientiousness": {"alpha": 4.5, "beta": 2.0},
+    "extraversion": {"alpha": 2.5, "beta": 2.5},
+    "agreeableness": {"alpha": 2.8, "beta": 2.4},
+    "neuroticism": {"alpha": 2.3, "beta": 3.0}
+  },
+  "interests": {
+    "practical": {
+      "count_weights": {"2": 0.35, "3": 0.65},
+      "item_weights": {
+        "home_cooking": 0.8,
+        "walking_hiking": 0.9,
+        "casual_fitness": 1.0,
+        "gaming": 0.5,
+        "crafts": 0.7,
+        "community_events": 1.0,
+        "reading": 2.5,
+        "photography": 0.8,
+        "gardening": 0.6,
+        "parent_child": 0.7
+      }
+    },
+    "aspirational": {
+      "count_weights": {"1": 0.25, "2": 0.75},
+      "item_weights": {
+        "travel_watching": 0.9,
+        "premium_tech_watching": 1.1,
+        "home_design_watching": 0.6,
+        "career_learning": 1.8,
+        "financial_learning": 1.6,
+        "culture_art": 1.5
+      }
+    },
+    "science_topics": {
+      "count_weights": {"0": 0.35, "1": 0.45, "2": 0.20}
+    }
+  }
+}

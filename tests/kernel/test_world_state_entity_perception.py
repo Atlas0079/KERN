@@ -1,0 +1,147 @@
+﻿import unittest
+from pathlib import Path
+
+from KERN.agent_workflow.full_ws_view_builder import build_full_ws_view
+from KERN.agent_workflow.observer import build_agent_perception
+from KERN.models.components import CustomComponent
+from KERN.runtime import KernRuntime
+
+
+def _load_camping_smoke_world_and_bundle():
+	project_root = Path(__file__).resolve().parents[2]
+	runtime = KernRuntime.from_config(
+		project_root,
+		"runtime_config.camping.package.smoke.json",
+		validate=False,
+		configure_logging=False,
+		overrides={"CHECKPOINT_EVERY_TICK": "0"},
+	)
+	return runtime.world_state, runtime.data_bundle
+
+
+class WorldStateEntityPerceptionTests(unittest.TestCase):
+	def test_environment_scope_replaces_weather_controller_entity(self):
+		ws, _bundle = _load_camping_smoke_world_and_bundle()
+
+		view = build_full_ws_view(ws, "camper_organizer", "test", {})
+		all_ids = {str(x.get("id", "")) for x in view.get("entities", []) if isinstance(x, dict)}
+		self.assertNotIn("weather_01", all_ids)
+
+		perception = build_agent_perception(view, "camper_organizer")
+		visible_ids = {str(x.get("id", "")) for x in perception.get("entities", []) if isinstance(x, dict)}
+		self.assertEqual(perception.get("location", {}).get("environment", {}).get("weather"), "clear")
+		self.assertIn("campfire_01", visible_ids)
+
+	def test_passive_perception_uses_base_description(self):
+		ws, _bundle = _load_camping_smoke_world_and_bundle()
+		view = build_full_ws_view(ws, "camper_organizer", "test", {})
+		perception = build_agent_perception(view, "camper_organizer")
+		entities_by_id = {str(x.get("id", "")): x for x in perception.get("entities", []) if isinstance(x, dict)}
+
+		self.assertEqual(entities_by_id["campfire_01"].get("description"), "营地火堆。")
+		self.assertEqual(entities_by_id["campfire_01"].get("perception_level"), "base")
+
+	def test_condition_based_perception_uses_matched_description_level(self):
+		ws, _bundle = _load_camping_smoke_world_and_bundle()
+		campfire = ws.get_entity_by_id("campfire_01")
+		self.assertIsNotNone(campfire)
+		campfire.add_component(
+			"PerceptionProfileComponent",
+			CustomComponent(
+				data={
+					"default_level": "base",
+					"default_description": "base",
+					"levels": [
+						{
+							"id": "lit_observed",
+							"condition": {
+								"type": "has_status",
+								"target": "target",
+								"status_id": "lit",
+							},
+							"description": "observed",
+						}
+					],
+				}
+			),
+		)
+
+		view = build_full_ws_view(ws, "camper_organizer", "test", {})
+		perception = build_agent_perception(view, "camper_organizer")
+		entities_by_id = {str(x.get("id", "")): x for x in perception.get("entities", []) if isinstance(x, dict)}
+		self.assertEqual(entities_by_id["campfire_01"].get("description"), "营地火堆。")
+		self.assertEqual(entities_by_id["campfire_01"].get("perception_level"), "base")
+
+		status_comp = campfire.get_component("StatusComponent")
+		status_comp.statuses.append("lit")
+
+		view = build_full_ws_view(ws, "camper_organizer", "test", {})
+		perception = build_agent_perception(view, "camper_organizer")
+		entities_by_id = {str(x.get("id", "")): x for x in perception.get("entities", []) if isinstance(x, dict)}
+		self.assertEqual(
+			entities_by_id["campfire_01"].get("description"),
+			"营地火堆。点燃后可用于取暖和烹饪；熄灭时不能发挥这些作用，需要燃料重新点火。",
+		)
+		self.assertEqual(entities_by_id["campfire_01"].get("perception_level"), "lit_observed")
+
+	def test_facility_templates_are_not_portable_items(self):
+		ws, _bundle = _load_camping_smoke_world_and_bundle()
+		for entity_id in ("camp_storage", "campfire_01", "shelter_01"):
+			ent = ws.get_entity_by_id(entity_id)
+			self.assertIsNotNone(ent)
+			self.assertTrue(ent.has_tag("facility"))
+			self.assertFalse(ent.has_tag("item"))
+
+	def test_dark_location_blocks_passive_entity_perception(self):
+		ws, _bundle = _load_camping_smoke_world_and_bundle()
+		scope = ws.get_environment_scope_by_id("camping_region")
+		self.assertIsNotNone(scope)
+		scope.fields["light_level"] = 0
+
+		view = build_full_ws_view(ws, "camper_organizer", "test", {})
+		perception = build_agent_perception(view, "camper_organizer")
+
+		self.assertEqual(perception.get("entities"), [])
+		self.assertTrue(perception.get("perception_blocked_by_darkness"))
+		self.assertEqual(perception.get("location", {}).get("light_level"), 0)
+		self.assertGreater(len(perception.get("reachable_locations", [])), 0)
+
+	def test_agent_perception_includes_own_vitals(self):
+		ws, _bundle = _load_camping_smoke_world_and_bundle()
+		view = build_full_ws_view(ws, "camper_organizer", "test", {})
+		perception = build_agent_perception(view, "camper_organizer")
+
+		self.assertEqual(
+			perception.get("vitals"),
+			{
+				"hp": 100.0,
+				"max_hp": 100.0,
+				"energy": 70.0,
+				"max_energy": 100.0,
+				"nutrition": 70.0,
+				"max_nutrition": 100.0,
+				"stress": 0.0,
+				"max_stress": 100.0,
+			},
+		)
+
+	def test_observe_is_the_entity_observation_recipe(self):
+		_ws, bundle = _load_camping_smoke_world_and_bundle()
+		verbs = {str(x.get("verb", "")) for x in bundle.recipes.values() if isinstance(x, dict)}
+
+		self.assertIn("Observe", verbs)
+		self.assertNotIn("InspectEntity", verbs)
+
+	def test_query_entity_recipes_recipe_and_description_field_exist(self):
+		ws, bundle = _load_camping_smoke_world_and_bundle()
+		verbs = {str(x.get("verb", "")) for x in bundle.recipes.values() if isinstance(x, dict)}
+		self.assertIn("QueryEntityRecipes", verbs)
+
+		wood = ws.get_entity_by_id("initial_wood_01")
+		self.assertIsNotNone(wood)
+		desc = wood.get_component("DescriptionComponent")
+		self.assertIn("LightCampfire", desc.recipe_description)
+
+
+if __name__ == "__main__":
+	unittest.main()

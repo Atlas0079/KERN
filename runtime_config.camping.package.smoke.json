@@ -2,8 +2,8 @@
   "packages": [
     { "path": "Packages/Camping", "world": true }
   ],
+  "default_workflow_provider": {"kind": "simple"},
   "env": {
-    "USE_LLM": "0",
     "LOG_LEVEL": "warn",
     "LOG_CATEGORIES": "system,executor,task,interaction,checkpoint",
     "DIALOGUE_LOG_FULL": "0",

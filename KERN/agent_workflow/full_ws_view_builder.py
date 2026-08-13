@@ -44,6 +44,15 @@ def _read_interaction_inbox(ent: Any) -> list[dict[str, Any]]:
 	]
 
 
+def _read_record_inbox(ent: Any) -> list[dict[str, Any]]:
+	perception = ent.get_component("PerceptionComponent") if hasattr(ent, "get_component") else None
+	return [
+		deepcopy(item)
+		for item in list(getattr(perception, "record_inbox", []) or [])
+		if isinstance(item, dict)
+	]
+
+
 def _round1(value: Any) -> float | None:
 	if value is None:
 		return None
@@ -301,6 +310,7 @@ def build_full_ws_view(
 
 	actor_entity = ws.get_entity_by_id(str(actor_id)) if hasattr(ws, "get_entity_by_id") else None
 	interaction_inbox = _read_interaction_inbox(actor_entity) if actor_entity is not None else []
+	record_inbox = _read_record_inbox(actor_entity) if actor_entity is not None else []
 
 	state = ws.runtime_state
 	return {
@@ -313,6 +323,7 @@ def build_full_ws_view(
 		"locations": locations_out,
 		"paths": paths_out,
 		"interaction_inbox": interaction_inbox,
+		"record_inbox": record_inbox,
 		"recent_interactions": [],
 		"dialogue_budget_limit_per_location": state.dialogue_budget_limit_per_location,
 		"dialogue_budget_used_per_location": dict(state.dialogue_budget_used_per_location),

@@ -1,6 +1,9 @@
 {
   "package_id": "social_propagation",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "provides_world": false,
+  "data": {
+    "recipes": ["Data/Recipes.json"]
+  },
   "extensions": "extensions.py"
 }

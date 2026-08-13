@@ -13,7 +13,8 @@ from ..execution_errors import KernFailure
 from ..failure_report import FailureEvidence
 from ..log_manager import get_logger
 from ..llm.openai_compat_client import LLMRequestError
-from .contracts import AgentTurnSession, DecisionFrame, EndTurn, SubmitAction, TurnStart
+from .context_builder import LLMDecisionContext, LLMDecisionContextBuilder
+from .contracts import AgentTurnSession, EndTurn, SubmitAction, TurnFrame, TurnStart
 from .dialogue import DialogueFrame, Pass, Speak
 from .trace import LLMTraceRecorder
 
@@ -476,6 +477,7 @@ class LLMWorkflow:
 	llm_debug_view: str = ""
 	failure_evidence: FailureEvidence = field(default_factory=FailureEvidence)
 	trace_recorder: LLMTraceRecorder | None = None
+	context_builder: LLMDecisionContextBuilder = field(default_factory=LLMDecisionContextBuilder)
 
 	def _ask(self, role: str, **kwargs: Any) -> str:
 		binding = self._role_binding(role)
@@ -659,12 +661,16 @@ Output rules:
 			return
 		logger.warn("llm", str(event), context=dict(context or {}))
 
-	def begin_turn(self, _start: TurnStart) -> AgentTurnSession:
+	def begin_turn(self, _ws: Any, _start: TurnStart) -> AgentTurnSession:
 		return _LLMTurnSession(self)
 
-	def _decide_frame(self, frame: DecisionFrame) -> tuple[list[dict[str, Any]], dict[str, Any]]:
-		perception = dict(frame.perception)
-		recipe_db_view = dict(frame.action_catalog)
+	def _decide_frame(
+		self,
+		frame: TurnFrame,
+		decision_context: LLMDecisionContext,
+	) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+		perception = dict(decision_context.perception)
+		recipe_db_view = dict(decision_context.action_catalog)
 		perception["mode_context"] = dict(frame.mode_context)
 		perception["interrupt_reason"] = str(frame.reason or "")
 		location = dict(perception.get("location", {}) or {}) if isinstance(perception.get("location", {}), dict) else {}
@@ -1461,9 +1467,16 @@ class _LLMTurnSession:
 	meta: dict[str, Any] = field(default_factory=dict)
 	initialized: bool = False
 
-	def next_step(self, frame: DecisionFrame):
+	def next_step(self, ws: Any, frame: TurnFrame):
 		if not self.initialized:
-			self.pending_actions, self.meta = self.workflow._decide_frame(frame)
+			decision_context = self.workflow.context_builder.build(
+				ws,
+				frame.actor_id,
+				frame.reason,
+				frame.mode_context,
+			)
+			self.pending_actions, self.meta = self.workflow._decide_frame(frame, decision_context)
+			self.workflow.context_builder.apply_step_meta(ws, frame.actor_id, self.meta)
 			self.initialized = True
 		if self.pending_actions:
 			return SubmitAction(intent=self.pending_actions.pop(0), meta=dict(self.meta))

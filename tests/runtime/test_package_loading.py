@@ -120,7 +120,7 @@ class PackageLoadingTests(unittest.TestCase):
 			_write_world_package(root)
 			_write_json(
 				root / "runtime.json",
-				{"packages": [{"path": "Packages/demo", "world": True}], "env": {"USE_LLM": "0", "CHECKPOINT_EVERY_TICK": "0"}},
+				{"packages": [{"path": "Packages/demo", "world": True}], "default_workflow_provider": {"kind": "simple"}, "env": {"CHECKPOINT_EVERY_TICK": "0"}},
 			)
 
 			runtime = KernRuntime.from_config(root, "runtime.json", configure_logging=False)

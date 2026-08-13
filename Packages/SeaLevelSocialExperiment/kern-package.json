@@ -1,0 +1,10 @@
+{
+  "package_id": "sea_level_social_experiment",
+  "version": "0.1.0",
+  "provides_world": true,
+  "data": {
+    "world": "Data/World.json",
+    "entities": ["Data/Entities"]
+  },
+  "extensions": "extensions.py"
+}

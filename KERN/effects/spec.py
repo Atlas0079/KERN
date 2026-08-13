@@ -6,6 +6,7 @@ from typing import Any, Callable
 
 BindCallable = Callable[[Any, dict[str, Any], dict[str, Any]], tuple[dict[str, Any], dict[str, Any]]]
 HandlerCallable = Callable[[Any, Any, dict[str, Any], dict[str, Any]], list[dict[str, Any]]]
+RecorderCallable = Callable[[Any, dict[str, Any], dict[str, Any], list[dict[str, Any]]], str | list[str] | None]
 
 
 SIDE_EFFECT_POLICIES = frozenset(
@@ -24,8 +25,10 @@ class EffectSpec:
 	module: str = ""
 	binder_name: str = ""
 	handler_name: str = ""
+	recorder_name: str = ""
 	binder: BindCallable | None = None
 	handler: HandlerCallable | None = None
+	recorder: RecorderCallable | None = None
 	visibility: str = "public"
 	origin: str = "core"
 	side_effect: str = "world"

@@ -1,0 +1,37 @@
+{
+  "packages": [
+    {"path": "Packages/SocialPropagation"},
+    {"path": "Packages/SeaLevelSocialExperiment", "world": true}
+  ],
+  "default_workflow_provider": {"kind": "simple"},
+  "external_runtimes": [
+    {
+      "runtime_id": "social_platform",
+      "provider": "social_propagation:sqlite_platform",
+      "options": {
+        "database_path": "KERN/external_runtimes/social_runs/consequence/platform.sqlite",
+        "seed_path": "Packages/SeaLevelSocialExperiment/Data/Platform/social_seed.sea_level_consequence_focus.json"
+      }
+    }
+  ],
+  "workflow_providers": [
+    {"workflow_id": "social_platform", "kind": "social_platform"}
+  ],
+  "env": {
+    "LLM_PROVIDER": "openai_compat",
+    "LLM_BASE_URL": "https://api.deepseek.com",
+    "LLM_API_PREFIX": "/v1",
+    "LLM_API_KEY_ENV": "LLM_API_KEY",
+    "LLM_TIMEOUT_SECONDS": "120",
+    "LLM_MAX_RETRIES": "2",
+    "SOCIAL_WORKFLOW_MODEL": "deepseek-v4-pro",
+    "MAX_TICKS": "100",
+    "MAX_ACTIONS_PER_TURN": "24",
+    "MAX_REPLANS_PER_TURN": "1",
+    "ACTIVE_PHASE_MODE": "parallel_batch",
+    "PARALLEL_DECISION_WORKERS": "16",
+    "CHECKPOINT_EVERY_TICK": "1",
+    "CHECKPOINT_DIR": "checkpoints/sea_level_consequence_focus",
+    "LLM_TRACE_MODE": "full"
+  }
+}

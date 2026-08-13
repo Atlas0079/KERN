@@ -56,6 +56,10 @@ class MemoryComponent:
 			"content": content,
 			"tags": tags,
 		}
+		for key in ("record_id", "record_type"):
+			value = str(entry.get(key, "") or "").strip()
+			if value:
+				out[key] = value
 		if isinstance(entry.get("source", None), dict):
 			out["source"] = dict(entry.get("source") or {})
 		return out
@@ -78,23 +82,23 @@ class MemoryComponent:
 		self.short_term_queue = kept
 
 	def per_tick(self, ws: Any, _entity_id: str, _ticks_per_minute: int) -> None:
-		tick = int(ws.game_time.total_ticks)
-		self.prune_to_tick(tick)
+		return None
 
 	def add_short_term(self, entry: dict[str, Any]) -> None:
 		norm = self._normalize_entry(entry)
 		self.short_term_queue.append(norm)
-		self.prune_to_tick(int(norm.get("tick", 0) or 0))
-		limit = int(self.short_term_max_entries or 0)
-		while limit > 0 and len(self.short_term_queue) > limit:
-			scored = [
-				(self._entry_score(item, int(norm.get("tick", 0) or 0)), idx, item)
-				for idx, item in enumerate(list(self.short_term_queue))
-			]
-			_score, idx, evicted = min(scored, key=lambda x: (float(x[0]), int(x[1])))
-			self.short_term_queue.pop(idx)
-			if float(evicted.get("importance", 0.0) or 0.0) >= 0.45:
-				self.add_mid_term_prep(evicted)
+
+	def remove_short_term_by_record_ids(self, record_ids: list[str]) -> int:
+		wanted = {str(item or "").strip() for item in list(record_ids or []) if str(item or "").strip()}
+		if not wanted:
+			return 0
+		before = len(self.short_term_queue)
+		self.short_term_queue = [
+			dict(item)
+			for item in list(self.short_term_queue or [])
+			if not isinstance(item, dict) or str(item.get("record_id", "") or "") not in wanted
+		]
+		return max(0, before - len(self.short_term_queue))
 
 	def add_mid_term_prep(self, entry: dict[str, Any]) -> None:
 		norm = self._normalize_entry(entry)

@@ -39,6 +39,24 @@ file. Source code is the final authority.
 - `WorldState.services` is an existing string-keyed dependency bag. Reuse its
   current entries; do not add a new key without an explicit design task.
 
+## Design-owner approval boundary
+
+Without explicit approval from the design owner in the current task,
+developers, including LLM agents, may modify code only in these extension
+areas:
+
+- scenario and capability Packages, including their declared data, components,
+  effects, recipes, adapters, configuration, and focused tests;
+- `KERN/external_runtimes/` domain runtime implementations and their focused
+  tests; and
+- new duck-typed Agent Workflow implementations, their domain helpers, and
+  focused tests, written against the existing `AgentWorkflow` /
+  `AgentTurnSession` contracts. Scenario-specific workflows should live in
+  Package or application code.
+
+If a task cannot be completed within these extension areas, stop before editing
+and ask the design owner for a decision.
+
 ## Components and persistence
 
 Components express entity state and data capabilities. Effects and systems
@@ -118,45 +136,6 @@ Scenario code is not sandboxed and has the same process permissions as KERN.
 
 Dynamic text renders once, only in explicitly supported text fields. It is not
 a general expression language and does not recursively render values.
-
-## Working rules
-
-- Before proposing a code change, read and understand the relevant code.
-- Treat incomplete or unsuitable requests as design questions: identify the
-  practical goal, risks, boundaries, and a better implementation path instead
-  of blindly following the first formulation.
-- Before development, agree with the user on the expected outcome, affected
-  area, and acceptance checks. Afterward, explain actual changes, validation,
-  difficulties, and tradeoffs.
-- Preserve unrelated work in a dirty worktree. Do not reset, checkout, or
-  delete user files without explicit scope.
-- Use UTF-8 for text reads and writes. On Windows, prefer `.venv\Scripts\python.exe`
-  when the `python` command resolves to the Microsoft Store alias.
-- Reuse current interfaces and contracts. Add behavior tests before changing a
-  seam.
-- Do not use defensive programming for author-controlled configuration,
-  scenario data, Package data, or other hand-written inputs. Assume data follows
-  the current contract. If correct data can avoid a failure, do not add fallback
-  values, coercion, filtering, silent ignores, automatic repair, or duplicate
-  runtime guards for that failure.
-- Do not add or retain compatibility code in any form, including legacy schema
-  branches, deprecated field aliases, adapters for retired interfaces, old
-  projections, format detection, or compatibility-only exports.
-- When a kernel contract changes, update the repository's hand-written data,
-  configs, fixtures, and tests to the new contract. Do not preserve the old
-  contract in code.
-- Generated artifacts are disposable. When their schema or runtime contract
-  changes, delete and regenerate affected checkpoints, archives, snapshots,
-  traces, logs, and other generated outputs instead of migrating them or adding
-  readers for historical formats.
-- Tests are not authoritative; kernel contracts are authoritative. Correct
-  tests are executable evidence of those contracts. Remove or rewrite tests
-  that require behavior which violates an agreed kernel contract.
-- Use direct language in documentation and explanations. Avoid rhetorical
-  "not X but Y" constructions and unnecessary abstract alternatives; make a
-  concrete recommendation that can be implemented.
-- Keep stable agent instructions here. Put active, multi-stage designs in a
-  dedicated plan; do not use this file as a work log.
 
 ## Verification
 

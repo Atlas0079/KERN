@@ -23,7 +23,19 @@ runtime config / Package selection
 2. 建立本次运行独有的 `EffectCatalog` 和 `ComponentCatalog`，注册所选 Package 的扩展并冻结；
 3. 加载组合后的 world、entity、recipe、reaction 和 named bundle 数据；
 4. 校验数据，随后构建 `WorldState`，或验证 Package identity 后恢复 checkpoint；
-5. 装配 executor、interaction engine、workflow registry、reaction system、archive 和 failure writer。
+5. 装配 executor、interaction engine、workflow registry、reaction system、archive、failure writer
+   和已选择的 external runtime 实例。
+
+workflow provider 是源码内置实现集合，不是 Package 自动发现项。runtime config 可以通过
+`workflow_providers` 选择 `KERN.agent_workflow.builtin_workflows.BUILTIN_WORKFLOW_BUILDERS`
+中注册的 kind；开发者新增 workflow 时需要修改源码注册表和对应 builder。当前内置 kind 包括
+`simple`、`llm` 和 `social_platform`。
+
+workflow builder 属于内核装配层。`simple` builder 返回无 LLM 策略；`llm` builder 包装旧有
+`llm_providers` / `workflows` role 配置；`social_platform` builder 读取已加载 world Package
+中的 study data，构造内置 `KERN.agent_workflow.social_platform.SocialPlatformWorkflow`。Package
+data 可以为内置 workflow 提供场景事实，但 workflow 实现本身不通过 Package loader 自动注册，
+KERN 内核也不 import capability Package 的 workflow 代码。
 
 Package 路径必须位于 project root 内，Package ID 不得重复。manifest 文件固定为 Package
 根目录的 `kern-package.json`。world Package 必须声明 `provides_world: true` 和完整 world
@@ -35,11 +47,13 @@ Effect、Component 和 codec。
 ```python
 EFFECT_MODULES = ("effects.weather",)
 COMPONENT_MODULES = ("components.weather",)
+EXTERNAL_RUNTIME_MODULES = ("runtimes.weather",)
 ```
 
 loader 只导入入口声明的 Package-local 模块，并只注册其中带 `@package_effect` 或
-`@package_component` 标记的定义。组件和 codec 先注册，Effect 后注册。Package definition
-ID 必须使用所属 Package 的命名空间。
+`@package_component`、`@package_external_runtime` 标记的定义。组件和 codec 先注册，Effect
+后注册，外部 runtime provider 也进入本次 runtime-scoped catalog。Package definition ID
+必须使用所属 Package 的命名空间。
 
 Package 装配完成后生成固定的 `package_identity.v2`。identity 只覆盖本次 runtime 实际读取
 或导入的 artifact：
@@ -47,11 +61,13 @@ Package 装配完成后生成固定的 `package_identity.v2`。identity 只覆�
 - 每个选中 Package 的 `kern-package.json`；
 - 实际加载的 world、entity、recipe、reaction 和 bundle JSON；
 - 已声明的 `extensions.py` 和实际导入的 Package-local Python 模块；
-- 冻结后的 Effect ID 与 Component ID 清单。
+- 冻结后的 Effect ID、Component ID 和 external runtime provider ID 清单；
+- runtime config 选择的 external runtime instance ID、provider 和 options。
 
-已加载 artifact 改变时，v2 checkpoint 恢复会失败。历史 v1 identity 和缺少 Package metadata
-的 checkpoint 会被拒绝。当前可运行 world Package 是 `Packages/Camping`，其他历史场景不参与
-Package 加载。
+已加载 artifact 或 external runtime instance 配置改变时，v2 checkpoint 恢复会失败。历史 v1
+identity 和缺少 Package metadata 的 checkpoint 会被拒绝。当前稳定回归 world Package 是
+`Packages/Camping`；社交平台实验还使用 `Packages/SocialPropagation` capability Package 和
+`Packages/SeaLevelSocialExperiment` world Package。历史归档场景不参与 Package 加载。
 
 普通 Package Component 必须是纯数据 dataclass，默认使用 `DataclassCodec`。需要特殊转换时，
 Package 必须显式提供 codec。
@@ -87,21 +103,29 @@ TurnScheduler 只负责授予 turn：它按稳定顺序查找启用 controller �
 
 ```text
 TurnStart
--> workflow.begin_turn()
--> build DecisionFrame from current settled state
--> session.next_step()
+-> workflow.begin_turn(ws, start)
+-> build TurnFrame with scheduling state and prior action feedback
+-> session.next_step(ws, frame)
 -> EndTurn
    or SubmitAction
       -> resolve ActionIntent
       -> ActionRejected feedback
          or execute one top-level EffectBundle and settle all Reactions
--> build the next DecisionFrame
+-> build the next TurnFrame
 ```
 
 一个 workflow session 可以保存多步计划，但每次只能提交一条 ActionIntent。每条 Action
 单独解析和提交，前一条 Action 的 Reaction FIFO 清空后才会请求下一条。合法但不可执行的
-动作是 `ActionFeedback(status="rejected")`；provider、contract、Effect 或 Reaction 失败是
-terminal `KernFailure`。action 和 replan 数量分别受 runtime budget 限制。
+动作是 `ActionFeedback(status="rejected")`；TurnRunner 会把 rejection 作为
+`interaction_origin="action_rejection"` 的 `RecordInteraction` 写入 interaction log，但它不是错误
+Event，也不进入 Reaction FIFO。provider、contract、Effect 或 Reaction 失败是 terminal
+`KernFailure`。action 和 replan 数量分别受 runtime budget 限制。
+
+`TurnFrame` 不包含 perception 或 action catalog。每次调用时 workflow 直接读取当前 `ws`，
+自行决定需要哪些组件并构造领域感知；workflow 不得直接修改 `WorldState`，写入仍只能通过
+返回的 ActionIntent 编译为 EffectBundle 后由 executor 提交。默认 LLM workflow 内部使用
+自己的 observer 和 memory policy；其他内置 workflow 可以直接读取当前 runtime 已加载的核心
+或 Package 组件。
 
 对话使用独立的 `DialoguePolicy` seam。`StartConversation` 在单个 tick 内建立稳定参与者顺序，
 先只读世界并生成有界 transcript；全部 provider 调用成功后，再通过一个 child bundle 将每句
@@ -128,7 +152,8 @@ Reaction Bundle 是新的事务；此前成功的 Reaction 不因后续 Reaction
 
 `ActionRejected` 表示 Decision 产生的意图符合 schema，但当前世界没有可执行路径，例如没有
 匹配 Recipe、目标不存在或 condition 不满足。它是正常 Action 结果，不写错误 Event，不终止
-runtime，也不进入 Reaction FIFO。
+runtime，也不进入 Reaction FIFO。当前 TurnRunner 会为它写一条 rejected interaction，供审计和
+Agent feedback 使用。
 
 `KernFailure` 表示 KERN、Package、Provider 或运行环境未能履行契约。稳定字段包括：
 
@@ -145,13 +170,18 @@ Executor、Binder、Workflow、Reaction、Persistence 和 External runtime 的 F
 Python exception 传播。Bundle 在异常路径恢复快照，Runtime 在公开执行入口捕获第一次
 Failure，并最多写一份 `<checkpoint_dir>/failure.json`。报告保留完整开发者证据，包括原始异常链、
 traceback、规范化 Effect 输入、Decision、LLM 上下文和执行身份；报告写入失败不会覆盖原始
-Failure。
+Failure。报告按当前产品策略不脱敏，会保留完整 runtime config，包括凭据；调用方必须把
+`failure.json` 当作敏感运行产物管理。
 
 Recipe 和 Reaction 只有在定义 `narrative_success` 时，才由编译器自动生成一条 interaction
 记录。作者仍可在 Bundle 中显式放置任意数量的 `RecordInteraction`；交互是否重复由 Bundle
 作者负责。`RecordInteraction` 写入时一次性提供交互文本和可感知数据，Handler 根据交互发生时
 的世界状态确定感知者，并把包含 `tick`、`time_str` 和 `interaction_id` 的快照写入
 `PerceptionComponent.interaction_inbox`。该写入与 interaction log 属于同一个 Bundle 事务。
+
+EffectBundle 还可以声明 `record: {"mode": "auto", "target": "self"}`。此模式会在 bundle 成功后
+调用各 Effect 的 recorder，把 Agent 可见片段写入行动者的 record inbox。`record.mode="template"`
+目前只在结构层保留，executor 会以 `BUNDLE_RECORD_TEMPLATE_UNSUPPORTED` 拒绝执行。
 
 ## 5. 组件转换与持久化
 
@@ -166,14 +196,18 @@ Recipe 和 Reaction 只有在定义 `narrative_success` 时，才由编译器自
 持久化输出分为三个用途：
 
 - `KernRuntime.snapshots`：`runtime_snapshot.v2` 调试快照，`component_state` 是完整 catalog 序列化状态；
-- run archive：`run_archive.v1` manifest、周期 snapshot 和逐 tick delta，可重建指定 tick；
-- `failure.json`：一次 runtime 的开发者失败证据，与世界 checkpoint 和事务分离。
+- run archive：`manifest.json` 使用 `run_archive.v1`；周期 snapshot 使用 `run_snapshot.v1`；
+  逐 tick delta 使用 `run_delta.v1`，可重建指定 tick；
+- `simulation_log.json`：`simlog.v1`，合并 event log 和 interaction log，restore 时可作为历史日志来源；
+- `failure.json`：`kern_failure.v1`，一次 runtime 的开发者失败证据，与世界 checkpoint 和事务分离。
 
 显式启用 `LLM_TRACE_MODE=full` 时，runtime 还会在 checkpoint 输出目录旁写入独立的压缩
 LLM trace。trace 不属于 `WorldState` 或 checkpoint，可以按 tick 和 Agent 查看精确请求、输出
 及 Action feedback。
 
 archive 和 checkpoint 写入 `package_identity.v2`，恢复时验证所选 Package 的实际加载 artifact。
+restore 优先读取同 run_id 的 `simulation_log.json` 作为历史 event/interaction log；不可用时才退回
+snapshot 内携带的当前 tick log。
 
 ## 6. 外部状态边界
 
@@ -213,6 +247,9 @@ Bridge 支持 `start`、`close`、`checkpoint_restore`、`checkpoint_save`、`bu
 checkpoint archive 与外部 checkpoint 不是一个原子事务。KERN archive 可能已经写入，随后外部
 `checkpoint_save` 才失败；调用方必须把这种情况视为失败运行，不能假定两侧已经一致。
 
+runtime config 中的 `external_runtimes` 是实例数组，每项固定为 `runtime_id`、`provider` 和
+`options`。`provider` 必须由已选 Package 注册，`options` 进入 `package_identity.v2`。
+
 ## 7. 模块所有权
 
 | 模块 | 当前责任 |
@@ -225,7 +262,7 @@ checkpoint archive 与外部 checkpoint 不是一个原子事务。KERN archive 
 | `KERN/executor/` | Binder、Handler、Bundle 事务和世界回滚 |
 | `KERN/interaction/` | Recipe 匹配、ActionIntent 编译和有界 ConversationEngine |
 | `KERN/sim/` | Reaction settlement、turn 调度和 turn 执行 |
-| `KERN/agent_workflow/` | 决策视图、记忆 patch、Workflow/DialoguePolicy contract、provider adapter 和 LLM trace |
+| `KERN/agent_workflow/` | 决策视图、记忆 patch、Workflow/DialoguePolicy contract、内置 workflow 实现/注册、provider adapter 和 LLM trace |
 | `KERN/query/` | condition predicate 和路径解析 |
 | `KERN/external_runtime.py` | 外部 adapter 路由与生命周期协议 |
 | `KERN/failure_report.py` | 单次 runtime 的失败证据 |

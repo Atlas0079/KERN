@@ -9,6 +9,31 @@ from typing import Any
 class PerceptionComponent:
 	enabled: bool = True
 	interaction_inbox: list[dict[str, Any]] = field(default_factory=list)
+	record_inbox: list[dict[str, Any]] = field(default_factory=list)
+
+	def enqueue_record(self, record: dict[str, Any]) -> bool:
+		if not isinstance(record, dict):
+			return False
+		record_id = str(record.get("record_id", "") or "").strip()
+		if not record_id:
+			return False
+		for item in list(self.record_inbox or []):
+			if isinstance(item, dict) and str(item.get("record_id", "") or "") == record_id:
+				return False
+		self.record_inbox.append(deepcopy(record))
+		return True
+
+	def consume_records(self, record_ids: list[str]) -> int:
+		wanted = {str(item or "").strip() for item in list(record_ids or []) if str(item or "").strip()}
+		if not wanted:
+			return 0
+		before = len(self.record_inbox)
+		self.record_inbox = [
+			deepcopy(item)
+			for item in list(self.record_inbox or [])
+			if isinstance(item, dict) and str(item.get("record_id", "") or "") not in wanted
+		]
+		return max(0, before - len(self.record_inbox))
 
 	def enqueue_interaction(self, record: dict[str, Any]) -> bool:
 		if not isinstance(record, dict):

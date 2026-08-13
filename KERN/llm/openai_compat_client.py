@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import ssl
 import time
 from dataclasses import dataclass
 from typing import Any, Protocol
@@ -197,7 +198,7 @@ class OpenAICompatClient:
 				)
 			except json.JSONDecodeError as e:
 				raise LLMRequestError(f"invalid response json: {e}") from e
-			except (URLError, TimeoutError, ConnectionError) as e:
+			except (URLError, TimeoutError, ConnectionError, ssl.SSLError) as e:
 				last_err = e
 				if attempt >= max_retries:
 					raise LLMRequestError(f"LLM request failed after {attempt + 1}/{max_retries + 1} attempts: {e}") from e

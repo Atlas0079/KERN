@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 from ..execution_errors import KernFailure
-from .contracts import ActionFeedback, DecisionFrame
 from .full_ws_view_builder import build_full_ws_view
 from .memory_policy import build_memory_patch
 from .observer import build_agent_perception
@@ -12,8 +11,9 @@ from .view_profile import active_workflow_view_profile
 
 
 @dataclass(frozen=True)
-class _PreparedDecisionFrame(DecisionFrame):
-	_legacy_workflow_view: dict[str, Any] = field(default_factory=dict, repr=False)
+class LLMDecisionContext:
+	perception: dict[str, Any]
+	action_catalog: dict[str, Any]
 
 
 def _build_workflow_view(ws: Any, actor_id: str, reason: str, mode_context: dict[str, Any]) -> dict[str, Any]:
@@ -51,6 +51,8 @@ def _execute_memory_patch(ws: Any, actor_id: str, patch: dict[str, Any]) -> None
 					"target": actor_id,
 					"notes": [dict(item) for item in patch.get("notes", [])],
 					"consume_interaction_ids": [str(item) for item in patch.get("consume_interaction_ids", [])],
+					"consume_record_ids": [str(item) for item in patch.get("consume_record_ids", [])],
+					"remove_short_term_record_ids": [str(item) for item in patch.get("remove_short_term_record_ids", [])],
 					"mid_term_summaries": [dict(item) for item in patch.get("mid_term_summaries", [])],
 					"clear_mid_term_prep": bool(patch.get("clear_mid_term_prep", False)),
 				}
@@ -58,6 +60,35 @@ def _execute_memory_patch(ws: Any, actor_id: str, patch: dict[str, Any]) -> None
 		},
 		{"self_id": actor_id, "target_id": actor_id},
 	)
+
+
+def apply_record_memory_patch(
+	ws: Any,
+	actor_id: str,
+	reason: str,
+	mode_context: dict[str, Any],
+) -> bool:
+	"""Consume visible record inbox entries into the actor's MemoryComponent."""
+
+	workflow_view = _build_workflow_view(ws, actor_id, reason, mode_context)
+	full_view = dict(workflow_view.get("full_ws_view", {}) or {})
+	try:
+		memory_patch = build_memory_patch(full_ws_view=full_view, actor_id=str(actor_id))
+	except Exception as exc:
+		raise KernFailure(
+			"WORKFLOW_MEMORY_PATCH_BUILD_FAILED",
+			str(exc),
+			origin="workflow",
+			phase="memory_patch",
+			context={"actor_id": str(actor_id or "")},
+		) from exc
+	if isinstance(memory_patch, dict) and memory_patch:
+		_execute_memory_patch(ws, actor_id, memory_patch)
+		return True
+	return False
+
+
+apply_interaction_memory_patch = apply_record_memory_patch
 
 
 def _normalized_memory_notes(ws: Any, actor_id: str, meta: dict[str, Any]) -> list[dict[str, Any]]:
@@ -80,8 +111,8 @@ def _normalized_memory_notes(ws: Any, actor_id: str, meta: dict[str, Any]) -> li
 
 
 @dataclass
-class DecisionContextBuilder:
-	"""Build one post-settlement, agent-visible workflow frame."""
+class LLMDecisionContextBuilder:
+	"""Build the default LLM workflow's private, agent-visible decision input."""
 
 	def build(
 		self,
@@ -89,44 +120,23 @@ class DecisionContextBuilder:
 		actor_id: str,
 		reason: str,
 		mode_context: dict[str, Any],
-		*,
-		previous_action: ActionFeedback | None,
-		actions_committed: int,
-		replans: int,
-	) -> DecisionFrame:
+	) -> LLMDecisionContext:
 		workflow_view = _build_workflow_view(ws, actor_id, reason, mode_context)
 		full_view = dict(workflow_view.get("full_ws_view", {}) or {})
-		recent_interactions = [
+		recent_records = [
 			dict(item)
-			for item in list(full_view.get("interaction_inbox", []) or [])
+			for item in list(full_view.get("record_inbox", []) or [])
 			if isinstance(item, dict)
 		]
-		try:
-			memory_patch = build_memory_patch(full_ws_view=full_view, actor_id=str(actor_id))
-		except Exception as exc:
-			raise KernFailure(
-				"WORKFLOW_MEMORY_PATCH_BUILD_FAILED",
-				str(exc),
-				origin="workflow",
-				phase="memory_patch",
-				context={"actor_id": str(actor_id or "")},
-			) from exc
-		if isinstance(memory_patch, dict) and memory_patch:
-			_execute_memory_patch(ws, actor_id, memory_patch)
+		if apply_record_memory_patch(ws, actor_id, reason, mode_context):
 			workflow_view = _build_workflow_view(ws, actor_id, reason, mode_context)
 			full_view = dict(workflow_view.get("full_ws_view", {}) or {})
-		full_view["recent_interactions"] = recent_interactions
+		full_view["recent_records"] = recent_records
+		full_view["recent_interactions"] = []
 		workflow_view["full_ws_view"] = full_view
-		return _PreparedDecisionFrame(
-			actor_id=str(actor_id),
-			reason=str(reason or ""),
-			mode_context=dict(mode_context or {}),
+		return LLMDecisionContext(
 			perception=build_agent_perception(full_view, str(actor_id)),
 			action_catalog=_workflow_action_catalog(ws),
-			previous_action=previous_action,
-			actions_committed=int(actions_committed),
-			replans=int(replans),
-			_legacy_workflow_view=workflow_view,
 		)
 
 	@staticmethod
@@ -140,10 +150,12 @@ class DecisionContextBuilder:
 			{
 				"notes": notes,
 				"consume_interaction_ids": [],
+				"consume_record_ids": [],
+				"remove_short_term_record_ids": [],
 				"mid_term_summaries": [],
 				"clear_mid_term_prep": False,
 			},
 		)
 
 
-__all__ = ["DecisionContextBuilder"]
+__all__ = ["LLMDecisionContext", "LLMDecisionContextBuilder", "apply_record_memory_patch"]

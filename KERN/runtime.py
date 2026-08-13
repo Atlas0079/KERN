@@ -6,12 +6,11 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-from .agent_workflow.provider_catalog import build_workflow_catalog
+from .agent_workflow.builtin_workflows import WorkflowBuildContext, build_builtin_workflow_registry
 from .agent_workflow.registry import WorkflowRegistry
-from .agent_workflow.simple_policy import SimplePolicyActionProvider
 from .agent_workflow.trace import LLMTraceRecorder
 from .agent_workflow.view_profile import normalize_workflow_view_profile
-from .sim.turn_scheduler import TurnScheduler
+from .sim.active_phase import build_active_phase_strategy
 from .component_catalog import ComponentCatalog, build_core_component_catalog
 from .data.archive import ArchiveRecorder
 from .data.builder import build_world_state
@@ -69,6 +68,10 @@ def _load_runtime_config(project_root: Path, config_path: str = "") -> tuple[dic
 			},
 			ensure_ascii=False,
 		)
+	if "workflow_providers" in raw:
+		out["WORKFLOW_PROVIDERS_JSON"] = json.dumps(raw["workflow_providers"], ensure_ascii=False)
+	if "default_workflow_provider" in raw:
+		out["DEFAULT_WORKFLOW_PROVIDER_JSON"] = json.dumps(raw["default_workflow_provider"], ensure_ascii=False)
 	return out, resolved
 
 
@@ -140,6 +143,8 @@ class KernRuntime:
 	max_trigger_depth: int = 4
 	max_actions_per_turn: int = 99
 	max_replans_per_turn: int = 5
+	active_phase_mode: str = "serial"
+	parallel_decision_workers: int = 4
 
 	# Named workflows are selected by provider_id; unresolved IDs fall back to
 	# action_provider so existing single-provider scenarios keep working.
@@ -362,17 +367,31 @@ class KernRuntime:
 
 		trace_recorder = LLMTraceRecorder.from_config(cfg, Path(resolved_checkpoint_dir) / "llm_traces")
 
-		use_llm = _cfg_bool(cfg, "USE_LLM", False)
-		if use_llm:
-			workflow_config_raw = _cfg_get(cfg, "LLM_WORKFLOW_CONFIG_JSON")
-			if not workflow_config_raw:
-				raise ValueError("USE_LLM=1 requires top-level llm_providers, workflows, and default_workflow_id")
-			action_provider, action_providers = build_workflow_catalog(json.loads(workflow_config_raw), trace_recorder=trace_recorder)
+		action_providers: dict[str, Any] = {}
+		if workflow_registry is None:
+			default_workflow_spec = json.loads(_cfg_get(cfg, "DEFAULT_WORKFLOW_PROVIDER_JSON", "{}") or "{}")
+			if not isinstance(default_workflow_spec, dict):
+				raise ValueError("default_workflow_provider must be an object")
+			default_workflow_kind = _cfg_get(cfg, "DEFAULT_WORKFLOW_KIND", str(default_workflow_spec.get("kind", "") or "simple"))
+			resolved_workflow_registry, action_provider, action_providers = build_builtin_workflow_registry(
+				WorkflowBuildContext(
+					project_root=root,
+					config_path=resolved_config_path,
+					checkpoint_dir=Path(resolved_checkpoint_dir),
+					runtime_config=dict(cfg),
+					loaded_packages=loaded_packages,
+					trace_recorder=trace_recorder,
+				),
+				json.loads(_cfg_get(cfg, "WORKFLOW_PROVIDERS_JSON", "[]")),
+				default_workflow_kind,
+				dict(default_workflow_spec.get("options", {}) or {}),
+			)
 		else:
-			action_provider, action_providers = SimplePolicyActionProvider(), {}
+			resolved_workflow_registry = workflow_registry
+			action_provider = workflow_registry.default_workflow
 		default_max_ticks_llm = _cfg_int(cfg, "MAX_TICKS_DEFAULT_LLM", 15)
 		default_max_ticks_no_llm = _cfg_int(cfg, "MAX_TICKS_DEFAULT_NO_LLM", 65)
-		configured_max_ticks = _cfg_int(cfg, "MAX_TICKS", 0) if "MAX_TICKS" in cfg else (default_max_ticks_llm if use_llm else default_max_ticks_no_llm)
+		configured_max_ticks = _cfg_int(cfg, "MAX_TICKS", 0) if "MAX_TICKS" in cfg else (default_max_ticks_llm if default_workflow_kind == "llm" else default_max_ticks_no_llm)
 
 		return cls(
 			world_state=ws,
@@ -384,7 +403,7 @@ class KernRuntime:
 			),
 			action_provider=action_provider,
 			component_catalog=component_catalog,
-			workflow_registry=workflow_registry,
+			workflow_registry=resolved_workflow_registry,
 			action_providers=action_providers,
 			external_runtimes=external_runtime_map,
 			reaction_rules=list((bundle.reactions or {}).get("rules", []) or []),
@@ -393,6 +412,8 @@ class KernRuntime:
 			# actions. LLM cost is controlled by scenario config, not a lower kernel cap.
 			max_actions_per_turn=_cfg_int(cfg, "MAX_ACTIONS_PER_TURN", 99),
 			max_replans_per_turn=_cfg_int(cfg, "MAX_REPLANS_PER_TURN", 5),
+			active_phase_mode=_cfg_get(cfg, "ACTIVE_PHASE_MODE", "serial"),
+			parallel_decision_workers=_cfg_int(cfg, "PARALLEL_DECISION_WORKERS", 4),
 			dialogue_budget_limit_per_location=_cfg_int(cfg, "DIALOGUE_BUDGET_LIMIT_PER_LOCATION", 4),
 			checkpoint_enabled=_cfg_bool(cfg, "CHECKPOINT_EVERY_TICK", True),
 			checkpoint_dir=resolved_checkpoint_dir,
@@ -729,10 +750,12 @@ class KernRuntime:
 
 		# 4) Only the scheduler can grant active turns.
 		if not bool(getattr(ws.runtime_state, "abort_requested", False)):
-			TurnScheduler(
+			build_active_phase_strategy(
+				self.active_phase_mode,
 				max_actions_per_turn=self.max_actions_per_turn,
 				max_replans_per_turn=self.max_replans_per_turn,
 				trace_recorder=self.llm_trace_recorder,
+				parallel_workers=self.parallel_decision_workers,
 			).run_active_phase(ws, settlement)
 
 		events_in_tick_records: list[dict[str, Any]] = []

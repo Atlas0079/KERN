@@ -3,6 +3,7 @@
     { "path": "Packages/SocialPropagation" },
     { "path": "Packages/Camping", "world": true }
   ],
+  "default_workflow_provider": {"kind": "simple"},
   "external_runtimes": [
     {
       "runtime_id": "social_platform",
@@ -11,7 +12,6 @@
     }
   ],
   "env": {
-    "USE_LLM": "0",
     "MAX_TICKS": "1",
     "CHECKPOINT_EVERY_TICK": "0"
   }

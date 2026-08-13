@@ -64,6 +64,7 @@ def _perception(raw: Any) -> dict[str, Any]:
 	return {
 		"enabled": bool(d.get("enabled", True)),
 		"interaction_inbox": [dict(item) for item in list(d.get("interaction_inbox", []) or [])],
+		"record_inbox": [dict(item) for item in list(d.get("record_inbox", []) or [])],
 	}
 
 

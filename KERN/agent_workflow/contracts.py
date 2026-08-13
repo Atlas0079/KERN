@@ -24,12 +24,10 @@ class ActionFeedback:
 
 
 @dataclass(frozen=True)
-class DecisionFrame:
+class TurnFrame:
 	actor_id: str
 	reason: str
 	mode_context: dict[str, Any]
-	perception: dict[str, Any]
-	action_catalog: dict[str, Any]
 	previous_action: ActionFeedback | None = None
 	actions_committed: int = 0
 	replans: int = 0
@@ -50,12 +48,12 @@ WorkflowStep = SubmitAction | EndTurn
 
 
 class AgentTurnSession(Protocol):
-	def next_step(self, frame: DecisionFrame) -> WorkflowStep:
+	def next_step(self, ws: Any, frame: TurnFrame) -> WorkflowStep:
 		...
 
 
 class AgentWorkflow(Protocol):
-	def begin_turn(self, start: TurnStart) -> AgentTurnSession:
+	def begin_turn(self, ws: Any, start: TurnStart) -> AgentTurnSession:
 		...
 
 
@@ -63,9 +61,9 @@ __all__ = [
 	"ActionFeedback",
 	"AgentTurnSession",
 	"AgentWorkflow",
-	"DecisionFrame",
 	"EndTurn",
 	"SubmitAction",
+	"TurnFrame",
 	"TurnStart",
 	"WorkflowStep",
 ]

@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 import sys
+import tempfile
 from typing import Any
 
 
@@ -11,48 +12,63 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
 	sys.path.insert(0, str(ROOT))
 
-from KERN.external_runtimes.social_profile_seed import generate_social_profiles
+from KERN.external_runtimes.social_profile_seed import (
+	CONFIG_SCHEMA_VERSION,
+	DEFAULT_CONFIG_PATH,
+	GENERATOR_VERSION,
+	SCHEMA_VERSION,
+	GenerationSpec,
+	generate_social_profiles,
+)
 
 
 DEFAULT_OUTPUT = "KERN/external_runtimes/social_profiles/generated_social_profiles.json"
 
 
-def _write_json(path: Path, data: Any) -> None:
+def _write_json_atomically(path: Path, data: Any) -> None:
 	path.parent.mkdir(parents=True, exist_ok=True)
-	path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-
-
-def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
-	path.parent.mkdir(parents=True, exist_ok=True)
-	text = "\n".join(json.dumps(row, ensure_ascii=False) for row in rows)
-	path.write_text(text + ("\n" if text else ""), encoding="utf-8")
+	with tempfile.NamedTemporaryFile("w", encoding="utf-8", dir=path.parent, prefix=f".{path.name}.", suffix=".tmp", delete=False) as handle:
+		handle.write(json.dumps(data, ensure_ascii=False, indent=2))
+		temporary = Path(handle.name)
+	temporary.replace(path)
 
 
 def main() -> None:
-	parser = argparse.ArgumentParser(description="Generate deterministic weighted social-account profile samples.")
+	parser = argparse.ArgumentParser(description="Generate validated social_profile.v4 population data.")
 	parser.add_argument("--count", type=int, default=100, help="Number of profiles to generate.")
-	parser.add_argument("--seed", default="kern-social-profiles-v1", help="Random seed. Same seed gives same output.")
-	parser.add_argument("--audience", choices=["general", "science_video"], default="general", help="Audience preset.")
-	parser.add_argument("--output", default=DEFAULT_OUTPUT, help="Output path.")
-	parser.add_argument("--format", choices=["json", "jsonl"], default="json", help="Output format.")
-	parser.add_argument("--include-debug", action="store_true", help="Include sampling trace and adjusted weights.")
+	parser.add_argument("--seed", default="kern-social-profiles-v2", help="Experiment seed. Same spec and seed give identical profiles.")
+	parser.add_argument("--config", default=str(DEFAULT_CONFIG_PATH), help="Complete or extending social_profile_generation.v3 population config.")
+	parser.add_argument("--output", default=DEFAULT_OUTPUT, help="Output JSON path.")
+	parser.add_argument("--include-audit", action="store_true", help="Embed eligible weights and applied soft-rule IDs in each profile.")
 	args = parser.parse_args()
 
-	profiles = generate_social_profiles(
-		count=max(0, int(args.count)),
-		seed=str(args.seed),
-		include_debug=bool(args.include_debug),
-		audience=str(args.audience),
-	)
+	if int(args.count) < 0:
+		parser.error("--count cannot be negative")
+	config_path = Path(args.config)
+	if not config_path.is_absolute():
+		config_path = ROOT / config_path
+	spec = GenerationSpec.from_path(config_path)
+	profiles = generate_social_profiles(count=int(args.count), seed=str(args.seed), spec=spec, include_audit=bool(args.include_audit))
+	payload = {
+		"schema_version": SCHEMA_VERSION,
+		"generation": {
+			"generator_version": GENERATOR_VERSION,
+			"seed": str(args.seed),
+			"population_id": spec.population_id,
+			"rule_set": spec.rule_set,
+			"config_schema_version": CONFIG_SCHEMA_VERSION,
+			"config_sha256": spec.config_sha256,
+			"config_source": spec.source_path,
+			"count": len(profiles),
+			"resolved_config": spec.config,
+		},
+		"profiles": profiles,
+	}
 	out_path = Path(args.output)
 	if not out_path.is_absolute():
 		out_path = ROOT / out_path
-
-	if args.format == "jsonl":
-		_write_jsonl(out_path, profiles)
-	else:
-		_write_json(out_path, {"seed": str(args.seed), "count": len(profiles), "profiles": profiles})
-	print(f"wrote {len(profiles)} social profiles to {out_path}")
+	_write_json_atomically(out_path, payload)
+	print(f"wrote {len(profiles)} validated social profiles to {out_path}")
 
 
 if __name__ == "__main__":

@@ -65,6 +65,18 @@ def _bind_apply_memory_patch(_ws: Any, effect_data: dict[str, Any], context: dic
 		for item in list(consume_ids or [])
 		if str(item or "").strip()
 	] if isinstance(consume_ids, list) else []
+	consume_record_ids = _resolve_param_token(params.get("consume_record_ids", []), ctx)
+	out["consume_record_ids"] = [
+		str(item)
+		for item in list(consume_record_ids or [])
+		if str(item or "").strip()
+	] if isinstance(consume_record_ids, list) else []
+	remove_short_term_ids = _resolve_param_token(params.get("remove_short_term_record_ids", []), ctx)
+	out["remove_short_term_record_ids"] = [
+		str(item)
+		for item in list(remove_short_term_ids or [])
+		if str(item or "").strip()
+	] if isinstance(remove_short_term_ids, list) else []
 	summaries = _resolve_param_token(params.get("mid_term_summaries", []), ctx)
 	out["mid_term_summaries"] = [dict(x) for x in list(summaries or []) if isinstance(x, dict)] if isinstance(summaries, list) else []
 	out["clear_mid_term_prep"] = bool(_resolve_param_token(params.get("clear_mid_term_prep", False), ctx))
@@ -81,10 +93,16 @@ def execute_apply_memory_patch(executor: Any, ws: Any, data: dict[str, Any], con
 		mem = MemoryComponent()
 		target.add_component("MemoryComponent", mem)
 	tick = int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
-	mem.prune_to_tick(tick)
 	notes = [dict(x) for x in list(data.get("notes", []) or []) if isinstance(x, dict)]
 	for note in notes:
 		mem.add_short_term(note)
+	short_term_removed = mem.remove_short_term_by_record_ids(
+		[
+			str(item)
+			for item in list(data.get("remove_short_term_record_ids", []) or [])
+			if str(item or "").strip()
+		]
+	)
 	for item in [dict(x) for x in list(data.get("mid_term_summaries", []) or []) if isinstance(x, dict)]:
 		summary = str(item.get("summary", "") or "").strip()
 		if not summary:
@@ -103,11 +121,19 @@ def execute_apply_memory_patch(executor: Any, ws: Any, data: dict[str, Any], con
 	]
 	perception = target.get_component("PerceptionComponent")
 	interactions_consumed = perception.consume_interactions(consume_ids) if isinstance(perception, PerceptionComponent) else 0
+	record_ids = [
+		str(item)
+		for item in list(data.get("consume_record_ids", []) or [])
+		if str(item or "").strip()
+	]
+	records_consumed = perception.consume_records(record_ids) if isinstance(perception, PerceptionComponent) else 0
 	return [
 		{
 			"type": "MemoryPatched",
 			"entity_id": str(getattr(target, "entity_id", "") or ""),
 			"notes_added": int(len(notes)),
 			"interactions_consumed": int(interactions_consumed),
+			"records_consumed": int(records_consumed),
+			"short_term_removed": int(short_term_removed),
 		}
 	]

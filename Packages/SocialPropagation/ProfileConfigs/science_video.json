@@ -1,0 +1,18 @@
+{
+  "schema_version": "social_profile_generation.v3",
+  "extends": "general.json",
+  "population_id": "science_video_audience",
+  "dimensions": {
+    "demographics.lifecycle_stage": {
+      "weights": {"student": 0.0, "early_career": 0.22, "family_formation": 0.20, "mid_career": 0.22, "late_career": 0.12, "retired": 0.0}
+    },
+    "education.highest_completed": {
+      "allowed": ["bachelor", "master", "doctorate"]
+    }
+  },
+  "interests": {
+    "science_topics": {
+      "count_weights": {"2": 1.0}
+    }
+  }
+}

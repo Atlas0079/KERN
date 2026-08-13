@@ -13,7 +13,7 @@ from ..effects import EffectCatalog, EffectResolutionError, build_core_effect_ca
 from ..external_runtime import ExternalRuntimeBridge
 from ..execution_errors import ERROR_KIND_CONTRACT, ERROR_KIND_ENGINE, KernFailure, executor_error
 from ..entity_ref_resolver import resolve_entity
-from ..models.components import ContainerComponent
+from ..models.components import ContainerComponent, PerceptionComponent
 
 
 def get_executor_effect_types(effect_catalog: EffectCatalog | None = None) -> set[str]:
@@ -48,6 +48,8 @@ class WorldExecutor:
 	_bundle_id_stack: list[str] = field(default_factory=list, init=False, repr=False)
 	_bundle_uses_external: bool = field(default=False, init=False, repr=False)
 	_bundle_deferred_irreversible: list[tuple[dict[str, Any], dict[str, Any]]] = field(default_factory=list, init=False, repr=False)
+	_last_normalized_effect: dict[str, Any] = field(default_factory=dict, init=False, repr=False)
+	_last_effect_context: dict[str, Any] = field(default_factory=dict, init=False, repr=False)
 
 	def __post_init__(self) -> None:
 		self.effect_catalog.freeze()
@@ -149,6 +151,8 @@ class WorldExecutor:
 				phase="effect_execution",
 				context={"effect": effect_name, "input": normalized_data, "result": events},
 			)
+		self._last_normalized_effect = dict(normalized_data)
+		self._last_effect_context = dict(merged_ctx)
 		return build_effect_events(
 			effect_name,
 			normalized_data,
@@ -234,6 +238,8 @@ class WorldExecutor:
 		snapshot = self._snapshot_world(ws)
 		context_snapshot = deepcopy(context) if isinstance(context, dict) else None
 		events: list[dict[str, Any]] = []
+		record_fragments: list[dict[str, Any]] = []
+		record_config = self._normalized_bundle_record_config(bundle.record)
 		try:
 			for idx, effect in enumerate(list(bundle.effects or [])):
 				if not isinstance(effect, dict):
@@ -244,10 +250,15 @@ class WorldExecutor:
 					continue
 				effect_events = self.execute(ws, effect, self._transaction_context(context, transaction_id, bundle_id, parent_bundle_id, idx))
 				events.extend(effect_events)
+				record_fragments.extend(self._effect_record_fragments(ws, effect_id, effect_events))
 			if is_outer_bundle:
 				for effect, deferred_context in self._bundle_deferred_irreversible:
 					effect_events = self.execute(ws, effect, deferred_context)
 					events.extend(effect_events)
+					effect_id = str(effect.get("effect", "") or "") if isinstance(effect, dict) else ""
+					record_fragments.extend(self._effect_record_fragments(ws, effect_id, effect_events))
+			if record_config.get("mode") == "auto" and record_fragments:
+				self._publish_agent_records(ws, record_config, record_fragments, context)
 			if is_outer_bundle and self._bundle_uses_external:
 				self._notify_external_bundle_lifecycle(ws, "commit_bundle", transaction_id)
 			return events
@@ -310,6 +321,97 @@ class WorldExecutor:
 		if self._bundle_uses_external:
 			out["external_transaction_id"] = str(transaction_id)
 		return out
+
+	def _normalized_bundle_record_config(self, record: dict[str, Any]) -> dict[str, Any]:
+		data = dict(record or {}) if isinstance(record, dict) else {}
+		mode = str(data.get("mode", "none") or "none").strip()
+		if mode == "template":
+			executor_error(
+				"effect bundle record.mode=template is not implemented",
+				kind=ERROR_KIND_CONTRACT,
+				code="BUNDLE_RECORD_TEMPLATE_UNSUPPORTED",
+				phase="bundle_recording",
+			)
+		if mode not in {"none", "auto"}:
+			executor_error(
+				f"unsupported bundle record mode: {mode}",
+				kind=ERROR_KIND_CONTRACT,
+				code="BUNDLE_RECORD_MODE_UNSUPPORTED",
+				phase="bundle_recording",
+			)
+		target = str(data.get("target", "self") or "self").strip()
+		if mode != "none" and target != "self":
+			executor_error(
+				"effect bundle record.target currently supports only self",
+				kind=ERROR_KIND_CONTRACT,
+				code="BUNDLE_RECORD_TARGET_UNSUPPORTED",
+				phase="bundle_recording",
+			)
+		return {"mode": mode, "target": target}
+
+	def _effect_record_fragments(self, ws: Any, effect_id: str, effect_events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+		if not effect_id or not self.effect_catalog.contains(effect_id):
+			return []
+		spec = self.effect_catalog.require(effect_id)
+		try:
+			recorder = self.effect_catalog.resolve_recorder(effect_id)
+		except EffectResolutionError as exc:
+			if not callable(spec.recorder) and not str(spec.recorder_name or "").strip():
+				return []
+			executor_error(
+				str(exc),
+				kind=ERROR_KIND_CONTRACT,
+				code="EFFECT_RECORDER_RESOLUTION_FAILED",
+				effect=exc.effect_id,
+				origin="executor",
+				phase="recorder_resolution",
+			)
+		if not callable(recorder):
+			return []
+		raw = recorder(ws, dict(self._last_normalized_effect), dict(self._last_effect_context), [dict(item) for item in list(effect_events or []) if isinstance(item, dict)])
+		if raw is None:
+			return []
+		texts = [raw] if isinstance(raw, str) else list(raw) if isinstance(raw, list) else []
+		out: list[dict[str, Any]] = []
+		for text in texts:
+			content = str(text or "").strip()
+			if not content:
+				continue
+			out.append({"effect": str(effect_id), "content": content})
+		return out
+
+	def _publish_agent_records(self, ws: Any, record_config: dict[str, Any], fragments: list[dict[str, Any]], context: dict[str, Any]) -> None:
+		actor_id = str((context or {}).get("self_id", "") or (context or {}).get("actor_id", "") or "").strip()
+		if not actor_id:
+			executor_error("bundle record requires context.self_id", kind=ERROR_KIND_CONTRACT, code="BUNDLE_RECORD_ACTOR_MISSING", phase="bundle_recording")
+		actor = ws.get_entity_by_id(actor_id) if hasattr(ws, "get_entity_by_id") else None
+		if actor is None:
+			executor_error("bundle record actor is missing", kind=ERROR_KIND_CONTRACT, code="BUNDLE_RECORD_ACTOR_MISSING", phase="bundle_recording")
+		perception = actor.get_component("PerceptionComponent") if hasattr(actor, "get_component") else None
+		if not isinstance(perception, PerceptionComponent):
+			perception = PerceptionComponent()
+			actor.add_component("PerceptionComponent", perception)
+		tick = int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
+		for fragment in list(fragments or []):
+			record_type = str(fragment.get("record_type", "") or self._record_type_for_effect(str(fragment.get("effect", "") or "")))
+			record = {
+				"record_id": f"record_{uuid4().hex}",
+				"tick": tick,
+				"actor_id": actor_id,
+				"record_type": record_type,
+				"content": str(fragment.get("content", "") or "").strip(),
+				"source_effect": str(fragment.get("effect", "") or ""),
+			}
+			if record["content"]:
+				perception.enqueue_record(record)
+
+	def _record_type_for_effect(self, effect_id: str) -> str:
+		name = str(effect_id or "")
+		if name.endswith("RefreshFeed"):
+			return "social_feed_view"
+		if "VisiblePost" in name:
+			return "social_action"
+		return "effect_record"
 
 	def _external_bridge(self, ws: Any) -> ExternalRuntimeBridge | None:
 		services = getattr(ws, "services", {}) or {}

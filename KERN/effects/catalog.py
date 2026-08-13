@@ -23,6 +23,7 @@ class EffectCatalog:
 		self._frozen = False
 		self._binder_cache: dict[str, object | None] = {}
 		self._handler_cache: dict[str, object | None] = {}
+		self._recorder_cache: dict[str, object | None] = {}
 
 	def register(self, spec: EffectSpec) -> None:
 		if self._frozen:
@@ -60,6 +61,9 @@ class EffectCatalog:
 	def resolve_handler(self, effect_id: str):
 		return self._resolve_callable(effect_id, "handler")
 
+	def resolve_recorder(self, effect_id: str):
+		return self._resolve_callable(effect_id, "recorder")
+
 	def clone_mutable(self) -> "EffectCatalog":
 		clone = EffectCatalog()
 		for spec in self._specs.values():
@@ -68,20 +72,36 @@ class EffectCatalog:
 
 	def _resolve_callable(self, effect_id: str, kind: str):
 		clean_id = str(effect_id or "")
-		cache = self._binder_cache if kind == "binder" else self._handler_cache
+		cache = {
+			"binder": self._binder_cache,
+			"handler": self._handler_cache,
+			"recorder": self._recorder_cache,
+		}[kind]
 		if clean_id in cache:
 			return cache[clean_id]
 		spec = self._specs.get(clean_id)
 		if spec is None:
 			return None
-		direct = spec.binder if kind == "binder" else spec.handler
+		direct = {
+			"binder": spec.binder,
+			"handler": spec.handler,
+			"recorder": spec.recorder,
+		}[kind]
 		if callable(direct):
 			cache[clean_id] = direct
 			return direct
 		module_path = str(spec.module or "").strip()
-		function_name = str(spec.binder_name if kind == "binder" else spec.handler_name).strip()
+		function_name = {
+			"binder": str(spec.binder_name or "").strip(),
+			"handler": str(spec.handler_name or "").strip(),
+			"recorder": str(spec.recorder_name or "").strip(),
+		}[kind]
 		if not function_name:
-			function_name = default_binder_name(clean_id) if kind == "binder" else default_handler_name(clean_id)
+			function_name = {
+				"binder": default_binder_name(clean_id),
+				"handler": default_handler_name(clean_id),
+				"recorder": default_recorder_name(clean_id),
+			}[kind]
 		if not module_path:
 			raise EffectResolutionError(clean_id, kind, module_path, function_name, "module path is empty")
 		try:
@@ -109,3 +129,7 @@ def default_binder_name(effect_id: str) -> str:
 
 def default_handler_name(effect_id: str) -> str:
 	return f"execute_{_camel_to_snake(str(effect_id).rsplit(':', 1)[-1])}"
+
+
+def default_recorder_name(effect_id: str) -> str:
+	return f"record_{_camel_to_snake(str(effect_id).rsplit(':', 1)[-1])}"

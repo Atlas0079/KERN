@@ -171,7 +171,6 @@ def execute_destroy_entity(executor: Any, ws: Any, data: dict[str, Any], context
 							{"self_id": str(ent.entity_id), "task_id": str(tid)},
 						)
 					)
-			wc.current_task_id = ""
 	for loc in ws.locations.values():
 		if ent.entity_id in loc.entities_in_location:
 			loc.remove_entity_id(ent.entity_id)

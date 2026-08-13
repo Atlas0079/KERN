@@ -24,6 +24,8 @@ venv.bak/
 *.log
 
 # Local runtime config with secrets
+local_llm_credentials.md
+runtime_config.claude.local.json
 runtime_config.json
 runtime_config_abbao.json
 runtime_config.local.json
@@ -39,6 +41,7 @@ failures/
 Saves/
 video/
 KERN/external_runtimes/social_profiles/
+KERN/external_runtimes/social_runs/
 
 # Generated scenario data and build artifacts
 Data/**/generated_*/

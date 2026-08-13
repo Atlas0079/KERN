@@ -1,0 +1,81 @@
+{
+  "schema_version": "sea_level_social_study.v1",
+  "study_id": "sea_level_narrative_propagation",
+  "study_seed": "sea-level-study-2026-08-v1",
+  "population": {
+    "count": 300,
+    "profiles_path": "KERN/external_runtimes/social_profiles/high_education_300_v4.json",
+    "backgrounds_path": "KERN/external_runtimes/social_profiles/high_education_300_v4_backgrounds_claude_full300_c50_final.jsonl"
+  },
+  "simulation": {
+    "tick_count": 100,
+    "feed_limit": 8,
+    "max_actions_per_turn": 24,
+    "max_replans_per_turn": 1
+  },
+  "platform": {
+    "runtime_id": "social_platform",
+    "institution_account_id": "earth_voice",
+    "institution_display_name": "地球之声",
+    "background_posts_path": "Packages/SeaLevelSocialExperiment/Study/background_posts.v1.json"
+  },
+  "network": {
+    "min_out_degree": 8,
+    "max_out_degree": 32,
+    "target_mean_out_degree": 20,
+    "out_degree_stddev": 3.5,
+    "extraversion_adjustment": 4.0,
+    "institution_initial_followers": 24,
+    "popularity_sigma": 1.0,
+    "interest_similarity_boost": 1.5,
+    "lifecycle_similarity_boost": 0.6,
+    "triangle_closure_boost": 0.9
+  },
+  "activation": {
+    "gap_intercept": 2.15,
+    "individual_intercept_stddev": 0.25,
+    "gap_noise_stddev": 0.35,
+    "max_active_per_tick": 60,
+    "coefficients": {
+      "extraversion": -0.70,
+      "openness": -0.20,
+      "conscientiousness": -0.10,
+      "neuroticism": -0.05,
+      "agreeableness": 0.0
+    }
+  },
+  "interest_mapping": {
+    "version": "social_interest_mapping.v1",
+    "weights": {
+      "science_topics": 1.0,
+      "practical": 0.7,
+      "aspirational": 0.45,
+      "general_knowledge": 0.1
+    }
+  },
+  "recommendation": {
+    "version": "social_recommendation.v1",
+    "topic_interest_weight": 2.0,
+    "source_follow_boost": 1.5,
+    "freshness_numerator": 1.0,
+    "repost_engagement_weight": 0.5,
+    "max_feed_items": 8,
+    "max_repost_items": 3
+  },
+  "conditions": [
+    {
+      "condition_id": "sea_level_consequence_focus",
+      "post_id": "sea_level_experiment_post",
+      "text": "🌊【被淹没的未来】联合国最新报告：全球海平面正在加速上升！\n\n过去30年，海平面上升速度翻倍；上海、纽约、伦敦等沿海城市面临周期性海水倒灌；到2050年，很多沿海居民的家园将受到威胁；马尔代夫、图瓦卢等岛国已启动长期性人口迁移规划；数亿气候难民即将涌向内陆，资源争夺一触即发……\n\n我们正在看着自己的海岸线一点点消失。",
+      "ranking_topics": ["climate_risk", "sea_level"],
+      "display_hashtags": ["气候危机", "海平面上升", "地球告急"]
+    },
+    {
+      "condition_id": "sea_level_solution_focus",
+      "post_id": "sea_level_experiment_post",
+      "text": "🌱【救赎之路】全球海平面上升并非无解！\n\n荷兰“还地于海”工程可抵御风暴潮侵袭；中国沿海红树林修复计划固碳功能显著；可再生能源装机量首超化石能源，为减缓冰川融化赢回时间；你随手关灯、减少肉食的每一个小行动，都在为海岸线留住一米土地！\n\n每一个人的低碳行为，都在铸就希望。",
+      "ranking_topics": ["climate_risk", "sea_level"],
+      "display_hashtags": ["气候行动", "碳中和", "可持续生活"]
+    }
+  ]
+}

@@ -3,8 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Callable
 
-from ..agent_workflow.context_builder import DecisionContextBuilder
-from ..agent_workflow.contracts import ActionFeedback, EndTurn, SubmitAction, TurnStart
+from ..agent_workflow.contracts import ActionFeedback, EndTurn, SubmitAction, TurnFrame, TurnStart
 from ..execution_errors import KernFailure
 from ..interaction.action_resolver import resolve_action_intent
 from ..agent_workflow.trace import LLMTraceRecorder
@@ -29,12 +28,10 @@ class TurnRunner:
 		*,
 		max_actions_per_turn: int,
 		max_replans_per_turn: int,
-		context_builder: DecisionContextBuilder | None = None,
 		trace_recorder: LLMTraceRecorder | None = None,
 	) -> None:
 		self.max_actions_per_turn = max(1, int(max_actions_per_turn))
 		self.max_replans_per_turn = max(0, int(max_replans_per_turn))
-		self.context_builder = context_builder or DecisionContextBuilder()
 		self.trace_recorder = trace_recorder
 
 	def run(
@@ -57,7 +54,7 @@ class TurnRunner:
 			mode="task_interrupt" if mode == "task_interrupt" else "normal",
 		)
 		try:
-			session = workflow.begin_turn(start)
+			session = workflow.begin_turn(ws, start)
 		except KernFailure:
 			raise
 		except Exception as exc:
@@ -88,17 +85,16 @@ class TurnRunner:
 				"interrupt_reason": str(reason or ""),
 				"rejection": self._rejection_context(feedback),
 			}
-			frame = self.context_builder.build(
-				ws,
-				turn.actor_id,
-				str(reason or ""),
-				mode_context,
+			frame = TurnFrame(
+				actor_id=turn.actor_id,
+				reason=str(reason or ""),
+				mode_context=mode_context,
 				previous_action=feedback,
 				actions_committed=turn.actions_committed,
 				replans=turn.replans,
 			)
 			try:
-				step = session.next_step(frame)
+				step = session.next_step(ws, frame)
 			except KernFailure:
 				raise
 			except Exception as exc:
@@ -117,7 +113,6 @@ class TurnRunner:
 					phase="turn_execution",
 					context={"actor_id": turn.actor_id, "turn_id": turn.turn_id},
 				)
-			self.context_builder.apply_step_meta(ws, turn.actor_id, step.meta)
 			if self._abort_requested(ws) or not is_turn_eligible(ws, turn.actor_id):
 				return
 			if isinstance(step, EndTurn):

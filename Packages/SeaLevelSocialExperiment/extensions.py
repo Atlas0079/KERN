@@ -1,0 +1,3 @@
+COMPONENT_MODULES = ("components.identity",)
+EFFECT_MODULES = ()
+EXTERNAL_RUNTIME_MODULES = ()

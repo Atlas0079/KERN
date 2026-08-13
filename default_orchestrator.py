@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 from KERN.agent_workflow.full_ws_view_builder import build_full_ws_view
@@ -71,6 +72,17 @@ def _log_initial_runtime_state(runtime: KernRuntime) -> str:
 	return agent_id
 
 
+def _default_workflow_kind(runtime: KernRuntime) -> str:
+	raw = str(runtime.runtime_config.get("DEFAULT_WORKFLOW_PROVIDER_JSON", "{}") or "{}")
+	try:
+		spec = json.loads(raw)
+	except json.JSONDecodeError:
+		spec = {}
+	if not isinstance(spec, dict):
+		spec = {}
+	return str(runtime.runtime_config.get("DEFAULT_WORKFLOW_KIND", "") or spec.get("kind", "") or "simple").strip()
+
+
 def main(argv: list[str] | None = None) -> None:
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--config", dest="config_path", default="", help="runtime config file path")
@@ -79,21 +91,24 @@ def main(argv: list[str] | None = None) -> None:
 
 	project_root = Path(__file__).resolve().parent
 	runtime = KernRuntime.from_config(project_root, str(args.config_path or ""), validate=not bool(args.skip_validation))
-	logger = get_logger()
-	logger.info("system", "runtime_config_loaded", context={"path": str(runtime.config_path)})
+	try:
+		logger = get_logger()
+		logger.info("system", "runtime_config_loaded", context={"path": str(runtime.config_path)})
 
-	agent_id = _log_initial_runtime_state(runtime)
+		agent_id = _log_initial_runtime_state(runtime)
 
-	events = runtime.run_configured()
-	logger.info("system", "run_finished", context={"event_count": len(events), "ticks": int(runtime.world_state.game_time.total_ticks)})
+		events = runtime.run_configured()
+		logger.info("system", "run_finished", context={"event_count": len(events), "ticks": int(runtime.world_state.game_time.total_ticks)})
 
-	if str(runtime.runtime_config.get("USE_LLM", "") or "").strip().lower() in {"1", "true", "yes", "on"}:
-		perception = build_agent_perception(build_full_ws_view(runtime.world_state, agent_id, "", {}), agent_id)
-		logger.info(
-			"interaction",
-			"short_term_memory_rendered",
-			context={"agent_id": agent_id, "short_term_memory_text": str((perception or {}).get("short_term_memory_text", "") or "")},
-		)
+		if _default_workflow_kind(runtime) == "llm":
+			perception = build_agent_perception(build_full_ws_view(runtime.world_state, agent_id, "", {}), agent_id)
+			logger.info(
+				"interaction",
+				"short_term_memory_rendered",
+				context={"agent_id": agent_id, "short_term_memory_text": str((perception or {}).get("short_term_memory_text", "") or "")},
+			)
+	finally:
+		runtime.close()
 
 
 if __name__ == "__main__":

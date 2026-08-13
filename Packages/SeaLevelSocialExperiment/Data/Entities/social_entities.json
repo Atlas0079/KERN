@@ -1,0 +1,76 @@
+{
+  "SocialExperimentAgent": {
+    "name": "Social Experiment Agent",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "character",
+          "agent",
+          "social_experiment_agent"
+        ]
+      },
+      "AgentSetting": {
+        "agent_name": "匿名实验参与者",
+        "personality_summary": "社交实验身份由专用身份组件提供。",
+        "common_knowledge_summary": "你可以在安排的传播轮次打开自己的社交平台。"
+      },
+      "PerceptionComponent": {},
+      "ContainerComponent": {
+        "slots": {
+          "inventory": {
+            "capacity_count": 1,
+            "accepted_tags": [
+              "social_media_terminal"
+            ]
+          }
+        }
+      },
+      "AgentControlComponent": {
+        "provider_id": "social_platform"
+      },
+      "AgentWakePolicyComponent": {
+        "rules": [
+          {
+            "type": "NoActiveTask",
+            "priority": 1
+          }
+        ]
+      },
+      "MemoryComponent": {
+        "short_term_queue": [],
+        "short_term_max_entries": 20,
+        "mid_term_queue": [],
+        "mid_term_max_entries": 20
+      },
+      "sea_level_social_experiment:SocialIdentityComponent": {
+        "profile_id": "template_profile",
+        "natural_language_background": "我是社交实验的模板参与者。",
+        "big_five": {
+          "openness": 0.5,
+          "conscientiousness": 0.5,
+          "extraversion": 0.5,
+          "agreeableness": 0.5,
+          "neuroticism": 0.5
+        }
+      }
+    }
+  },
+  "SocialExperimentPhone": {
+    "name": "Social Experiment Phone",
+    "components": {
+      "TagComponent": {
+        "tags": [
+          "device",
+          "phone",
+          "social_media_terminal"
+        ]
+      },
+      "social_propagation:ScreenComponent": {
+        "runtime_id": "social_platform",
+        "account_id": "template_account",
+        "app": "social_platform",
+        "view": "blank"
+      }
+    }
+  }
+}
