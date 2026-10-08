@@ -5,7 +5,7 @@ from typing import Any
 from ..effect_bundle import effect_bundle_from_raw
 from ..execution_errors import executor_error
 from ._effect_binder import _base_bind
-from ._effect_child_bundle import child_bundle_error_message, run_child_bundle
+from ._effect_child_bundle import run_child_bundle
 
 
 def _bind_invoke_bundle(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -25,8 +25,6 @@ def execute_invoke_bundle(executor: Any, ws: Any, data: dict[str, Any], context:
 		except Exception as exc:
 			return executor_error(f"InvokeBundle: invalid named bundle {ref_id!r} ({exc})")
 		result = run_child_bundle(executor, ws, bundle.to_dict(), context)
-		if result.failed:
-			return executor_error(child_bundle_error_message(result, "InvokeBundle", f"ref:{ref_id}"))
 		return result.events
 	if isinstance(data.get("bundle"), dict):
 		try:
@@ -34,8 +32,6 @@ def execute_invoke_bundle(executor: Any, ws: Any, data: dict[str, Any], context:
 		except Exception as exc:
 			return executor_error(f"InvokeBundle: invalid bundle ({exc})")
 		result = run_child_bundle(executor, ws, bundle.to_dict(), context)
-		if result.failed:
-			return executor_error(child_bundle_error_message(result, "InvokeBundle", "inline"))
 		return result.events
 	target_key = str(data.get("target", "target") or "target")
 	target, err = executor.require_entity(ws, context, target_key, "InvokeBundle", "target")
@@ -58,6 +54,4 @@ def execute_invoke_bundle(executor: Any, ws: Any, data: dict[str, Any], context:
 	except Exception as exc:
 		return executor_error(f"InvokeBundle: invalid component bundle ({exc})")
 	result = run_child_bundle(executor, ws, bundle.to_dict(), context)
-	if result.failed:
-		return executor_error(child_bundle_error_message(result, "InvokeBundle", f"{component_name}.{property_name}"))
 	return result.events

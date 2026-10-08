@@ -357,8 +357,6 @@ def _activate_task(executor: Any, ws: Any, task: Task, worker: WorkerComponent, 
 	task.task_status = "InProgress"
 	lifecycle_ctx = _task_lifecycle_context(task, context, worker_id)
 	start_result = _run_task_lifecycle_bundle(executor, ws, task, lifecycle_ctx, "start_bundle")
-	if start_result.failed:
-		executor_error(f"TaskStart: lifecycle bundle failed ({start_result.error_message})")
 	return True, [
 		{
 			"type": event_type,
@@ -377,10 +375,7 @@ def _deactivate_task(executor: Any, ws: Any, task: Task, worker_id: str, context
 	events: list[dict[str, Any]] = []
 	if old_status == "InProgress":
 		cleanup_result = _run_task_lifecycle_bundle(executor, ws, task, lifecycle_ctx, "cleanup_bundle")
-		if cleanup_result.failed:
-			executor_error(f"TaskCleanup: lifecycle bundle failed ({cleanup_result.error_message})")
-		else:
-			events.extend(cleanup_result.events)
+		events.extend(cleanup_result.events)
 	task.task_status = str(new_status or "")
 	if worker_id:
 		_try_stop_worker_task(ws, worker_id, task.task_id)
@@ -725,9 +720,6 @@ def execute_finish_task(executor: Any, ws: Any, _data: dict[str, Any], context: 
 	if bundle is None or bundle.is_empty():
 		return executor_error(f"FinishTask: task has empty completion_bundle: {task_id}")
 	result = run_child_bundle(executor, ws, bundle.to_dict(), context)
-	if result.failed:
-		message = str(result.error_message or "")
-		executor_error(f"FinishTask: completion bundle failed ({message})")
 	cleanup_events = _deactivate_task(executor, ws, task, _task_worker_id(task, context), context, "Completed")
 	_remove_task_from_host_and_world(ws, task, context)
 	return [{"type": "TaskFinished", "task_id": task.task_id}, *result.events, *cleanup_events]

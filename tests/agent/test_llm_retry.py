@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import io
 import json
@@ -33,8 +33,8 @@ def _gemini_response(text: str = "ok") -> _Response:
 	return _Response({"candidates": [{"content": {"parts": [{"text": text}]}}]})
 
 
-def _http_error(code: int) -> HTTPError:
-	return HTTPError("https://example.test", code, "error", None, io.BytesIO(b'{"error":"failed"}'))
+def _http_error(code: int, body: bytes = b'{"error":"failed"}') -> HTTPError:
+	return HTTPError("https://example.test", code, "error", None, io.BytesIO(body))
 
 
 class LLMRetryTests(unittest.TestCase):
@@ -86,6 +86,7 @@ class LLMRetryTests(unittest.TestCase):
 			client.chat_text([{"role": "user", "content": "hi"}], "model")
 		self.assertEqual(urlopen.call_count, 1)
 		sleep.assert_not_called()
+
 
 	@patch("KERN.llm.openai_compat_client.time.sleep")
 	@patch("KERN.llm.openai_compat_client.urlopen")

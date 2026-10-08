@@ -6,7 +6,7 @@ from ..effect_bundle import effect_bundle_from_raw
 from ..execution_errors import executor_error
 from ..query import QueryEngine
 from ._effect_binder import BindError, _base_bind, _require_param
-from ._effect_child_bundle import child_bundle_error_message, run_child_bundle
+from ._effect_child_bundle import run_child_bundle
 
 
 def _bind_apply_to_query(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -82,19 +82,6 @@ def execute_apply_to_query(executor: Any, ws: Any, data: dict[str, Any], context
 		child_context["query_row"] = dict(row)
 		result = run_child_bundle(executor, ws, bundle, child_context)
 		applied += 1
-		if result.failed:
-			events.append(
-				{
-					"type": "QueryApplied",
-					"matched": matched,
-					"applied": applied,
-					"failed": True,
-					"failed_index": index,
-					"failed_entity_id": entity_id,
-				}
-			)
-			executor_error(child_bundle_error_message(result, "ApplyToQuery"))
-			return events
 		events.extend(result.events)
 	events.append({"type": "QueryApplied", "matched": matched, "applied": applied})
 	return events

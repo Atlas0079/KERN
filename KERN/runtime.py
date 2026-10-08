@@ -284,151 +284,171 @@ class KernRuntime:
 			else:
 				raise ValueError("CHECKPOINT_DIR must differ from the checkpoint restore source directory")
 		external_runtime_map = dict(external_runtimes or {})
-		for instance in loaded_packages.external_runtime_instances:
-			if instance.runtime_id in external_runtime_map:
-				raise ValueError(f"external runtime supplied twice: {instance.runtime_id}")
-			spec = loaded_packages.external_runtime_catalog.require(instance.provider_id)
-			factory_context = {
-				"project_root": str(root),
-				"config_path": str(resolved_config_path),
-				"checkpoint_dir": str(resolved_checkpoint_dir),
-				"restore_path": str(restore_path or ""),
-				"runtime_id": instance.runtime_id,
-				"provider": instance.provider_id,
-			}
-			try:
-				adapter = spec.factory(dict(factory_context), dict(instance.options))
-			except Exception as exc:
-				raise KernFailure(
-					"EXTERNAL_RUNTIME_FACTORY_FAILED",
-					f"external runtime factory failed: {instance.runtime_id} ({exc})",
-					origin="external_runtime",
-					phase="factory",
-					context={"runtime_id": instance.runtime_id, "provider": instance.provider_id},
-				) from exc
-			if adapter is None:
-				raise KernFailure(
-					"EXTERNAL_RUNTIME_FACTORY_FAILED",
-					f"external runtime factory returned None: {instance.runtime_id}",
-					origin="external_runtime",
-					phase="factory",
-					context={"runtime_id": instance.runtime_id, "provider": instance.provider_id},
-				)
-			external_runtime_map[instance.runtime_id] = adapter
-		external_runtime_bridge = ExternalRuntimeBridge(external_runtime_map)
-		external_runtime_bridge.start({"project_root": str(root), "config_path": str(resolved_config_path), "checkpoint_dir": str(resolved_checkpoint_dir)})
-		workflow_view_profile = _build_workflow_view_profile(root, resolved_config_path, cfg)
-		if restore_path is not None:
-			checkpoint_meta = load_checkpoint_meta(restore_path)
-			verify_checkpoint_identity(checkpoint_meta, loaded_packages)
-			ws = restore_world_state_from_checkpoint(
-				restore_path,
-				bundle.entity_templates,
-				bundle.named_bundles,
-				component_catalog=component_catalog,
-			)
-			if not ws.entities or not ws.locations:
-				raise ValueError(f"Invalid checkpoint format or empty world state: {restore_path}")
-			external_runtime_bridge.restore_checkpoint(
-				cls._build_checkpoint_context_for_world(
-					ws,
-					run_id=str(getattr(ws, "_checkpoint_run_id", "") or ""),
-					phase="restore",
-				)
-			)
-		else:
-			if validate:
-				from tools.scenario_lint import lint_bundle
-
-				lint = lint_bundle(
-					project_root=root,
-					config_path=resolved_config_path,
-					env=cfg,
-					bundle=bundle,
-					world_json=world_json_name,
-					recipes_jsons=recipes_jsons,
-					reactions_jsons=reactions_jsons,
-					entities_dirs=entities_dirs,
-					bundles_jsons=bundles_jsons,
-					effect_catalog=effect_catalog,
+		try:
+			for instance in loaded_packages.external_runtime_instances:
+				if instance.runtime_id in external_runtime_map:
+					raise ValueError(f"external runtime supplied twice: {instance.runtime_id}")
+				spec = loaded_packages.external_runtime_catalog.require(instance.provider_id)
+				factory_context = {
+					"project_root": str(root),
+					"config_path": str(resolved_config_path),
+					"checkpoint_dir": str(resolved_checkpoint_dir),
+					"restore_path": str(restore_path or ""),
+					"runtime_id": instance.runtime_id,
+					"provider": instance.provider_id,
+				}
+				try:
+					adapter = spec.factory(dict(factory_context), dict(instance.options))
+				except Exception as exc:
+					raise KernFailure(
+						"EXTERNAL_RUNTIME_FACTORY_FAILED",
+						f"external runtime factory failed: {instance.runtime_id} ({exc})",
+						origin="external_runtime",
+						phase="factory",
+						context={"runtime_id": instance.runtime_id, "provider": instance.provider_id},
+					) from exc
+				if adapter is None:
+					raise KernFailure(
+						"EXTERNAL_RUNTIME_FACTORY_FAILED",
+						f"external runtime factory returned None: {instance.runtime_id}",
+						origin="external_runtime",
+						phase="factory",
+						context={"runtime_id": instance.runtime_id, "provider": instance.provider_id},
+					)
+				external_runtime_map[instance.runtime_id] = adapter
+			external_runtime_bridge = ExternalRuntimeBridge(external_runtime_map)
+			external_runtime_bridge.start({"project_root": str(root), "config_path": str(resolved_config_path), "checkpoint_dir": str(resolved_checkpoint_dir)})
+			workflow_view_profile = _build_workflow_view_profile(root, resolved_config_path, cfg)
+			if restore_path is not None:
+				checkpoint_meta = load_checkpoint_meta(restore_path)
+				verify_checkpoint_identity(checkpoint_meta, loaded_packages)
+				ws = restore_world_state_from_checkpoint(
+					restore_path,
+					bundle.entity_templates,
+					bundle.named_bundles,
 					component_catalog=component_catalog,
 				)
-				errors = [x for x in lint.issues if x.severity == "ERROR"]
-				if errors:
-					raise ValueError("Data validation failed:\n" + "\n".join(f"{x.where}: {x.message}" for x in errors))
-			result = build_world_state(
-				bundle.world,
-				bundle.entity_templates,
-				bundle.recipes,
-				named_bundles=bundle.named_bundles,
-				component_catalog=component_catalog,
-			)
-			ws = result.world_state
+				if not ws.entities or not ws.locations:
+					raise ValueError(f"Invalid checkpoint format or empty world state: {restore_path}")
+				external_runtime_bridge.restore_checkpoint(
+					cls._build_checkpoint_context_for_world(
+						ws,
+						run_id=str(getattr(ws, "_checkpoint_run_id", "") or ""),
+						phase="restore",
+					)
+				)
+			else:
+				if validate:
+					from tools.scenario_lint import lint_bundle
 
-		trace_recorder = LLMTraceRecorder.from_config(cfg, Path(resolved_checkpoint_dir) / "llm_traces")
+					lint = lint_bundle(
+						project_root=root,
+						config_path=resolved_config_path,
+						env=cfg,
+						bundle=bundle,
+						world_json=world_json_name,
+						recipes_jsons=recipes_jsons,
+						reactions_jsons=reactions_jsons,
+						entities_dirs=entities_dirs,
+						bundles_jsons=bundles_jsons,
+						effect_catalog=effect_catalog,
+						component_catalog=component_catalog,
+					)
+					errors = [x for x in lint.issues if x.severity == "ERROR"]
+					if errors:
+						raise ValueError("Data validation failed:\n" + "\n".join(f"{x.where}: {x.message}" for x in errors))
+				result = build_world_state(
+					bundle.world,
+					bundle.entity_templates,
+					bundle.recipes,
+					named_bundles=bundle.named_bundles,
+					component_catalog=component_catalog,
+				)
+				ws = result.world_state
 
-		action_providers: dict[str, Any] = {}
-		if workflow_registry is None:
-			default_workflow_spec = json.loads(_cfg_get(cfg, "DEFAULT_WORKFLOW_PROVIDER_JSON", "{}") or "{}")
-			if not isinstance(default_workflow_spec, dict):
-				raise ValueError("default_workflow_provider must be an object")
-			default_workflow_kind = _cfg_get(cfg, "DEFAULT_WORKFLOW_KIND", str(default_workflow_spec.get("kind", "") or "simple"))
-			resolved_workflow_registry, action_provider, action_providers = build_builtin_workflow_registry(
-				WorkflowBuildContext(
-					project_root=root,
-					config_path=resolved_config_path,
-					checkpoint_dir=Path(resolved_checkpoint_dir),
-					runtime_config=dict(cfg),
-					loaded_packages=loaded_packages,
-					trace_recorder=trace_recorder,
+			trace_recorder = LLMTraceRecorder.from_config(cfg, Path(resolved_checkpoint_dir) / "llm_traces")
+
+			action_providers: dict[str, Any] = {}
+			# Injected workflows are opaque; use the ordinary tick default unless
+			# MAX_TICKS is explicitly configured. Built-in LLMs keep their own default.
+			default_workflow_kind = ""
+			if workflow_registry is None:
+				default_workflow_spec = json.loads(_cfg_get(cfg, "DEFAULT_WORKFLOW_PROVIDER_JSON", "{}") or "{}")
+				if not isinstance(default_workflow_spec, dict):
+					raise ValueError("default_workflow_provider must be an object")
+				default_workflow_kind = _cfg_get(cfg, "DEFAULT_WORKFLOW_KIND", str(default_workflow_spec.get("kind", "") or "simple"))
+				resolved_workflow_registry, action_provider, action_providers = build_builtin_workflow_registry(
+					WorkflowBuildContext(
+						project_root=root,
+						config_path=resolved_config_path,
+						checkpoint_dir=Path(resolved_checkpoint_dir),
+						runtime_config=dict(cfg),
+						loaded_packages=loaded_packages,
+						trace_recorder=trace_recorder,
+					),
+					json.loads(_cfg_get(cfg, "WORKFLOW_PROVIDERS_JSON", "[]")),
+					default_workflow_kind,
+					dict(default_workflow_spec.get("options", {}) or {}),
+				)
+			else:
+				resolved_workflow_registry = workflow_registry
+				action_provider = workflow_registry.default_workflow
+			default_max_ticks_llm = _cfg_int(cfg, "MAX_TICKS_DEFAULT_LLM", 15)
+			default_max_ticks_no_llm = _cfg_int(cfg, "MAX_TICKS_DEFAULT_NO_LLM", 65)
+			configured_max_ticks = _cfg_int(cfg, "MAX_TICKS", 0) if "MAX_TICKS" in cfg else (default_max_ticks_llm if default_workflow_kind == "llm" else default_max_ticks_no_llm)
+
+			return cls(
+				world_state=ws,
+				interaction_engine=InteractionEngine(recipe_db=bundle.recipes),
+				executor=WorldExecutor(
+					entity_templates=bundle.entity_templates,
+					effect_catalog=effect_catalog,
+					component_catalog=component_catalog,
 				),
-				json.loads(_cfg_get(cfg, "WORKFLOW_PROVIDERS_JSON", "[]")),
-				default_workflow_kind,
-				dict(default_workflow_spec.get("options", {}) or {}),
-			)
-		else:
-			resolved_workflow_registry = workflow_registry
-			action_provider = workflow_registry.default_workflow
-		default_max_ticks_llm = _cfg_int(cfg, "MAX_TICKS_DEFAULT_LLM", 15)
-		default_max_ticks_no_llm = _cfg_int(cfg, "MAX_TICKS_DEFAULT_NO_LLM", 65)
-		configured_max_ticks = _cfg_int(cfg, "MAX_TICKS", 0) if "MAX_TICKS" in cfg else (default_max_ticks_llm if default_workflow_kind == "llm" else default_max_ticks_no_llm)
-
-		return cls(
-			world_state=ws,
-			interaction_engine=InteractionEngine(recipe_db=bundle.recipes),
-			executor=WorldExecutor(
-				entity_templates=bundle.entity_templates,
-				effect_catalog=effect_catalog,
+				action_provider=action_provider,
 				component_catalog=component_catalog,
-			),
-			action_provider=action_provider,
-			component_catalog=component_catalog,
-			workflow_registry=resolved_workflow_registry,
-			action_providers=action_providers,
-			external_runtimes=external_runtime_map,
-			reaction_rules=list((bundle.reactions or {}).get("rules", []) or []),
-			max_trigger_depth=_cfg_int(cfg, "MAX_TRIGGER_DEPTH", 4),
-			# Intentional policy: a turn may contain a long sequence of immediate
-			# actions. LLM cost is controlled by scenario config, not a lower kernel cap.
-			max_actions_per_turn=_cfg_int(cfg, "MAX_ACTIONS_PER_TURN", 99),
-			max_replans_per_turn=_cfg_int(cfg, "MAX_REPLANS_PER_TURN", 5),
-			active_phase_mode=_cfg_get(cfg, "ACTIVE_PHASE_MODE", "serial"),
-			parallel_decision_workers=_cfg_int(cfg, "PARALLEL_DECISION_WORKERS", 4),
-			dialogue_budget_limit_per_location=_cfg_int(cfg, "DIALOGUE_BUDGET_LIMIT_PER_LOCATION", 4),
-			checkpoint_enabled=_cfg_bool(cfg, "CHECKPOINT_EVERY_TICK", True),
-			checkpoint_dir=resolved_checkpoint_dir,
-			checkpoint_include_logs=_cfg_bool(cfg, "CHECKPOINT_INCLUDE_LOGS", True),
-			checkpoint_snapshot_interval_ticks=_cfg_int(cfg, "CHECKPOINT_SNAPSHOT_INTERVAL_TICKS", 60),
-			dialogue_log_full=_cfg_bool(cfg, "DIALOGUE_LOG_FULL", False),
-			workflow_view_profile=workflow_view_profile,
-			llm_trace_recorder=trace_recorder,
-			project_root=root,
-			config_path=resolved_config_path,
-			runtime_config=dict(cfg),
-			data_bundle=bundle,
-			loaded_packages=loaded_packages,
-			configured_max_ticks=int(configured_max_ticks),
-		)
+				workflow_registry=resolved_workflow_registry,
+				action_providers=action_providers,
+				external_runtimes=external_runtime_map,
+				reaction_rules=list((bundle.reactions or {}).get("rules", []) or []),
+				max_trigger_depth=_cfg_int(cfg, "MAX_TRIGGER_DEPTH", 4),
+				# Intentional policy: a turn may contain a long sequence of immediate
+				# actions. LLM cost is controlled by scenario config, not a lower kernel cap.
+				max_actions_per_turn=_cfg_int(cfg, "MAX_ACTIONS_PER_TURN", 99),
+				max_replans_per_turn=_cfg_int(cfg, "MAX_REPLANS_PER_TURN", 5),
+				active_phase_mode=_cfg_get(cfg, "ACTIVE_PHASE_MODE", "serial"),
+				parallel_decision_workers=_cfg_int(cfg, "PARALLEL_DECISION_WORKERS", 4),
+				dialogue_budget_limit_per_location=_cfg_int(cfg, "DIALOGUE_BUDGET_LIMIT_PER_LOCATION", 4),
+				checkpoint_enabled=_cfg_bool(cfg, "CHECKPOINT_EVERY_TICK", True),
+				checkpoint_dir=resolved_checkpoint_dir,
+				checkpoint_include_logs=_cfg_bool(cfg, "CHECKPOINT_INCLUDE_LOGS", True),
+				checkpoint_snapshot_interval_ticks=_cfg_int(cfg, "CHECKPOINT_SNAPSHOT_INTERVAL_TICKS", 60),
+				dialogue_log_full=_cfg_bool(cfg, "DIALOGUE_LOG_FULL", False),
+				workflow_view_profile=workflow_view_profile,
+				llm_trace_recorder=trace_recorder,
+				project_root=root,
+				config_path=resolved_config_path,
+				runtime_config=dict(cfg),
+				data_bundle=bundle,
+				loaded_packages=loaded_packages,
+				configured_max_ticks=int(configured_max_ticks),
+			)
+
+		except BaseException as exc:
+			# Assembly owns these adapters before a KernRuntime can be returned.
+			# Attempt every close even if another adapter fails during cleanup.
+			for runtime_id, adapter in reversed(list(external_runtime_map.items())):
+				try:
+					ExternalRuntimeBridge({runtime_id: adapter}).close({
+						"project_root": str(root),
+						"config_path": str(resolved_config_path),
+						"checkpoint_dir": str(resolved_checkpoint_dir),
+						"phase": "startup_failure",
+					})
+				except BaseException as cleanup_exc:
+					exc.add_note(f"external runtime cleanup failed for {runtime_id}: {cleanup_exc}")
+			raise
+
 
 	@classmethod
 	def from_loaded_packages(

@@ -56,6 +56,11 @@ class WorldExecutor:
 		self.component_catalog.freeze()
 
 	def execute(self, ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+		return self._execute_effect(ws, effect_data, context, snapshot_required=True)
+
+	def _execute_effect(
+		self, ws: Any, effect_data: dict[str, Any], context: dict[str, Any], *, snapshot_required: bool,
+	) -> list[dict[str, Any]]:
 		raw_effect = dict(effect_data) if isinstance(effect_data, dict) else effect_data
 		execution_context = dict(context or {})
 		# Effects invoked from a handler (for example a lifecycle or interaction
@@ -126,15 +131,17 @@ class WorldExecutor:
 			)
 		if not callable(handler):
 			executor_error(f"effect handler missing: {effect_name}", kind=ERROR_KIND_CONTRACT, code="EFFECT_HANDLER_MISSING", effect=effect_name)
-		snapshot = self._snapshot_world(ws)
+		snapshot = self._snapshot_world(ws) if snapshot_required else None
 		try:
 			events = handler(self, ws, normalized_data, merged_ctx)
 		except KernFailure as exc:
-			self._restore_world(ws, snapshot)
+			if snapshot is not None:
+				self._restore_world(ws, snapshot)
 			exc.add_context(effect=effect_name, phase="effect_execution", input=normalized_data, execution_context=merged_ctx)
 			raise
 		except Exception as exc:
-			self._restore_world(ws, snapshot)
+			if snapshot is not None:
+				self._restore_world(ws, snapshot)
 			raise KernFailure(
 				"EFFECT_HANDLER_EXCEPTION",
 				f"{effect_name}: handler exception ({exc})",
@@ -143,7 +150,8 @@ class WorldExecutor:
 				context={"effect": effect_name, "input": normalized_data, "execution_context": merged_ctx},
 			) from exc
 		if not isinstance(events, list) or any(not isinstance(event, dict) for event in events):
-			self._restore_world(ws, snapshot)
+			if snapshot is not None:
+				self._restore_world(ws, snapshot)
 			raise KernFailure(
 				"EFFECT_HANDLER_RESULT_INVALID",
 				f"{effect_name}: handler must return a list of event/fact objects",
@@ -210,6 +218,10 @@ class WorldExecutor:
 					code="EXTERNAL_IRREVERSIBLE_NOT_LAST",
 					effect=effect_id,
 				)
+		# Finish fallible preparation before entering the transaction stack.
+		record_config = self._normalized_bundle_record_config(bundle.record)
+		snapshot = self._snapshot_world(ws)
+		context_snapshot = deepcopy(context) if isinstance(context, dict) else None
 		is_outer_bundle = self._bundle_depth == 0
 		parent_bundle_id = self._bundle_id_stack[-1] if self._bundle_id_stack else ""
 		bundle_id = str(uuid4())
@@ -220,27 +232,24 @@ class WorldExecutor:
 		transaction_id = str(self._bundle_transaction_id)
 		if not is_outer_bundle and any(spec.side_effect != "world" for spec in effect_specs):
 			self._bundle_uses_external = True
-		if is_outer_bundle and self._bundle_uses_external:
-			try:
-				self._begin_external_bundle(ws, transaction_id)
-			except KernFailure:
-				raise
-			except Exception as exc:
-				raise KernFailure(
-					"EXTERNAL_RUNTIME_BEGIN_FAILED",
-					str(exc),
-					origin="external_runtime",
-					phase="bundle_begin",
-					context={"transaction_id": transaction_id},
-				) from exc
 		self._bundle_depth += 1
 		self._bundle_id_stack.append(bundle_id)
-		snapshot = self._snapshot_world(ws)
-		context_snapshot = deepcopy(context) if isinstance(context, dict) else None
 		events: list[dict[str, Any]] = []
 		record_fragments: list[dict[str, Any]] = []
-		record_config = self._normalized_bundle_record_config(bundle.record)
 		try:
+			if is_outer_bundle and self._bundle_uses_external:
+				try:
+					self._begin_external_bundle(ws, transaction_id)
+				except KernFailure:
+					raise
+				except Exception as exc:
+					raise KernFailure(
+						"EXTERNAL_RUNTIME_BEGIN_FAILED",
+						str(exc),
+						origin="external_runtime",
+						phase="bundle_begin",
+						context={"transaction_id": transaction_id},
+					) from exc
 			for idx, effect in enumerate(list(bundle.effects or [])):
 				if not isinstance(effect, dict):
 					continue
@@ -248,12 +257,12 @@ class WorldExecutor:
 				if self.effect_catalog.contains(effect_id) and self.effect_catalog.require(effect_id).side_effect == "external_irreversible":
 					self._bundle_deferred_irreversible.append((effect, self._transaction_context(context, transaction_id, bundle_id, parent_bundle_id, idx)))
 					continue
-				effect_events = self.execute(ws, effect, self._transaction_context(context, transaction_id, bundle_id, parent_bundle_id, idx))
+				effect_events = self._execute_effect(ws, effect, self._transaction_context(context, transaction_id, bundle_id, parent_bundle_id, idx), snapshot_required=False)
 				events.extend(effect_events)
 				record_fragments.extend(self._effect_record_fragments(ws, effect_id, effect_events))
 			if is_outer_bundle:
 				for effect, deferred_context in self._bundle_deferred_irreversible:
-					effect_events = self.execute(ws, effect, deferred_context)
+					effect_events = self._execute_effect(ws, effect, deferred_context, snapshot_required=False)
 					events.extend(effect_events)
 					effect_id = str(effect.get("effect", "") or "") if isinstance(effect, dict) else ""
 					record_fragments.extend(self._effect_record_fragments(ws, effect_id, effect_events))
@@ -393,25 +402,16 @@ class WorldExecutor:
 			actor.add_component("PerceptionComponent", perception)
 		tick = int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
 		for fragment in list(fragments or []):
-			record_type = str(fragment.get("record_type", "") or self._record_type_for_effect(str(fragment.get("effect", "") or "")))
 			record = {
 				"record_id": f"record_{uuid4().hex}",
 				"tick": tick,
 				"actor_id": actor_id,
-				"record_type": record_type,
+				"record_type": "effect_record",
 				"content": str(fragment.get("content", "") or "").strip(),
 				"source_effect": str(fragment.get("effect", "") or ""),
 			}
 			if record["content"]:
 				perception.enqueue_record(record)
-
-	def _record_type_for_effect(self, effect_id: str) -> str:
-		name = str(effect_id or "")
-		if name.endswith("RefreshFeed"):
-			return "social_feed_view"
-		if "VisiblePost" in name:
-			return "social_action"
-		return "effect_record"
 
 	def _external_bridge(self, ws: Any) -> ExternalRuntimeBridge | None:
 		services = getattr(ws, "services", {}) or {}
@@ -440,23 +440,25 @@ class WorldExecutor:
 			bridge.close_bundle(transaction_id)
 
 	def _snapshot_world(self, ws: Any) -> dict[str, Any]:
-		return {
-			"game_time": deepcopy(getattr(ws, "game_time", None)),
-			"entities": deepcopy(getattr(ws, "entities", {})),
-			"locations": deepcopy(getattr(ws, "locations", {})),
-			"environment_scopes": deepcopy(getattr(ws, "environment_scopes", {})),
-			"tasks": deepcopy(getattr(ws, "tasks", {})),
-			"paths": deepcopy(getattr(ws, "paths", {})),
-			"event_log": deepcopy(getattr(ws, "event_log", [])),
+		# Copy one object graph so indexes and component-owned objects keep
+		# their shared references (notably WorldState.tasks and TaskHost.tasks).
+		return deepcopy({
+			"game_time": getattr(ws, "game_time", None),
+			"entities": getattr(ws, "entities", {}),
+			"locations": getattr(ws, "locations", {}),
+			"environment_scopes": getattr(ws, "environment_scopes", {}),
+			"tasks": getattr(ws, "tasks", {}),
+			"paths": getattr(ws, "paths", {}),
+			"event_log": getattr(ws, "event_log", []),
 			"_event_seq": int(getattr(ws, "_event_seq", 0) or 0),
-			"interaction_log": deepcopy(getattr(ws, "interaction_log", [])),
+			"interaction_log": getattr(ws, "interaction_log", []),
 			"_interaction_seq": int(getattr(ws, "_interaction_seq", 0) or 0),
-			"runtime_state": deepcopy(getattr(ws, "runtime_state", None)),
-		}
+			"runtime_state": getattr(ws, "runtime_state", None),
+		})
 
 	def _restore_world(self, ws: Any, snapshot: dict[str, Any]) -> None:
-		for key, value in dict(snapshot or {}).items():
-			setattr(ws, key, deepcopy(value))
+		for key, value in deepcopy(snapshot).items():
+			setattr(ws, key, value)
 
 	def _resolve_entity_from_ctx(self, ws: Any, ctx: dict[str, Any], key_or_idkey: str):
 		ctx_dict = dict(ctx) if isinstance(ctx, dict) else {}

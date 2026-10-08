@@ -87,6 +87,13 @@ def _parse_sse_chat_chunks(raw: str) -> dict[str, Any]:
 	}
 
 
+def _is_retryable_http_error(code: int, err_body: str) -> bool:
+	if code == 429 or 500 <= code < 600:
+		return True
+	body = str(err_body or "").lower()
+	return "bad_response_status_code" in body and "no available sub-groups" in body
+
+
 @dataclass
 class OpenAICompatClient:
 	"""
@@ -181,7 +188,7 @@ class OpenAICompatClient:
 					err_body = ""
 				msg = f"LLM HTTPError {getattr(e, 'code', '')}: {getattr(e, 'reason', '')} body={err_body}"
 				code = int(getattr(e, "code", 0) or 0)
-				if code != 429 and not 500 <= code < 600:
+				if not _is_retryable_http_error(code, err_body):
 					raise LLMRequestError(f"{msg} attempts={attempt + 1}/{max_retries + 1}") from e
 				if attempt >= max_retries:
 					raise LLMRequestError(f"{msg} attempts={attempt + 1}/{max_retries + 1}") from e

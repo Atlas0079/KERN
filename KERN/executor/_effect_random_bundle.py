@@ -6,7 +6,7 @@ from typing import Any
 from ..effect_bundle import effect_bundle_from_raw
 from ..execution_errors import executor_error
 from ._effect_binder import BindError, _base_bind
-from ._effect_child_bundle import child_bundle_error_message, run_child_bundle
+from ._effect_child_bundle import run_child_bundle
 
 
 def _bind_random_bundle(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -71,6 +71,4 @@ def execute_random_bundle(executor: Any, ws: Any, data: dict[str, Any], context:
 	if bundle.is_empty():
 		return [resolved_event]
 	result = run_child_bundle(executor, ws, bundle.to_dict(), dict(context or {}))
-	if result.failed:
-		executor_error(child_bundle_error_message(result, "RandomBundle", "selected"))
 	return [resolved_event, *result.events]

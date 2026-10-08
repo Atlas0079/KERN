@@ -13,8 +13,6 @@ EVENT_CONTEXT_KEY = "__kern_event_context__"
 @dataclass
 class ChildBundleResult:
 	events: list[dict[str, Any]] = field(default_factory=list)
-	failed: bool = False
-	error_message: str = ""
 
 
 def run_child_bundle(executor: Any, ws: Any, bundle: Any, context: dict[str, Any]) -> ChildBundleResult:
@@ -25,7 +23,7 @@ def run_child_bundle(executor: Any, ws: Any, bundle: Any, context: dict[str, Any
 	they are published only after the containing bundle commits.
 	"""
 	events = _attach_child_context(executor.execute_bundle(ws, bundle, context), context)
-	return ChildBundleResult(events=events, failed=False, error_message="")
+	return ChildBundleResult(events=events)
 
 
 def _attach_child_context(events: Any, context: dict[str, Any]) -> list[dict[str, Any]]:
@@ -46,8 +44,3 @@ def _attach_child_context(events: Any, context: dict[str, Any]) -> list[dict[str
 			clean[EVENT_CONTEXT_KEY] = dict(context or {})
 		wrapped.append(clean)
 	return wrapped
-
-
-def child_bundle_error_message(result: ChildBundleResult, owner: str, detail: str = "") -> str:
-	suffix = f" ({detail})" if str(detail or "").strip() else ""
-	return f"{owner}: child bundle failed{suffix}"
