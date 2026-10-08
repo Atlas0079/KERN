@@ -51,7 +51,10 @@
           "extraversion": 0.5,
           "agreeableness": 0.5,
           "neuroticism": 0.5
-        }
+        },
+        "platform_friend_categories": [
+          "同学"
+        ]
       }
     }
   },

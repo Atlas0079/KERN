@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from typing import Any, Mapping, Protocol
 from uuid import uuid4
 
-from KERN.agent_workflow.context_builder import apply_record_memory_patch
+from .memory import apply_record_memory_patch
 from KERN.agent_workflow.contracts import AgentTurnSession, EndTurn, SubmitAction, TurnFrame, TurnStart
 from KERN.execution_errors import ERROR_KIND_CONTRACT, ERROR_KIND_INFRASTRUCTURE, KernFailure
 
@@ -14,7 +14,7 @@ from KERN.execution_errors import ERROR_KIND_CONTRACT, ERROR_KIND_INFRASTRUCTURE
 _BIG_FIVE_FIELDS = ("openness", "conscientiousness", "extraversion", "agreeableness", "neuroticism")
 _PUBLIC_CARD_FIELDS = (
 	"post_id",
-	"text",
+	"title",
 	"display_hashtags",
 	"original_author_id",
 	"feed_item_kind",
@@ -29,7 +29,11 @@ _PUBLIC_CARD_FIELDS = (
 	"viewer_has_liked",
 	"viewer_has_reposted",
 )
+_DETAIL_POST_FIELDS = (*_PUBLIC_CARD_FIELDS, "text", "recent_comments", "feed_session_id", "exposure_id")
 _PAGE_DECISION_EMPTY_RESPONSE_MAX_ATTEMPTS = 3
+_PAGE_DECISION_MAX_ACTIONS = 8
+_MAX_DETAIL_VIEWS_PER_TURN = 3
+_SOCIAL_ACTION_ORDER = {"open_post": 0, "like": 1, "comment": 2, "repost": 3, "back_to_feed": 4}
 
 
 def _parse_page_decision_output(response_text: str) -> dict[str, Any]:
@@ -226,6 +230,7 @@ class _PreparedSocialPageDecision:
 	start: TurnStart
 	binding: ActorPlatformBinding
 	card_by_id: dict[str, dict[str, Any]]
+	screen_view: str
 	messages: list[dict[str, Any]]
 	trace: dict[str, Any]
 
@@ -237,6 +242,7 @@ class _PreparedSocialPageDecision:
 			response_text,
 			trace=self.trace,
 			card_by_id=self.card_by_id,
+			screen_view=self.screen_view,
 			start=self.start,
 			binding=self.binding,
 		)
@@ -252,10 +258,16 @@ class _PreparedSocialSessionStep:
 
 	def complete(self, response_text: str):
 		actions, meta = self.decision.complete(response_text)
+		if self.decision.screen_view == "post_detail":
+			# Navigation follows the interaction decision through the existing effect path.
+			if not any(action.get("verb") == "BackToSocialFeed" for action in actions):
+				actions.append({"verb": "BackToSocialFeed", "target_id": self.session.binding.terminal_id, "parameters": {}})
+			meta = {**meta, "navigation_policy": "return_after_interactions"}
 		self.session.decision_meta = dict(meta)
 		if actions:
+			self.session.pending_actions = [dict(action) for action in actions]
 			self.session.phase = "awaiting_action"
-			return SubmitAction(intent=actions[0], meta=dict(self.session.decision_meta))
+			return self.session._submit_next_pending_action()
 		self.session.phase = "done"
 		return EndTurn(meta=dict(self.session.decision_meta))
 
@@ -529,6 +541,7 @@ class SocialPlatformWorkflow:
 			start=start,
 			binding=binding,
 			card_by_id={str(key): dict(value) for key, value in dict(card_by_id).items()},
+			screen_view=str(((perception.get("screen") or {}).get("view", "") or "")),
 			messages=messages,
 			trace=trace,
 		)
@@ -549,6 +562,7 @@ class SocialPlatformWorkflow:
 		*,
 		trace: dict[str, Any],
 		card_by_id: dict[str, dict[str, Any]],
+		screen_view: str,
 		start: TurnStart,
 		binding: ActorPlatformBinding,
 		) -> tuple[list[dict[str, Any]], dict[str, Any]]:
@@ -569,7 +583,7 @@ class SocialPlatformWorkflow:
 			) from exc
 
 		try:
-			actions, decision_summary = self._validate_output(parsed, card_by_id)
+			actions, decision_summary, validation_meta = self._validate_output(parsed, card_by_id, screen_view)
 		except (TypeError, ValueError) as exc:
 			trace["parsed_output"] = parsed
 			trace["error"] = {"code": "WORKFLOW_OUTPUT_CONTRACT_INVALID", "message": str(exc)}
@@ -591,6 +605,7 @@ class SocialPlatformWorkflow:
 			"reason": "social_page_decision" if actions else "no_action",
 			"decision_summary": decision_summary,
 			"llm_trace_id": recorded_trace_id,
+			**validation_meta,
 		}
 		return [self._action_intent(binding.terminal_id, action) for action in actions], meta
 
@@ -667,6 +682,7 @@ class SocialPlatformWorkflow:
 			{
 				"profile_id": getattr(identity, "profile_id", None),
 				"natural_language_background": getattr(identity, "natural_language_background", None),
+				"platform_friend_categories": getattr(identity, "platform_friend_categories", None),
 				"big_five": getattr(identity, "big_five", None),
 			}
 		)
@@ -681,10 +697,11 @@ class SocialPlatformWorkflow:
 				context={"actor_id": start.actor_id, "terminal_id": binding.terminal_id, "tick": start.tick},
 				category=ERROR_KIND_CONTRACT,
 			)
+		screen_view = str(getattr(screen, "view", "") or "")
 		if (
 			str(getattr(screen, "runtime_id", "") or "") != binding.runtime_id
 			or str(getattr(screen, "account_id", "") or "") != binding.account_id
-			or str(getattr(screen, "view", "") or "") != "feed"
+			or screen_view not in {"feed", "post_detail"}
 			or int(getattr(screen, "updated_tick", -1)) != int(start.tick)
 		):
 			raise KernFailure(
@@ -705,6 +722,8 @@ class SocialPlatformWorkflow:
 				context={"actor_id": start.actor_id, "tick": start.tick},
 				category=ERROR_KIND_CONTRACT,
 			)
+		items: list[dict[str, Any]] = []
+		card_by_id: dict[str, dict[str, Any]] = {}
 		raw_items = getattr(screen, "feed_items", None)
 		if not isinstance(raw_items, list):
 			raise KernFailure(
@@ -715,8 +734,6 @@ class SocialPlatformWorkflow:
 				context={"actor_id": start.actor_id, "tick": start.tick},
 				category=ERROR_KIND_CONTRACT,
 			)
-		items: list[dict[str, Any]] = []
-		card_by_id: dict[str, dict[str, Any]] = {}
 		for raw in raw_items:
 			if not isinstance(raw, dict):
 				raise KernFailure(
@@ -740,6 +757,30 @@ class SocialPlatformWorkflow:
 			card = {key: raw[key] for key in _PUBLIC_CARD_FIELDS if key in raw}
 			items.append(card)
 			card_by_id[post_id] = card
+		current_post_payload = None
+		if screen_view == "post_detail":
+			raw_current = getattr(screen, "current_post", None)
+			if not isinstance(raw_current, dict):
+				raise KernFailure(
+					"SOCIAL_POST_DETAIL_INVALID",
+					"post detail screen current_post must be an object",
+					origin="workflow",
+					phase="social_perception",
+					context={"actor_id": start.actor_id, "tick": start.tick},
+					category=ERROR_KIND_CONTRACT,
+				)
+			current_post_id = raw_current.get("post_id")
+			if not isinstance(current_post_id, str) or current_post_id not in card_by_id:
+				raise KernFailure(
+					"SOCIAL_POST_DETAIL_INVALID",
+					"post detail current_post must refer to a current feed item",
+					origin="workflow",
+					phase="social_perception",
+					context={"actor_id": start.actor_id, "tick": start.tick},
+					category=ERROR_KIND_CONTRACT,
+				)
+			current_post_payload = {key: raw_current[key] for key in _DETAIL_POST_FIELDS if key in raw_current}
+			card_by_id = {current_post_id: dict(current_post_payload)}
 
 		memory_component = actor.get_component("MemoryComponent") if hasattr(actor, "get_component") else None
 		memory_items = [
@@ -759,10 +800,11 @@ class SocialPlatformWorkflow:
 					"terminal_id": binding.terminal_id,
 					"runtime_id": binding.runtime_id,
 					"account_id": binding.account_id,
-					"view": "feed",
+					"view": screen_view,
 					"updated_tick": int(start.tick),
 					"feed_session_id": feed_session_id,
 					"feed_items": items,
+					"current_post": current_post_payload,
 				},
 				"recent_social_memory": [dict(item) for item in memory],
 			},
@@ -773,11 +815,18 @@ class SocialPlatformWorkflow:
 	def _profile_payload(profile: dict[str, Any]) -> dict[str, Any]:
 		profile_id = profile.get("profile_id")
 		background = profile.get("natural_language_background")
+		categories = profile.get("platform_friend_categories")
 		big_five = profile.get("big_five")
 		if not isinstance(profile_id, str) or not profile_id.strip():
 			raise ValueError("social profile_id must be a non-blank string")
 		if not isinstance(background, str) or not background.strip():
 			raise ValueError("social natural_language_background must be a non-blank string")
+		if not isinstance(categories, list) or not 1 <= len(categories) <= 5:
+			raise ValueError("social platform_friend_categories must contain one to five categories")
+		if any(not isinstance(item, str) or not item or item != item.strip() for item in categories):
+			raise ValueError("social friend categories must be non-blank trimmed strings")
+		if len(set(categories)) != len(categories):
+			raise ValueError("social friend categories must be unique")
 		if not isinstance(big_five, dict) or set(big_five) != set(_BIG_FIVE_FIELDS):
 			raise ValueError("social big_five must contain exactly the five configured dimensions")
 		for field_name in _BIG_FIVE_FIELDS:
@@ -787,6 +836,7 @@ class SocialPlatformWorkflow:
 		return {
 			"profile_id": profile_id,
 			"natural_language_background": background,
+			"platform_friend_categories": list(categories),
 			"big_five": {field_name: float(big_five[field_name]) for field_name in _BIG_FIVE_FIELDS},
 		}
 
@@ -801,66 +851,119 @@ class SocialPlatformWorkflow:
 		profile_id = str(profile.get("profile_id", "") or "").strip()
 		background = str(profile.get("natural_language_background", "") or "").strip()
 		system = (
-			"我就是以下这个社交平台用户；这不是第三方角色扮演材料，而是我的自我画像和稳定人格。"
-			"我的每个判断都要直接来自我的经历、性格、近期社交记忆和当前手机页面。\n\n"
+			"我是以下这个社交平台用户；这不是第三方角色扮演材料，而是我的自我画像和稳定人格。"
+			"我的判断应直接来自我的经历、性格、近期社交记忆和当前页面。\n\n"
 			f"我的 profile_id：{profile_id}\n"
 			f"我的自我画像：\n{background}\n"
-			f"我的人格五维（0-1，越高越明显）：{big_five_text}\n\n"
-			"现在是我的休息时间，我只是随手刷自己的社交平台推荐页"
-			"我会像平时一样快速扫过页面：大多数内容看过就划走，只有被自然触动时才公开互动。"
-			"我不会把人格维度机械地解释成固定行为，也不会假设页面之外的信息。"
-			"评论和转发文字必须符合我的第一人称表达。只返回一个 JSON 对象，不输出解释性正文。\n"
-			"可用行为含义："
-			"do_nothing 表示我看过后继续划走，不公开表达态度；这是默认且常见的选择，输出为空 actions。"
-			"like 表示我愿意留下一个轻量的公开反馈，通常是认同、共鸣、觉得有用或想稍后再看。"
-			"comment 表示我有一句具体的话想当场说出来，例如补充、质疑、提问、表达个人经验或情绪。"
-			"repost 表示我想把这条内容转给自己的社交圈看，或借它公开表达一个我愿意承担的立场；"
-			"输出契约：{\"actions\":[...],\"decision_summary\":\"一至三句决定摘要\"}。"
-			"每次只表达当前这一刻的自然浏览反应，actions 必须为空数组或只包含一个动作。"
-			"如果我选择 do_nothing，就返回 {\"actions\":[],\"decision_summary\":\"我为什么划走\"}。"
-			"我不需要系统性处理页面上的帖子；已经有一次轻微互动后，如果当前页面状态和近期记忆"
-			"没有自然激发新的互动冲动，就返回空 actions。"
-			"like 动作只能是 {\"post_id\":\"页面中的ID\",\"action\":\"like\"}，不得包含 text。"
-			"comment 动作必须是 {\"post_id\":\"页面中的ID\",\"action\":\"comment\",\"text\":\"非空评论\"}。"
-			"repost 动作必须是 {\"post_id\":\"页面中的ID\",\"action\":\"repost\",\"text\":\"可为空\"}。"
-			"actions 可以为空。"
-			"所有动作的 post_id 必须逐字取自 allowed_action_post_ids；不得输出列表之外的 post_id。"
+			f"我的平台主要好友类别：{json.dumps(profile['platform_friend_categories'], ensure_ascii=False)}\n"
+			f"我的人格五维（0-1，越高越明显）：{big_five_text}"
 		)
-		allowed_ids = [
-			str(item.get("post_id"))
-			for item in list(((perception.get("screen") or {}).get("feed_items") or []))
-			if isinstance(item, dict) and isinstance(item.get("post_id"), str)
-		]
+		screen = dict(perception.get("screen", {}) or {}) if isinstance(perception.get("screen", {}), dict) else {}
+		view = str(screen.get("view", "") or "")
+		if view == "post_detail" and isinstance(screen.get("current_post"), dict):
+			allowed_ids = [str(screen["current_post"].get("post_id"))]
+		else:
+			allowed_ids = [
+				str(item.get("post_id"))
+				for item in list((screen.get("feed_items") or []))
+				if isinstance(item, dict) and isinstance(item.get("post_id"), str)
+			]
 		request_perception = dict(perception)
 		request_perception.pop("profile", None)
 		request_perception["schema_version"] = "social_decision_page_context.v1"
 		request_perception["allowed_action_post_ids"] = allowed_ids
+		if view == "feed":
+			action_text = (
+				"当前屏幕是推荐流。推荐流卡片只显示标题、来源和互动数量，不显示全文和评论。"
+				"我如果对某个标题感兴趣，需要先点开详情页才能读全文、看评论、点赞、评论或转发。\n\n"
+				"可用行为含义："
+				"do_nothing 表示我只是扫过这页推荐流，不点开任何帖子；输出为空 actions。"
+				"open_post 表示我点开某条推荐卡片，进入该帖详情页查看全文和近期评论。"
+				"本页不能 like、comment 或 repost。\n\n"
+				"输出契约：只返回一个 JSON 对象，不输出解释性正文。actions 最多 1 个。"
+				"open_post 动作必须是 {\"post_id\":\"页面中的ID\",\"action\":\"open_post\"}。"
+				"如果我不点开帖子，就返回 {\"actions\":[],\"decision_summary\":\"我为什么继续划走\"}。"
+			)
+		elif view == "post_detail":
+			action_text = (
+				"当前屏幕是帖子详情页，我已经点开并看到了这条帖子的全文和近期评论。"
+				"这次只判断我读完当前帖子后愿意做哪些公开互动，不决定浏览导航操作。\n\n"
+				"可用行为含义："
+				"do_nothing 表示我读完后不进行任何公开互动；输出为空 actions。"
+				"like 表示我愿意留下一个轻量反馈，通常是认同、共鸣、觉得有用、支持或想稍后再看。"
+				"comment 表示我愿意在帖子下写一句公开评论，内容应像我平时会真实写出的短评论。"
+				"repost 表示我把这条帖子转发到自己的主页或动态中；其他关注我的用户之后可能会在推荐流或关注流里看到我转发的帖子。"
+				"同一条帖子可以同时 like、comment、repost；也可以只做其中一种；也可以什么都不做。"
+				"如果页面显示我已经点赞或转发过，就不要重复该动作。\n\n"
+				f"输出契约：只返回一个 JSON 对象，不输出解释性正文。actions 最多 {_PAGE_DECISION_MAX_ACTIONS} 个。"
+				"like 动作只能是 {\"post_id\":\"当前帖子ID\",\"action\":\"like\"}，不得包含 text。"
+				"comment 动作必须是 {\"post_id\":\"当前帖子ID\",\"action\":\"comment\",\"text\":\"非空评论\"}。"
+				"repost 动作必须是 {\"post_id\":\"当前帖子ID\",\"action\":\"repost\",\"text\":\"可为空\"}。"
+				"同一 post_id 的同一种 action 不能重复。"
+				"如果我不进行公开互动，就返回 {\"actions\":[],\"decision_summary\":\"我为什么不进行互动\"}。"
+			)
+		else:
+			raise ValueError(f"unsupported social screen view: {view!r}")
+		task = (
+			"现在是我的休息时间，我随手打开社交平台刷一会儿。仿真中的 1 tick 代表现实中的 1 天；"
+			f"当前 tick={int(perception.get('tick', 0) or 0)}。"
+			"recent_social_memory 是我过去几天或今天早些时候的互动记忆。"
+			+ ("请按照我这个人的真实自然反应，选择我读完当前帖子后愿意进行的公开互动；可以多选，也可以不互动。\n\n"
+			   if view == "post_detail" else "请按照我这个人的真实自然反应，判断我下一步会怎么操作。\n\n")
+			+ action_text
+			+ "所有带 post_id 的动作必须逐字取自 allowed_action_post_ids；不得输出列表之外的 post_id。\n\n"
+			"页面上下文 JSON：\n"
+			+ json.dumps(request_perception, ensure_ascii=False, separators=(",", ":"))
+		)
 		return [
 			{"role": "system", "content": system},
-			{"role": "user", "content": json.dumps(request_perception, ensure_ascii=False, separators=(",", ":"))},
+			{"role": "user", "content": task},
 		]
 
 	@staticmethod
-	def _validate_output(raw: Any, card_by_id: dict[str, dict[str, Any]]) -> tuple[list[dict[str, Any]], str]:
-		if not isinstance(raw, dict) or set(raw) != {"actions", "decision_summary"}:
-			raise ValueError("social output must contain exactly actions and decision_summary")
+	def _validate_output(raw: Any, card_by_id: dict[str, dict[str, Any]], screen_view: str) -> tuple[list[dict[str, Any]], str, dict[str, Any]]:
+		if not isinstance(raw, dict):
+			raise ValueError("social output must be an object")
+		if "actions" not in raw:
+			raise ValueError("social output must contain actions")
+		unknown = set(raw).difference({"actions", "decision_summary"})
+		if unknown:
+			raise ValueError(f"social output has unknown fields: {sorted(unknown)}")
 		actions = raw["actions"]
-		summary = raw["decision_summary"]
+		summary = raw.get("decision_summary", "")
 		if not isinstance(actions, list):
 			raise ValueError("social output actions must be an array")
-		if len(actions) > 1:
-			raise ValueError("social output actions must contain at most one next action")
-		if not isinstance(summary, str) or not summary.strip():
-			raise ValueError("social output decision_summary must be a non-blank string")
+		if summary is None:
+			summary = ""
+		if not isinstance(summary, str):
+			raise ValueError("social output decision_summary must be a string when present")
 		seen: set[tuple[str, str]] = set()
+		post_order: dict[str, int] = {}
 		validated: list[dict[str, Any]] = []
 		for item in actions:
 			if not isinstance(item, dict):
 				raise ValueError("social action must be an object")
 			post_id = item.get("post_id")
 			action = item.get("action")
+			if screen_view == "feed":
+				if action != "open_post":
+					raise ValueError(f"unsupported feed action: {action!r}")
+				if not isinstance(post_id, str) or post_id not in card_by_id:
+					raise ValueError(f"social action post_id is not visible: {post_id!r}")
+				if set(item) != {"post_id", "action"}:
+					raise ValueError("invalid fields for open_post action")
+				post_order.setdefault(post_id, len(post_order))
+				validated.append({"post_id": post_id, "action": "open_post"})
+				continue
+			if screen_view != "post_detail":
+				raise ValueError(f"unsupported social screen view: {screen_view!r}")
+			if action == "back_to_feed":
+				if set(item) != {"action"}:
+					raise ValueError("invalid fields for back_to_feed action")
+				validated.append({"action": "back_to_feed"})
+				continue
 			if not isinstance(post_id, str) or post_id not in card_by_id:
-				raise ValueError(f"social action post_id is not visible: {post_id!r}")
+				raise ValueError(f"social action post_id is not open: {post_id!r}")
 			if action not in {"like", "comment", "repost"}:
 				raise ValueError(f"unsupported social action: {action!r}")
 			expected_keys = {"post_id", "action", "text"} if action == "comment" else {"post_id", "action"}
@@ -872,6 +975,7 @@ class SocialPlatformWorkflow:
 			if key in seen:
 				raise ValueError(f"duplicate social action: {post_id}/{action}")
 			seen.add(key)
+			post_order.setdefault(post_id, len(post_order))
 			card = card_by_id[post_id]
 			if action == "like" and card.get("viewer_has_liked") is True:
 				raise ValueError(f"post is already liked by viewer: {post_id}")
@@ -889,17 +993,40 @@ class SocialPlatformWorkflow:
 					raise ValueError("social repost text must be a string")
 				out["text"] = text
 			validated.append(out)
-		return validated, summary
+		ordered = [
+			item
+			for _, item in sorted(
+				enumerate(validated),
+				key=lambda pair: (
+					post_order.get(pair[1].get("post_id", ""), 9999),
+					_SOCIAL_ACTION_ORDER[pair[1]["action"]],
+					pair[0],
+				),
+			)
+		]
+		if screen_view == "feed" and len(ordered) > 1:
+			raise ValueError("feed decision can open at most one post")
+		limited = ordered[:_PAGE_DECISION_MAX_ACTIONS]
+		truncated_count = max(0, len(ordered) - len(limited))
+		clean_summary = summary.strip() or ("我选择了这些互动。" if limited else "我没有进行公开互动。")
+		validation_meta = {
+			"raw_action_count": len(actions),
+			"validated_action_count": len(ordered),
+			"truncated_action_count": truncated_count,
+		}
+		return limited, clean_summary, validation_meta
 
 	@staticmethod
 	def _action_intent(terminal_id: str, action: dict[str, Any]) -> dict[str, Any]:
 		action_name = action["action"]
 		verb = {
+			"open_post": "OpenSocialPost",
 			"like": "LikeSocialPost",
 			"comment": "CommentOnSocialPost",
 			"repost": "RepostSocialPost",
+			"back_to_feed": "BackToSocialFeed",
 		}[action_name]
-		parameters = {"post_id": action["post_id"]}
+		parameters = {} if action_name == "back_to_feed" else {"post_id": action["post_id"]}
 		if action_name in {"comment", "repost"}:
 			parameters["text"] = action.get("text", "")
 		return {"verb": verb, "target_id": terminal_id, "parameters": parameters}
@@ -931,6 +1058,8 @@ class _ActiveSocialTurnSession:
 	binding: ActorPlatformBinding
 	phase: str = "browse"
 	decision_meta: dict[str, Any] = field(default_factory=dict)
+	pending_actions: list[dict[str, Any]] = field(default_factory=list)
+	detail_views_opened: int = 0
 
 	def next_step(self, ws: Any, frame: TurnFrame):
 		prepared = self.prepare_parallel_next_step(ws, frame)
@@ -976,7 +1105,18 @@ class _ActiveSocialTurnSession:
 					context={"actor_id": self.start.actor_id, "tick": self.start.tick},
 					category=ERROR_KIND_CONTRACT,
 				)
-			return self._prepare_decision(ws, frame)
+			apply_record_memory_patch(ws, self.start.actor_id, frame.reason, frame.mode_context)
+			verb = str((feedback.intent or {}).get("verb", "") or "")
+			if verb == "OpenSocialPost":
+				self.detail_views_opened += 1
+			if self.pending_actions:
+				return self._submit_next_pending_action()
+			if verb == "OpenSocialPost":
+				return self._prepare_decision(ws, frame)
+			if verb == "BackToSocialFeed" and self.detail_views_opened < _MAX_DETAIL_VIEWS_PER_TURN:
+				return self._prepare_decision(ws, frame)
+			self.phase = "done"
+			return EndTurn(meta=dict(self.decision_meta))
 		if self.phase == "parallel_decision":
 			return self._prepare_decision(ws, frame)
 		self.phase = "done"
@@ -991,6 +1131,14 @@ class _ActiveSocialTurnSession:
 			session=self,
 			decision=self.workflow.prepare_page_decision(perception, card_by_id, self.start, self.binding),
 		)
+
+	def _submit_next_pending_action(self):
+		if not self.pending_actions:
+			self.phase = "done"
+			return EndTurn(meta=dict(self.decision_meta))
+		action = self.pending_actions.pop(0)
+		self.phase = "awaiting_action"
+		return SubmitAction(intent=dict(action), meta=dict(self.decision_meta))
 
 
 __all__ = [

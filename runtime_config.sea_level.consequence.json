@@ -10,7 +10,8 @@
       "provider": "social_propagation:sqlite_platform",
       "options": {
         "database_path": "KERN/external_runtimes/social_runs/consequence/platform.sqlite",
-        "seed_path": "Packages/SeaLevelSocialExperiment/Data/Platform/social_seed.sea_level_consequence_focus.json"
+        "seed_path": "Packages/SeaLevelSocialExperiment/Data/Platform/social_seed.sea_level_consequence_focus.json",
+        "propagating_post_ids": ["sea_level_experiment_post"]
       }
     }
   ],

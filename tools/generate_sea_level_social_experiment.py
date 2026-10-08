@@ -102,7 +102,7 @@ def load_study_config(path: Path) -> dict[str, Any]:
 	for field in ("study_id", "study_seed"):
 		if not isinstance(config[field], str) or not config[field].strip() or config[field] != config[field].strip():
 			raise ValueError(f"study config {field} must be a non-blank trimmed string")
-	population = _exact(config["population"], {"count", "profiles_path", "backgrounds_path"}, "population")
+	population = _exact(config["population"], {"count", "profiles_path", "backgrounds_path", "friend_categories_path"}, "population")
 	if _positive_int(population["count"], "population.count") != 300:
 		raise ValueError("sea-level study population.count must be 300")
 	_exact(config["simulation"], {"tick_count", "feed_limit", "max_actions_per_turn", "max_replans_per_turn"}, "simulation")
@@ -131,7 +131,7 @@ def load_study_config(path: Path) -> dict[str, Any]:
 		raise ValueError("study config must define exactly two conditions")
 	condition_ids = []
 	for index, condition in enumerate(conditions):
-		_exact(condition, {"condition_id", "post_id", "text", "ranking_topics", "display_hashtags"}, f"conditions[{index}]")
+		_exact(condition, {"condition_id", "post_id", "title", "text", "ranking_topics", "display_hashtags"}, f"conditions[{index}]")
 		condition_ids.append(condition["condition_id"])
 		for field in ("ranking_topics", "display_hashtags"):
 			if not isinstance(condition[field], list) or not condition[field] or len(set(condition[field])) != len(condition[field]):
@@ -186,6 +186,21 @@ def load_population(config: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[
 		backgrounds[profile_id] = text.strip()
 	if set(backgrounds) != set(by_id):
 		raise ValueError("background profile IDs do not exactly match population profile IDs")
+	friend_path = (ROOT / config["population"]["friend_categories_path"]).resolve()
+	friend_data = _load_json(friend_path)
+	if friend_data.get("schema_version") != "social_platform_friend_categories.v1":
+		raise ValueError("friend categories input must use social_platform_friend_categories.v1")
+	friend_profiles = friend_data.get("profiles")
+	if not isinstance(friend_profiles, dict) or set(friend_profiles) != set(by_id):
+		raise ValueError("friend category profile IDs must exactly match population profile IDs")
+	for profile_id, categories in friend_profiles.items():
+		if not isinstance(categories, list) or not 1 <= len(categories) <= 5:
+			raise ValueError(f"profile {profile_id} friend categories must contain one to five categories")
+		if any(not isinstance(item, str) or not item or item != item.strip() for item in categories):
+			raise ValueError(f"profile {profile_id} friend categories must be non-blank trimmed strings")
+		if len(set(categories)) != len(categories):
+			raise ValueError(f"profile {profile_id} friend categories must be unique")
+		by_id[profile_id]["platform_friend_categories"] = list(categories)
 	return [by_id[key] for key in sorted(by_id)], backgrounds, profile_path, background_path
 
 
@@ -418,6 +433,7 @@ def _entity_templates() -> dict[str, Any]:
 				"sea_level_social_experiment:SocialIdentityComponent": {
 					"profile_id": "template_profile",
 					"natural_language_background": "我是社交实验的模板参与者。",
+					"platform_friend_categories": ["同学"],
 					"big_five": {field_name: 0.5 for field_name in BIG_FIVE_FIELDS},
 				},
 			},
@@ -452,6 +468,7 @@ def build_world(profiles: list[dict[str, Any]], backgrounds: dict[str, str], sch
 							"sea_level_social_experiment:SocialIdentityComponent": {
 								"profile_id": profile_id,
 								"natural_language_background": backgrounds[profile_id],
+								"platform_friend_categories": list(profile["platform_friend_categories"]),
 								"big_five": {field_name: float(profile["personality"][field_name]) for field_name in BIG_FIVE_FIELDS},
 							}
 						},
@@ -489,9 +506,11 @@ def _load_background_posts(path: Path) -> tuple[list[dict[str, Any]], list[dict[
 	publisher_ids = {item["account_id"] for item in payload["publishers"]}
 	posts: list[dict[str, Any]] = []
 	for index, raw in enumerate(payload["posts"]):
-		_exact(raw, {"post_id", "account_id", "text", "ranking_topics", "display_hashtags"}, f"background posts[{index}]")
+		_exact(raw, {"post_id", "account_id", "title", "text", "ranking_topics", "display_hashtags"}, f"background posts[{index}]")
 		if raw["account_id"] not in publisher_ids:
 			raise ValueError(f"background posts[{index}] has an unknown publisher")
+		if not isinstance(raw["title"], str) or not raw["title"].strip():
+			raise ValueError(f"background posts[{index}] has no title")
 		if not raw["ranking_topics"] or not raw["display_hashtags"] or len(set(raw["ranking_topics"])) != len(raw["ranking_topics"]):
 			raise ValueError(f"background posts[{index}] has invalid topics or hashtags")
 		posts.append({**raw, "condition_id": "background", "tick": 0})
@@ -523,6 +542,7 @@ def generate(config_path: Path, package_root: Path) -> dict[str, Any]:
 		experimental_post = {
 			"account_id": config["platform"]["institution_account_id"],
 			"post_id": condition["post_id"],
+			"title": condition["title"],
 			"text": condition["text"],
 			"ranking_topics": condition["ranking_topics"],
 			"display_hashtags": condition["display_hashtags"],
@@ -537,6 +557,7 @@ def generate(config_path: Path, package_root: Path) -> dict[str, Any]:
 		"study_config_sha256": _file_sha256(config_path),
 		"profile_input": {"path": profile_path.relative_to(ROOT).as_posix(), "sha256": _file_sha256(profile_path), "count": len(profiles)},
 		"background_input": {"path": background_path.relative_to(ROOT).as_posix(), "sha256": _file_sha256(background_path), "count": len(backgrounds)},
+		"friend_categories_input": {"path": config["population"]["friend_categories_path"], "sha256": _file_sha256((ROOT / config["population"]["friend_categories_path"]).resolve()), "count": len(profiles)},
 		"background_posts_input": {"path": background_catalog_path.relative_to(ROOT).as_posix(), "sha256": _file_sha256(background_catalog_path), "count": len(background_posts)},
 		"population_count": len(profiles),
 		"account_count": len(accounts),

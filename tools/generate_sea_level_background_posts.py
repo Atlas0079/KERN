@@ -26,17 +26,13 @@ SOURCE_CARD_SCHEMA = "sea_level_background_post_source_cards.v1"
 BACKGROUND_POSTS_SCHEMA = "social_background_posts.v1"
 
 PLAN_BUCKETS = (
-	("interest_hobby", 70),
-	("everyday_life", 55),
-	("community_public", 35),
-	("light_public_issue", 25),
-	("loose_social", 15),
+	("interest_hobby", 95),
+	("everyday_life", 80),
+	("loose_social", 25),
 )
 BUCKET_LABELS = {
 	"interest_hobby": "兴趣爱好与个人经验",
 	"everyday_life": "日常生活、家庭、工作、消费或通勤",
-	"community_public": "社区、城市、公共服务、健康或技术社会",
-	"light_public_issue": "轻公共议题或信息转述",
 	"loose_social": "随手记录、求建议、小抱怨或轻量情绪",
 }
 PUBLISHER_NAMES = (
@@ -131,34 +127,18 @@ BUCKET_TOPIC_POOL = {
 		"career_learning",
 		"technology",
 		"fitness",
-		"general_knowledge",
-	),
-	"community_public": (
-		"community",
-		"public_health",
-		"technology_society",
-		"environment",
-		"fitness",
 		"reading",
-		"culture_art",
-		"general_knowledge",
-	),
-	"light_public_issue": (
-		"public_health",
-		"technology_society",
-		"environment",
-		"ecology",
-		"extreme_weather",
-		"general_knowledge",
+		"crafts",
 	),
 	"loose_social": (
-		"general_knowledge",
 		"cooking",
 		"fitness",
-		"community",
 		"career_learning",
 		"technology",
 		"reading",
+		"gardening",
+		"photography",
+		"home_design",
 	),
 }
 SCENE_POOL = {
@@ -174,31 +154,17 @@ SCENE_POOL = {
 		"家里人临时提起一件需要安排的事",
 		"买东西、做预算或整理物品时发现了细节",
 	),
-	"community_public": (
-		"社区或城市里有一个新变化",
-		"公共服务的小流程最近调整了",
-		"附近空间被更多人使用后出现了新问题",
-		"线下服务和手机小程序之间有了新的衔接",
-	),
-	"light_public_issue": (
-		"刷到一条公共议题相关信息后做了简单核查",
-		"身边人讨论天气、健康或环境变化",
-		"看到一个倡议或试点后想到日常执行成本",
-		"信息很多但说法不一，需要给判断留一点余地",
-	),
 	"loose_social": (
 		"随手记录一个不大不小的困扰",
-		"想问问大家有没有类似经验",
 		"今天情绪被一件普通小事带动了一下",
 		"把一个小发现先记下来",
+		"休息时间随便翻到一个生活细节",
 	),
 }
 STYLE_POOL = {
 	"interest_hobby": ("经验分享", "复盘记录", "小技巧", "试用感受"),
-	"everyday_life": ("生活记录", "轻量吐槽", "求建议", "家庭备忘"),
-	"community_public": ("观察记录", "温和讨论", "信息整理", "现场见闻"),
-	"light_public_issue": ("信息核查", "转述见闻", "提醒建议", "谨慎感想"),
-	"loose_social": ("碎碎念", "求建议", "情绪记录", "随手一问"),
+	"everyday_life": ("生活记录", "轻量吐槽", "日常复盘", "家庭备忘"),
+	"loose_social": ("碎碎念", "轻量记录", "情绪记录", "小发现"),
 }
 TONE_POOL = ("平实", "轻微困惑", "有点感慨", "温和提醒", "认真复盘", "带一点自嘲", "谨慎观察")
 
@@ -427,13 +393,15 @@ def _prompt(card: Mapping[str, Any]) -> list[dict[str, str]]:
 
 输出契约：
 1. 只输出 JSON 对象，不输出解释性正文。
-2. 字段必须是 post_id、text、ranking_topics、display_hashtags。
+2. 字段必须是 post_id、title、text、ranking_topics、display_hashtags。
 3. post_id、ranking_topics、display_hashtags 必须原样复制 source card。
-4. text 长度控制在 130-210 个中文字符左右，可以一段或两段，不要超过 230 字。
-5. text 不能写成标题党、新闻通稿、政策宣传或知识百科；要有具体生活场景、轻微个人判断或情绪。
-6. text 不要包含“请点赞/转发/评论”、不要刻意煽动传播。
-7. 不要直接讨论海平面上升；轻公共议题可以涉及天气、健康、环保、技术或社区，但保持日常化。
-8. 如果 author_basis 给出了人物片段，只借用其生活处境和表达气质，不要复制原文，不要暴露 profile_id。
+4. title 是推荐流里显示的标题，12-32 个中文字符，平实概括内容，不要标题党。
+5. text 长度控制在 130-210 个中文字符左右，可以一段或两段，不要超过 230 字。
+6. text 不能写成标题党、新闻通稿、政策宣传或知识百科；要有具体生活场景、轻微个人判断或情绪。
+7. text 不要包含“请点赞/转发/评论”、不要刻意煽动传播。
+8. 不要直接讨论海平面上升。
+9. 如果 author_basis 给出了人物片段，只借用其生活处境和表达气质，不要复制原文，不要暴露 profile_id。
+10. 背景帖只用于提供日常平台语境，不能成为独立传播刺激；不要写公共安全提醒、医疗健康建议、政策通告、辟谣核查、强实用教程、灾害风险、气候环境公共议题、社区治理动员，或明显征集大量评论/转发的提问。
 
 source card：
 {json.dumps(card, ensure_ascii=False, indent=2)}
@@ -544,12 +512,13 @@ def _parse_json_object(text: str) -> dict[str, Any]:
 
 	def _loose_contract_object(candidate: str) -> dict[str, Any] | None:
 		post_id = _loose_string_field(candidate, "post_id")
+		title = _loose_string_field(candidate, "title")
 		body = _loose_string_field(candidate, "text")
 		topics = _array_field(candidate, "ranking_topics")
 		hashtags = _array_field(candidate, "display_hashtags")
-		if post_id is None or body is None or topics is None or hashtags is None:
+		if post_id is None or title is None or body is None or topics is None or hashtags is None:
 			return None
-		return {"post_id": post_id, "text": body, "ranking_topics": topics, "display_hashtags": hashtags}
+		return {"post_id": post_id, "title": title, "text": body, "ranking_topics": topics, "display_hashtags": hashtags}
 
 	raw = str(text or "").strip()
 	if not raw:
@@ -577,18 +546,28 @@ def _parse_json_object(text: str) -> dict[str, Any]:
 	raise ValueError("LLM response did not contain a valid background post JSON object")
 
 
+def _derive_title(text: str, *, max_chars: int = 32) -> str:
+	first_line = re.split(r"[。！？!?；;\n]", str(text or "").strip(), maxsplit=1)[0]
+	first_line = re.sub(r"\s+", "", first_line)
+	return first_line[:max_chars] or "日常生活记录"
+
+
 def _normalize_post(card: Mapping[str, Any], generated: Mapping[str, Any]) -> dict[str, Any]:
-	expected_keys = {"post_id", "text", "ranking_topics", "display_hashtags"}
+	expected_keys = {"post_id", "title", "text", "ranking_topics", "display_hashtags"}
 	if not expected_keys <= set(generated):
 		raise ValueError(f"LLM response must contain {sorted(expected_keys)}")
 	if str(generated["post_id"]) != str(card["post_id"]):
 		raise ValueError("LLM response changed post_id")
+	title = str(generated["title"] or "").strip()
+	title = re.sub(r"\s+", "", title)
+	if not 6 <= len(title) <= 40:
+		raise ValueError(f"title length out of bounds: {len(title)}")
 	text = str(generated["text"] or "").strip()
 	text = re.sub(r"\n{3,}", "\n\n", text)
 	if not 110 <= len(text) <= 260:
 		raise ValueError(f"text length out of bounds: {len(text)}")
 	for forbidden in ("海平面", "仿真实验", "实验任务", "agent", "source card", "profile_id", "仿真"):
-		if forbidden in text:
+		if forbidden in text or forbidden in title:
 			raise ValueError(f"text contains forbidden marker: {forbidden}")
 	if list(map(str, generated["ranking_topics"])) != list(map(str, card["ranking_topics"])):
 		raise ValueError("LLM response changed ranking_topics")
@@ -597,6 +576,7 @@ def _normalize_post(card: Mapping[str, Any], generated: Mapping[str, Any]) -> di
 	return {
 		"post_id": str(card["post_id"]),
 		"account_id": str(card["account_id"]),
+		"title": title,
 		"text": text,
 		"ranking_topics": list(card["ranking_topics"]),
 		"display_hashtags": list(card["display_hashtags"]),
@@ -614,6 +594,7 @@ def _render_deterministic(card: Mapping[str, Any]) -> dict[str, Any]:
 	return {
 		"post_id": str(card["post_id"]),
 		"account_id": str(card["account_id"]),
+		"title": _derive_title(text),
 		"text": text[:220],
 		"ranking_topics": list(card["ranking_topics"]),
 		"display_hashtags": list(card["display_hashtags"]),
@@ -726,6 +707,8 @@ def build_background_catalog(publishers: list[dict[str, Any]], posts: list[dict[
 		seen.add(post_id)
 		if str(post.get("account_id", "") or "") not in publisher_ids:
 			raise ValueError(f"post {post_id} uses an unknown publisher")
+		if not isinstance(post.get("title"), str) or not str(post["title"]).strip():
+			raise ValueError(f"post {post_id} has no title")
 		if not isinstance(post.get("ranking_topics"), list) or not post["ranking_topics"]:
 			raise ValueError(f"post {post_id} has no ranking_topics")
 		if not isinstance(post.get("display_hashtags"), list) or not post["display_hashtags"]:

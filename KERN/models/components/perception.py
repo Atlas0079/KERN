@@ -8,6 +8,10 @@ from typing import Any
 @dataclass
 class PerceptionComponent:
 	enabled: bool = True
+	# Inbox 暂存世界可提供给该实体的观察输入，不代表实体已经注意或记住了它们。
+	# 各工作流自行决定哪些观察进入记忆；已处理但未写入记忆的观察表示被“忽视”。
+	# 因此保留这层中转，不把所有可感知事件自动写入 MemoryComponent。
+	# 决策瞬间的当前环境另行构造上下文，不与这里待处理的过去观察混为一谈。
 	interaction_inbox: list[dict[str, Any]] = field(default_factory=list)
 	record_inbox: list[dict[str, Any]] = field(default_factory=list)
 

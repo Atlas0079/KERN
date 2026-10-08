@@ -27,6 +27,7 @@ class SocialPackageEffectTests(unittest.TestCase):
 					"posts": [{
 						"account_id": "author",
 						"post_id": "risk_post",
+						"title": "Risk title",
 						"text": "Risk information",
 						"ranking_topics": ["risk"],
 						"display_hashtags": ["风险信息"],
@@ -90,12 +91,21 @@ class SocialPackageEffectTests(unittest.TestCase):
 			loaded, adapter, ws, executor = self._runtime_parts(temp_dir)
 			self.assertTrue({
 				"social_propagation:RefreshFeed",
+				"social_propagation:OpenPostDetail",
+				"social_propagation:BackToFeed",
 				"social_propagation:RepostVisiblePost",
 				"social_propagation:LikeVisiblePost",
 				"social_propagation:CommentOnVisiblePost",
 				"social_propagation:ObserveMetrics",
 			}.issubset(loaded.effect_catalog.effect_ids()))
-			self.assertTrue({"social_browse_feed", "social_repost_visible_post", "social_like_visible_post", "social_comment_visible_post"}.issubset(loaded.data_bundle.recipes))
+			self.assertTrue({
+				"social_browse_feed",
+				"social_open_post_detail",
+				"social_back_to_feed",
+				"social_repost_visible_post",
+				"social_like_visible_post",
+				"social_comment_visible_post",
+			}.issubset(loaded.data_bundle.recipes))
 
 			context = {"self_id": "agent", "target_id": "phone"}
 			executor.execute_bundle(ws, self._record_bundle(self._effect("RefreshFeed", limit=8)), context)
@@ -105,16 +115,24 @@ class SocialPackageEffectTests(unittest.TestCase):
 			self.assertNotIn("score", screen.feed_items[0])
 			self.assertNotIn("ranking_topics", screen.feed_items[0])
 			self.assertNotIn("condition_id", screen.feed_items[0])
+			self.assertNotIn("text", screen.feed_items[0])
+			self.assertEqual(screen.feed_items[0]["title"], "Risk title")
 			self.assertEqual(screen.feed_items[0]["display_hashtags"], ["风险信息"])
 			self.assertIn("exposure_id", screen.feed_items[0])
 			self.assertEqual(screen.feed_items[0]["feed_session_id"], screen.feed_session_id)
 			self.assertEqual(len(perception.record_inbox), 1)
-			self.assertEqual(perception.record_inbox[0]["record_type"], "social_feed_view")
+			self.assertEqual(perception.record_inbox[0]["record_type"], "effect_record")
 			self.assertIn("feed_session_id", perception.record_inbox[0]["content"])
+
+			executor.execute_bundle(ws, self._record_bundle(self._effect("OpenPostDetail", post_id="risk_post")), context)
+			self.assertEqual(screen.view, "post_detail")
+			self.assertEqual(screen.current_post["text"], "Risk information")
+			self.assertEqual(screen.current_post["title"], "Risk title")
 
 			executor.execute_bundle(ws, self._record_bundle(self._effect("LikeVisiblePost", post_id="risk_post")), context)
 			executor.execute_bundle(ws, self._record_bundle(self._effect("CommentOnVisiblePost", post_id="risk_post", text="值得关注")), context)
 			executor.execute_bundle(ws, self._record_bundle(self._effect("RepostVisiblePost", post_id="risk_post", text="请扩散")), context)
+			executor.execute_bundle(ws, self._record_bundle(self._effect("BackToFeed")), context)
 
 			self.assertEqual(adapter.platform.metrics(), {
 				"cumulative_feed_sessions": 1,
@@ -127,9 +145,14 @@ class SocialPackageEffectTests(unittest.TestCase):
 			self.assertEqual(adapter.platform.like_records("reader")[0]["source_exposure_id"], screen.feed_items[0]["exposure_id"])
 			self.assertTrue(screen.feed_items[0]["viewer_has_liked"])
 			self.assertTrue(screen.feed_items[0]["viewer_has_reposted"])
-			self.assertEqual([item["record_type"] for item in perception.record_inbox], ["social_feed_view", "social_action", "social_action", "social_action"])
+			self.assertEqual(
+				[item["record_type"] for item in perception.record_inbox],
+				["effect_record"] * 6,
+			)
 			self.assertTrue(any("值得关注" in item["content"] for item in perception.record_inbox))
 			self.assertTrue(any("请扩散" in item["content"] for item in perception.record_inbox))
+			self.assertEqual(screen.view, "feed")
+			self.assertIsNone(screen.current_post)
 			adapter.close({})
 
 	def test_refresh_session_and_screen_roll_back_together(self) -> None:
@@ -160,6 +183,7 @@ class SocialPackageEffectTests(unittest.TestCase):
 			_loaded, adapter, ws, executor = self._runtime_parts(temp_dir)
 			context = {"self_id": "agent", "target_id": "phone"}
 			executor.execute_bundle(ws, {"effects": [self._effect("RefreshFeed", limit=8)]}, context)
+			executor.execute_bundle(ws, {"effects": [self._effect("OpenPostDetail", post_id="risk_post")]}, context)
 			screen = ws.get_entity_by_id("phone").get_component("social_propagation:ScreenComponent")
 			before_status = screen.status_text
 
@@ -183,7 +207,12 @@ class SocialPackageEffectTests(unittest.TestCase):
 			_loaded, adapter, ws, executor = self._runtime_parts(temp_dir)
 			context = {"self_id": "agent", "target_id": "phone"}
 			executor.execute_bundle(ws, {"effects": [self._effect("RefreshFeed", limit=8)]}, context)
+			with self.assertRaisesRegex(KernFailure, "detail"):
+				executor.execute_bundle(ws, {"effects": [self._effect("LikeVisiblePost", post_id="risk_post")]}, context)
 			with self.assertRaisesRegex(KernFailure, "not visible"):
+				executor.execute_bundle(ws, {"effects": [self._effect("OpenPostDetail", post_id="not_on_page")]}, context)
+			executor.execute_bundle(ws, {"effects": [self._effect("OpenPostDetail", post_id="risk_post")]}, context)
+			with self.assertRaisesRegex(KernFailure, "not open"):
 				executor.execute_bundle(ws, {"effects": [self._effect("LikeVisiblePost", post_id="not_on_page")]}, context)
 			ws.game_time.total_ticks = 1
 			with self.assertRaisesRegex(KernFailure, "stale"):
@@ -197,6 +226,7 @@ class SocialPackageEffectTests(unittest.TestCase):
 			loaded, adapter, ws, executor = self._runtime_parts(temp_dir)
 			context = {"self_id": "agent", "target_id": "phone"}
 			executor.execute_bundle(ws, {"effects": [self._effect("RefreshFeed", limit=8)]}, context)
+			executor.execute_bundle(ws, {"effects": [self._effect("OpenPostDetail", post_id="risk_post")]}, context)
 			executor.execute_bundle(ws, {"effects": [self._effect("LikeVisiblePost", post_id="risk_post")]}, context)
 			source_root = Path(temp_dir) / "checkpoints"
 			adapter.save_checkpoint({"run_id": "run_01", "tick": 0})
@@ -220,6 +250,7 @@ class SocialPackageEffectTests(unittest.TestCase):
 			self.assertEqual(restored.platform.metrics()["cumulative_exposures"], 1)
 			self.assertEqual(restored.platform.metrics()["cumulative_likes"], 1)
 			restored.close({})
+
 
 
 if __name__ == "__main__":

@@ -7,11 +7,9 @@ Agent workflow layer:
 from .contracts import ActionFeedback, EndTurn, SubmitAction, TurnFrame, TurnStart
 from .dialogue import DialogueFrame, DialoguePolicy, Pass, Speak
 from .registry import WorkflowRegistry
-from .social_platform import ActorPlatformBinding, SocialActivationSchedule, SocialPlatformWorkflow
 
 __all__ = [
 	"ActionFeedback",
-	"ActorPlatformBinding",
 	"DialogueFrame",
 	"DialoguePolicy",
 	"EndTurn",
@@ -20,8 +18,6 @@ __all__ = [
 	"SubmitAction",
 	"TurnFrame",
 	"TurnStart",
-	"SocialActivationSchedule",
-	"SocialPlatformWorkflow",
 	"WorkflowRegistry",
 ]
 

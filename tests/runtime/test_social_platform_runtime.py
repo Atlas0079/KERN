@@ -20,6 +20,7 @@ def _post(
 	return {
 		"account_id": author,
 		"post_id": post_id,
+		"title": f"Risk title {post_id}",
 		"text": f"Risk information {post_id}",
 		"ranking_topics": list(ranking_topics or ["risk"]),
 		"display_hashtags": list(display_hashtags or ["风险信息"]),
@@ -82,6 +83,8 @@ class SQLiteSocialPlatformTests(unittest.TestCase):
 			feed = platform.recommend_feed("reader", tick=0, limit=5)
 
 			self.assertEqual([item["post_id"] for item in feed], ["risk_post"])
+			self.assertEqual(feed[0]["title"], "Risk title risk_post")
+			self.assertNotIn("text", feed[0])
 			self.assertEqual(feed[0]["display_hashtags"], ["风险信息"])
 			self.assertNotIn("ranking_topics", feed[0])
 			self.assertNotIn("condition_id", feed[0])
@@ -89,7 +92,7 @@ class SQLiteSocialPlatformTests(unittest.TestCase):
 
 	def test_old_tags_post_contract_is_rejected(self) -> None:
 		seed = _seed()
-		seed["posts"] = [{"account_id": "author", "post_id": "old", "text": "old", "tags": ["risk"], "tick": 0}]
+		seed["posts"] = [{"account_id": "author", "post_id": "old", "title": "Old", "text": "old", "tags": ["risk"], "tick": 0}]
 		with tempfile.TemporaryDirectory() as temp_dir:
 			platform = SQLiteSocialPlatform(Path(temp_dir) / "platform.sqlite")
 			with self.assertRaisesRegex(ValueError, "ranking_topics"):
@@ -109,6 +112,8 @@ class SQLiteSocialPlatformTests(unittest.TestCase):
 			self.assertEqual(platform.metrics()["cumulative_feed_sessions"], 1)
 			self.assertEqual(platform.metrics()["cumulative_exposures"], 1)
 			self.assertEqual(platform.exposure_records("reader")[0]["feed_session_id"], 1)
+
+
 
 	def test_empty_page_still_records_feed_session(self) -> None:
 		seed = _seed()

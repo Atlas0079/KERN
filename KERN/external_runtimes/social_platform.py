@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 
-SCHEMA_VERSION = "social_platform.v3"
+SCHEMA_VERSION = "social_platform.v4"
 MAX_FEED_ITEMS = 8
 MAX_REPOST_ITEMS = 3
 MAX_HOT_ITEMS = 3
@@ -203,6 +203,7 @@ class SQLiteSocialPlatform:
 				CREATE TABLE IF NOT EXISTS posts (
 					post_id TEXT PRIMARY KEY,
 					author_id TEXT NOT NULL REFERENCES accounts(account_id),
+					title TEXT NOT NULL,
 					text TEXT NOT NULL,
 					condition_id TEXT NOT NULL,
 					created_tick INTEGER NOT NULL
@@ -376,8 +377,8 @@ class SQLiteSocialPlatform:
 					conn.execute("INSERT INTO account_interests(account_id, topic, weight) VALUES(?, ?, ?)", (row["account_id"], topic, weight))
 			for row in post_rows:
 				conn.execute(
-					"INSERT INTO posts(post_id, author_id, text, condition_id, created_tick) VALUES(?, ?, ?, ?, ?)",
-					(row["post_id"], row["author_id"], row["text"], row["condition_id"], row["tick"]),
+					"INSERT INTO posts(post_id, author_id, title, text, condition_id, created_tick) VALUES(?, ?, ?, ?, ?, ?)",
+					(row["post_id"], row["author_id"], row["title"], row["text"], row["condition_id"], row["tick"]),
 				)
 				for topic in row["ranking_topics"]:
 					conn.execute("INSERT INTO post_ranking_topics(post_id, topic) VALUES(?, ?)", (row["post_id"], topic))
@@ -534,7 +535,7 @@ class SQLiteSocialPlatform:
 			"created_tick": int(post["created_tick"]),
 			"reposted_by_account_id": reposter_id,
 			"reposted_tick": reposted_tick,
-			"text": str(post["text"]),
+			"title": str(post["title"]),
 			"display_hashtags": list(hashtags),
 			"repost_count": repost_counts.get(post_id, 0),
 			"like_count": like_counts.get(post_id, 0),
@@ -578,6 +579,54 @@ class SQLiteSocialPlatform:
 			cursor = conn.execute("INSERT INTO comments(post_id, author_id, source_exposure_id, text, created_tick) VALUES(?, ?, ?, ?, ?)", (post, account, int(source_exposure_id), comment_text, current_tick))
 			return {"comment_id": int(cursor.lastrowid), "author_id": account, "post_id": post, "source_exposure_id": int(source_exposure_id), "text": comment_text, "tick": current_tick}
 
+	def post_detail(self, account_id: str, post_id: str, *, source_exposure_id: int, tick: int, recent_comments_limit: int = 5) -> dict[str, Any]:
+		account, post, current_tick = self._interaction_context(account_id, post_id, source_exposure_id, tick)
+		limit = max(0, min(int(recent_comments_limit), 20))
+		with self._read_db() as conn:
+			exposure = self._require_source_exposure(conn, int(source_exposure_id), account, post, current_tick)
+			post_row = self._require_post(conn, post)
+			recent_comments = [
+				{
+					"comment_id": int(row["comment_id"]),
+					"author_id": str(row["author_id"]),
+					"text": str(row["text"]),
+					"created_tick": int(row["created_tick"]),
+				}
+				for row in conn.execute(
+					"""
+					SELECT comment_id, author_id, text, created_tick
+					FROM comments
+					WHERE post_id=? AND created_tick<=?
+					ORDER BY created_tick DESC, comment_id DESC
+					LIMIT ?
+					""",
+					(post, current_tick, limit),
+				)
+			]
+			return {
+				"feed_session_id": int(exposure["feed_session_id"]),
+				"exposure_id": int(exposure["exposure_id"]),
+				"feed_item_kind": str(exposure["feed_item_kind"]),
+				"post_id": post,
+				"original_author_id": str(post_row["author_id"]),
+				"created_tick": int(post_row["created_tick"]),
+				"reposted_by_account_id": exposure["reposted_by_account_id"],
+				"reposted_tick": exposure["reposted_tick"],
+				"title": str(post_row["title"]),
+				"text": str(post_row["text"]),
+				"display_hashtags": self._display_hashtags(conn, post),
+				"repost_count": int(conn.execute("SELECT COUNT(*) FROM reposts WHERE post_id=?", (post,)).fetchone()[0]),
+				"like_count": int(conn.execute("SELECT COUNT(*) FROM likes WHERE post_id=?", (post,)).fetchone()[0]),
+				"comment_count": int(conn.execute("SELECT COUNT(*) FROM comments WHERE post_id=?", (post,)).fetchone()[0]),
+				"viewer_has_liked": conn.execute("SELECT 1 FROM likes WHERE account_id=? AND post_id=?", (account, post)).fetchone() is not None,
+				"viewer_has_reposted": conn.execute("SELECT 1 FROM reposts WHERE account_id=? AND post_id=?", (account, post)).fetchone() is not None,
+				"source_kind": str(exposure["source_kind"]),
+				"source_account_id": str(exposure["source_account_id"]),
+				"section": str(exposure["section"]),
+				"position": int(exposure["position"]),
+				"recent_comments": recent_comments,
+			}
+
 	def feed_session_for(self, account_id: str, tick: int) -> dict[str, Any] | None:
 		account = self._clean(account_id, "account_id")
 		with self._read_db() as conn:
@@ -611,7 +660,7 @@ class SQLiteSocialPlatform:
 			"created_tick": int(post["created_tick"]),
 			"reposted_by_account_id": exposure["reposted_by_account_id"],
 			"reposted_tick": exposure["reposted_tick"],
-			"text": str(post["text"]),
+			"title": str(post["title"]),
 			"display_hashtags": self._display_hashtags(conn, str(exposure["post_id"])),
 			"repost_count": int(exposure["repost_count"]),
 			"like_count": int(exposure["like_count"]),
@@ -720,7 +769,7 @@ class SQLiteSocialPlatform:
 		}
 
 	def _post_row(self, raw: Any, index: int) -> dict[str, Any]:
-		expected = {"account_id", "post_id", "text", "ranking_topics", "display_hashtags", "condition_id", "tick"}
+		expected = {"account_id", "post_id", "title", "text", "ranking_topics", "display_hashtags", "condition_id", "tick"}
 		if not isinstance(raw, dict) or set(raw) != expected:
 			raise ValueError(f"posts[{index}] must contain exactly {sorted(expected)}")
 		topics = self._string_array(raw["ranking_topics"], f"posts[{index}].ranking_topics")
@@ -728,6 +777,7 @@ class SQLiteSocialPlatform:
 		return {
 			"author_id": self._clean(raw["account_id"], f"posts[{index}].account_id"),
 			"post_id": self._clean(raw["post_id"], f"posts[{index}].post_id"),
+			"title": self._clean(raw["title"], f"posts[{index}].title"),
 			"text": self._clean(raw["text"], f"posts[{index}].text"),
 			"ranking_topics": topics,
 			"display_hashtags": hashtags,

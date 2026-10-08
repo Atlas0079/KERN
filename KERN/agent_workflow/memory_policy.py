@@ -44,18 +44,13 @@ def _build_entities_index(full_ws_view: dict[str, Any]) -> dict[str, dict[str, A
 
 def _record_to_memory_entry(actor_id: str, item: dict[str, Any]) -> dict[str, Any]:
 	record_type = _safe_str(item.get("record_type")).strip() or "agent_record"
-	importance = 0.7
-	if record_type == "social_action":
-		importance = 0.8
-	elif record_type == "social_feed_view":
-		importance = 0.65
 	content = _safe_str(item.get("content")).strip()
 	return {
 		"tick": int(item.get("tick", 0) or 0),
 		"time_str": _safe_str(item.get("time_str")),
 		"type": "agent_record",
 		"topic": record_type,
-		"importance": float(importance),
+		"importance": 0.7,
 		"location_id": _safe_str(item.get("location_id")),
 		"actor_id": _safe_str(item.get("actor_id")) or _safe_str(actor_id),
 		"target_id": _safe_str(item.get("target_id")),

@@ -17,6 +17,7 @@ class SocialIdentityComponent:
 
 	profile_id: str
 	natural_language_background: str
+	platform_friend_categories: list[str]
 	big_five: dict[str, float] = field(default_factory=dict)
 
 	def __post_init__(self) -> None:
@@ -26,6 +27,14 @@ class SocialIdentityComponent:
 			raise ValueError("social identity natural_language_background must be non-blank")
 		if "我" not in self.natural_language_background:
 			raise ValueError("social identity natural_language_background must use first-person voice")
+		categories = self.platform_friend_categories
+		if not isinstance(categories, list) or not 1 <= len(categories) <= 5:
+			raise ValueError("social identity platform_friend_categories must contain one to five categories")
+		if any(not isinstance(item, str) or not item or item != item.strip() for item in categories):
+			raise ValueError("social identity friend categories must be non-blank trimmed strings")
+		if len(set(categories)) != len(categories):
+			raise ValueError("social identity friend categories must be unique")
+		self.platform_friend_categories = list(categories)
 		if not isinstance(self.big_five, dict) or set(self.big_five) != BIG_FIVE_FIELDS:
 			raise ValueError("social identity big_five must contain exactly five dimensions")
 		normalized: dict[str, float] = {}

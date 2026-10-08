@@ -91,13 +91,14 @@ class SeaLevelSocialExperimentGenerationTests(unittest.TestCase):
 		self.assertEqual(left["ranking_topics"], ["climate_risk", "sea_level"])
 		self.assertEqual(left["ranking_topics"], right["ranking_topics"])
 		self.assertNotEqual(left["condition_id"], right["condition_id"])
+		self.assertNotEqual(left["title"], right["title"])
 		self.assertNotEqual(left["text"], right["text"])
 		self.assertNotEqual(left["display_hashtags"], right["display_hashtags"])
 		self.assertEqual(len(consequence["accounts"]), 341)
 		self.assertEqual(len(consequence["posts"]), 201)
 		self.assertEqual(sum(row["followee_id"] == "earth_voice" for row in consequence["follows"]), 24)
 
-	def test_generated_seeds_are_accepted_by_social_platform_v3(self) -> None:
+	def test_generated_seeds_are_accepted_by_social_platform_v4(self) -> None:
 		import tempfile
 
 		for condition in ("sea_level_consequence_focus", "sea_level_solution_focus"):
@@ -127,17 +128,17 @@ class SeaLevelSocialExperimentGenerationTests(unittest.TestCase):
 		self.assertEqual(len(left["publishers"]), 40)
 		self.assertEqual(len(left["source_cards"]), POST_COUNT)
 		self.assertEqual(left["generation"]["bucket_counts"], {
-			"interest_hobby": 70,
-			"everyday_life": 55,
-			"community_public": 35,
-			"light_public_issue": 25,
-			"loose_social": 15,
+			"interest_hobby": 95,
+			"everyday_life": 80,
+			"loose_social": 25,
 		})
+		self.assertEqual({card["bucket"] for card in left["source_cards"]}, {"interest_hobby", "everyday_life", "loose_social"})
 		self.assertTrue(all(card["author_basis"]["kind"] == "profile_inspired_background_user" for card in left["source_cards"]))
 		posts = [
 			{
 				"post_id": card["post_id"],
 				"account_id": card["account_id"],
+				"title": "普通背景帖标题",
 				"text": "这是一条用于测试的普通背景帖，围绕日常生活里的具体小事展开，语气平实，没有传播动员，也不讨论海平面。",
 				"ranking_topics": card["ranking_topics"],
 				"display_hashtags": card["display_hashtags"],

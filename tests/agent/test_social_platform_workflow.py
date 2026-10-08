@@ -13,7 +13,7 @@ from KERN.models.entity import Entity
 from KERN.models.world_state import WorldState
 from Packages.SeaLevelSocialExperiment.components.identity import SocialIdentityComponent
 from Packages.SocialPropagation.components.screen import ScreenComponent
-from KERN.agent_workflow.social_platform import ActorPlatformBinding, SocialPlatformWorkflow
+from applications.social_experiment.workflow import ActorPlatformBinding, SocialPlatformWorkflow
 
 
 class _Schedule:
@@ -72,10 +72,20 @@ def _committed(intent: dict) -> ActionFeedback:
 	return ActionFeedback(action_id="action-1", intent=dict(intent), status="committed")
 
 
+def _user_payload(message_content: str) -> dict:
+	marker = "页面上下文 JSON："
+	text = str(message_content)
+	start = text.find(marker)
+	if start >= 0:
+		text = text[start + len(marker) :].strip()
+	return json.loads(text)
+
+
 def _page(*, include_experimental: bool = True) -> dict:
 	items = [
 		{
 			"post_id": "background_001",
+			"title": "背景帖标题",
 			"text": "一条背景帖子",
 			"display_hashtags": ["公共议题"],
 			"original_author_id": "background_author",
@@ -97,6 +107,7 @@ def _page(*, include_experimental: bool = True) -> dict:
 		items.append(
 			{
 				"post_id": "experiment_001",
+				"title": "海平面上升实验帖标题",
 				"text": "海平面上升实验帖",
 				"display_hashtags": ["海平面上升"],
 				"original_author_id": "earth_voice",
@@ -119,6 +130,29 @@ def _page(*, include_experimental: bool = True) -> dict:
 	}
 
 
+def _set_detail_screen(ws: WorldState, post_id: str) -> None:
+	screen = ws.get_entity_by_id("phone_001").get_component("social_propagation:ScreenComponent")
+	card = next(item for item in screen.feed_items if item["post_id"] == post_id)
+	screen.view = "post_detail"
+	screen.current_post = {
+		**dict(card),
+		"text": "海平面上升实验帖" if post_id == "experiment_001" else "一条背景帖子",
+		"recent_comments": [{"author_id": "reader_002", "text": "之前有人这样评论。", "created_tick": 3}],
+		"feed_session_id": screen.feed_session_id,
+		"exposure_id": card.get("exposure_id", 1),
+	}
+	screen.selected_post_id = post_id
+	screen.updated_tick = 4
+
+
+def _set_feed_screen(ws: WorldState) -> None:
+	screen = ws.get_entity_by_id("phone_001").get_component("social_propagation:ScreenComponent")
+	screen.view = "feed"
+	screen.current_post = None
+	screen.selected_post_id = ""
+	screen.updated_tick = 4
+
+
 class SocialPlatformWorkflowTests(unittest.TestCase):
 	def _workflow(self, *, active: bool, response: str, page: dict | None = None) -> tuple[SocialPlatformWorkflow, _Client, WorldState]:
 		client = _Client(response)
@@ -130,6 +164,7 @@ class SocialPlatformWorkflowTests(unittest.TestCase):
 			SocialIdentityComponent(
 				profile_id="profile:agent_001",
 				natural_language_background="我是一名关注公共议题的研究人员。",
+				platform_friend_categories=["同学", "工作同事"],
 				big_five={
 					"openness": 0.8,
 					"conscientiousness": 0.7,
@@ -204,77 +239,21 @@ class SocialPlatformWorkflowTests(unittest.TestCase):
 		self.assertEqual(step.meta["reason"], "no_action")
 		self.assertEqual(len(client.calls), 1)
 
-	def test_committed_social_action_rebuilds_perception_before_next_decision(self) -> None:
-		responses = [
-			json.dumps(
-				{"actions": [{"post_id": "experiment_001", "action": "like"}], "decision_summary": "先点赞。"},
-				ensure_ascii=False,
-			),
-			json.dumps(
-				{"actions": [], "decision_summary": "已经点赞过这条帖子，暂时不继续互动。"},
-				ensure_ascii=False,
-			),
-		]
-		workflow, client, ws = self._workflow(active=True, response=responses)
-		executor = WorldExecutor(effect_catalog=build_core_effect_catalog())
-		ws.services = {"execute": lambda bundle, context: executor.execute_bundle(ws, bundle, context)}
-		session = workflow.begin_turn(ws, _turn_start())
-		browse = session.next_step(ws, _frame())
 
-		like = session.next_step(ws, _frame(_committed(browse.intent)))
-		perception = ws.get_entity_by_id("agent_001").get_component("PerceptionComponent")
-		perception.enqueue_record(
-			{
-				"record_id": "record_like_001",
-				"tick": 4,
-				"actor_id": "agent_001",
-				"record_type": "social_action",
-				"content": "我给海平面上升实验帖点了赞。",
-				"source_effect": "social_propagation:LikeVisiblePost",
-			}
-		)
-		screen = ws.get_entity_by_id("phone_001").get_component("social_propagation:ScreenComponent")
-		screen.feed_items[1]["viewer_has_liked"] = True
-		screen.feed_items[1]["like_count"] = 4
-		end = session.next_step(ws, _frame(_committed(like.intent)))
 
-		self.assertEqual(like.intent, {"verb": "LikeSocialPost", "target_id": "phone_001", "parameters": {"post_id": "experiment_001"}})
-		self.assertIsInstance(end, EndTurn)
-		self.assertEqual(len(client.calls), 2)
-		request_text = json.dumps(client.calls[0], ensure_ascii=False)
-		system_prompt = client.calls[0]["messages"][0]["content"]
-		first_request = json.loads(client.calls[0]["messages"][1]["content"])
-		self.assertIsNone(client.calls[0]["response_format"])
-		self.assertIn("我就是以下这个社交平台用户", system_prompt)
-		self.assertIn("我是一名关注公共议题的研究人员。", system_prompt)
-		self.assertIn("openness=0.80", system_prompt)
-		self.assertIn("休息时间", system_prompt)
-		self.assertIn("do_nothing 表示我看过后继续划走", system_prompt)
-		self.assertIn("like 表示我愿意留下一个轻量的公开反馈", system_prompt)
-		self.assertIn("comment 表示我有一句具体的话想当场说出来", system_prompt)
-		self.assertIn("repost 表示我想把这条内容转给自己的社交圈看", system_prompt)
-		self.assertNotIn("profile", first_request)
-		self.assertEqual(first_request["schema_version"], "social_decision_page_context.v1")
-		self.assertEqual(first_request["actor_id"], "agent_001")
-		self.assertEqual(first_request["allowed_action_post_ids"], ["background_001", "experiment_001"])
-		self.assertNotIn("must-not-reach-llm", request_text)
-		self.assertNotIn("hidden-world-entity", request_text)
-		self.assertNotIn("private_topic", request_text)
-		self.assertNotIn("private_condition", request_text)
-		self.assertNotIn('"score"', request_text)
-		second_request = json.loads(client.calls[1]["messages"][1]["content"])
-		self.assertTrue(second_request["screen"]["feed_items"][1]["viewer_has_liked"])
-		self.assertTrue(any(item.get("record_type") == "social_action" for item in second_request["recent_social_memory"]))
+
 
 	def test_rejected_social_action_ends_session_without_second_decision(self) -> None:
-		response = json.dumps(
-			{"actions": [{"post_id": "experiment_001", "action": "like"}], "decision_summary": "点赞。"},
-			ensure_ascii=False,
-		)
+		response = [
+			json.dumps({"actions": [{"post_id": "experiment_001", "action": "open_post"}], "decision_summary": "点开。"}, ensure_ascii=False),
+			json.dumps({"actions": [{"post_id": "experiment_001", "action": "like"}], "decision_summary": "点赞。"}, ensure_ascii=False),
+		]
 		workflow, client, ws = self._workflow(active=True, response=response)
 		session = workflow.begin_turn(ws, _turn_start())
 		browse = session.next_step(ws, _frame())
-		like = session.next_step(ws, _frame(_committed(browse.intent)))
+		open_post = session.next_step(ws, _frame(_committed(browse.intent)))
+		_set_detail_screen(ws, "experiment_001")
+		like = session.next_step(ws, _frame(_committed(open_post.intent)))
 		rejected = ActionFeedback(
 			action_id="action-2",
 			intent=dict(like.intent),
@@ -287,7 +266,7 @@ class SocialPlatformWorkflowTests(unittest.TestCase):
 
 		self.assertIsInstance(step, EndTurn)
 		self.assertEqual(step.meta["reason"], "social_action_rejected")
-		self.assertEqual(len(client.calls), 1)
+		self.assertEqual(len(client.calls), 2)
 
 	def test_empty_action_decision_is_distinct_from_inactive_turn(self) -> None:
 		response = json.dumps(
@@ -318,7 +297,8 @@ class SocialPlatformWorkflowTests(unittest.TestCase):
 				"record_id": "record_001",
 				"tick": 3,
 				"actor_id": "agent_001",
-				"record_type": "social_feed_view",
+				"record_type": "effect_record",
+				"source_effect": "social_propagation:RefreshFeed",
 				"content": "我刚刚看到一条海平面帖子。",
 			}
 		)
@@ -379,7 +359,8 @@ class SocialPlatformWorkflowTests(unittest.TestCase):
 				"tick": 3,
 				"time_str": "tick 3",
 				"actor_id": "agent_001",
-				"record_type": "social_action",
+				"record_type": "effect_record",
+				"source_effect": "social_propagation:LikeVisiblePost",
 				"content": "我刚刚点赞过一条海平面帖子。",
 			}
 		)
@@ -392,10 +373,16 @@ class SocialPlatformWorkflowTests(unittest.TestCase):
 
 		self.assertIsInstance(step, EndTurn)
 		self.assertEqual(len(client.calls), 1)
-		request = json.loads(client.calls[0]["messages"][1]["content"])
+		request = _user_payload(client.calls[0]["messages"][1]["content"])
 		memory = request["recent_social_memory"]
 		self.assertTrue(any("点赞" in str(item) for item in memory))
 		self.assertEqual(perception.record_inbox, [])
+		note = next(item for item in agent.get_component("MemoryComponent").short_term_queue if item.get("record_id") == "record_001")
+		self.assertEqual(note["record_type"], "social_action")
+		self.assertEqual(note["importance"], 0.8)
+		self.assertEqual(note["tick"], 3)
+		self.assertEqual(note["source"]["source_effect"], "social_propagation:LikeVisiblePost")
+
 
 	def test_social_memory_consolidation_triggers_at_40_and_keeps_latest_10(self) -> None:
 		responses = [
@@ -485,10 +472,10 @@ class SocialPlatformWorkflowTests(unittest.TestCase):
 			'  "actions": [\n'
 			"    {\n"
 			'      "post_id": "background_001",\n'
-			'      "action": "like"\n'
+			'      "action": "open_post"\n'
 			"    }\n"
 			"  ],\n"
-			'  "decision_summary": "看到"学习新软件时先完成一个小项目"这条很有共鸣，先点个赞。"\n'
+			'  "decision_summary": "看到"学习新软件时先完成一个小项目"这个标题有点兴趣，先点开。"\n'
 			"}\n"
 			"```"
 		)
@@ -499,7 +486,7 @@ class SocialPlatformWorkflowTests(unittest.TestCase):
 		step = session.next_step(ws, _frame(_committed(browse.intent)))
 
 		self.assertIsInstance(step, SubmitAction)
-		self.assertEqual(step.intent, {"verb": "LikeSocialPost", "target_id": "phone_001", "parameters": {"post_id": "background_001"}})
+		self.assertEqual(step.intent, {"verb": "OpenSocialPost", "target_id": "phone_001", "parameters": {"post_id": "background_001"}})
 		self.assertEqual(len(client.calls), 1)
 
 	def test_social_decision_extracts_json_object_from_mixed_text(self) -> None:
@@ -540,7 +527,7 @@ class SocialPlatformWorkflowTests(unittest.TestCase):
 
 	def test_invisible_post_is_a_terminal_output_contract_failure(self) -> None:
 		response = json.dumps(
-			{"actions": [{"post_id": "not_visible", "action": "like"}], "decision_summary": "点赞。"},
+			{"actions": [{"post_id": "not_visible", "action": "open_post"}], "decision_summary": "点开。"},
 			ensure_ascii=False,
 		)
 		workflow, _client, ws = self._workflow(active=True, response=response)

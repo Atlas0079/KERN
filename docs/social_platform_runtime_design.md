@@ -86,14 +86,24 @@ pilot 后如需校准，应修改 study config 并重新生成 disposable 数据
 
 ### 推荐近似
 
-采用可解释的类微博双通道近似，不声称复刻任何商业平台的私有算法：
+采用可解释的混合推荐，不声称复刻任何商业平台的私有算法：
 
-1. 关注传播区最多 3 张卡片，候选来自我所关注账号在此前 tick 的转发；
-2. 普通推荐区补足页面至最多 8 张，候选来自帖子主题兴趣、是否关注作者、新鲜度和
-   此前 tick 的累计转发量；
+1. 推荐策略混合关注转发、兴趣、热门和探索四个通道；关注转发与热门各最多 3 张，
+   页面总计最多 8 张；
+2. 普通推荐分数包含主题兴趣、是否关注作者、新鲜度和此前 tick 的累计转发量；
+   热门通道使用转发、评论与点赞的互动分数；
 3. 同一页内同一原帖只出现一次，已曝光帖子可重复出现但得分固定为 0；
-4. 点赞和评论数量作为公开信号显示，但第一版不参与排名；
+4. 真实点赞、评论和转发数量作为公开信号显示；
 5. 同一 tick 的所有推荐只读取 tick 开始前已经存在的互动事实。
+
+海平面实验额外采用背景帖传播控制，完整实验解释见 `social_platform_experiment_plan.md`。
+SQLite adapter 的 `propagating_post_ids` 选项指定允许转发分发及互动加权的帖子。
+Package 内的 `ExperimentalFeedRecommender` 复用上述推荐接口，在选页前移除其他帖子的
+转发候选，重建其不含转发加权的普通推荐分数，并将热门互动分数置零。已曝光背景帖的
+普通分数仍为零。筛选发生在选页前，空缺由现有策略补足，不在生成页面后删除卡片。
+真实互动记录、公开计数、是否已互动字段不被清零。该选项未配置时使用普通推荐策略；
+配置时必须是非空、无重复、无空白且存在于 seed 中的帖子 ID 列表。策略配置进入现有
+runtime identity，恢复时沿用既有 identity 校验，不兼容旧实验身份。
 
 账号推荐兴趣只映射结构化画像中明确采样的科学主题和兴趣事实。没有相关事实的账号
 保留低权重通用知识主题，不补写“媒介偏好”“互动风格”或立场字段。
@@ -206,7 +216,7 @@ context 注入。Package 自主声明 runtime 不进入当前实验里程碑。
 
 初版推荐只考虑帖子内部主题兴趣、是否关注原作者或直接转发者、来源新鲜度与此前 tick 的累计转发量。`recommend_feed` 保持只读；只有 `open_feed_session` 表示页面实际打开并写入曝光。独立引擎已经具备多跳传播和 SQLite 事务；KERN adapter 已将这些写入接到 EffectBundle lifecycle。
 
-数据库 schema 固定为 `social_platform.v3`。旧 SQLite 文件和旧 checkpoint 是可重建生成物，运行时会拒绝旧 schema，不提供迁移或格式探测。
+数据库 schema 固定为 `social_platform.v4`。旧 SQLite 文件和旧 checkpoint 是可重建生成物，运行时会拒绝旧 schema，不提供迁移或格式探测。
 
 ### 手机屏幕组件
 
@@ -253,7 +263,7 @@ context 注入。Package 自主声明 runtime 不进入当前实验里程碑。
 | 关注关系 | 1,900 | 已验证端点存在且无重复 |
 
 它不包含历史曝光、点赞、评论或转发，其帖子仍使用已退役的 `tags` 字段，不能直接导入
-`social_platform.v3`。海平面场景生成器必须生成新的严格 seed；不在 runtime 中提供 legacy
+`social_platform.v4`。海平面场景生成器必须生成新的严格 seed；不在 runtime 中提供 legacy
 转换或兼容读取。
 
 ### 海平面实验 Package 与运行配置
@@ -262,7 +272,7 @@ context 注入。Package 自主声明 runtime 不进入当前实验里程碑。
 
 - 300 个实验 Agent、300 个手机实体和 300 个普通平台账号一一绑定；
 - `sea_level_social_experiment:SocialIdentityComponent` 保存 `profile_id`、第一人称背景和大五人格；
-- `AgentControlComponent.provider_id="social_platform"` 选择内置社交 workflow；
+- `AgentControlComponent.provider_id="social_platform"` 选择应用层注册的社交 workflow；
 - `AgentWakePolicyComponent` 使用 `NoActiveTask`，每轮是否打开平台由 workflow 读取 activation schedule 判断；
 - `Data/Study/activation_schedule.json` 保存 100 tick 完整访问计划和 fingerprint；
 - `Data/Study/actor_bindings.json` 保存 Agent、手机、账号、runtime 绑定；
@@ -270,7 +280,7 @@ context 注入。Package 自主声明 runtime 不进入当前实验里程碑。
   `Data/Platform/social_seed.sea_level_solution_focus.json` 保存两条件 SQLite seed。
 
 顶层运行配置已经组合 world Package、`SocialPropagation` capability Package、SQLite adapter
-和内置 `social_platform` workflow：
+和由 `applications/social_experiment` 注入的 `social_platform` workflow：
 
 - `runtime_config.sea_level.consequence.json`
 - `runtime_config.sea_level.solution.json`
@@ -280,7 +290,7 @@ SQLite 路径和 checkpoint 路径。
 
 ### 过程导出
 
-`tools/export_social_platform_process.py` 已支持从 `social_platform.v3` SQLite 数据库导出原始过程
+`tools/export_social_platform_process.py` 已支持从 `social_platform.v4` SQLite 数据库导出原始过程
 数据：全量平台表 CSV、`exposure_process.csv`、`repost_process.csv`、`summary_by_tick.csv`
 和导出 manifest。导出器保留原始事实与基础派生字段，不在运行时固化最终统计解释。
 
@@ -517,7 +527,7 @@ KERN/external_runtimes/social_profiles/generated_social_agent_backgrounds.jsonl
 4. 已完成：增加 `social_propagation:sqlite_platform` adapter、Package effects 和 recipes，支持浏览、曝光、转发、点赞、扁平评论和指标采样；实验通过顶层 config 显式选择 runtime instance。
 5. 已完成：在海平面 world Package 中生成 300 个实验 Agent、手机实例、身份组件和 actor/platform 绑定。
 6. 已完成：实现唯一画像生成、验证、报告、grounded background 链路、海平面场景 seed、
-   画像到 Agent/account 的组合、内置社交 workflow 和原始过程 CSV 导出器。
+   画像到 Agent/account 的组合、应用层社交 workflow 和原始过程 CSV 导出器。
 7. 待完成：pilot、300 Agent smoke、同 seed 完整复跑、两条件 schedule 相等测试，以及最终统计口径和图表工具。
 
 第一阶段核心验收：

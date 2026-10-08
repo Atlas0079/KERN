@@ -8,15 +8,12 @@ from .execution_errors import KernFailure
 from .effect_record import EffectEvent
 from .agent_workflow import (
 	ActionFeedback,
-	ActorPlatformBinding,
 	DialogueFrame,
 	DialoguePolicy,
 	EndTurn,
 	Pass,
 	Speak,
 	SubmitAction,
-	SocialActivationSchedule,
-	SocialPlatformWorkflow,
 	TurnFrame,
 	TurnStart,
 	WorkflowRegistry,
@@ -25,7 +22,6 @@ from .runtime import KernRuntime
 
 __all__ = [
 	"ActionFeedback",
-	"ActorPlatformBinding",
 	"DialogueFrame",
 	"DialoguePolicy",
 	"EffectEvent",
@@ -40,8 +36,6 @@ __all__ = [
 	"Pass",
 	"Speak",
 	"SubmitAction",
-	"SocialActivationSchedule",
-	"SocialPlatformWorkflow",
 	"TurnFrame",
 	"TurnStart",
 	"WorkflowRegistry",

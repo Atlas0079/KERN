@@ -3,7 +3,59 @@
 本文记录海平面两条件实验当前已经实现的工程状态和剩余验收工作。平台推荐、曝光、点赞、
 扁平评论和转发的运行契约以 `social_platform_runtime_design.md` 为准。
 
+## 背景帖传播控制（2026-09-22）
+
+本实验检验后果聚焦与解决方案聚焦文案对转发行为的影响，不预设假设必然成立。
+两组使用相同的背景帖传播控制：背景帖继续提供浏览情境，但不通过互动反馈扩大分发。
+
+| 机制 | 背景帖 | 实验帖 |
+| --- | --- | --- |
+| 普通推荐中的兴趣、关注作者、新鲜度与探索 | 保留 | 保留 |
+| 点赞、评论、转发操作及真实数据库记录 | 保留 | 保留 |
+| 向关注者分发转发卡片 | 禁止 | 保留 |
+| 累计转发对普通推荐分数的加权 | 关闭 | 保留 |
+| 点赞、评论、转发形成的热门推荐加权 | 关闭 | 保留 |
+| 页面上真实互动计数与本人已互动状态 | 保留 | 保留 |
+
+两组运行配置的 `external_runtimes[].options.propagating_post_ids` 均设置为
+`["sea_level_experiment_post"]`。列表明确指定允许转发分发和互动加权的帖子，其余帖子
+按背景帖处理；不根据文案、hashtag 或 condition_id 猜测。列表不得为空、重复或引用
+seed 中不存在的帖子。正式配置与本地 12 tick 配置采用相同规则。
+
+实现复用现有 `recommender.select_page`，由 SocialPropagation Package 的 SQLite adapter
+装配 `ExperimentalFeedRecommender`。无需改变 Agent 决策、动作接口或事务边界。
+未配置该选项的其他社交场景继续使用普通推荐策略。该选项进入现有 Package runtime
+identity；新实验从新建的空数据库开始，旧运行档案保留，不混入新结果或续跑旧 checkpoint。
+
+这是一项受控传播设定，不代表真实平台的完整机制，也不保证提高实验帖转发率。
+背景文案、公开互动计数、评论和 Agent 记忆仍可能影响选择；实验帖自身的扩散也会改变
+后续页面。因此两组背景页面不保证完全相同，仍须分别报告曝光人数、曝光后的转发比例
+与最终传播规模。背景帖转发是已记录的行为，不产生二次转发分发，不能据此推算背景传播级联。
+
+文件分工：本文描述实验规则；`Packages/SeaLevelSocialExperiment/Study/study_config.v1.json`
+保存帖子材料、人口、网络及访问计划参数；运行配置保存上述分发策略选项；
+`social_platform_runtime_design.md` 说明推荐与持久化的技术契约。
+
 ## 社交专用 workflow
+
+### 读后互动与导航分离（2026-09-30）
+
+详情页决策任务改为“读完当前帖子后愿意进行哪些公开互动”，允许点赞、评论、转发或空互动。
+原有动作说明、画像、帖子和页面状态继续进入同一个决策请求；推荐流仍判断是否点开卡片。
+详情页请求不要求模型选择返回推荐流，session 在互动队列末尾通过既有 `BackToSocialFeed`
+动作返回；空互动同样返回。导航仍经过原有动作、effect 和反馈链路，每 turn 最多阅读三条详情。
+页面已有点赞或转发状态时，提示词要求不重复该动作。
+
+先从现有 300 个画像中以固定 seed `20260930` 抽取 100 个，用同一批画像分别测试两篇帖子，
+每画像每条件请求一次。该阶段使用统一的假设详情页：完整帖子、零互动计数、无评论、无历史记忆；
+它不运行推荐、访问计划或传播。后续实际平台实验保留 300 人、12 tick 和背景传播控制，使用
+新建数据库。两阶段均使用 Gemma，temperature 为 0.9，决策 max_tokens 为 1200。
+模拟进程在本机运行，数据库、checkpoint、请求与回复记录保留在本机；学校服务器只提供
+Gemma API。本机通过 SSH 转发调用 API，并使用独立的新运行目录。
+
+实际运行复用 `step_and_record`，在每个 tick 完整执行并保存 checkpoint 后，记录两条件的
+当 tick 与累计曝光人数、详情阅读人数、实验帖转发数、背景互动和请求错误；运行中的 tick
+与已完成 tick 分开显示。原始请求、回复、数据库和旧实验档案保留，各辅助脚本与统计仅保留本地。
 
 ### 运行边界
 
@@ -11,7 +63,7 @@
 `TurnFrame`、`SubmitAction` / `EndTurn`、动作解析、EffectBundle、拒绝反馈、replan 上限、
 运行终止、checkpoint 和 failure report。
 
-`SocialPlatformWorkflow` 是内置鸭子类型实现；KERN 不增加社交调度 policy 或 `SkipTurn`。
+`SocialPlatformWorkflow` 是应用层鸭子类型实现；KERN 不增加社交调度 policy 或 `SkipTurn`。
 `WorkflowRegistry` 仍然只注册和解析 workflow，
 开发者只通过 `AgentControlComponent.provider_id` 选择它。访问判断、浏览状态机、社交专用
 LLM 输入、领域输出校验和动作队列全部封装在该 workflow 及其 turn session 内。
@@ -23,12 +75,12 @@ LLM 输入、领域输出校验和动作队列全部封装在该 workflow 及其
 
 ### 配置与选择
 
-workflow 实现是 KERN 源码内置集合，不通过 Package 自动发现，也不允许 runtime config import
-任意 Python 工厂。`KERN.agent_workflow.builtin_workflows.BUILTIN_WORKFLOW_BUILDERS` 注册
-`simple`、`llm` 和 `social_platform` 等 kind。开发者新增长期维护的 workflow 时修改源码注册表
-和对应 builder。
+社交 workflow 由 `applications/social_experiment` 应用层拥有和装配。应用通过现有
+`WorkflowRegistry` 注入 KERN；Package 只定义世界与额外能力，不声明 workflow。
+通用内置 kind 保留 `simple` 和 `llm`。运行社交实验使用
+`python -m applications.social_experiment --config runtime_config.sea_level.solution.json`。
 
-海平面实验 config 通过顶层 `workflow_providers` 注册：
+社交应用读取海平面实验 config 的顶层 `workflow_providers` 并注册：
 
 ```json
 {"workflow_id": "social_platform", "kind": "social_platform"}
@@ -50,6 +102,7 @@ Agent 统一使用 `provider_id="social_platform"`。`social_platform` builder �
   "profile": {
     "profile_id": "social_profile_001",
     "natural_language_background": "……",
+    "platform_friend_categories": ["大学同学", "工作同事", "家人亲属"],
     "big_five": {
       "openness": 0.0,
       "conscientiousness": 0.0,
@@ -76,7 +129,11 @@ Agent 统一使用 `provider_id="social_platform"`。`social_platform` builder �
 转发。排序分数、全网关注图、未展示候选、其他 Agent 画像和全局指标不能进入感知。
 
 感知中不包含地点、地图、路径、附近实体、普通背包、生命值、任务、对话参与者或世界事件。
-人物背景和大五人格来自 Agent 的实验身份组件。手机仍由
+人物背景、大五人格和 `platform_friend_categories` 来自 Agent 的实验身份组件。好友类别是
+根据完整画像生成的角色设定，使用一至五个不重复的非空字符串；它描述平台主要联系对象，
+不新增实际关注边，不规定点赞、评论或转发偏好。workflow 每次决策都将好友类别写入身份
+提示词，不能只写入数据后遗漏于 LLM 上下文。正式生成输入由 study config 的
+`population.friend_categories_path` 指定，必须覆盖全部画像 ID。手机仍由
 `social_propagation:ScreenComponent` 表达短期可操作页面；同一个刷新 effect 事务性写入的
 页面字段是 workflow 构造本次 LLM 输入的事实来源。SQLite `feed_session` 保留为审计事实，
 不作为第二套决策输入。workflow 只读取 `WorldState`，不直接写 SQLite 或 `WorldState`。
@@ -156,7 +213,7 @@ WorldState、SQLite 或 `ws.services`，也不接触推荐内容。schedule 的 
 
 ## 帖子主题与可见标签
 
-`social_platform.v3` seed 已将帖子契约拆成：
+`social_platform.v4` seed 已将帖子契约拆成：
 
 - `ranking_topics`：受控词表中的内部推荐主题，只用于候选和排序，不进入 Agent 感知；
 - `display_hashtags`：帖子作者写出的可见 hashtag，作为页面内容交给 Agent；
@@ -203,7 +260,7 @@ fact ID、映射版本和最终权重。两篇海平面实验帖使用相同的 
 
 ## 过程状态与 SQLite
 
-SQLite 保存所有已提交的平台事实。`social_platform.v3` 已实现：
+SQLite 保存所有已提交的平台事实。`social_platform.v4` 已实现：
 
 - `feed_sessions`：每次打开/刷新页面一行，即使页面为空也保留；
 - `exposures.feed_session_id`：将每张曝光卡片归到具体页面会话；
@@ -236,7 +293,7 @@ activation schedule、Agent、手机和 generation manifest。正式实验需要
 - [x] 实现 inactive/active 两种 turn session，并验证未调度 session 不调用 LLM、不提交平台 effect。
 - [x] 实现 workflow 内部的社交 LLM 输入构造器，直接读取身份和屏幕组件，验证不会泄露
   地点、实体、排序分数和全局状态。
-- [x] 在实验 world 中定义身份组件，保存 `profile_id`、第一人称背景和大五人格。
+- [x] 在实验 world 中定义身份组件，保存 `profile_id`、第一人称背景、大五人格和平台主要好友类别。
 - [x] 实现仅在实验帖曝光时发生的单次 LLM 页面决策与严格输出解析。
 - [x] 实现浏览提交反馈、页面决策、多动作提交、no-action 和拒绝终止测试。
 - [x] 为完整请求、响应、解析结果和 action results 接入现有 `LLMTraceRecorder` 与 failure evidence。
@@ -245,7 +302,7 @@ activation schedule、Agent、手机和 generation manifest。正式实验需要
 
 - [x] 定义 activation schedule schema，并将不可变 schedule 注入 `SocialPlatformWorkflow`。
 - [x] 实现并测试 `social_interest_mapping.v1`。
-- [x] 将 SQLite 升级到 `social_platform.v3`，增加 feed session、viewer state、互动曝光归因和查询 API。
+- [x] 将 SQLite 升级到 `social_platform.v4`，增加 feed session、viewer state、互动曝光归因和查询 API。
 - [x] 定义严格的 study config schema。
 - [x] 实现确定性场景/网络/activation schedule 生成器及 generation manifest。
 - [x] 创建海平面实验 world Package、SQLite 配置和两个条件的运行配置。

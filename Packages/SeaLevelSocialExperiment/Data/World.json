@@ -5,7 +5,7 @@
   "study": {
     "study_id": "sea_level_narrative_propagation",
     "activation_schedule_fingerprint": "e7575e529d939e9a9ac14ff3de81ebe88b5e0549db78fb3697efc2ba1c1959a6",
-    "generation_manifest_fingerprint": "6f4def060e518147cccc8aabfcd86e00375669a345fa631d75962d7d90f03fec"
+    "generation_manifest_fingerprint": "9b61a3b37987b066340be74bde8661189759727cc30a99254510c84da0f69db0"
   },
   "locations": [
     {
@@ -26,7 +26,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.6,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "孩子同学的家长",
+                "摄影工作领域的同事",
+                "大学时期的财经专业同学"
+              ]
             }
           }
         }
@@ -50,7 +56,14 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.4,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "工程与制造方向的本科及硕士同学",
+                "平面设计行业的同事或同行",
+                "家人及亲属",
+                "居住社区的邻居及家长",
+                "游戏攻略研究圈的网友"
+              ]
             }
           }
         }
@@ -74,7 +87,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.6,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "本科及硕士阶段同学",
+                "前公司工作同事",
+                "家人亲属",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -98,7 +117,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.8,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "本科阶段同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -122,7 +147,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.2,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "现实生活邻居",
+                "大学同学"
+              ]
             }
           }
         }
@@ -146,7 +177,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.4,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工程制造方向的大学及研究生同学",
+                "现实生活中的邻居及社区活动伙伴",
+                "前职场同事"
+              ]
             }
           }
         }
@@ -170,7 +207,13 @@
                 "extraversion": 0.1,
                 "agreeableness": 0.6,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "大学财经专业同学",
+                "前职场同事",
+                "现实生活中的熟人朋友"
+              ]
             }
           }
         }
@@ -194,7 +237,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.8,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -218,7 +267,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.5,
                 "neuroticism": 0.0
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "艺术与设计专业时期的同学",
+                "游戏兴趣圈认识的朋友"
+              ]
             }
           }
         }
@@ -242,7 +297,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.9,
                 "neuroticism": 0.8
-              }
+              },
+              "platform_friend_categories": [
+                "本科及硕士阶段的同学",
+                "家人及亲属",
+                "游戏圈认识的朋友",
+                "社区邻里朋友"
+              ]
             }
           }
         }
@@ -266,7 +327,13 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.8,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "现实生活中的邻里朋友",
+                "个体经营相关的业务往来对象",
+                "大学或研究生阶段的同学"
+              ]
             }
           }
         }
@@ -290,7 +357,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.6,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "艺术与设计专业时期的本科及硕士同学",
+                "前公司职场同事",
+                "现实生活中的家人亲属",
+                "孩子就读学校或社区的家长朋友"
+              ]
             }
           }
         }
@@ -314,7 +387,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.6,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "社区及亲友圈中的家长",
+                "现实生活中的读书或园艺爱好者"
+              ]
             }
           }
         }
@@ -338,7 +417,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.2,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "经营花店相关的商业伙伴与熟客",
+                "家人与亲属",
+                "社区邻里及亲子活动结识的朋友",
+                "计算机与信息技术继续教育的同学"
+              ]
             }
           }
         }
@@ -362,7 +447,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.7,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "大学及研究生阶段同学",
+                "数据分析项目合作方及同行",
+                "居住社区的邻里朋友"
+              ]
             }
           }
         }
@@ -386,7 +477,14 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.8,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "学龄前儿童家长群体",
+                "后端开发及外包项目合作者",
+                "财经与经济方向的大学及研究生同学",
+                "家人亲属",
+                "现实生活中的社交朋友"
+              ]
             }
           }
         }
@@ -410,7 +508,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.8,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "本科阶段同学",
+                "家人亲属",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -434,7 +538,14 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.6,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "教育行业前同事",
+                "孩子同学的家长",
+                "家人亲属",
+                "大学教育专业同学",
+                "园艺养花兴趣圈朋友"
+              ]
             }
           }
         }
@@ -458,7 +569,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.7,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "孩子同学的家长",
+                "软件测试工作同事",
+                "教育学专业本科同学"
+              ]
             }
           }
         }
@@ -482,7 +599,13 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.3,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "财经与经济方向硕士同学",
+                "木工行业同行或合作伙伴",
+                "人文社科方向本科同学"
+              ]
             }
           }
         }
@@ -506,7 +629,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.4,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "现实生活朋友",
+                "养花种菜兴趣圈的朋友"
+              ]
             }
           }
         }
@@ -530,7 +659,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.6,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "平面设计行业的同行及前同事",
+                "现实生活中的邻居或同龄朋友",
+                "工程与制造方向的大学同学",
+                "家庭成员及亲属"
+              ]
             }
           }
         }
@@ -554,7 +689,13 @@
                 "extraversion": 0.9,
                 "agreeableness": 0.5,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "医护行业退休同事",
+                "现实生活中的老朋友",
+                "亲戚好友",
+                "工程与制造方向的大学同学"
+              ]
             }
           }
         }
@@ -578,7 +719,13 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.2,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "现实生活结识的朋友"
+              ]
             }
           }
         }
@@ -602,7 +749,13 @@
                 "extraversion": 0.1,
                 "agreeableness": 0.8,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人及亲属",
+                "计算机专业阶段的同学",
+                "商场工作同事",
+                "现实生活中的朋友"
+              ]
             }
           }
         }
@@ -626,7 +779,14 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.5,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "前同事及职场同行",
+                "幼儿园家长群体",
+                "大学及工程专业同学",
+                "徒步与阅读兴趣圈朋友"
+              ]
             }
           }
         }
@@ -650,7 +810,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.5,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "艺术与设计专业的本科及硕士同学",
+                "家人及亲属",
+                "居住社区的邻居",
+                "现实生活中的朋友"
+              ]
             }
           }
         }
@@ -674,7 +840,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.6,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "网约车同行",
+                "幼儿园家长群体",
+                "大学教育学专业同学"
+              ]
             }
           }
         }
@@ -698,7 +870,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.6,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人与亲属",
+                "大学期间的计算机专业同学",
+                "灵活就业期间的项目合作者与前同事",
+                "继续教育课程的同学"
+              ]
             }
           }
         }
@@ -722,7 +900,14 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.8,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "幼儿园家长群友",
+                "大学财经专业同学",
+                "徒步户外兴趣圈朋友"
+              ]
             }
           }
         }
@@ -746,7 +931,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.4,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "孩子同伴家长"
+              ]
             }
           }
         }
@@ -770,7 +961,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.3,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "机械维修工作同事",
+                "教育专业阶段同学",
+                "现实生活中的旧识朋友"
+              ]
             }
           }
         }
@@ -794,7 +991,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.6,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "教育行业的前同事及同行",
+                "现实生活中的邻居与社交圈朋友",
+                "继续教育课程的同学",
+                "家庭成员及亲属"
+              ]
             }
           }
         }
@@ -818,7 +1021,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.5,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "大学同学",
+                "游戏兴趣圈朋友"
+              ]
             }
           }
         }
@@ -842,7 +1051,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.6,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "现实生活朋友",
+                "前同事",
+                "本科阶段同学"
+              ]
             }
           }
         }
@@ -866,7 +1081,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.9,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "长期合作的工作同事",
+                "大学时期的财经专业同学",
+                "同住或近亲的家人亲属",
+                "现实生活中共同徒步或烹饪的朋友"
+              ]
             }
           }
         }
@@ -890,7 +1111,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.7,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "直播运营行业同事",
+                "游戏攻略交流圈朋友",
+                "亲子活动社群家长"
+              ]
             }
           }
         }
@@ -914,7 +1141,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.4,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "前同事及教育行业同行",
+                "师范类本科同学",
+                "现实生活中的邻居或朋友"
+              ]
             }
           }
         }
@@ -938,7 +1171,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.9,
                 "neuroticism": 0.8
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "本科阶段同学",
+                "前职场同事",
+                "社区邻里朋友"
+              ]
             }
           }
         }
@@ -962,7 +1201,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.5,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "伴侣及家人亲属",
+                "大学财经专业同学",
+                "公司人事及行政工作同事",
+                "现实生活中的社交朋友"
+              ]
             }
           }
         }
@@ -986,7 +1231,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.8,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "餐饮行业同行及同事",
+                "收藏爱好圈的朋友",
+                "财经专业时期的大学同学"
+              ]
             }
           }
         }
@@ -1010,7 +1261,14 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.4,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "孩子同学的家长",
+                "大学同学",
+                "继续教育课程的同学"
+              ]
             }
           }
         }
@@ -1034,7 +1292,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.6,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "孩子同学的家长",
+                "大学同学"
+              ]
             }
           }
         }
@@ -1058,7 +1322,14 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.6,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "学龄前儿童家长群体",
+                "大学财经专业同学",
+                "健康与生命科学课程同学"
+              ]
             }
           }
         }
@@ -1082,7 +1353,13 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.8,
                 "neuroticism": 0.8
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "学术阶段同学",
+                "项目合作同事",
+                "现实生活结识的朋友"
+              ]
             }
           }
         }
@@ -1106,7 +1383,12 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.3,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "餐饮行业工作同事",
+                "人文社科专业阶段同学",
+                "合租室友及现实生活朋友"
+              ]
             }
           }
         }
@@ -1130,7 +1412,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.5,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "艺术与设计专业的本科及硕士同学",
+                "家人与亲属",
+                "同小区或周边社区的家长",
+                "现实生活中的朋友"
+              ]
             }
           }
         }
@@ -1154,7 +1442,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.5,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "学龄前儿童家长群体",
+                "教育专业本科及硕士同学",
+                "项目协调工作相关的合作者/同事",
+                "现实生活中的亲友"
+              ]
             }
           }
         }
@@ -1178,7 +1472,13 @@
                 "extraversion": 0.9,
                 "agreeableness": 0.7,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "测试行业同行及项目合作者",
+                "艺术与设计专业大学同学",
+                "生活方式及手工烹饪兴趣圈朋友"
+              ]
             }
           }
         }
@@ -1202,7 +1502,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.5,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "孩子同学的家长",
+                "短视频剪辑同行及项目合作方",
+                "本科或硕士阶段的同学"
+              ]
             }
           }
         }
@@ -1226,7 +1532,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.5,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "大学同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -1250,7 +1562,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.1,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "大学同学",
+                "社区邻居"
+              ]
             }
           }
         }
@@ -1274,7 +1592,14 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.5,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家庭成员与亲属",
+                "共同经营修车铺的合伙人及同事",
+                "孩子学校的家长群体",
+                "大学时期的同学",
+                "现实生活中的好友"
+              ]
             }
           }
         }
@@ -1298,7 +1623,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.5,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -1322,7 +1653,13 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.8,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "本科及硕士阶段同学",
+                "博士就读期间的同门及学术圈友人",
+                "伴侣及其社交圈好友",
+                "园艺与植物养护兴趣圈好友"
+              ]
             }
           }
         }
@@ -1346,7 +1683,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.4,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "孩子同学的家长",
+                "大学时期同学"
+              ]
             }
           }
         }
@@ -1370,7 +1713,14 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.7,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "大学时期教育专业同学",
+                "公司运营岗同事",
+                "家人及亲属",
+                "居住社区的邻居",
+                "现实生活中的社交朋友"
+              ]
             }
           }
         }
@@ -1394,7 +1744,14 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.5,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "孩子同学的家长",
+                "游戏圈认识的朋友",
+                "本科阶段同学"
+              ]
             }
           }
         }
@@ -1418,7 +1775,14 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.7,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "大学同学",
+                "社区邻里",
+                "徒步阅读兴趣圈朋友"
+              ]
             }
           }
         }
@@ -1442,7 +1806,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.4,
                 "neuroticism": 0.9
-              }
+              },
+              "platform_friend_categories": [
+                "大学期间的工程与制造专业同学",
+                "目前灵活就业阶段的运营同行或项目合作伙伴",
+                "共同居住的父母及长辈亲属",
+                "现实生活中志趣相投的阅读或摄影爱好者"
+              ]
             }
           }
         }
@@ -1466,7 +1836,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.8,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "孩子学龄前阶段的家长朋友",
+                "大学时期同学"
+              ]
             }
           }
         }
@@ -1490,7 +1866,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.7,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "短视频行业同事",
+                "大学教育学专业同学",
+                "孩子学校的家长群体"
+              ]
             }
           }
         }
@@ -1514,7 +1896,12 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.6,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "本科阶段同学"
+              ]
             }
           }
         }
@@ -1538,7 +1925,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.8,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人及亲属",
+                "大学同学",
+                "工作同事",
+                "游戏同好圈朋友"
+              ]
             }
           }
         }
@@ -1562,7 +1955,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.5,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "托育中心同事",
+                "大学时期同学",
+                "园艺与手工爱好者"
+              ]
             }
           }
         }
@@ -1586,7 +1985,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.5,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "前同事及教育行业同行",
+                "大学同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -1610,7 +2015,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.7,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "育儿阶段认识的朋友"
+              ]
             }
           }
         }
@@ -1634,7 +2045,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.6,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "现实生活朋友",
+                "大学同学"
+              ]
             }
           }
         }
@@ -1658,7 +2075,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.7,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "亲子社交圈朋友"
+              ]
             }
           }
         }
@@ -1682,7 +2105,13 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.7,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "短视频行业合作团队及同行",
+                "大学财经专业同学",
+                "家人亲属",
+                "现实生活中的朋友"
+              ]
             }
           }
         }
@@ -1706,7 +2135,12 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.2,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "退休前工厂时期的前同事",
+                "现实生活中共同养花种菜的邻居或朋友",
+                "大学时期的同学"
+              ]
             }
           }
         }
@@ -1730,7 +2164,14 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.5,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人及亲属",
+                "工作同事",
+                "幼儿园家长群体",
+                "大学同学",
+                "游戏攻略与技术讨论圈好友"
+              ]
             }
           }
         }
@@ -1754,7 +2195,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.4,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "财经与经济方向的同学及进修伙伴",
+                "单位工作同事",
+                "现实生活中的朋友"
+              ]
             }
           }
         }
@@ -1778,7 +2225,13 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.8,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "现实生活中的邻里及家长朋友",
+                "工作同事",
+                "大学期间的同学"
+              ]
             }
           }
         }
@@ -1802,7 +2255,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.3,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "机械维修同行及业务联系人",
+                "家人亲属",
+                "游戏攻略及同好圈朋友",
+                "人文社会科学专业时期的旧友"
+              ]
             }
           }
         }
@@ -1826,7 +2285,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.4,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "大学期间的计算机专业同学",
+                "网络运维工作的同事",
+                "家人亲属",
+                "游戏攻略与钻研相关的兴趣圈朋友"
+              ]
             }
           }
         }
@@ -1850,7 +2315,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.4,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "本科阶段同学",
+                "前职场同事",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -1874,7 +2345,14 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.3,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "健康与生命科学方向的本科及硕士同学",
+                "前职场同事",
+                "现实生活中的邻居与社区活动伙伴",
+                "游戏攻略研究及同好圈朋友",
+                "家人与亲属"
+              ]
             }
           }
         }
@@ -1898,7 +2376,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.7,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "现实生活结识的朋友",
+                "大学同学"
+              ]
             }
           }
         }
@@ -1922,7 +2406,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.7,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "培训机构工作同事",
+                "艺术与设计专业本科同学",
+                "社区邻里及现实生活朋友"
+              ]
             }
           }
         }
@@ -1946,7 +2436,14 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.4,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "幼儿园孩子同龄家庭的家长",
+                "工作同事",
+                "大学艺术与设计专业同学",
+                "合租室友"
+              ]
             }
           }
         }
@@ -1970,7 +2467,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.4,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "计算机专业本科同学",
+                "前职场同事",
+                "家人亲属",
+                "游戏攻略及同好圈朋友"
+              ]
             }
           }
         }
@@ -1994,7 +2497,14 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.9,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "平面设计行业同事",
+                "教育专业本科及硕士同学",
+                "游戏玩家圈好友",
+                "现实生活中的徒步或阅读爱好者"
+              ]
             }
           }
         }
@@ -2018,7 +2528,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.5,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "孩子学校的家长群体"
+              ]
             }
           }
         }
@@ -2042,7 +2558,14 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.1,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "孩子同学家长",
+                "大学及研究生阶段同学",
+                "小区邻里"
+              ]
             }
           }
         }
@@ -2066,7 +2589,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.6,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "大学同学",
+                "工作同事",
+                "家人亲属",
+                "游戏圈认识的朋友"
+              ]
             }
           }
         }
@@ -2090,7 +2619,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.7,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "本科阶段同学",
+                "游戏圈认识的朋友"
+              ]
             }
           }
         }
@@ -2114,7 +2649,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.6,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "教育专业阶段的同学（本科、硕士及博士）",
+                "家人与亲属",
+                "现实生活中的邻里与社区朋友",
+                "户外徒步及阅读兴趣圈的朋友"
+              ]
             }
           }
         }
@@ -2138,7 +2679,14 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.7,
                 "neuroticism": 0.8
-              }
+              },
+              "platform_friend_categories": [
+                "孩子同学的家长",
+                "工作同事",
+                "大学及继续教育课程同学",
+                "亲戚家人",
+                "现实生活中的社交朋友"
+              ]
             }
           }
         }
@@ -2162,7 +2710,12 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.3,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "医疗系统前同事",
+                "财经与教育专业时期的同学",
+                "现实生活中的熟人朋友"
+              ]
             }
           }
         }
@@ -2186,7 +2739,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.5,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "本硕博阶段的学术同窗",
+                "人文社科领域的导师及学术同行",
+                "合租室友及社区邻居",
+                "现实生活中的亲友及伴侣"
+              ]
             }
           }
         }
@@ -2210,7 +2769,13 @@
                 "extraversion": 0.1,
                 "agreeableness": 0.7,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "本科及硕博阶段同学",
+                "装修行业同行及灵活就业伙伴",
+                "游戏攻略及电子产品兴趣圈朋友"
+              ]
             }
           }
         }
@@ -2234,7 +2799,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.7,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "本科艺术设计专业同学",
+                "现实生活中的熟人朋友"
+              ]
             }
           }
         }
@@ -2258,7 +2829,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.4,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "同专业及课题组同学",
+                "家人与亲属",
+                "现实生活中的邻居",
+                "本科阶段的旧友"
+              ]
             }
           }
         }
@@ -2282,7 +2859,13 @@
                 "extraversion": 0.1,
                 "agreeableness": 0.4,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "前同事及教师同行",
+                "大学时期同学",
+                "旅行兴趣圈认识的朋友",
+                "园艺与阅读兴趣圈认识的朋友"
+              ]
             }
           }
         }
@@ -2306,7 +2889,14 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.7,
                 "neuroticism": 0.8
-              }
+              },
+              "platform_friend_categories": [
+                "家人与亲属",
+                "孩子学校的家长群体",
+                "平面设计行业的同行与合作客户",
+                "本科阶段的同学",
+                "合租室友"
+              ]
             }
           }
         }
@@ -2330,7 +2920,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.6,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "前护理工作同事",
+                "现实生活邻居",
+                "大学及研究生阶段同学"
+              ]
             }
           }
         }
@@ -2354,7 +2950,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.5,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "合伙经营修车铺的生意伙伴",
+                "工程与制造专业的本硕同学",
+                "配偶及家庭亲属",
+                "现实生活中的邻居或合租室友"
+              ]
             }
           }
         }
@@ -2378,7 +2980,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.7,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "大学同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -2402,7 +3010,14 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.5,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "财经与经济方向的大学同学",
+                "社区邻居",
+                "徒步与阅读兴趣圈朋友"
+              ]
             }
           }
         }
@@ -2426,7 +3041,12 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.3,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "本科及硕士阶段同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -2450,7 +3070,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.9,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "艺术与设计方向的本科及硕士同学",
+                "家人及亲属",
+                "共同照顾小朋友的亲友或社区熟人",
+                "收藏爱好的同好圈朋友"
+              ]
             }
           }
         }
@@ -2474,7 +3100,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.4,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "人文社科方向的本科及硕士同学",
+                "前职场同事",
+                "合租室友及现实生活邻居"
+              ]
             }
           }
         }
@@ -2498,7 +3130,14 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.4,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "伴侣及其社交圈",
+                "本科及硕士阶段同学",
+                "水电维修工作同事",
+                "现实生活中的社区邻居"
+              ]
             }
           }
         }
@@ -2522,7 +3161,14 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.5,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学及研究生阶段同学",
+                "孩子幼儿园的家长群体",
+                "户外徒步及环保兴趣圈朋友"
+              ]
             }
           }
         }
@@ -2546,7 +3192,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.6,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "前同事及行业猎头",
+                "大学同学",
+                "孩子学校的家长"
+              ]
             }
           }
         }
@@ -2570,7 +3222,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.6,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人与亲属",
+                "工程与制造方向的大学同学",
+                "修车铺的合伙人及生意往来伙伴",
+                "孩子同龄人的家长"
+              ]
             }
           }
         }
@@ -2594,7 +3252,12 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.5,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "大学同学",
+                "工作同事"
+              ]
             }
           }
         }
@@ -2618,7 +3281,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.7,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "现实生活朋友",
+                "大学及研究生阶段同学"
+              ]
             }
           }
         }
@@ -2642,7 +3311,12 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.6,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "孩子同学的家长",
+                "人文社科方向的同学",
+                "前同事或职场人脉"
+              ]
             }
           }
         }
@@ -2666,7 +3340,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.1,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "社区邻里及店铺熟客",
+                "亲戚家属",
+                "大学艺术专业同学",
+                "现实生活中的好友"
+              ]
             }
           }
         }
@@ -2690,7 +3370,12 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.4,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "大学同学",
+                "现实生活结识的朋友"
+              ]
             }
           }
         }
@@ -2714,7 +3399,14 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.9,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "幼儿园家长群体",
+                "博士及硕士阶段同学",
+                "行政工作同事",
+                "社区邻里朋友"
+              ]
             }
           }
         }
@@ -2738,7 +3430,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.4,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -2762,7 +3460,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.3,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "合租室友",
+                "大学同学",
+                "园艺/动手维修兴趣圈朋友"
+              ]
             }
           }
         }
@@ -2786,7 +3490,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.2,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "大学艺术与设计专业同学",
+                "幼儿园工作同事",
+                "家人亲属",
+                "现实生活中的朋友"
+              ]
             }
           }
         }
@@ -2810,7 +3520,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.7,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "本科阶段同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -2834,7 +3550,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.8,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "本科阶段同学",
+                "现实生活中的合租室友"
+              ]
             }
           }
         }
@@ -2858,7 +3580,14 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.5,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "社区邻居",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -2882,7 +3611,14 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.8,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "孩子同学家长",
+                "大学及硕士阶段同学",
+                "现实生活中的阅读与户外兴趣朋友"
+              ]
             }
           }
         }
@@ -2906,7 +3642,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.0,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "孩子幼儿园的家长",
+                "本科阶段同学"
+              ]
             }
           }
         }
@@ -2930,7 +3672,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.3,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "退休前的工作同事",
+                "师范类院校的同学",
+                "现实生活中的邻居与朋友"
+              ]
             }
           }
         }
@@ -2954,7 +3702,13 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.8,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "大学同学",
+                "现实生活结识的朋友"
+              ]
             }
           }
         }
@@ -2978,7 +3732,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.3,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "大学期间的计算机专业同学",
+                "目前公司的测试与研发同事",
+                "共同居住区域的租房同龄人",
+                "现实生活中的业余兴趣好友"
+              ]
             }
           }
         }
@@ -3002,7 +3762,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.7,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "计算机专业本科及硕士阶段同学",
+                "家人及亲属",
+                "现实生活中的合租室友",
+                "手工爱好者圈子朋友"
+              ]
             }
           }
         }
@@ -3026,7 +3792,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.7,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "退休前的工作同事",
+                "现实生活中的邻里朋友",
+                "大学阶段的同学"
+              ]
             }
           }
         }
@@ -3050,7 +3822,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.5,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "职场同事及同行",
+                "亲戚及家人",
+                "共同带娃的家长朋友",
+                "游戏及阅读兴趣圈好友"
+              ]
             }
           }
         }
@@ -3074,7 +3852,13 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.5,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "工程制造方向的大学同学",
+                "家人亲属",
+                "园艺养花兴趣圈朋友"
+              ]
             }
           }
         }
@@ -3098,7 +3882,12 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.4,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "现实生活中的邻居与亲友",
+                "餐饮服务行业的同事",
+                "工程专业时期的老同学"
+              ]
             }
           }
         }
@@ -3122,7 +3911,13 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.7,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "工程与制造方向的大学及硕士同学",
+                "机械维修行业相关的业务合作者与同行",
+                "现实生活中的亲戚及好友",
+                "旅行及文化艺术兴趣圈认识的朋友"
+              ]
             }
           }
         }
@@ -3146,7 +3941,13 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.5,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "硕士及本科阶段同学",
+                "前公司工作同事",
+                "孩子幼儿园的家长朋友"
+              ]
             }
           }
         }
@@ -3170,7 +3971,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.7,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "退休前工程与制造领域的前同事",
+                "现实生活中的邻居或熟人",
+                "人文社科或工程方向的大学同学"
+              ]
             }
           }
         }
@@ -3194,7 +4001,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.2,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -3218,7 +4031,14 @@
                 "extraversion": 0.9,
                 "agreeableness": 0.7,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "网络运维及工程制造领域的职场同事",
+                "本科及硕士阶段的工程专业同学",
+                "现实生活中的合租室友及社交朋友",
+                "孩子相关的教育或家长社交圈",
+                "手工DIY及阅读兴趣圈的朋友"
+              ]
             }
           }
         }
@@ -3242,7 +4062,13 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.2,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人及亲戚",
+                "职场同事及项目合作伙伴",
+                "近郊徒步及散步爱好者",
+                "大学艺术与设计专业同学"
+              ]
             }
           }
         }
@@ -3266,7 +4092,14 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.6,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "本科及硕士阶段同学",
+                "社区邻里朋友",
+                "孩子同学的家长"
+              ]
             }
           }
         }
@@ -3290,7 +4123,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.7,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "大学期间的计算机专业同学",
+                "目前公司的项目协调同事",
+                "家人与亲属",
+                "通过游戏社交结识的网友"
+              ]
             }
           }
         }
@@ -3314,7 +4153,13 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.6,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "退休前的工作同事",
+                "大学时期的同学",
+                "现实生活中的邻居或熟人"
+              ]
             }
           }
         }
@@ -3338,7 +4183,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.6,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "现实生活中的邻里与熟客",
+                "餐饮经营相关的商业伙伴",
+                "财经与经济方向的大学同学"
+              ]
             }
           }
         }
@@ -3362,7 +4213,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.1,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "大学时期财经专业同学",
+                "家教工作中结识的家长或同行",
+                "现实生活中的社交朋友"
+              ]
             }
           }
         }
@@ -3386,7 +4243,13 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.7,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "孩子同学的家长",
+                "大学及研究生阶段同学"
+              ]
             }
           }
         }
@@ -3410,7 +4273,13 @@
                 "extraversion": 0.1,
                 "agreeableness": 0.7,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "大学同学",
+                "现实生活中的邻居"
+              ]
             }
           }
         }
@@ -3434,7 +4303,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.4,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "收养孩子的学校家长群体",
+                "设计行业的熟客与前同事",
+                "艺术与设计专业的大学同学",
+                "现实生活中的平和社交圈朋友"
+              ]
             }
           }
         }
@@ -3458,7 +4333,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.8,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "现实生活结识的家长朋友",
+                "大学同学"
+              ]
             }
           }
         }
@@ -3482,7 +4363,12 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.5,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "大学同学及计算机专业前同事",
+                "社区邻居及现实生活朋友"
+              ]
             }
           }
         }
@@ -3506,7 +4392,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.8,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "现实生活中的街坊邻居",
+                "孩子同学的家长",
+                "大学时期的同学"
+              ]
             }
           }
         }
@@ -3530,7 +4422,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.7,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "本科阶段同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -3554,7 +4452,14 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.3,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "现实生活中的邻居",
+                "计算机专业时期的大学同学",
+                "花店经营相关的商业伙伴或同行",
+                "游戏攻略研究圈认识的朋友"
+              ]
             }
           }
         }
@@ -3578,7 +4483,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.8,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "教育学专业阶段同学",
+                "财务文员工作同事",
+                "社区邻里朋友"
+              ]
             }
           }
         }
@@ -3602,7 +4513,13 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.9,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "本科阶段同学",
+                "灵活就业合作者/同行",
+                "社区邻里"
+              ]
             }
           }
         }
@@ -3626,7 +4543,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.5,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "大学同学",
+                "家人亲属",
+                "合租室友"
+              ]
             }
           }
         }
@@ -3650,7 +4573,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.5,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "游戏圈认识的朋友"
+              ]
             }
           }
         }
@@ -3674,7 +4603,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.7,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "学龄期孩子的家长群体",
+                "游戏兴趣圈好友"
+              ]
             }
           }
         }
@@ -3698,7 +4633,13 @@
                 "extraversion": 0.1,
                 "agreeableness": 0.4,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "现实生活朋友",
+                "本科阶段同学"
+              ]
             }
           }
         }
@@ -3722,7 +4663,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.3,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -3746,7 +4693,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.3,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "大学同学",
+                "合租室友"
+              ]
             }
           }
         }
@@ -3770,7 +4723,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.7,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "餐饮行业供应商及合作伙伴",
+                "大学时期的工程与制造专业同学",
+                "徒步与阅读兴趣圈的朋友"
+              ]
             }
           }
         }
@@ -3794,7 +4753,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.8,
                 "neuroticism": 0.9
-              }
+              },
+              "platform_friend_categories": [
+                "工程与制造专业的本科及硕士同学",
+                "共同居住的家人亲属",
+                "居住社区的邻居朋友",
+                "手工制作或阅读兴趣圈的朋友"
+              ]
             }
           }
         }
@@ -3818,7 +4783,13 @@
                 "extraversion": 0.9,
                 "agreeableness": 0.4,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "现实生活结识的朋友",
+                "工作同事",
+                "大学同学"
+              ]
             }
           }
         }
@@ -3842,7 +4813,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.2,
                 "neuroticism": 0.9
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "孩子同学的家长",
+                "人文社科方向的大学同学"
+              ]
             }
           }
         }
@@ -3866,7 +4843,14 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.6,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "学龄前儿童家长群体",
+                "教育学专业同学",
+                "灵活就业运营同行",
+                "同社区邻居"
+              ]
             }
           }
         }
@@ -3890,7 +4874,13 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.6,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "财经与经济方向的大学同学",
+                "数据分析工作的职场同事",
+                "共同照顾学龄前孩子的家长群体",
+                "通过阅读或手工爱好结识的线上朋友"
+              ]
             }
           }
         }
@@ -3914,7 +4904,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.3,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "硕士及本科阶段同学",
+                "合租室友"
+              ]
             }
           }
         }
@@ -3938,7 +4934,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.8,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "社区邻里及熟客",
+                "家人亲属",
+                "大学及硕士阶段同学",
+                "供应链供应商及同行"
+              ]
             }
           }
         }
@@ -3962,7 +4964,14 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.6,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "合租的熟识朋友及其家人",
+                "幼儿园孩子的家长",
+                "养老护理工作的同事",
+                "工程与制造专业的大学同学",
+                "社区邻居"
+              ]
             }
           }
         }
@@ -3986,7 +4995,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.5,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "大学及硕士阶段同学",
+                "现实生活中的邻里朋友",
+                "伴侣及其亲友"
+              ]
             }
           }
         }
@@ -4010,7 +5025,14 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.6,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "本科及硕士阶段同学",
+                "灵活就业相关的项目合作者或前同事",
+                "居住小区的邻居",
+                "现实生活中的育儿伙伴"
+              ]
             }
           }
         }
@@ -4034,7 +5056,13 @@
                 "extraversion": 0.0,
                 "agreeableness": 0.1,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学及硕士阶段同学",
+                "幼儿园家长群友"
+              ]
             }
           }
         }
@@ -4058,7 +5086,13 @@
                 "extraversion": 0.1,
                 "agreeableness": 0.8,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "大学时期同学",
+                "前职场同事",
+                "社区邻居"
+              ]
             }
           }
         }
@@ -4082,7 +5116,14 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.8,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "大学同学",
+                "工作同事",
+                "合租舍友及其家人",
+                "孩子幼儿园的家长朋友"
+              ]
             }
           }
         }
@@ -4106,7 +5147,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.6,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "合租舍友"
+              ]
             }
           }
         }
@@ -4130,7 +5177,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.7,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "人文社科方向的大学及研究生阶段同学",
+                "数据分析行业的工作同事",
+                "现实生活中的家人亲属",
+                "徒步与户外活动等兴趣圈认识的朋友"
+              ]
             }
           }
         }
@@ -4154,7 +5207,14 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.4,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "餐饮同行及供应商",
+                "孩子同学的家长",
+                "大学时期同学",
+                "游戏攻略交流圈好友"
+              ]
             }
           }
         }
@@ -4178,7 +5238,13 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.9,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "幼儿园工作同事",
+                "本科及硕士阶段同学",
+                "社区邻里朋友"
+              ]
             }
           }
         }
@@ -4202,7 +5268,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.3,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "计算机与信息技术方向的硕士同学",
+                "财经与经济方向的本科同学",
+                "家人亲属",
+                "园艺/植物养护兴趣圈朋友"
+              ]
             }
           }
         }
@@ -4226,7 +5298,14 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.8,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "合租舍友",
+                "游戏圈认识的朋友"
+              ]
             }
           }
         }
@@ -4250,7 +5329,14 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.6,
                 "neuroticism": 0.8
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "孩子同龄人的家长",
+                "机械维修行业同事",
+                "人文社科专业时期的同学",
+                "收藏爱好者圈子朋友"
+              ]
             }
           }
         }
@@ -4274,7 +5360,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.9,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "退休前护理行业的同事",
+                "社区邻里朋友",
+                "大学及研究生阶段的同学"
+              ]
             }
           }
         }
@@ -4298,7 +5390,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.5,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "现实生活中的邻里朋友"
+              ]
             }
           }
         }
@@ -4322,7 +5420,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.7,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "现实生活中的熟人与合伙人",
+                "孩子学校的家长群体",
+                "汽修行业相关的同行或客户",
+                "财经或经济方向的大学同学"
+              ]
             }
           }
         }
@@ -4346,7 +5450,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.5,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "艺术与设计方向的硕士同学",
+                "教育学本科阶段的同学",
+                "家人与亲属",
+                "手工制作及艺术设计兴趣圈的朋友"
+              ]
             }
           }
         }
@@ -4370,7 +5480,13 @@
                 "extraversion": 0.1,
                 "agreeableness": 0.3,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "大学教育专业同学",
+                "公司运营部门同事",
+                "家人亲属",
+                "现实生活中的熟人朋友"
+              ]
             }
           }
         }
@@ -4394,7 +5510,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.3,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "大学同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -4418,7 +5540,14 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.3,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "继续教育课程同学",
+                "社区邻里朋友",
+                "大学时期同学"
+              ]
             }
           }
         }
@@ -4442,7 +5571,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.5,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "教育行业前同事",
+                "孩子学校的家长群体",
+                "大学时期同学"
+              ]
             }
           }
         }
@@ -4466,7 +5601,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.3,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "艺术与设计专业的求学阶段同学",
+                "行政助理工作相关的职业联系人",
+                "居住社区的邻里朋友",
+                "家人亲属"
+              ]
             }
           }
         }
@@ -4490,7 +5631,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.6,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "孩子学校的家长群友",
+                "前公司同事",
+                "本科阶段同学"
+              ]
             }
           }
         }
@@ -4514,7 +5661,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.9,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "大学期间的艺术与设计专业同学",
+                "目前公司的人事部门同事",
+                "家人及亲属",
+                "现实生活中的少数知心朋友"
+              ]
             }
           }
         }
@@ -4538,7 +5691,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.2,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学阶段同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -4562,7 +5721,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.3,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "幼儿园孩子家长",
+                "平面设计同行及客户",
+                "大学及硕士阶段同学"
+              ]
             }
           }
         }
@@ -4586,7 +5751,13 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.2,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "前同事",
+                "家人亲属",
+                "大学同学",
+                "合租室友"
+              ]
             }
           }
         }
@@ -4610,7 +5781,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.5,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "设计专业领域的同学及前同事",
+                "孩子就读学校的家长群体",
+                "现实生活中的合租室友及邻居"
+              ]
             }
           }
         }
@@ -4634,7 +5811,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.2,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -4658,7 +5841,13 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.3,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "幼儿园工作同事",
+                "家人与亲属",
+                "大学时期计算机专业同学",
+                "现实生活中的熟人朋友"
+              ]
             }
           }
         }
@@ -4682,7 +5871,12 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.6,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "短视频剪辑行业同事及合作伙伴",
+                "大学时期的人文社科专业同学"
+              ]
             }
           }
         }
@@ -4706,7 +5900,14 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.3,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "灵活就业的网络运维同行及客户",
+                "财经与经济方向的大学同学",
+                "孩子幼儿园的家长群体",
+                "收藏爱好的同好圈友",
+                "共同居住的家人亲属"
+              ]
             }
           }
         }
@@ -4730,7 +5931,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.3,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "孩子同学的家长",
+                "花店供应商及同行",
+                "大学期间的计算机专业同学",
+                "合租室友及现实生活朋友"
+              ]
             }
           }
         }
@@ -4754,7 +5961,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.4,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "现实生活朋友",
+                "大学期间的财经类专业同学",
+                "项目合作期间的测试工程师及同行",
+                "家人亲属"
+              ]
             }
           }
         }
@@ -4778,7 +5991,14 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.7,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "合租室友及邻里",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -4802,7 +6022,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.2,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "本科阶段同学",
+                "托育中心同事",
+                "社区邻里朋友"
+              ]
             }
           }
         }
@@ -4826,7 +6052,14 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.5,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "人文与社会科学方向的硕士同学",
+                "财经与经济方向的本科同学",
+                "现实生活中的社交朋友",
+                "徒步与户外运动兴趣圈朋友",
+                "家人亲属"
+              ]
             }
           }
         }
@@ -4850,7 +6083,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.8,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "工程与制造方向的大学同学",
+                "现实生活中的邻里及社区朋友"
+              ]
             }
           }
         }
@@ -4874,7 +6113,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.7,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "社区邻居"
+              ]
             }
           }
         }
@@ -4898,7 +6143,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.3,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "现实生活朋友",
+                "本科阶段同学",
+                "社区邻居"
+              ]
             }
           }
         }
@@ -4922,7 +6173,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.6,
                 "neuroticism": 0.9
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "退休前工厂同事",
+                "同社区邻里朋友",
+                "大学时期同学"
+              ]
             }
           }
         }
@@ -4946,7 +6203,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.2,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "孩子同学家长",
+                "大学及硕士阶段同学"
+              ]
             }
           }
         }
@@ -4970,7 +6233,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.4,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工程与制造行业前同事及生意伙伴",
+                "大学时期同学",
+                "居住社区的邻里朋友"
+              ]
             }
           }
         }
@@ -4994,7 +6263,14 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.8,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "合租舍友",
+                "继续教育课程同学",
+                "社区邻里朋友"
+              ]
             }
           }
         }
@@ -5018,7 +6294,14 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.6,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "大学及研究生阶段同学",
+                "经营网店相关的商业伙伴或供应商",
+                "同社区的邻里朋友",
+                "收藏爱好圈认识的朋友"
+              ]
             }
           }
         }
@@ -5042,7 +6325,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.8,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "大学同学",
+                "游戏圈认识的朋友"
+              ]
             }
           }
         }
@@ -5066,7 +6355,14 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.4,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "培训机构工作同事",
+                "大学时期同学",
+                "合租室友",
+                "园艺养花兴趣圈朋友"
+              ]
             }
           }
         }
@@ -5090,7 +6386,14 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.9,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人及亲属",
+                "孩子学校的家长群体",
+                "摄影行业的同事及同行",
+                "大学及硕士阶段的同学",
+                "游戏攻略社区认识的玩家"
+              ]
             }
           }
         }
@@ -5114,7 +6417,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.3,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "灵活就业期间的业务联系人及同事",
+                "工程与制造方向的硕士及本科阶段同学",
+                "现实生活中合租的室友"
+              ]
             }
           }
         }
@@ -5138,7 +6447,14 @@
                 "extraversion": 0.9,
                 "agreeableness": 0.4,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "前同事及职场人脉",
+                "大学及研究生阶段同学",
+                "亲戚及家人",
+                "现实生活中的社交朋友",
+                "亲子活动及阅读兴趣圈认识的朋友"
+              ]
             }
           }
         }
@@ -5162,7 +6478,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.8,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工程与制造方向的大学同学",
+                "设计行业的业务合作伙伴与前同事",
+                "亲子活动及学前教育圈的朋友"
+              ]
             }
           }
         }
@@ -5186,7 +6508,12 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.1,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -5210,7 +6537,13 @@
                 "extraversion": 0.9,
                 "agreeableness": 0.8,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "大学同学",
+                "家人亲属",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -5234,7 +6567,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.8,
                 "neuroticism": 0.8
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "孩子学校的家长群体",
+                "大学时期同学"
+              ]
             }
           }
         }
@@ -5258,7 +6597,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.7,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "现实生活朋友",
+                "子女教育相关家长"
+              ]
             }
           }
         }
@@ -5282,7 +6627,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.6,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学时期同学",
+                "社区邻里朋友"
+              ]
             }
           }
         }
@@ -5306,7 +6657,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.8,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "前同事及行业同行",
+                "亲友及孩子同学家长",
+                "现实生活中的邻里朋友",
+                "园艺与手工兴趣圈好友"
+              ]
             }
           }
         }
@@ -5330,7 +6687,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.8,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "邻里街坊",
+                "大学同学"
+              ]
             }
           }
         }
@@ -5354,7 +6717,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.7,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "游戏圈认识的朋友"
+              ]
             }
           }
         }
@@ -5378,7 +6747,13 @@
                 "extraversion": 0.1,
                 "agreeableness": 0.8,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "餐饮行业工作同事",
+                "大学时期的同学",
+                "游戏社区结识的网友"
+              ]
             }
           }
         }
@@ -5402,7 +6777,12 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.3,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "大学同学",
+                "现实生活结识的朋友"
+              ]
             }
           }
         }
@@ -5426,7 +6806,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.4,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "人文社科方向的大学及硕士同学",
+                "家人及亲属",
+                "现实生活中的朋友",
+                "徒步与阅读兴趣圈认识的朋友"
+              ]
             }
           }
         }
@@ -5450,7 +6836,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.2,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "幼儿园工作同事",
+                "孩子幼儿园的家长",
+                "大学时期同学"
+              ]
             }
           }
         }
@@ -5474,7 +6866,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.4,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "人文社科专业阶段同学",
+                "家人及亲属",
+                "合租室友",
+                "社区邻里"
+              ]
             }
           }
         }
@@ -5498,7 +6896,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.6,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "现实生活中的邻居与社区朋友"
+              ]
             }
           }
         }
@@ -5522,7 +6926,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.6,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "人文社科方向的求学同学",
+                "自媒体行业同事",
+                "现实生活中的徒步或美食爱好者"
+              ]
             }
           }
         }
@@ -5546,7 +6956,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.6,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "前同事及行业同行",
+                "家人亲属",
+                "现实生活中的邻居",
+                "大学时期同学"
+              ]
             }
           }
         }
@@ -5570,7 +6986,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.3,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "计算机及财经方向的大学同学",
+                "数据分析领域的职场同事",
+                "家人及亲属",
+                "合租室友及社区邻居"
+              ]
             }
           }
         }
@@ -5594,7 +7016,14 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.4,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "孩子同学的家长",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -5618,7 +7047,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.9,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "艺术与设计专业硕士同学",
+                "教育学本科阶段同学",
+                "现实生活中的伴侣及家人亲属",
+                "租住社区的邻居及现实生活朋友"
+              ]
             }
           }
         }
@@ -5642,7 +7077,12 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.6,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "本科及硕士阶段同学",
+                "家人亲属",
+                "社区邻里朋友"
+              ]
             }
           }
         }
@@ -5666,7 +7106,13 @@
                 "extraversion": 0.1,
                 "agreeableness": 0.1,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "本科阶段同学",
+                "居住小区邻居"
+              ]
             }
           }
         }
@@ -5690,7 +7136,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.6,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "本科及硕士阶段的同学",
+                "同居伴侣及对方社交圈",
+                "现实生活中的朋友",
+                "居住社区的邻居"
+              ]
             }
           }
         }
@@ -5714,7 +7166,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.5,
                 "neuroticism": 0.0
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "养老护理同行及合作机构人员",
+                "大学时期同学",
+                "现实生活中的邻居或家长群友"
+              ]
             }
           }
         }
@@ -5738,7 +7196,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.8,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "孩子学校的家长群好友",
+                "旅行兴趣圈认识的朋友"
+              ]
             }
           }
         }
@@ -5762,7 +7226,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.9,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "本科及硕士阶段的计算机专业同学",
+                "家人及亲属",
+                "居住社区的邻居",
+                "通过兼职或项目结识的合作伙伴"
+              ]
             }
           }
         }
@@ -5786,7 +7256,14 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.9,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "孩子同学家长",
+                "工作同事",
+                "大学同学",
+                "游戏圈认识的朋友"
+              ]
             }
           }
         }
@@ -5810,7 +7287,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.3,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "社区邻里朋友",
+                "大学同学"
+              ]
             }
           }
         }
@@ -5834,7 +7317,13 @@
                 "extraversion": 0.9,
                 "agreeableness": 0.4,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "大学同学",
+                "家人亲属",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -5858,7 +7347,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.1,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "摄影工作圈同事及同行",
+                "大学教育专业同学",
+                "孩子学校的家长群体"
+              ]
             }
           }
         }
@@ -5882,7 +7377,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.9,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "社区邻里",
+                "大学同学"
+              ]
             }
           }
         }
@@ -5906,7 +7407,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.5,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "外卖骑手同事",
+                "大学财经专业同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -5930,7 +7437,13 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.5,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -5954,7 +7467,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.5,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "计算机专业本硕阶段同学",
+                "家人及双方亲戚",
+                "同小区邻居",
+                "现实生活中的朋友"
+              ]
             }
           }
         }
@@ -5978,7 +7497,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.3,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "本科阶段同学",
+                "徒步与旅行兴趣圈朋友"
+              ]
             }
           }
         }
@@ -6002,7 +7527,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.7,
                 "neuroticism": 0.9
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "合租舍友及邻里朋友",
+                "孩子幼儿园/学龄前社交圈家长"
+              ]
             }
           }
         }
@@ -6026,7 +7557,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.1,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "艺术与设计方向的本科及硕士同学",
+                "家人及亲属",
+                "游戏圈认识的朋友",
+                "现实生活中的朋友"
+              ]
             }
           }
         }
@@ -6050,7 +7587,14 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.5,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家有学龄孩子的家长群体",
+                "培训机构的同事",
+                "人文社科方向的大学同学",
+                "居住小区的邻居",
+                "家人亲属"
+              ]
             }
           }
         }
@@ -6074,7 +7618,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.5,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "短视频行业同行及客户",
+                "计算机与信息技术专业同学",
+                "社区邻居及现实生活朋友"
+              ]
             }
           }
         }
@@ -6098,7 +7648,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.9,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学阶段同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -6122,7 +7678,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.6,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "幼儿园工作同事",
+                "计算机专业本科同学",
+                "家人亲属",
+                "社区邻里朋友"
+              ]
             }
           }
         }
@@ -6146,7 +7708,13 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.4,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "自由职业同行及潜在客户",
+                "亲戚及家族成员",
+                "社区邻居及家长群体",
+                "大学时期的财经专业同学"
+              ]
             }
           }
         }
@@ -6170,7 +7738,13 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.7,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "餐饮服务业同事",
+                "艺术与设计专业本科同学",
+                "合租室友及社区邻居"
+              ]
             }
           }
         }
@@ -6194,7 +7768,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.5,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "大学同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -6218,7 +7798,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.3,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "前同事及教育行业同行",
+                "家人及亲属",
+                "社区邻里及现实生活朋友",
+                "大学及早年学习阶段同学"
+              ]
             }
           }
         }
@@ -6242,7 +7828,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.5,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "前同事及教育同行",
+                "大学及研究生阶段同学",
+                "合租室友及现实生活邻里"
+              ]
             }
           }
         }
@@ -6266,7 +7858,14 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.5,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "自由职业设计师同行及客户",
+                "大学工程与制造专业同学",
+                "游戏攻略与电子产品兴趣圈朋友",
+                "合租室友及现实生活朋友",
+                "家人亲属"
+              ]
             }
           }
         }
@@ -6290,7 +7889,14 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.6,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "大学期间的工程与制造专业同学",
+                "平面设计领域的同行或合作客户",
+                "家人与亲属",
+                "合租房的室友",
+                "社区邻里朋友"
+              ]
             }
           }
         }
@@ -6314,7 +7920,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.5,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "本科及硕士阶段同学",
+                "家人亲属",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -6338,7 +7950,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.6,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "单亲妈妈群体及亲子活动社群朋友",
+                "测试工程师同行及前同事",
+                "大学期间的工程类专业同学",
+                "租房地周边或现实生活中的朋友"
+              ]
             }
           }
         }
@@ -6362,7 +7980,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.3,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "教育方向硕士在读的同学",
+                "财经与经济方向的本科同学",
+                "家人亲属",
+                "现实生活中的朋友"
+              ]
             }
           }
         }
@@ -6386,7 +8010,13 @@
                 "extraversion": 0.1,
                 "agreeableness": 0.6,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "前同事及职场人脉",
+                "大学艺术专业同学",
+                "现实生活中的熟人朋友"
+              ]
             }
           }
         }
@@ -6410,7 +8040,13 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.6,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "孩子同学的家长",
+                "工作同事",
+                "大学艺术与设计专业同学"
+              ]
             }
           }
         }
@@ -6434,7 +8070,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.7,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "本科阶段同学",
+                "游戏圈认识的朋友"
+              ]
             }
           }
         }
@@ -6458,7 +8100,14 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.4,
                 "neuroticism": 0.8
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "孩子同学家长",
+                "前同事",
+                "本科阶段同学",
+                "社区邻居"
+              ]
             }
           }
         }
@@ -6482,7 +8131,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.8,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "养老机构工作同事",
+                "合租室友及邻里",
+                "大学计算机专业同学"
+              ]
             }
           }
         }
@@ -6506,7 +8161,14 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.8,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "大学同学",
+                "合租室友",
+                "社区邻居"
+              ]
             }
           }
         }
@@ -6530,7 +8192,13 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.8,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "网络运维行业同事",
+                "现实生活中的熟人朋友",
+                "健康与生命科学方向的大学同学"
+              ]
             }
           }
         }
@@ -6554,7 +8222,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.9,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "大学同学",
+                "现实生活朋友",
+                "园艺种植兴趣圈朋友"
+              ]
             }
           }
         }
@@ -6578,7 +8252,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.7,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学同学",
+                "社区邻居"
+              ]
             }
           }
         }
@@ -6602,7 +8282,14 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.5,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "前单位同事及工程制造行业同行",
+                "孩子学校的家长群体",
+                "游戏攻略及电子产品兴趣圈好友",
+                "大学时期同学"
+              ]
             }
           }
         }
@@ -6626,7 +8313,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.7,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "大学同学",
+                "公司同事",
+                "家人亲属",
+                "徒步及户外活动爱好者"
+              ]
             }
           }
         }
@@ -6650,7 +8343,14 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.3,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "学龄孩子家长群体",
+                "游戏兴趣圈朋友",
+                "教育学专业同学"
+              ]
             }
           }
         }
@@ -6674,7 +8374,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.7,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "本科及硕士阶段同学",
+                "亲子活动及育儿圈朋友"
+              ]
             }
           }
         }
@@ -6698,7 +8404,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.8,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "大学及硕士阶段同学",
+                "家人亲属",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -6722,7 +8434,14 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.5,
                 "neuroticism": 0.8
-              }
+              },
+              "platform_friend_categories": [
+                "孩子同学的家长",
+                "工作同事",
+                "家人亲属",
+                "合租室友",
+                "大学艺术专业同学"
+              ]
             }
           }
         }
@@ -6746,7 +8465,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.2,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "工程与制造方向硕士同学",
+                "艺术与设计方向本科同学"
+              ]
             }
           }
         }
@@ -6770,7 +8495,14 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.6,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "家庭成员与亲属",
+                "前同事及职场人脉",
+                "大学同学",
+                "邻里及社区朋友",
+                "育儿圈家长"
+              ]
             }
           }
         }
@@ -6794,7 +8526,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.4,
                 "neuroticism": 0.1
-              }
+              },
+              "platform_friend_categories": [
+                "孩子同学的家长",
+                "财务工作同事",
+                "硕博阶段的同学",
+                "家人亲属"
+              ]
             }
           }
         }
@@ -6818,7 +8556,13 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.2,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "大学同学",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -6842,7 +8586,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.8,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "学龄前儿童家长群体",
+                "平面设计同行及客户",
+                "大学本科及硕士期间同学"
+              ]
             }
           }
         }
@@ -6866,7 +8616,13 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.4,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "大学同学",
+                "工作同事",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -6890,7 +8646,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.4,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "大学艺术与设计专业同学",
+                "后端开发工作同事",
+                "现实生活中的伴侣及家人亲属",
+                "艺术展览与文化兴趣圈朋友"
+              ]
             }
           }
         }
@@ -6914,7 +8676,14 @@
                 "extraversion": 0.8,
                 "agreeableness": 0.4,
                 "neuroticism": 0.7
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "大学同学",
+                "孩子学校的家长",
+                "同社区邻居"
+              ]
             }
           }
         }
@@ -6938,7 +8707,14 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.1,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "合租舍友",
+                "孩子同学的家长",
+                "大学及继续教育课程同学"
+              ]
             }
           }
         }
@@ -6962,7 +8738,14 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.6,
                 "neuroticism": 0.9
-              }
+              },
+              "platform_friend_categories": [
+                "计算机与信息技术方向的硕士同学",
+                "项目协调员岗位的工作同事",
+                "财经与经济方向的本科同学",
+                "合租屋的室友",
+                "家人亲属"
+              ]
             }
           }
         }
@@ -6986,7 +8769,13 @@
                 "extraversion": 0.2,
                 "agreeableness": 0.2,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "教育专业时期的同学",
+                "财务工作单位的同事",
+                "孩子同学的家长"
+              ]
             }
           }
         }
@@ -7010,7 +8799,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.5,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "工作同事",
+                "大学及研究生阶段同学",
+                "现实生活中的朋友"
+              ]
             }
           }
         }
@@ -7034,7 +8829,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.7,
                 "neuroticism": 0.2
-              }
+              },
+              "platform_friend_categories": [
+                "教育专业本科及硕士阶段同学",
+                "家人及亲属",
+                "现实生活中的朋友",
+                "合租舍友"
+              ]
             }
           }
         }
@@ -7058,7 +8859,13 @@
                 "extraversion": 0.9,
                 "agreeableness": 0.7,
                 "neuroticism": 0.3
-              }
+              },
+              "platform_friend_categories": [
+                "本科及硕士阶段的教育学同学",
+                "目前攻读博士期间的学术同行及同学",
+                "家人及亲属",
+                "现实生活中的社交朋友"
+              ]
             }
           }
         }
@@ -7082,7 +8889,13 @@
                 "extraversion": 0.3,
                 "agreeableness": 0.2,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "大学期间的财经专业同学",
+                "家人与亲属",
+                "居住社区的邻里朋友",
+                "现实生活中的熟人及亲友家的小孩"
+              ]
             }
           }
         }
@@ -7106,7 +8919,13 @@
                 "extraversion": 0.4,
                 "agreeableness": 0.4,
                 "neuroticism": 0.6
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "幼儿园家长群体",
+                "职场同事",
+                "大学同学"
+              ]
             }
           }
         }
@@ -7130,7 +8949,13 @@
                 "extraversion": 0.6,
                 "agreeableness": 0.6,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "大学同学",
+                "家人亲属",
+                "现实生活朋友"
+              ]
             }
           }
         }
@@ -7154,7 +8979,13 @@
                 "extraversion": 0.7,
                 "agreeableness": 0.7,
                 "neuroticism": 0.5
-              }
+              },
+              "platform_friend_categories": [
+                "工作同事",
+                "家人亲属",
+                "现实生活中的邻里朋友",
+                "本科阶段同学"
+              ]
             }
           }
         }
@@ -7178,7 +9009,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.6,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "合伙人及修车铺同行",
+                "现实生活中的长期好友",
+                "家人及亲属",
+                "大学时期的人文社科专业同学"
+              ]
             }
           }
         }
@@ -7202,7 +9039,13 @@
                 "extraversion": 0.5,
                 "agreeableness": 0.4,
                 "neuroticism": 0.4
-              }
+              },
+              "platform_friend_categories": [
+                "家人亲属",
+                "孩子同学的家长",
+                "职场同事",
+                "本科及硕博阶段同学"
+              ]
             }
           }
         }

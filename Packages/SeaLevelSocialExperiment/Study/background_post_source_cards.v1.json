@@ -1,17 +1,20 @@
 {
   "schema_version": "sea_level_background_post_source_cards.v1",
   "generation": {
-    "seed": "sea-level-background-posts-2026-08-v1",
+    "seed": "sea-level-background-posts-2026-08-v1-softened",
     "post_count": 200,
     "publisher_count": 40,
     "bucket_counts": {
-      "everyday_life": 55,
-      "light_public_issue": 25,
-      "community_public": 35,
-      "interest_hobby": 70,
-      "loose_social": 15
+      "everyday_life": 80,
+      "interest_hobby": 95,
+      "loose_social": 25
     },
-    "profile_source_count": 300
+    "profile_source_count": 300,
+    "excluded_buckets": [
+      "community_public",
+      "light_public_issue"
+    ],
+    "exclusion_rationale": "Background posts simulate ordinary platform context; public issue and community public-service posts were excluded because they can act as independent high-salience propagation stimuli."
   },
   "publishers": [
     {
@@ -216,8 +219,8 @@
       "post_id": "background_002",
       "account_id": "background_publisher_002",
       "publisher_display_name": "城市小观察",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_233",
@@ -232,26 +235,27 @@
         }
       },
       "ranking_topics": [
-        "technology_society"
+        "reading"
       ],
       "display_hashtags": [
-        "数字服务",
-        "用户体验"
+        "阅读笔记",
+        "时间管理",
+        "图书馆"
       ],
-      "content_style": "谨慎感想",
-      "life_scene": "身边人讨论天气、健康或环境变化",
-      "emotional_tone": "带一点自嘲",
+      "content_style": "试用感受",
+      "life_scene": "周末给自己安排了一段练习",
+      "emotional_tone": "温和提醒",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_003",
       "account_id": "background_publisher_003",
       "publisher_display_name": "健康随手记",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_257",
@@ -266,20 +270,18 @@
         }
       },
       "ranking_topics": [
-        "community",
-        "culture_art"
+        "home_design"
       ],
       "display_hashtags": [
-        "音乐现场",
-        "城市文化",
-        "公共空间"
+        "家居动线",
+        "居家生活"
       ],
-      "content_style": "信息整理",
-      "life_scene": "附近空间被更多人使用后出现了新问题",
-      "emotional_tone": "轻微困惑",
+      "content_style": "试用感受",
+      "life_scene": "休息时试了一个小方法",
+      "emotional_tone": "认真复盘",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -357,8 +359,8 @@
       "post_id": "background_006",
       "account_id": "background_publisher_006",
       "publisher_display_name": "阅读与文化角",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_286",
@@ -373,20 +375,18 @@
         }
       },
       "ranking_topics": [
-        "community",
-        "technology_society"
+        "gardening"
       ],
       "display_hashtags": [
-        "技术社会",
-        "数字服务",
-        "邻里活动"
+        "植物养护",
+        "日常记录"
       ],
-      "content_style": "观察记录",
-      "life_scene": "附近空间被更多人使用后出现了新问题",
-      "emotional_tone": "有点感慨",
+      "content_style": "小技巧",
+      "life_scene": "把一个长期收藏的想法做成了小尝试",
+      "emotional_tone": "平实",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -495,8 +495,8 @@
       "post_id": "background_010",
       "account_id": "background_publisher_010",
       "publisher_display_name": "消费体验站",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_148",
@@ -511,26 +511,26 @@
         }
       },
       "ranking_topics": [
-        "culture_art"
+        "career_learning"
       ],
       "display_hashtags": [
-        "音乐现场",
-        "展览"
+        "技能学习",
+        "阶段复盘"
       ],
-      "content_style": "现场见闻",
-      "life_scene": "公共服务的小流程最近调整了",
-      "emotional_tone": "有点感慨",
+      "content_style": "经验分享",
+      "life_scene": "休息时试了一个小方法",
+      "emotional_tone": "带一点自嘲",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_011",
       "account_id": "background_publisher_011",
       "publisher_display_name": "旅行计划本",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_055",
@@ -545,19 +545,19 @@
         }
       },
       "ranking_topics": [
-        "general_knowledge",
-        "environment"
+        "fitness",
+        "reading"
       ],
       "display_hashtags": [
-        "环保措施",
-        "生活常识"
+        "轻运动",
+        "图书馆"
       ],
-      "content_style": "转述见闻",
-      "life_scene": "信息很多但说法不一，需要给判断留一点余地",
-      "emotional_tone": "平实",
+      "content_style": "试用感受",
+      "life_scene": "把一个长期收藏的想法做成了小尝试",
+      "emotional_tone": "谨慎观察",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -599,8 +599,8 @@
       "post_id": "background_013",
       "account_id": "background_publisher_013",
       "publisher_display_name": "亲子小纸条",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_075",
@@ -615,26 +615,26 @@
         }
       },
       "ranking_topics": [
-        "environment"
+        "cooking"
       ],
       "display_hashtags": [
-        "绿色生活",
-        "环保措施"
+        "厨房经验",
+        "生活技巧"
       ],
-      "content_style": "转述见闻",
-      "life_scene": "刷到一条公共议题相关信息后做了简单核查",
-      "emotional_tone": "认真复盘",
+      "content_style": "试用感受",
+      "life_scene": "把一个长期收藏的想法做成了小尝试",
+      "emotional_tone": "温和提醒",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_014",
       "account_id": "background_publisher_014",
       "publisher_display_name": "理财学习桌",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_017",
@@ -649,27 +649,26 @@
         }
       },
       "ranking_topics": [
-        "fitness",
-        "public_health"
+        "career_learning"
       ],
       "display_hashtags": [
-        "社区健康",
-        "轻运动"
+        "技能学习",
+        "阶段复盘"
       ],
-      "content_style": "信息整理",
-      "life_scene": "公共服务的小流程最近调整了",
-      "emotional_tone": "平实",
+      "content_style": "试用感受",
+      "life_scene": "把一个长期收藏的想法做成了小尝试",
+      "emotional_tone": "带一点自嘲",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_015",
       "account_id": "background_publisher_015",
       "publisher_display_name": "游戏与数码",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_173",
@@ -684,19 +683,19 @@
         }
       },
       "ranking_topics": [
-        "community"
+        "culture_art"
       ],
       "display_hashtags": [
-        "社区观察",
-        "公共空间",
-        "邻里活动"
+        "展览",
+        "音乐现场",
+        "城市文化"
       ],
-      "content_style": "观察记录",
-      "life_scene": "线下服务和手机小程序之间有了新的衔接",
+      "content_style": "试用感受",
+      "life_scene": "休息时试了一个小方法",
       "emotional_tone": "轻微困惑",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -913,8 +912,8 @@
       "post_id": "background_022",
       "account_id": "background_publisher_022",
       "publisher_display_name": "学习复盘页",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_267",
@@ -929,27 +928,28 @@
         }
       },
       "ranking_topics": [
-        "community",
-        "reading"
+        "crafts",
+        "parenting"
       ],
       "display_hashtags": [
-        "阅读笔记",
-        "公共空间"
+        "动手维修",
+        "家庭协作",
+        "上学准备"
       ],
-      "content_style": "信息整理",
-      "life_scene": "社区或城市里有一个新变化",
-      "emotional_tone": "谨慎观察",
+      "content_style": "经验分享",
+      "life_scene": "看到别人分享后自己也试了试",
+      "emotional_tone": "认真复盘",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_023",
       "account_id": "background_publisher_023",
       "publisher_display_name": "小区见闻",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_198",
@@ -964,27 +964,26 @@
         }
       },
       "ranking_topics": [
-        "community"
+        "crafts"
       ],
       "display_hashtags": [
-        "邻里活动",
-        "社区观察",
-        "公共空间"
+        "手作",
+        "生活小事"
       ],
-      "content_style": "观察记录",
-      "life_scene": "社区或城市里有一个新变化",
-      "emotional_tone": "认真复盘",
+      "content_style": "小技巧",
+      "life_scene": "把一个长期收藏的想法做成了小尝试",
+      "emotional_tone": "温和提醒",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_024",
       "account_id": "background_publisher_024",
       "publisher_display_name": "家居整理箱",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_202",
@@ -999,18 +998,19 @@
         }
       },
       "ranking_topics": [
-        "culture_art"
+        "career_learning"
       ],
       "display_hashtags": [
-        "展览",
-        "城市文化"
+        "技能学习",
+        "阶段复盘",
+        "工作方法"
       ],
-      "content_style": "温和讨论",
-      "life_scene": "附近空间被更多人使用后出现了新问题",
-      "emotional_tone": "有点感慨",
+      "content_style": "试用感受",
+      "life_scene": "把一个长期收藏的想法做成了小尝试",
+      "emotional_tone": "谨慎观察",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -1120,8 +1120,8 @@
       "post_id": "background_028",
       "account_id": "background_publisher_028",
       "publisher_display_name": "信息核查台",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_204",
@@ -1136,19 +1136,18 @@
         }
       },
       "ranking_topics": [
-        "technology_society"
+        "crafts"
       ],
       "display_hashtags": [
-        "数字服务",
-        "用户体验",
-        "技术社会"
+        "手作",
+        "生活小事"
       ],
-      "content_style": "信息整理",
-      "life_scene": "社区或城市里有一个新变化",
-      "emotional_tone": "有点感慨",
+      "content_style": "小技巧",
+      "life_scene": "休息时试了一个小方法",
+      "emotional_tone": "谨慎观察",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -1224,8 +1223,8 @@
       "post_id": "background_031",
       "account_id": "background_publisher_031",
       "publisher_display_name": "普通上班族",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_244",
@@ -1240,19 +1239,18 @@
         }
       },
       "ranking_topics": [
-        "environment",
-        "public_health"
+        "premium_tech"
       ],
       "display_hashtags": [
-        "社区实践",
-        "环保措施"
+        "产品体验",
+        "消费观察"
       ],
-      "content_style": "提醒建议",
-      "life_scene": "刷到一条公共议题相关信息后做了简单核查",
-      "emotional_tone": "带一点自嘲",
+      "content_style": "复盘记录",
+      "life_scene": "休息时试了一个小方法",
+      "emotional_tone": "有点感慨",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -1328,8 +1326,8 @@
       "post_id": "background_034",
       "account_id": "background_publisher_034",
       "publisher_display_name": "育儿互助角",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_213",
@@ -1344,19 +1342,19 @@
         }
       },
       "ranking_topics": [
-        "public_health"
+        "culture_art",
+        "home_design"
       ],
       "display_hashtags": [
-        "规律作息",
-        "社区健康",
-        "健康科普"
+        "家居动线",
+        "展览"
       ],
-      "content_style": "温和讨论",
-      "life_scene": "社区或城市里有一个新变化",
-      "emotional_tone": "温和提醒",
+      "content_style": "经验分享",
+      "life_scene": "周末给自己安排了一段练习",
+      "emotional_tone": "平实",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -1398,8 +1396,8 @@
       "post_id": "background_036",
       "account_id": "background_publisher_036",
       "publisher_display_name": "饭后散步群",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_094",
@@ -1414,19 +1412,19 @@
         }
       },
       "ranking_topics": [
-        "public_health",
-        "general_knowledge"
+        "career_learning",
+        "fitness"
       ],
       "display_hashtags": [
-        "健康科普",
-        "生活常识"
+        "轻运动",
+        "运动日常"
       ],
-      "content_style": "现场见闻",
-      "life_scene": "社区或城市里有一个新变化",
+      "content_style": "小技巧",
+      "life_scene": "周末给自己安排了一段练习",
       "emotional_tone": "谨慎观察",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -1677,8 +1675,8 @@
       "post_id": "background_044",
       "account_id": "background_publisher_004",
       "publisher_display_name": "科技日常谈",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_070",
@@ -1696,23 +1694,24 @@
         "culture_art"
       ],
       "display_hashtags": [
-        "音乐现场",
-        "展览"
+        "城市文化",
+        "展览",
+        "音乐现场"
       ],
-      "content_style": "温和讨论",
-      "life_scene": "附近空间被更多人使用后出现了新问题",
-      "emotional_tone": "平实",
+      "content_style": "试用感受",
+      "life_scene": "把一个长期收藏的想法做成了小尝试",
+      "emotional_tone": "带一点自嘲",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_045",
       "account_id": "background_publisher_005",
       "publisher_display_name": "邻里频道",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_145",
@@ -1727,20 +1726,19 @@
         }
       },
       "ranking_topics": [
-        "environment",
-        "general_knowledge"
+        "parenting",
+        "gaming"
       ],
       "display_hashtags": [
-        "绿色生活",
-        "社区实践",
-        "环保措施"
+        "上学准备",
+        "家庭协作"
       ],
-      "content_style": "信息核查",
-      "life_scene": "信息很多但说法不一，需要给判断留一点余地",
-      "emotional_tone": "认真复盘",
+      "content_style": "经验分享",
+      "life_scene": "看到别人分享后自己也试了试",
+      "emotional_tone": "谨慎观察",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -1853,8 +1851,8 @@
       "post_id": "background_049",
       "account_id": "background_publisher_009",
       "publisher_display_name": "职场午休",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_239",
@@ -1869,18 +1867,18 @@
         }
       },
       "ranking_topics": [
-        "technology_society"
+        "career_learning"
       ],
       "display_hashtags": [
-        "数字服务",
-        "技术社会"
+        "技能学习",
+        "工作方法"
       ],
-      "content_style": "观察记录",
-      "life_scene": "公共服务的小流程最近调整了",
-      "emotional_tone": "认真复盘",
+      "content_style": "复盘记录",
+      "life_scene": "周末给自己安排了一段练习",
+      "emotional_tone": "平实",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -1922,8 +1920,8 @@
       "post_id": "background_051",
       "account_id": "background_publisher_011",
       "publisher_display_name": "旅行计划本",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_273",
@@ -1938,18 +1936,19 @@
         }
       },
       "ranking_topics": [
-        "extreme_weather"
+        "crafts",
+        "home_design"
       ],
       "display_hashtags": [
-        "出行提醒",
-        "天气变化"
+        "家居动线",
+        "居家生活"
       ],
-      "content_style": "谨慎感想",
-      "life_scene": "看到一个倡议或试点后想到日常执行成本",
-      "emotional_tone": "平实",
+      "content_style": "试用感受",
+      "life_scene": "周末给自己安排了一段练习",
+      "emotional_tone": "有点感慨",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -2302,8 +2301,8 @@
       "post_id": "background_062",
       "account_id": "background_publisher_022",
       "publisher_display_name": "学习复盘页",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_109",
@@ -2318,18 +2317,19 @@
         }
       },
       "ranking_topics": [
-        "technology_society"
+        "photography",
+        "travel"
       ],
       "display_hashtags": [
-        "用户体验",
-        "技术社会"
+        "周末去处",
+        "摄影练习"
       ],
-      "content_style": "提醒建议",
-      "life_scene": "信息很多但说法不一，需要给判断留一点余地",
-      "emotional_tone": "平实",
+      "content_style": "小技巧",
+      "life_scene": "周末给自己安排了一段练习",
+      "emotional_tone": "带一点自嘲",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -2439,8 +2439,8 @@
       "post_id": "background_066",
       "account_id": "background_publisher_026",
       "publisher_display_name": "公园散步线",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_112",
@@ -2455,26 +2455,28 @@
         }
       },
       "ranking_topics": [
-        "community"
+        "career_learning",
+        "culture_art"
       ],
       "display_hashtags": [
-        "社区观察",
-        "公共空间"
+        "城市文化",
+        "展览",
+        "阶段复盘"
       ],
-      "content_style": "观察记录",
-      "life_scene": "附近空间被更多人使用后出现了新问题",
+      "content_style": "复盘记录",
+      "life_scene": "周末给自己安排了一段练习",
       "emotional_tone": "平实",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_067",
       "account_id": "background_publisher_027",
       "publisher_display_name": "展览与音乐",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_195",
@@ -2489,27 +2491,27 @@
         }
       },
       "ranking_topics": [
-        "technology_society"
+        "photography",
+        "cooking"
       ],
       "display_hashtags": [
-        "技术社会",
-        "用户体验",
-        "数字服务"
+        "厨房经验",
+        "家常菜"
       ],
-      "content_style": "转述见闻",
-      "life_scene": "信息很多但说法不一，需要给判断留一点余地",
-      "emotional_tone": "轻微困惑",
+      "content_style": "小技巧",
+      "life_scene": "把一个长期收藏的想法做成了小尝试",
+      "emotional_tone": "带一点自嘲",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_068",
       "account_id": "background_publisher_028",
       "publisher_display_name": "信息核查台",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_140",
@@ -2524,19 +2526,18 @@
         }
       },
       "ranking_topics": [
-        "community",
-        "public_health"
+        "fitness"
       ],
       "display_hashtags": [
-        "公共空间",
-        "规律作息"
+        "运动日常",
+        "轻运动"
       ],
-      "content_style": "温和讨论",
-      "life_scene": "附近空间被更多人使用后出现了新问题",
-      "emotional_tone": "轻微困惑",
+      "content_style": "经验分享",
+      "life_scene": "休息时试了一个小方法",
+      "emotional_tone": "谨慎观察",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -2613,8 +2614,8 @@
       "post_id": "background_071",
       "account_id": "background_publisher_031",
       "publisher_display_name": "普通上班族",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_219",
@@ -2629,19 +2630,19 @@
         }
       },
       "ranking_topics": [
-        "general_knowledge"
+        "fitness"
       ],
       "display_hashtags": [
-        "生活常识",
-        "经验分享",
-        "信息核查"
+        "健康习惯",
+        "运动日常",
+        "轻运动"
       ],
-      "content_style": "谨慎感想",
-      "life_scene": "身边人讨论天气、健康或环境变化",
-      "emotional_tone": "谨慎观察",
+      "content_style": "复盘记录",
+      "life_scene": "周末给自己安排了一段练习",
+      "emotional_tone": "平实",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -2925,8 +2926,8 @@
       "post_id": "background_080",
       "account_id": "background_publisher_040",
       "publisher_display_name": "日常长帖",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "interest_hobby",
+      "bucket_label": "兴趣爱好与个人经验",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_136",
@@ -2941,27 +2942,26 @@
         }
       },
       "ranking_topics": [
-        "environment",
-        "general_knowledge"
+        "cooking"
       ],
       "display_hashtags": [
-        "生活常识",
-        "经验分享"
+        "家常菜",
+        "厨房经验"
       ],
-      "content_style": "提醒建议",
-      "life_scene": "看到一个倡议或试点后想到日常执行成本",
-      "emotional_tone": "温和提醒",
+      "content_style": "试用感受",
+      "life_scene": "周末给自己安排了一段练习",
+      "emotional_tone": "带一点自嘲",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_081",
       "account_id": "background_publisher_001",
       "publisher_display_name": "生活碎片簿",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_243",
@@ -2976,18 +2976,18 @@
         }
       },
       "ranking_topics": [
-        "general_knowledge"
+        "parenting"
       ],
       "display_hashtags": [
-        "生活常识",
-        "经验分享"
+        "亲子生活",
+        "家庭协作"
       ],
-      "content_style": "提醒建议",
-      "life_scene": "刷到一条公共议题相关信息后做了简单核查",
-      "emotional_tone": "谨慎观察",
+      "content_style": "生活记录",
+      "life_scene": "工作日晚上处理了一件家里的小事",
+      "emotional_tone": "带一点自嘲",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -3271,8 +3271,8 @@
       "post_id": "background_090",
       "account_id": "background_publisher_010",
       "publisher_display_name": "消费体验站",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_268",
@@ -3287,18 +3287,18 @@
         }
       },
       "ranking_topics": [
-        "public_health"
+        "financial_learning"
       ],
       "display_hashtags": [
-        "健康科普",
-        "规律作息"
+        "储蓄计划",
+        "理性消费"
       ],
-      "content_style": "观察记录",
-      "life_scene": "公共服务的小流程最近调整了",
+      "content_style": "日常复盘",
+      "life_scene": "家里人临时提起一件需要安排的事",
       "emotional_tone": "温和提醒",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -3340,8 +3340,8 @@
       "post_id": "background_092",
       "account_id": "background_publisher_012",
       "publisher_display_name": "家常厨房",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_111",
@@ -3356,27 +3356,26 @@
         }
       },
       "ranking_topics": [
-        "public_health",
-        "technology_society"
+        "home_design"
       ],
       "display_hashtags": [
-        "社区健康",
-        "技术社会"
+        "家居动线",
+        "居家生活"
       ],
-      "content_style": "谨慎感想",
-      "life_scene": "看到一个倡议或试点后想到日常执行成本",
+      "content_style": "生活记录",
+      "life_scene": "通勤或排队时想到一个日常问题",
       "emotional_tone": "认真复盘",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_093",
       "account_id": "background_publisher_013",
       "publisher_display_name": "亲子小纸条",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_284",
@@ -3391,26 +3390,26 @@
         }
       },
       "ranking_topics": [
-        "public_health"
+        "home_design"
       ],
       "display_hashtags": [
-        "社区健康",
-        "规律作息"
+        "居家生活",
+        "家居动线"
       ],
-      "content_style": "信息整理",
-      "life_scene": "附近空间被更多人使用后出现了新问题",
-      "emotional_tone": "有点感慨",
+      "content_style": "轻量吐槽",
+      "life_scene": "家里人临时提起一件需要安排的事",
+      "emotional_tone": "轻微困惑",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_094",
       "account_id": "background_publisher_014",
       "publisher_display_name": "理财学习桌",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_248",
@@ -3425,26 +3424,27 @@
         }
       },
       "ranking_topics": [
+        "crafts",
         "reading"
       ],
       "display_hashtags": [
-        "阅读笔记",
-        "时间管理"
+        "生活小事",
+        "动手维修"
       ],
-      "content_style": "温和讨论",
-      "life_scene": "附近空间被更多人使用后出现了新问题",
+      "content_style": "生活记录",
+      "life_scene": "工作日晚上处理了一件家里的小事",
       "emotional_tone": "谨慎观察",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_095",
       "account_id": "background_publisher_015",
       "publisher_display_name": "游戏与数码",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_183",
@@ -3459,19 +3459,19 @@
         }
       },
       "ranking_topics": [
-        "general_knowledge"
+        "crafts",
+        "reading"
       ],
       "display_hashtags": [
-        "经验分享",
-        "生活常识",
-        "信息核查"
+        "阅读笔记",
+        "生活小事"
       ],
-      "content_style": "温和讨论",
-      "life_scene": "线下服务和手机小程序之间有了新的衔接",
-      "emotional_tone": "带一点自嘲",
+      "content_style": "日常复盘",
+      "life_scene": "通勤或排队时想到一个日常问题",
+      "emotional_tone": "温和提醒",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -3583,8 +3583,8 @@
       "post_id": "background_099",
       "account_id": "background_publisher_019",
       "publisher_display_name": "天气与生活",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_282",
@@ -3599,18 +3599,19 @@
         }
       },
       "ranking_topics": [
-        "general_knowledge"
+        "cooking"
       ],
       "display_hashtags": [
-        "信息核查",
-        "生活常识"
+        "备餐",
+        "生活技巧",
+        "家常菜"
       ],
-      "content_style": "信息核查",
-      "life_scene": "身边人讨论天气、健康或环境变化",
+      "content_style": "轻量吐槽",
+      "life_scene": "通勤或排队时想到一个日常问题",
       "emotional_tone": "谨慎观察",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -3651,8 +3652,8 @@
       "post_id": "background_101",
       "account_id": "background_publisher_021",
       "publisher_display_name": "社区活动板",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_079",
@@ -3667,19 +3668,19 @@
         }
       },
       "ranking_topics": [
-        "public_health",
-        "ecology"
+        "reading"
       ],
       "display_hashtags": [
-        "雨水花园",
-        "规律作息"
+        "阅读笔记",
+        "图书馆",
+        "时间管理"
       ],
-      "content_style": "谨慎感想",
-      "life_scene": "信息很多但说法不一，需要给判断留一点余地",
-      "emotional_tone": "谨慎观察",
+      "content_style": "家庭备忘",
+      "life_scene": "通勤或排队时想到一个日常问题",
+      "emotional_tone": "轻微困惑",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -3755,8 +3756,8 @@
       "post_id": "background_104",
       "account_id": "background_publisher_024",
       "publisher_display_name": "家居整理箱",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_032",
@@ -3771,20 +3772,20 @@
         }
       },
       "ranking_topics": [
-        "reading",
-        "technology_society"
+        "technology",
+        "financial_learning"
       ],
       "display_hashtags": [
-        "图书馆",
-        "数字服务",
-        "用户体验"
+        "家庭预算",
+        "实用技巧",
+        "数字生活"
       ],
-      "content_style": "信息整理",
-      "life_scene": "附近空间被更多人使用后出现了新问题",
-      "emotional_tone": "认真复盘",
+      "content_style": "日常复盘",
+      "life_scene": "通勤或排队时想到一个日常问题",
+      "emotional_tone": "轻微困惑",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -3861,8 +3862,8 @@
       "post_id": "background_107",
       "account_id": "background_publisher_027",
       "publisher_display_name": "展览与音乐",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_221",
@@ -3877,18 +3878,18 @@
         }
       },
       "ranking_topics": [
-        "general_knowledge"
+        "reading"
       ],
       "display_hashtags": [
-        "生活常识",
-        "经验分享"
+        "图书馆",
+        "阅读笔记"
       ],
-      "content_style": "信息整理",
-      "life_scene": "线下服务和手机小程序之间有了新的衔接",
-      "emotional_tone": "认真复盘",
+      "content_style": "轻量吐槽",
+      "life_scene": "家里人临时提起一件需要安排的事",
+      "emotional_tone": "温和提醒",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -3964,8 +3965,8 @@
       "post_id": "background_110",
       "account_id": "background_publisher_030",
       "publisher_display_name": "晚间闲聊",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_067",
@@ -3980,27 +3981,27 @@
         }
       },
       "ranking_topics": [
-        "culture_art",
-        "community"
+        "career_learning"
       ],
       "display_hashtags": [
-        "城市文化",
-        "音乐现场"
+        "工作方法",
+        "技能学习",
+        "阶段复盘"
       ],
-      "content_style": "温和讨论",
-      "life_scene": "公共服务的小流程最近调整了",
+      "content_style": "日常复盘",
+      "life_scene": "买东西、做预算或整理物品时发现了细节",
       "emotional_tone": "温和提醒",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_111",
       "account_id": "background_publisher_031",
       "publisher_display_name": "普通上班族",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_241",
@@ -4015,26 +4016,26 @@
         }
       },
       "ranking_topics": [
-        "fitness"
+        "career_learning"
       ],
       "display_hashtags": [
-        "运动日常",
-        "轻运动"
+        "技能学习",
+        "工作方法"
       ],
-      "content_style": "温和讨论",
-      "life_scene": "社区或城市里有一个新变化",
-      "emotional_tone": "温和提醒",
+      "content_style": "家庭备忘",
+      "life_scene": "家里人临时提起一件需要安排的事",
+      "emotional_tone": "平实",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_112",
       "account_id": "background_publisher_032",
       "publisher_display_name": "生活提问箱",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_184",
@@ -4049,26 +4050,26 @@
         }
       },
       "ranking_topics": [
-        "extreme_weather"
+        "reading"
       ],
       "display_hashtags": [
-        "城市安全",
-        "出行提醒"
+        "时间管理",
+        "图书馆"
       ],
-      "content_style": "谨慎感想",
-      "life_scene": "看到一个倡议或试点后想到日常执行成本",
-      "emotional_tone": "认真复盘",
+      "content_style": "轻量吐槽",
+      "life_scene": "工作日晚上处理了一件家里的小事",
+      "emotional_tone": "带一点自嘲",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_113",
       "account_id": "background_publisher_033",
       "publisher_display_name": "居家维修记",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_291",
@@ -4083,18 +4084,19 @@
         }
       },
       "ranking_topics": [
-        "community"
+        "home_design",
+        "crafts"
       ],
       "display_hashtags": [
-        "社区观察",
-        "邻里活动"
+        "动手维修",
+        "家居动线"
       ],
-      "content_style": "信息整理",
-      "life_scene": "社区或城市里有一个新变化",
-      "emotional_tone": "谨慎观察",
+      "content_style": "日常复盘",
+      "life_scene": "通勤或排队时想到一个日常问题",
+      "emotional_tone": "轻微困惑",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -4171,8 +4173,8 @@
       "post_id": "background_116",
       "account_id": "background_publisher_036",
       "publisher_display_name": "饭后散步群",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_035",
@@ -4187,19 +4189,18 @@
         }
       },
       "ranking_topics": [
-        "environment",
-        "ecology"
+        "cooking"
       ],
       "display_hashtags": [
-        "雨水花园",
-        "社区实践"
+        "家常菜",
+        "备餐"
       ],
-      "content_style": "提醒建议",
-      "life_scene": "看到一个倡议或试点后想到日常执行成本",
-      "emotional_tone": "温和提醒",
+      "content_style": "生活记录",
+      "life_scene": "通勤或排队时想到一个日常问题",
+      "emotional_tone": "平实",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -4550,8 +4551,8 @@
       "post_id": "background_127",
       "account_id": "background_publisher_007",
       "publisher_display_name": "家庭备忘录",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_099",
@@ -4566,26 +4567,26 @@
         }
       },
       "ranking_topics": [
-        "general_knowledge"
+        "crafts"
       ],
       "display_hashtags": [
-        "经验分享",
-        "信息核查"
+        "生活小事",
+        "手作"
       ],
-      "content_style": "观察记录",
-      "life_scene": "公共服务的小流程最近调整了",
-      "emotional_tone": "带一点自嘲",
+      "content_style": "轻量吐槽",
+      "life_scene": "工作日晚上处理了一件家里的小事",
+      "emotional_tone": "认真复盘",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_128",
       "account_id": "background_publisher_008",
       "publisher_display_name": "运动慢记录",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_192",
@@ -4600,26 +4601,26 @@
         }
       },
       "ranking_topics": [
-        "public_health"
+        "home_design"
       ],
       "display_hashtags": [
-        "健康科普",
-        "社区健康"
+        "家居动线",
+        "整理收纳"
       ],
-      "content_style": "转述见闻",
-      "life_scene": "信息很多但说法不一，需要给判断留一点余地",
-      "emotional_tone": "轻微困惑",
+      "content_style": "生活记录",
+      "life_scene": "买东西、做预算或整理物品时发现了细节",
+      "emotional_tone": "带一点自嘲",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_129",
       "account_id": "background_publisher_009",
       "publisher_display_name": "职场午休",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_147",
@@ -4634,18 +4635,18 @@
         }
       },
       "ranking_topics": [
-        "technology_society"
+        "technology"
       ],
       "display_hashtags": [
-        "技术社会",
-        "用户体验"
+        "数字生活",
+        "实用技巧"
       ],
-      "content_style": "信息整理",
-      "life_scene": "附近空间被更多人使用后出现了新问题",
-      "emotional_tone": "温和提醒",
+      "content_style": "日常复盘",
+      "life_scene": "买东西、做预算或整理物品时发现了细节",
+      "emotional_tone": "有点感慨",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -5069,8 +5070,8 @@
       "post_id": "background_142",
       "account_id": "background_publisher_022",
       "publisher_display_name": "学习复盘页",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_141",
@@ -5085,19 +5086,19 @@
         }
       },
       "ranking_topics": [
-        "technology_society"
+        "reading",
+        "cooking"
       ],
       "display_hashtags": [
-        "用户体验",
-        "数字服务",
-        "技术社会"
+        "阅读笔记",
+        "图书馆"
       ],
-      "content_style": "转述见闻",
-      "life_scene": "刷到一条公共议题相关信息后做了简单核查",
-      "emotional_tone": "有点感慨",
+      "content_style": "家庭备忘",
+      "life_scene": "通勤或排队时想到一个日常问题",
+      "emotional_tone": "平实",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -5138,8 +5139,8 @@
       "post_id": "background_144",
       "account_id": "background_publisher_024",
       "publisher_display_name": "家居整理箱",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_256",
@@ -5154,19 +5155,19 @@
         }
       },
       "ranking_topics": [
-        "community"
+        "cooking",
+        "reading"
       ],
       "display_hashtags": [
-        "邻里活动",
-        "社区观察",
-        "公共空间"
+        "时间管理",
+        "家常菜"
       ],
-      "content_style": "信息整理",
-      "life_scene": "附近空间被更多人使用后出现了新问题",
-      "emotional_tone": "带一点自嘲",
+      "content_style": "家庭备忘",
+      "life_scene": "工作日晚上处理了一件家里的小事",
+      "emotional_tone": "轻微困惑",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -5278,8 +5279,8 @@
       "post_id": "background_148",
       "account_id": "background_publisher_028",
       "publisher_display_name": "信息核查台",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_133",
@@ -5294,27 +5295,28 @@
         }
       },
       "ranking_topics": [
-        "community",
-        "general_knowledge"
+        "home_design",
+        "technology"
       ],
       "display_hashtags": [
-        "社区观察",
-        "信息核查"
+        "整理收纳",
+        "家居动线",
+        "居家生活"
       ],
-      "content_style": "现场见闻",
-      "life_scene": "线下服务和手机小程序之间有了新的衔接",
-      "emotional_tone": "谨慎观察",
+      "content_style": "生活记录",
+      "life_scene": "工作日晚上处理了一件家里的小事",
+      "emotional_tone": "带一点自嘲",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_149",
       "account_id": "background_publisher_029",
       "publisher_display_name": "绿色生活笔记",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_179",
@@ -5329,27 +5331,27 @@
         }
       },
       "ranking_topics": [
-        "environment",
-        "public_health"
+        "crafts",
+        "financial_learning"
       ],
       "display_hashtags": [
-        "环保措施",
-        "绿色生活"
+        "理性消费",
+        "生活小事"
       ],
-      "content_style": "信息核查",
-      "life_scene": "刷到一条公共议题相关信息后做了简单核查",
-      "emotional_tone": "温和提醒",
+      "content_style": "日常复盘",
+      "life_scene": "买东西、做预算或整理物品时发现了细节",
+      "emotional_tone": "有点感慨",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_150",
       "account_id": "background_publisher_030",
       "publisher_display_name": "晚间闲聊",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_015",
@@ -5364,20 +5366,19 @@
         }
       },
       "ranking_topics": [
-        "environment",
-        "general_knowledge"
+        "fitness"
       ],
       "display_hashtags": [
-        "经验分享",
-        "绿色生活",
-        "生活常识"
+        "健康习惯",
+        "轻运动",
+        "运动日常"
       ],
-      "content_style": "提醒建议",
-      "life_scene": "信息很多但说法不一，需要给判断留一点余地",
+      "content_style": "轻量吐槽",
+      "life_scene": "家里人临时提起一件需要安排的事",
       "emotional_tone": "平实",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -5524,8 +5525,8 @@
       "post_id": "background_155",
       "account_id": "background_publisher_035",
       "publisher_display_name": "周末安排局",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_238",
@@ -5540,18 +5541,19 @@
         }
       },
       "ranking_topics": [
-        "fitness"
+        "cooking"
       ],
       "display_hashtags": [
-        "健康习惯",
-        "散步"
+        "家常菜",
+        "备餐",
+        "生活技巧"
       ],
-      "content_style": "信息整理",
-      "life_scene": "线下服务和手机小程序之间有了新的衔接",
-      "emotional_tone": "平实",
+      "content_style": "日常复盘",
+      "life_scene": "通勤或排队时想到一个日常问题",
+      "emotional_tone": "轻微困惑",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -5802,8 +5804,8 @@
       "post_id": "background_163",
       "account_id": "background_publisher_003",
       "publisher_display_name": "健康随手记",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "everyday_life",
+      "bucket_label": "日常生活、家庭、工作、消费或通勤",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_090",
@@ -5818,20 +5820,19 @@
         }
       },
       "ranking_topics": [
-        "general_knowledge",
-        "environment"
+        "reading",
+        "technology"
       ],
       "display_hashtags": [
-        "环保措施",
-        "绿色生活",
-        "经验分享"
+        "图书馆",
+        "实用技巧"
       ],
-      "content_style": "谨慎感想",
-      "life_scene": "信息很多但说法不一，需要给判断留一点余地",
-      "emotional_tone": "温和提醒",
+      "content_style": "家庭备忘",
+      "life_scene": "工作日晚上处理了一件家里的小事",
+      "emotional_tone": "轻微困惑",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -6050,8 +6051,8 @@
       "post_id": "background_170",
       "account_id": "background_publisher_010",
       "publisher_display_name": "消费体验站",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "loose_social",
+      "bucket_label": "随手记录、求建议、小抱怨或轻量情绪",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_271",
@@ -6066,20 +6067,18 @@
         }
       },
       "ranking_topics": [
-        "environment",
-        "general_knowledge"
+        "home_design"
       ],
       "display_hashtags": [
-        "生活常识",
-        "社区实践",
-        "经验分享"
+        "整理收纳",
+        "居家生活"
       ],
-      "content_style": "谨慎感想",
-      "life_scene": "看到一个倡议或试点后想到日常执行成本",
+      "content_style": "小发现",
+      "life_scene": "把一个小发现先记下来",
       "emotional_tone": "轻微困惑",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -6364,8 +6363,8 @@
       "post_id": "background_179",
       "account_id": "background_publisher_019",
       "publisher_display_name": "天气与生活",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "loose_social",
+      "bucket_label": "随手记录、求建议、小抱怨或轻量情绪",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_242",
@@ -6380,28 +6379,27 @@
         }
       },
       "ranking_topics": [
-        "extreme_weather",
-        "public_health"
+        "home_design",
+        "fitness"
       ],
       "display_hashtags": [
-        "社区健康",
-        "规律作息",
-        "城市安全"
+        "健康习惯",
+        "运动日常"
       ],
-      "content_style": "信息核查",
-      "life_scene": "信息很多但说法不一，需要给判断留一点余地",
-      "emotional_tone": "谨慎观察",
+      "content_style": "碎碎念",
+      "life_scene": "休息时间随便翻到一个生活细节",
+      "emotional_tone": "轻微困惑",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_180",
       "account_id": "background_publisher_020",
       "publisher_display_name": "情绪便利贴",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "loose_social",
+      "bucket_label": "随手记录、求建议、小抱怨或轻量情绪",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_194",
@@ -6416,27 +6414,27 @@
         }
       },
       "ranking_topics": [
-        "culture_art",
-        "general_knowledge"
+        "home_design"
       ],
       "display_hashtags": [
-        "生活常识",
-        "展览"
+        "整理收纳",
+        "居家生活",
+        "家居动线"
       ],
-      "content_style": "信息整理",
-      "life_scene": "附近空间被更多人使用后出现了新问题",
-      "emotional_tone": "轻微困惑",
+      "content_style": "情绪记录",
+      "life_scene": "今天情绪被一件普通小事带动了一下",
+      "emotional_tone": "带一点自嘲",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_181",
       "account_id": "background_publisher_021",
       "publisher_display_name": "社区活动板",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "loose_social",
+      "bucket_label": "随手记录、求建议、小抱怨或轻量情绪",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_218",
@@ -6451,19 +6449,18 @@
         }
       },
       "ranking_topics": [
-        "general_knowledge",
-        "reading"
+        "gardening"
       ],
       "display_hashtags": [
-        "阅读笔记",
-        "图书馆"
+        "植物养护",
+        "日常记录"
       ],
-      "content_style": "温和讨论",
-      "life_scene": "附近空间被更多人使用后出现了新问题",
-      "emotional_tone": "认真复盘",
+      "content_style": "碎碎念",
+      "life_scene": "今天情绪被一件普通小事带动了一下",
+      "emotional_tone": "谨慎观察",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -6643,8 +6640,8 @@
       "post_id": "background_187",
       "account_id": "background_publisher_027",
       "publisher_display_name": "展览与音乐",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "loose_social",
+      "bucket_label": "随手记录、求建议、小抱怨或轻量情绪",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_161",
@@ -6659,27 +6656,27 @@
         }
       },
       "ranking_topics": [
-        "public_health",
-        "reading"
+        "gardening",
+        "home_design"
       ],
       "display_hashtags": [
-        "图书馆",
-        "社区健康"
+        "整理收纳",
+        "日常记录"
       ],
-      "content_style": "观察记录",
-      "life_scene": "线下服务和手机小程序之间有了新的衔接",
-      "emotional_tone": "带一点自嘲",
+      "content_style": "情绪记录",
+      "life_scene": "休息时间随便翻到一个生活细节",
+      "emotional_tone": "温和提醒",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_188",
       "account_id": "background_publisher_028",
       "publisher_display_name": "信息核查台",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "loose_social",
+      "bucket_label": "随手记录、求建议、小抱怨或轻量情绪",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_185",
@@ -6694,18 +6691,19 @@
         }
       },
       "ranking_topics": [
-        "public_health"
+        "fitness",
+        "cooking"
       ],
       "display_hashtags": [
-        "规律作息",
-        "社区健康"
+        "健康习惯",
+        "备餐"
       ],
-      "content_style": "提醒建议",
-      "life_scene": "刷到一条公共议题相关信息后做了简单核查",
-      "emotional_tone": "认真复盘",
+      "content_style": "碎碎念",
+      "life_scene": "把一个小发现先记下来",
+      "emotional_tone": "带一点自嘲",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -6817,8 +6815,8 @@
       "post_id": "background_192",
       "account_id": "background_publisher_032",
       "publisher_display_name": "生活提问箱",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "loose_social",
+      "bucket_label": "随手记录、求建议、小抱怨或轻量情绪",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_128",
@@ -6833,27 +6831,27 @@
         }
       },
       "ranking_topics": [
-        "reading"
+        "gardening"
       ],
       "display_hashtags": [
-        "图书馆",
-        "阅读笔记",
-        "时间管理"
+        "植物养护",
+        "日常记录",
+        "阳台种植"
       ],
-      "content_style": "现场见闻",
-      "life_scene": "社区或城市里有一个新变化",
-      "emotional_tone": "轻微困惑",
+      "content_style": "轻量记录",
+      "life_scene": "随手记录一个不大不小的困扰",
+      "emotional_tone": "带一点自嘲",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_193",
       "account_id": "background_publisher_033",
       "publisher_display_name": "居家维修记",
-      "bucket": "light_public_issue",
-      "bucket_label": "轻公共议题或信息转述",
+      "bucket": "loose_social",
+      "bucket_label": "随手记录、求建议、小抱怨或轻量情绪",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_223",
@@ -6868,18 +6866,19 @@
         }
       },
       "ranking_topics": [
-        "technology_society"
+        "career_learning"
       ],
       "display_hashtags": [
-        "技术社会",
-        "用户体验"
+        "工作方法",
+        "技能学习",
+        "阶段复盘"
       ],
-      "content_style": "转述见闻",
-      "life_scene": "看到一个倡议或试点后想到日常执行成本",
-      "emotional_tone": "温和提醒",
+      "content_style": "情绪记录",
+      "life_scene": "今天情绪被一件普通小事带动了一下",
+      "emotional_tone": "认真复盘",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
@@ -7057,8 +7056,8 @@
       "post_id": "background_199",
       "account_id": "background_publisher_039",
       "publisher_display_name": "老街新事",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "loose_social",
+      "bucket_label": "随手记录、求建议、小抱怨或轻量情绪",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_135",
@@ -7073,27 +7072,26 @@
         }
       },
       "ranking_topics": [
-        "culture_art"
+        "gardening"
       ],
       "display_hashtags": [
-        "城市文化",
-        "展览",
-        "音乐现场"
+        "植物养护",
+        "日常记录"
       ],
-      "content_style": "现场见闻",
-      "life_scene": "线下服务和手机小程序之间有了新的衔接",
-      "emotional_tone": "谨慎观察",
+      "content_style": "轻量记录",
+      "life_scene": "随手记录一个不大不小的困扰",
+      "emotional_tone": "温和提醒",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     },
     {
       "post_id": "background_200",
       "account_id": "background_publisher_040",
       "publisher_display_name": "日常长帖",
-      "bucket": "community_public",
-      "bucket_label": "社区、城市、公共服务、健康或技术社会",
+      "bucket": "loose_social",
+      "bucket_label": "随手记录、求建议、小抱怨或轻量情绪",
       "author_basis": {
         "kind": "profile_inspired_background_user",
         "profile_id": "social_profile_226",
@@ -7108,19 +7106,18 @@
         }
       },
       "ranking_topics": [
-        "culture_art"
+        "home_design"
       ],
       "display_hashtags": [
-        "城市文化",
-        "展览",
-        "音乐现场"
+        "家居动线",
+        "整理收纳"
       ],
-      "content_style": "温和讨论",
-      "life_scene": "线下服务和手机小程序之间有了新的衔接",
-      "emotional_tone": "平实",
+      "content_style": "情绪记录",
+      "life_scene": "把一个小发现先记下来",
+      "emotional_tone": "轻微困惑",
       "length_chars": {
-        "min": 130,
-        "max": 210
+        "min": 120,
+        "max": 190
       }
     }
   ]

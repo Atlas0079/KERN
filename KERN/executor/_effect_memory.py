@@ -84,6 +84,10 @@ def _bind_apply_memory_patch(_ws: Any, effect_data: dict[str, Any], context: dic
 
 
 def execute_apply_memory_patch(executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+	# 工作流决定记忆内容与要消费的观察 ID，executor 负责实际修改状态。
+	# notes 与 consume_*_ids 无需一一对应：消费观察而不新增 note 即表示“忽视”。
+	# 同一批观察的消费与选中内容的记忆写入应在同一事务中提交或回滚，
+	# 避免消费后丢失待保存内容，或写入后重复处理；这不要求每条观察都进入记忆。
 	target_key = str(data.get("target", "self") or "self")
 	target, err = executor.require_entity(ws, context, target_key, "ApplyMemoryPatch", "target")
 	if err is not None:

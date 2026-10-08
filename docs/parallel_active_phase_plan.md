@@ -133,7 +133,7 @@ Implementation may modify only:
 - `KERN/sim/turn_scheduler.py`
 - `KERN/sim/turn_runner.py`
 - `KERN/sim/active_phase.py`
-- `KERN/agent_workflow/social_platform.py`
+- `applications/social_experiment/workflow.py`
 - focused tests under `tests/runtime/` and `tests/agent/`
 - sea-level runtime configs if needed to opt into the new mode
 

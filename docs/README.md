@@ -8,7 +8,7 @@
 - `开发者快速上手.md`：第一次运行 KERN 的最短路径和公开 runtime API。
 - `配置详解.md`：当前代码实际读取的 runtime config 字段。
 - `野营场景设计.md`：Camping world Package 的当前场景目标、已实现行为、待补内容和移动建模待决项。
-- `social_memory_design.md`：社交平台 Agent 可见记录与记忆机制的设计备忘；其中部分机制已经实现，未实现项以代码和实现状态文档为准。
+- `social_memory_design.md`：当前社交平台 Agent 可见记录、应用层记忆分类与整理流程。
 
 仓库根目录 `AGENTS.md` 是给代码 agent 的稳定边界和验证指导，不是产品文档或工作日志。
 

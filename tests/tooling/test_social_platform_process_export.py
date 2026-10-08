@@ -19,6 +19,7 @@ def _seed() -> dict:
 			{
 				"account_id": "author",
 				"post_id": "post_001",
+				"title": "Risk title",
 				"text": "Risk information",
 				"ranking_topics": ["risk"],
 				"display_hashtags": ["风险"],

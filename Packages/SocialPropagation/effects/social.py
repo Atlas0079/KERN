@@ -13,11 +13,11 @@ SCREEN_COMPONENT_ID = "social_propagation:ScreenComponent"
 PUBLIC_CARD_FIELDS = (
 	"feed_item_kind",
 	"post_id",
+	"title",
 	"original_author_id",
 	"created_tick",
 	"reposted_by_account_id",
 	"reposted_tick",
-	"text",
 	"display_hashtags",
 	"repost_count",
 	"like_count",
@@ -28,6 +28,13 @@ PUBLIC_CARD_FIELDS = (
 	"source_account_id",
 	"section",
 	"position",
+)
+DETAIL_POST_FIELDS = (
+	*PUBLIC_CARD_FIELDS,
+	"text",
+	"recent_comments",
+	"feed_session_id",
+	"exposure_id",
 )
 
 
@@ -45,6 +52,19 @@ def _bind_refresh_feed(_ws: Any, effect_data: dict[str, Any], context: dict[str,
 	if limit < 1 or limit > 8:
 		raise BindError(effect_type, ["limit"])
 	return {"effect": effect_type, "terminal_id": _terminal_id(params, effect_type, ctx), "limit": limit}, ctx
+
+
+def _bind_open_post_detail(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, params, ctx = _base_bind(effect_data, context)
+	post_id = str(_resolve_param_token(params.get("post_id", ""), ctx) or "").strip()
+	if not post_id:
+		raise BindError(effect_type, ["post_id"])
+	return {"effect": effect_type, "terminal_id": _terminal_id(params, effect_type, ctx), "post_id": post_id}, ctx
+
+
+def _bind_back_to_feed(_ws: Any, effect_data: dict[str, Any], context: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+	effect_type, _params, ctx = _base_bind(effect_data, context)
+	return {"effect": effect_type, "terminal_id": _terminal_id(_params, effect_type, ctx)}, ctx
 
 
 def _bind_visible_post_action(effect_data: dict[str, Any], context: dict[str, Any], *, text_required: bool = False) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -102,13 +122,24 @@ def _terminal_context(ws: Any, terminal_id: str, context: dict[str, Any]) -> tup
 	return screen, bridge, terminal, tick
 
 
-def _visible_card(screen: Any, post_id: str, tick: int) -> dict[str, Any]:
+def _feed_card(screen: Any, post_id: str, tick: int) -> dict[str, Any]:
 	if int(getattr(screen, "updated_tick", -1)) != int(tick):
-		executor_error("social screen is stale; refresh the feed before interacting", kind=ERROR_KIND_BUSINESS, code="SOCIAL_SCREEN_STALE")
+		executor_error("social screen is stale; refresh the feed before using it", kind=ERROR_KIND_BUSINESS, code="SOCIAL_SCREEN_STALE")
 	for card in list(getattr(screen, "feed_items", []) or []):
 		if isinstance(card, dict) and str(card.get("post_id", "") or "") == post_id:
 			return dict(card)
 	executor_error("post is not visible on the current social screen", kind=ERROR_KIND_BUSINESS, code="SOCIAL_POST_NOT_VISIBLE")
+
+
+def _visible_card(screen: Any, post_id: str, tick: int) -> dict[str, Any]:
+	if int(getattr(screen, "updated_tick", -1)) != int(tick):
+		executor_error("social screen is stale; refresh the feed before interacting", kind=ERROR_KIND_BUSINESS, code="SOCIAL_SCREEN_STALE")
+	if str(getattr(screen, "view", "") or "") != "post_detail":
+		executor_error("open the post detail page before liking, commenting, or reposting", kind=ERROR_KIND_BUSINESS, code="SOCIAL_POST_DETAIL_REQUIRED")
+	current = getattr(screen, "current_post", None)
+	if isinstance(current, dict) and str(current.get("post_id", "") or "") == post_id:
+		return dict(current)
+	executor_error("post is not open on the current social screen", kind=ERROR_KIND_BUSINESS, code="SOCIAL_POST_NOT_VISIBLE")
 
 
 def _screen_from_terminal(ws: Any, terminal_id: str) -> Any:
@@ -154,6 +185,23 @@ def record_refresh_feed(ws: Any, data: dict[str, Any], _context: dict[str, Any],
 	cards = [dict(item) for item in list(getattr(screen, "feed_items", []) or []) if isinstance(item, dict)]
 	card_lines = "；".join(_public_card_summary(card) for card in cards)
 	return f"我在 tick {tick} 打开推荐页，feed_session_id={int(getattr(screen, 'feed_session_id', 0) or 0)}，看到了 {len(cards)} 张卡片：{card_lines}"
+
+
+def record_open_post_detail(ws: Any, data: dict[str, Any], _context: dict[str, Any], _events: list[dict[str, Any]]) -> str:
+	screen = _screen_from_terminal(ws, str(data.get("terminal_id", "") or ""))
+	if screen is None:
+		return ""
+	tick = int(getattr(getattr(ws, "game_time", None), "total_ticks", 0) or 0)
+	post_id = str(data.get("post_id", "") or "")
+	card = _visible_card(screen, post_id, tick)
+	return f"我点开了{_card_label(card, post_id)}的详情页。"
+
+
+def record_back_to_feed(ws: Any, data: dict[str, Any], _context: dict[str, Any], _events: list[dict[str, Any]]) -> str:
+	screen = _screen_from_terminal(ws, str(data.get("terminal_id", "") or ""))
+	if screen is None:
+		return ""
+	return f"我从帖子详情页回到了推荐页，feed_session_id={int(getattr(screen, 'feed_session_id', 0) or 0)}。"
 
 
 def record_like_visible_post(ws: Any, data: dict[str, Any], _context: dict[str, Any], _events: list[dict[str, Any]]) -> str:
@@ -224,6 +272,53 @@ def execute_refresh_feed(_executor: Any, ws: Any, data: dict[str, Any], context:
 	return [opened, *[dict(item) for item in feed_events[1:]]]
 
 
+def execute_open_post_detail(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+	screen, bridge, _terminal, tick = _terminal_context(ws, str(data["terminal_id"]), context)
+	if str(getattr(screen, "view", "") or "") != "feed":
+		executor_error("open post detail requires the recommendation feed screen", kind=ERROR_KIND_BUSINESS, code="SOCIAL_FEED_REQUIRED")
+	post_id = str(data["post_id"])
+	card = _feed_card(screen, post_id, tick)
+	payload = {
+		"account_id": str(screen.account_id),
+		"post_id": post_id,
+		"source_exposure_id": int(card.get("exposure_id")),
+		"tick": tick,
+		"recent_comments_limit": 5,
+	}
+	events = bridge.invoke(str(screen.runtime_id), "open_post_detail", payload, context)
+	if len(events) != 1 or events[0].get("type") != "SocialPostDetailOpened":
+		executor_error("social runtime returned an invalid post detail result", kind=ERROR_KIND_CONTRACT, code="SOCIAL_POST_DETAIL_RESULT_INVALID")
+	detail = dict(events[0])
+	public_detail = {field: detail.get(field) for field in DETAIL_POST_FIELDS if field in detail}
+	public_detail["feed_session_id"] = int(detail.get("feed_session_id"))
+	public_detail["exposure_id"] = int(detail.get("exposure_id"))
+	screen.view = "post_detail"
+	screen.title = str(public_detail.get("title", "") or "帖子详情")
+	screen.current_post = public_detail
+	screen.selected_post_id = post_id
+	screen.updated_tick = tick
+	screen.status_text = "已打开帖子详情"
+	screen.last_event_type = "SocialPostDetailOpened"
+	screen.last_error = ""
+	detail["current_post"] = dict(public_detail)
+	return [detail]
+
+
+def execute_back_to_feed(_executor: Any, ws: Any, data: dict[str, Any], context: dict[str, Any]) -> list[dict[str, Any]]:
+	screen, _bridge, _terminal, tick = _terminal_context(ws, str(data["terminal_id"]), context)
+	if str(getattr(screen, "view", "") or "") != "post_detail":
+		executor_error("back to feed requires an open post detail page", kind=ERROR_KIND_BUSINESS, code="SOCIAL_POST_DETAIL_REQUIRED")
+	screen.view = "feed"
+	screen.title = "推荐"
+	screen.current_post = None
+	screen.selected_post_id = ""
+	screen.updated_tick = tick
+	screen.status_text = "已返回推荐页"
+	screen.last_event_type = "SocialFeedReturned"
+	screen.last_error = ""
+	return [{"type": "SocialFeedReturned", "feed_session_id": int(getattr(screen, "feed_session_id", 0) or 0), "tick": tick}]
+
+
 def _execute_visible_interaction(ws: Any, data: dict[str, Any], context: dict[str, Any], operation: str, event_type: str) -> list[dict[str, Any]]:
 	screen, bridge, _terminal, tick = _terminal_context(ws, str(data["terminal_id"]), context)
 	post_id = str(data["post_id"])
@@ -248,9 +343,23 @@ def _execute_visible_interaction(ws: Any, data: dict[str, Any], context: dict[st
 		card["repost_count"] = int(card.get("repost_count", 0)) + 1
 	else:
 		card["comment_count"] = int(card.get("comment_count", 0)) + 1
+		if isinstance(card.get("recent_comments"), list):
+			card["recent_comments"] = [
+				{
+					"author_id": str(screen.account_id),
+					"text": str(data.get("text", "") or ""),
+					"created_tick": tick,
+				},
+				*list(card.get("recent_comments", [])),
+			][:5]
+	screen.current_post = dict(card)
 	for index, item in enumerate(list(screen.feed_items or [])):
 		if isinstance(item, dict) and str(item.get("post_id", "") or "") == post_id:
-			screen.feed_items[index] = card
+			feed_card = dict(item)
+			for field in ("like_count", "comment_count", "repost_count", "viewer_has_liked", "viewer_has_reposted"):
+				if field in card:
+					feed_card[field] = card[field]
+			screen.feed_items[index] = feed_card
 			break
 	screen.status_text = {"repost": "已转发", "like": "已点赞", "comment": "已评论"}[operation]
 	screen.last_event_type = event_type
@@ -282,6 +391,16 @@ def execute_observe_metrics(_executor: Any, ws: Any, data: dict[str, Any], conte
 
 @package_effect(EffectSpec(effect_id="social_propagation:RefreshFeed", module="effects.social", side_effect="external_transactional", emits=("SocialFeedOpened", "SocialPostExposed")))
 def refresh_feed_effect() -> None:
+	pass
+
+
+@package_effect(EffectSpec(effect_id="social_propagation:OpenPostDetail", module="effects.social", emits=("SocialPostDetailOpened",)))
+def open_post_detail_effect() -> None:
+	pass
+
+
+@package_effect(EffectSpec(effect_id="social_propagation:BackToFeed", module="effects.social", emits=("SocialFeedReturned",)))
+def back_to_feed_effect() -> None:
 	pass
 
 

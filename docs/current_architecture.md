@@ -26,16 +26,15 @@ runtime config / Package selection
 5. 装配 executor、interaction engine、workflow registry、reaction system、archive、failure writer
    和已选择的 external runtime 实例。
 
-workflow provider 是源码内置实现集合，不是 Package 自动发现项。runtime config 可以通过
-`workflow_providers` 选择 `KERN.agent_workflow.builtin_workflows.BUILTIN_WORKFLOW_BUILDERS`
-中注册的 kind；开发者新增 workflow 时需要修改源码注册表和对应 builder。当前内置 kind 包括
-`simple`、`llm` 和 `social_platform`。
+Package 只定义世界及该世界需要的额外能力，不声明或装配 Agent workflow。
+通用入口的内置 workflow kind 只有 `simple` 和 `llm`。自定义决策、模型和实验策略由应用层
+构造 `WorkflowRegistry`，通过 `KernRuntime.from_config(..., workflow_registry=...)` 或
+`from_loaded_packages` 注入，无需修改内核注册表。
 
-workflow builder 属于内核装配层。`simple` builder 返回无 LLM 策略；`llm` builder 包装旧有
-`llm_providers` / `workflows` role 配置；`social_platform` builder 读取已加载 world Package
-中的 study data，构造内置 `KERN.agent_workflow.social_platform.SocialPlatformWorkflow`。Package
-data 可以为内置 workflow 提供场景事实，但 workflow 实现本身不通过 Package loader 自动注册，
-KERN 内核也不 import capability Package 的 workflow 代码。
+社交实验使用 `applications/social_experiment`：`workflow.py` 实现决策，`memory.py` 定义
+实验记忆分类和权重，`runtime.py` 读取实验配置并装配 registry。它仍读取 world Package
+中的 schedule、actor bindings 和 study data，但 Package loader 不发现或导入这些工作流。
+启动命令为 `python -m applications.social_experiment --config runtime_config.sea_level.solution.json`。
 
 Package 路径必须位于 project root 内，Package ID 不得重复。manifest 文件固定为 Package
 根目录的 `kern-package.json`。world Package 必须声明 `provides_world: true` 和完整 world
@@ -137,7 +136,9 @@ Event，也不进入 Reaction FIFO。provider、contract、Effect 或 Reaction �
 
 一个 EffectBundle 是一个世界事务。Executor 在执行前验证 Effect ID 和外部副作用顺序，
 为最外层 Bundle 建立 transaction ID，并保存 `WorldState` 快照。任何 Effect 或 child bundle
-失败都会恢复包含它的事务快照。
+失败都会恢复包含它的事务快照。每个嵌套 Bundle 保留自己的回滚点；
+Bundle 内直接执行的 Effect 复用该 Bundle 的快照。单独调用 `executor.execute`（包括 Handler
+中的嵌套调用）仍保留独立快照，因此调用者捕获子调用失败后，也不会留下子调用的部分写入。
 
 `InvokeBundle`、`RandomBundle`、`ApplyToQuery` 和 Task lifecycle 等 child bundle 与父 Bundle
 共享事务。它们产生的 Event 在最外层 Bundle 成功前不会交给 Reaction。

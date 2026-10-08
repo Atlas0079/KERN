@@ -189,8 +189,8 @@ def export(database_path: Path, output_dir: Path) -> dict[str, Any]:
 	conn = _connect(database_path)
 	try:
 		meta = {str(row["key"]): str(row["value"]) for row in conn.execute("SELECT key, value FROM platform_meta")}
-		if meta.get("schema_version") != "social_platform.v3":
-			raise ValueError("exporter requires social_platform.v3")
+		if meta.get("schema_version") != "social_platform.v4":
+			raise ValueError("exporter requires social_platform.v4")
 		table_counts: dict[str, int] = {}
 		for table in TABLES:
 			rows = _table_rows(conn, table)
@@ -213,7 +213,7 @@ def export(database_path: Path, output_dir: Path) -> dict[str, Any]:
 
 
 def main() -> None:
-	parser = argparse.ArgumentParser(description="Export raw social-platform process facts from a social_platform.v3 SQLite database.")
+	parser = argparse.ArgumentParser(description="Export raw social-platform process facts from a social_platform.v4 SQLite database.")
 	parser.add_argument("--database", required=True, help="Path to platform.sqlite")
 	parser.add_argument("--out", required=True, help="Output directory for CSV files and manifest.json")
 	args = parser.parse_args()
