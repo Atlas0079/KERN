@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_282_without_friends",
+  "actor": "agent_282",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-5daf4a71f6714e7d8b4786645c168cdf",
+    "object": "chat.completion",
+    "created": 1791453215,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的环境议题挺有意义的，看到有具体的解决方案比单纯的焦虑要好。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的理念，内容比较积极。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别想深入讨论的观点，点个赞就足够了。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但目前不需要转发到自己的主页分享给他人。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的环境议题挺有意义的，看到有具体的解决方案比单纯的焦虑要好。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的理念，内容比较积极。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别想深入讨论的观点，点个赞就足够了。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但目前不需要转发到自己的主页分享给他人。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.56
+}

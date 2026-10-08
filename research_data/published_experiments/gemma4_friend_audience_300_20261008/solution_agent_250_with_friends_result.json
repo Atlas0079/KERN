@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_250_with_friends",
+  "actor": "agent_250",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-fd6357b92062411d81c3dfa28e723b48",
+    "object": "chat.completion",
+    "created": 1791453853,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候议题听起来很有意义，虽然离我的日常生活比较远，但为了孩子以后能生活在更好的环境里，确实得关注一下。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活的理念，支持这种正能量的环保科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，我只是个普通职员，没什么专业的见解可以补充，点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的朋友圈多是同事和家长，转发这个可能不太契合大家的聊天话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候议题听起来很有意义，虽然离我的日常生活比较远，但为了孩子以后能生活在更好的环境里，确实得关注一下。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活的理念，支持这种正能量的环保科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大，我只是个普通职员，没什么专业的见解可以补充，点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的朋友圈多是同事和家长，转发这个可能不太契合大家的聊天话题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.13
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_021_with_friends",
+  "actor": "agent_021",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-71fb616d9e874fc4a532cb22a8465e90",
+    "object": "chat.completion",
+    "created": 1791455463,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个严肃的问题，看到有些实际的工程和方案在实施，心里稍微踏实了一点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活的理念，支持这种传递希望的科普内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，我没有太专业的见解，点个赞支持就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类话题比较严肃，我的朋友圈好友大多是同事和养花的朋友，转发这个可能不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个严肃的问题，看到有些实际的工程和方案在实施，心里稍微踏实了一点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活的理念，支持这种传递希望的科普内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大，我没有太专业的见解，点个赞支持就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类话题比较严肃，我的朋友圈好友大多是同事和养花的朋友，转发这个可能不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.27
+}

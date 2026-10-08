@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_195_without_friends",
+  "actor": "agent_195",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-5a190495f9de44acb11121b78cf2b33c",
+    "object": "chat.completion",
+    "created": 1791456756,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺正能量的，不过这种宏大叙事对我个人生活的直接影响感觉比较遥远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然没那么深切共鸣，但认同环保和可持续发展的方向，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学不专业，没什么能补充的观点，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容对我来说是阅读素材，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺正能量的，不过这种宏大叙事对我个人生活的直接影响感觉比较遥远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然没那么深切共鸣，但认同环保和可持续发展的方向，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学不专业，没什么能补充的观点，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容对我来说是阅读素材，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.73
+}

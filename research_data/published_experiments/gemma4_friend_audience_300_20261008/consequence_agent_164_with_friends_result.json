@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_164_with_friends",
+  "actor": "agent_164",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-2f2697d2b9134537a80d0785c1f61c05",
+    "object": "chat.completion",
+    "created": 1791457597,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么严重吗，感觉是个挺宏大的课题，虽然离我的杂货铺很远，但确实让人有点担忧。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类探讨全球新观点和环境问题的议题比较感兴趣，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容太专业且宏大了，我一个开小店的没什么专业见解，不方便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的好友圈大多是邻居和供应商，转发这个可能跟他们的生活关联不大，没必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么严重吗，感觉是个挺宏大的课题，虽然离我的杂货铺很远，但确实让人有点担忧。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类探讨全球新观点和环境问题的议题比较感兴趣，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容太专业且宏大了，我一个开小店的没什么专业见解，不方便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的好友圈大多是邻居和供应商，转发这个可能跟他们的生活关联不大，没必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.67
+}

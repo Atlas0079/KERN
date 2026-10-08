@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_277_with_friends",
+  "actor": "agent_277",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-e81af919d25f4ae3bd285d63d31426b3",
+    "object": "chat.completion",
+    "created": 1791453566,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章讲的环保措施挺有意思的，尤其是那些工程案例，让这种大问题看起来像是有解的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我比较愿意接触新想法，这种积极且有建设性的环保观点值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有共鸣，但这个话题离我的日常生活太远，没什么具体的观点需要发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但我的社交圈主要是家人、同事和家长，转发这个可能不太契合他们的关注点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章讲的环保措施挺有意思的，尤其是那些工程案例，让这种大问题看起来像是有解的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我比较愿意接触新想法，这种积极且有建设性的环保观点值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有共鸣，但这个话题离我的日常生活太远，没什么具体的观点需要发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但我的社交圈主要是家人、同事和家长，转发这个可能不太契合他们的关注点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.92
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_140_without_friends",
+  "actor": "agent_140",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-d05067dff23548518fcbfe48061364c7",
+    "object": "chat.completion",
+    "created": 1791454312,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么快吗，感觉气候危机离我们虽然远，但影响确实挺深远的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类科普和全球性议题比较感兴趣，支持这类警示内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得挺严重，但我也不是专家，没什么具体的见解能发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，而且我平时不习惯转发这种大规模危机类的消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么快吗，感觉气候危机离我们虽然远，但影响确实挺深远的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类科普和全球性议题比较感兴趣，支持这类警示内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得挺严重，但我也不是专家，没什么具体的见解能发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，而且我平时不习惯转发这种大规模危机类的消息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.37
+}

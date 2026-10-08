@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_181_without_friends",
+  "actor": "agent_181",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-d63c1eb8f759492f987292273438783c",
+    "object": "chat.completion",
+    "created": 1791453520,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升带来的气候危机确实令人担忧，这种宏观的生态变化对城市和人口迁移的影响规模太大了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类环保和全球性议题感兴趣，点赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但这个话题太宏大，我没什么专业见解可以补充，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容较为沉重，且我平时在社交平台比较低调，不倾向于转发此类预警信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升带来的气候危机确实令人担忧，这种宏观的生态变化对城市和人口迁移的影响规模太大了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类环保和全球性议题感兴趣，点赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但这个话题太宏大，我没什么专业见解可以补充，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容较为沉重，且我平时在社交平台比较低调，不倾向于转发此类预警信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.83
+}

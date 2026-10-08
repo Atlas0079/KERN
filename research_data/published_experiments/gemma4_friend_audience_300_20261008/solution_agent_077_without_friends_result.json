@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_077_without_friends",
+  "actor": "agent_077",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-5afe583a4ac94a36a6792a7eaab4439e",
+    "object": "chat.completion",
+    "created": 1791452131,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保工程和低碳行动，觉得虽然海平面上升很严重，但还是有一些切实可行的解决方案，心情稍微舒缓了一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态话题，这种传递希望且有事实支撑的内容值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我倾向于安静地阅读和思考，不需要特意发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但我的社交习惯比较内向，不常转发这类宏大叙事的内容到个人主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保工程和低碳行动，觉得虽然海平面上升很严重，但还是有一些切实可行的解决方案，心情稍微舒缓了一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态话题，这种传递希望且有事实支撑的内容值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我倾向于安静地阅读和思考，不需要特意发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然认同，但我的社交习惯比较内向，不常转发这类宏大叙事的内容到个人主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.95
+}

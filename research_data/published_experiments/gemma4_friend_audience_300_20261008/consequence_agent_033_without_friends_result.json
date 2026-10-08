@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_033_without_friends",
+  "actor": "agent_033",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-7e2d3dfdfc014f118ed2aa9985d21a2d",
+    "object": "chat.completion",
+    "created": 1791456533,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"现在的气候变化比我想象中还要紧迫，沿海城市要是真这样，后果不堪设想。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候变化和极端天气一直很关注，这种科普信息很有价值。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得事态严重，但这种全球性的宏大课题，我没啥具体的建议或见解能发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这内容比较沉重，而且我朋友圈的人大多也是退休同龄人，转发这个可能太压抑了。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "现在的气候变化比我想象中还要紧迫，沿海城市要是真这样，后果不堪设想。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候变化和极端天气一直很关注，这种科普信息很有价值。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得事态严重，但这种全球性的宏大课题，我没啥具体的建议或见解能发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这内容比较沉重，而且我朋友圈的人大多也是退休同龄人，转发这个可能太压抑了。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.43
+}

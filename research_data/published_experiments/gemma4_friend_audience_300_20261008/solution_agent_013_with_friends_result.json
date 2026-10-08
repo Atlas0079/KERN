@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_013_with_friends",
+  "actor": "agent_013",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-dc78c29930c94616a1ba11d51e080c80",
+    "object": "chat.completion",
+    "created": 1791455431,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球气候问题虽然重要，但离我的日常生活太远了，感觉是个宏大且沉重的议题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正面且有建设性，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对这个领域不专业，而且性格内向，不想在公共讨论区发表观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这不符合我的社交习惯，我的朋友圈里大多是家人和家长，转发这个可能没人感兴趣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球气候问题虽然重要，但离我的日常生活太远了，感觉是个宏大且沉重的议题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正面且有建设性，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对这个领域不专业，而且性格内向，不想在公共讨论区发表观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这不符合我的社交习惯，我的朋友圈里大多是家人和家长，转发这个可能没人感兴趣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.26
+}

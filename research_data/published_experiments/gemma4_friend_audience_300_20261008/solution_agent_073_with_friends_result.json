@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_073_with_friends",
+  "actor": "agent_073",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-8ae909ba525d445aa6d3dafb4b59612c",
+    "object": "chat.completion",
+    "created": 1791457214,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升和气候变化确实挺严重的，不过看到这些具体的应对工程和方案，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候科普类话题比较感兴趣，这篇文章提供了一些正向的解决方案，值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较科普，看完之后觉得涨知识了，但没有什么特别想补充或讨论的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容不错，但这种宏大的环保话题发到我的朋友圈可能不太合适，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升和气候变化确实挺严重的，不过看到这些具体的应对工程和方案，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候科普类话题比较感兴趣，这篇文章提供了一些正向的解决方案，值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较科普，看完之后觉得涨知识了，但没有什么特别想补充或讨论的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容不错，但这种宏大的环保话题发到我的朋友圈可能不太合适，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.16
+}

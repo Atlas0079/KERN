@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_239_without_friends",
+  "actor": "agent_239",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-60243a85b1d7421b9fb770fe1b1f4fac",
+    "object": "chat.completion",
+    "created": 1791457080,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个严重的全球问题，看到有具体的工程和修复计划在实施，心里觉得踏实了一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有建设性，支持这种传播科学环保知识的帖子。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然关注这个话题，但目前的讨论比较宏观，我没有特别深刻的个人见解需要发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但我的社交圈子比较小，这种科普类信息不需要特意转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个严重的全球问题，看到有具体的工程和修复计划在实施，心里觉得踏实了一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有建设性，支持这种传播科学环保知识的帖子。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然关注这个话题，但目前的讨论比较宏观，我没有特别深刻的个人见解需要发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但我的社交圈子比较小，这种科普类信息不需要特意转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.05
+}

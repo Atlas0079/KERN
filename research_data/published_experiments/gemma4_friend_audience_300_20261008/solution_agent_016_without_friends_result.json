@@ -1,0 +1,52 @@
+{
+  "key": "solution_agent_016_without_friends",
+  "actor": "agent_016",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-bc2807d68988407c98c507d364639912",
+    "object": "chat.completion",
+    "created": 1791454160,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的应对措施让我觉得气候问题虽然严重但还是有希望的，而且作为家长，很希望给孩子留下一个更好的地球。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态类话题，这种正向且有建设性的内容很对我胃口。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"我想表达对低碳生活支持的态度，同时也鼓励更多人参与。\",\n      \"text\": \"看到红树林修复和可再生能源的进展很振奋！虽然只是个体，但会坚持在日常生活中践行低碳，为了下一代一起努力🌱\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但目前还没到需要把它分享到自己主页让所有人看到的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的应对措施让我觉得气候问题虽然严重但还是有希望的，而且作为家长，很希望给孩子留下一个更好的地球。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态类话题，这种正向且有建设性的内容很对我胃口。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "我想表达对低碳生活支持的态度，同时也鼓励更多人参与。",
+        "text": "看到红树林修复和可再生能源的进展很振奋！虽然只是个体，但会坚持在日常生活中践行低碳，为了下一代一起努力🌱"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但目前还没到需要把它分享到自己主页让所有人看到的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "看到红树林修复和可再生能源的进展很振奋！虽然只是个体，但会坚持在日常生活中践行低碳，为了下一代一起努力🌱"
+    }
+  ],
+  "seconds": 17.54
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_237_without_friends",
+  "actor": "agent_237",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-394fbf1290c646b7a60675f223de317f",
+    "object": "chat.completion",
+    "created": 1791457241,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章挺有正能量的，而且把宏观的工程和个人的小习惯结合在一起，读起来很有启发。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的观点，这种正向的内容值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但目前没有特别强烈的个人见解想要分享，点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但我的社交圈可能更倾向于生活化分享，转发这个可能稍微有点太正式了。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章挺有正能量的，而且把宏观的工程和个人的小习惯结合在一起，读起来很有启发。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的观点，这种正向的内容值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但目前没有特别强烈的个人见解想要分享，点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但我的社交圈可能更倾向于生活化分享，转发这个可能稍微有点太正式了。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.05
+}

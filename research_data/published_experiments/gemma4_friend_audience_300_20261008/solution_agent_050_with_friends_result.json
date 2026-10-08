@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_050_with_friends",
+  "actor": "agent_050",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-576cb31034ac48dc8d331b67071f471d",
+    "object": "chat.completion",
+    "created": 1791453459,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然海平面上升听起来很遥远，但看到有具体的工程和方案在解决，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正向，支持环保和可持续发展的观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别专业的见解或强烈的表达欲去评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，不太适合发在我的朋友圈或社交动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然海平面上升听起来很遥远，但看到有具体的工程和方案在解决，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正向，支持环保和可持续发展的观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别专业的见解或强烈的表达欲去评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较宏大，不太适合发在我的朋友圈或社交动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.75
+}

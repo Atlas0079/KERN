@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_155_without_friends",
+  "actor": "agent_155",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-661013ac1c0a484689b1eb318fb0313e",
+    "object": "chat.completion",
+    "created": 1791455049,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然有点沉重，但看到有具体的工程和方案在解决问题，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种积极面对气候问题的态度，支持环保。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观，我暂时没有什么特别直接的观点要表达。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容点赞即可，没必要特意转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然有点沉重，但看到有具体的工程和方案在解决问题，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种积极面对气候问题的态度，支持环保。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏观，我暂时没有什么特别直接的观点要表达。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容点赞即可，没必要特意转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.49
+}

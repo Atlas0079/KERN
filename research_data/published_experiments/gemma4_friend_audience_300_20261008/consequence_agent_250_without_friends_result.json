@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_250_without_friends",
+  "actor": "agent_250",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-c1c1bf0374424e28a3336ba6fbdb82ce",
+    "object": "chat.completion",
+    "created": 1791456547,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种宏大的气候危机听起来很可怕，想到未来孩子成长的世界可能会有这么多动荡，心里莫名有点焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较严肃且具有警示意义，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种全球性的议题太宏大了，我一个普通人事员没什么专业见解，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但转发到我的动态里显得有些突兀，没必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种宏大的气候危机听起来很可怕，想到未来孩子成长的世界可能会有这么多动荡，心里莫名有点焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较严肃且具有警示意义，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种全球性的议题太宏大了，我一个普通人事员没什么专业见解，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但转发到我的动态里显得有些突兀，没必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.03
+}

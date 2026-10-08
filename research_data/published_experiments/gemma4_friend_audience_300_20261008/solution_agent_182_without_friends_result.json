@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_182_without_friends",
+  "actor": "agent_182",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-9af3de823cb948c4a72e2ddb432468e8",
+    "object": "chat.completion",
+    "created": 1791453466,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺积极的，不过对我个人目前的生活节奏来说，这些宏大叙事离我有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正面且有条理，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"没什么特别想表达的立场，也不太习惯在没讨论氛围时主动社交。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普性内容不需要转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺积极的，不过对我个人目前的生活节奏来说，这些宏大叙事离我有点远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正面且有条理，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "没什么特别想表达的立场，也不太习惯在没讨论氛围时主动社交。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普性内容不需要转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.83
+}

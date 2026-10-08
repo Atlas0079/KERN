@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_230_without_friends",
+  "actor": "agent_230",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-a345d1b00b3b4b3cbaf662dc6f97b1d8",
+    "object": "chat.completion",
+    "created": 1791452130,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺正能量的，从技术方案到个人行动都提到了，这种关于技术与社会关系的讨论我一直比较关注。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的正面观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但内容比较常规，没什么特别想深入讨论的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普性质的帖子点赞即可，没必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺正能量的，从技术方案到个人行动都提到了，这种关于技术与社会关系的讨论我一直比较关注。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的正面观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但内容比较常规，没什么特别想深入讨论的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普性质的帖子点赞即可，没必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.97
+}

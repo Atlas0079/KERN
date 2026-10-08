@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_117_with_friends",
+  "actor": "agent_117",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-1059d933c54b4bdfb14a7754b3914596",
+    "object": "chat.completion",
+    "created": 1791454325,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的工程和修复计划觉得还挺有希望的，低碳生活确实是每个人都能参与的小事。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很正能量，而且我比较认可可持续生活的理念，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没什么特别想补充的观点，随缘看看就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普性质的内容对我个人影响较大，但没必要转发到我的朋友圈里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的工程和修复计划觉得还挺有希望的，低碳生活确实是每个人都能参与的小事。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很正能量，而且我比较认可可持续生活的理念，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没什么特别想补充的观点，随缘看看就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普性质的内容对我个人影响较大，但没必要转发到我的朋友圈里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.74
+}

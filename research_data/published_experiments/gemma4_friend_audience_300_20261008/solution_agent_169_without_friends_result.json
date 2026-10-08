@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_169_without_friends",
+  "actor": "agent_169",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8a683856bd264b94a0755af755cfa0df",
+    "object": "chat.completion",
+    "created": 1791455432,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保工程和行动还是挺有希望的，虽然离我的日常生活有点远，但这种可持续发展的理念我认同。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种正向的低碳生活倡导，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对专业的气候工程了解不多，没太想法发表评论，且性格比较内向。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然不错，但不是我关注的求职或生活实用类重点，没必要转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保工程和行动还是挺有希望的，虽然离我的日常生活有点远，但这种可持续发展的理念我认同。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种正向的低碳生活倡导，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对专业的气候工程了解不多，没太想法发表评论，且性格比较内向。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然不错，但不是我关注的求职或生活实用类重点，没必要转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.85
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_095_without_friends",
+  "actor": "agent_095",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-7a8bdb5aa0304f9a9e0815d4ffd53bd6",
+    "object": "chat.completion",
+    "created": 1791456643,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升带来的气候危机确实令人担忧，尤其是对那些岛国和沿海城市的影响，这种规模的变迁让人感到沉重。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类关于地球环境和全球趋势的严肃议题比较感兴趣，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这类宏大叙事的议题我没有特别独到的见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我平时比较内向，很少在社交平台上转发这类引起焦虑的公共议题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升带来的气候危机确实令人担忧，尤其是对那些岛国和沿海城市的影响，这种规模的变迁让人感到沉重。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类关于地球环境和全球趋势的严肃议题比较感兴趣，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这类宏大叙事的议题我没有特别独到的见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我平时比较内向，很少在社交平台上转发这类引起焦虑的公共议题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.94
+}

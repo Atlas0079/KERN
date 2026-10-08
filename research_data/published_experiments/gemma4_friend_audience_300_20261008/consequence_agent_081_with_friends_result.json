@@ -1,0 +1,52 @@
+{
+  "key": "consequence_agent_081_with_friends",
+  "actor": "agent_081",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-9b3b937abed34e02b6a5d7f43c270cd5",
+    "object": "chat.completion",
+    "created": 1791453809,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看着这些数据挺心惊的，想到孩子以后要面对这样的环境，真的挺担忧。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态话题，支持这类科普内容的传播。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"想表达作为家长的担忧，提醒大家关注后代的生存环境。\",\n      \"text\": \"看到这些数据真的很揪心，想到孩子们以后生活的世界，我们现在真的得采取行动了。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，现在心情比较焦虑，不想在朋友圈传播这种压抑的消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看着这些数据挺心惊的，想到孩子以后要面对这样的环境，真的挺担忧。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态话题，支持这类科普内容的传播。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "想表达作为家长的担忧，提醒大家关注后代的生存环境。",
+        "text": "看到这些数据真的很揪心，想到孩子们以后生活的世界，我们现在真的得采取行动了。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，现在心情比较焦虑，不想在朋友圈传播这种压抑的消息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "看到这些数据真的很揪心，想到孩子们以后生活的世界，我们现在真的得采取行动了。"
+    }
+  ],
+  "seconds": 15.33
+}

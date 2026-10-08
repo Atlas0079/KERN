@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_004_with_friends",
+  "actor": "agent_004",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-08b5a1134c58436397e13d5243284bf2",
+    "object": "chat.completion",
+    "created": 1791456146,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然内容挺有意义的，但对我目前的日常生活来说稍微有点遥远，不过看到有具体工程和解决方案还是挺有启发。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续发展的理念，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"没什么专业见解可以分享，也不太想在不熟悉的宏大话题下发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容不需要转发到我的社交圈，我的朋友们可能也不太感兴趣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然内容挺有意义的，但对我目前的日常生活来说稍微有点遥远，不过看到有具体工程和解决方案还是挺有启发。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续发展的理念，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "没什么专业见解可以分享，也不太想在不熟悉的宏大话题下发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容不需要转发到我的社交圈，我的朋友们可能也不太感兴趣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.65
+}

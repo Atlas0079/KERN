@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_208_without_friends",
+  "actor": "agent_208",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8156f82f403a4d48926c6d19eaba51d2",
+    "object": "chat.completion",
+    "created": 1791451454,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这新闻看着挺触目惊心的，虽然离我的生活还远，但感觉未来的不确定性越来越多了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容沉重，但这类科普信息很有必要，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种全球性的宏大议题我没什么专业见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较压抑，没必要转发到自己的主页传播焦虑。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这新闻看着挺触目惊心的，虽然离我的生活还远，但感觉未来的不确定性越来越多了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容沉重，但这类科普信息很有必要，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种全球性的宏大议题我没什么专业见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较压抑，没必要转发到自己的主页传播焦虑。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.39
+}

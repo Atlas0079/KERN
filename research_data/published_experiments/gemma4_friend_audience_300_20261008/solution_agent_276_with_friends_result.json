@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_276_with_friends",
+  "actor": "agent_276",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-bc05648073a84cab933a19c4172ecafb",
+    "object": "chat.completion",
+    "created": 1791454875,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的，原来这些宏观的气候问题已经有这么多具体的解决方案了，而且每个人也能参与其中。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新技术和社会关系比较感兴趣，这个帖子提供了一些积极的视角，值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但我对这个领域的专业知识不多，没什么能深入探讨的，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然好，但和我的社交圈（同学、同事、家人）重合度不高，不确定他们是否感兴趣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的，原来这些宏观的气候问题已经有这么多具体的解决方案了，而且每个人也能参与其中。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新技术和社会关系比较感兴趣，这个帖子提供了一些积极的视角，值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但我对这个领域的专业知识不多，没什么能深入探讨的，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然好，但和我的社交圈（同学、同事、家人）重合度不高，不确定他们是否感兴趣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.86
+}

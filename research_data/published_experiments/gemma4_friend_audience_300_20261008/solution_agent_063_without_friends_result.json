@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_063_without_friends",
+  "actor": "agent_063",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-3eadd3b49c194cb6b434db89c5407ba2",
+    "object": "chat.completion",
+    "created": 1791451712,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章提到的几个工程案例挺有意思的，看到有具体的方法论比单纯地焦虑气候变化要好得多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类跨领域的知识和可持续发展的观点比较感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但我性格比较内向，习惯安静地阅读，不需要特意发表看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但我觉得还没到需要转发到自己主页分享给别人的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章提到的几个工程案例挺有意思的，看到有具体的方法论比单纯地焦虑气候变化要好得多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类跨领域的知识和可持续发展的观点比较感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但我性格比较内向，习惯安静地阅读，不需要特意发表看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但我觉得还没到需要转发到自己主页分享给别人的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.88
+}

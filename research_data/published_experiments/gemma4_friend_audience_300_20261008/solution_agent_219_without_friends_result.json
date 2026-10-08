@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_219_without_friends",
+  "actor": "agent_219",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-d7f56b8c92e743c78a5a96d50c5bf5ad",
+    "object": "chat.completion",
+    "created": 1791453053,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保措施和具体的工程方案还挺有启发性的，感觉个体的小努力确实能汇聚成力量。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持低碳生活和环保行动，内容积极且有建设性。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但这类宏大的话题我没什么专业见解可以补充，点个赞就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的社交圈子比较小，且这篇文章更像科普，没有必要特意转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保措施和具体的工程方案还挺有启发性的，感觉个体的小努力确实能汇聚成力量。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持低碳生活和环保行动，内容积极且有建设性。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但这类宏大的话题我没什么专业见解可以补充，点个赞就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的社交圈子比较小，且这篇文章更像科普，没有必要特意转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.88
+}

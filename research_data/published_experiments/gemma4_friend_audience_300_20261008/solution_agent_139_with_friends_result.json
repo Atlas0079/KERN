@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_139_with_friends",
+  "actor": "agent_139",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-2c2be589c5d041d88b380a330966b413",
+    "object": "chat.completion",
+    "created": 1791454067,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环境问题确实重要，不过这种全球性的宏大话题离我的日常生活有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然离我较远，但这种环保的正能量内容值得支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候工程和碳中和这些专业领域不了解，没什么好发表的见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的好友圈大多是邻里和亲戚，转发这个可能不太符合大家的聊天氛围。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环境问题确实重要，不过这种全球性的宏大话题离我的日常生活有点远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然离我较远，但这种环保的正能量内容值得支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候工程和碳中和这些专业领域不了解，没什么好发表的见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的好友圈大多是邻里和亲戚，转发这个可能不太符合大家的聊天氛围。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.78
+}

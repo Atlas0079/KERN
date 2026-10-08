@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_126_with_friends",
+  "actor": "agent_126",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-928050339fae49d6a383aeaff8a8e239",
+    "object": "chat.completion",
+    "created": 1791454941,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到海平面上升这么快，真是让人担心，尤其是想到以后孩子们要面对这样的环境，心里挺沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态话题，这种提醒人们重视气候危机的内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很担忧，但这种宏大的全球性议题我没什么专业建议能给，随便说两句显得轻巧了。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但对我朋友圈里的老同事和邻居来说可能太沉重了，不打算转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到海平面上升这么快，真是让人担心，尤其是想到以后孩子们要面对这样的环境，心里挺沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态话题，这种提醒人们重视气候危机的内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很担忧，但这种宏大的全球性议题我没什么专业建议能给，随便说两句显得轻巧了。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但对我朋友圈里的老同事和邻居来说可能太沉重了，不打算转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.7
+}

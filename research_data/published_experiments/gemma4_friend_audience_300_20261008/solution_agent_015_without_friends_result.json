@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_015_without_friends",
+  "actor": "agent_015",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-11afa29e86a846c688d3816d4898d76e",
+    "object": "chat.completion",
+    "created": 1791453962,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保话题一直是我关注的，看到这些具体的解决方案让我想起之前读到的相关文章，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且符合我的环保关注点，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别想补充的见解，习惯性静静阅读。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发频率不高，除非是非常实用的攻略或极具冲击力的资讯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保话题一直是我关注的，看到这些具体的解决方案让我想起之前读到的相关文章，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且符合我的环保关注点，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别想补充的见解，习惯性静静阅读。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发频率不高，除非是非常实用的攻略或极具冲击力的资讯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.54
+}

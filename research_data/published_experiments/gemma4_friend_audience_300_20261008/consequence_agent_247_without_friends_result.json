@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_247_without_friends",
+  "actor": "agent_247",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-501f499c0aad40ce89d81461fb295a77",
+    "object": "chat.completion",
+    "created": 1791455337,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，这种大规模的社会变迁确实让人感到有些不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注气候危机和科技社会关系，支持这类科普信息的传播。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这是一个宏大议题，我目前没有能提供独特见解的专业知识，没必要随口评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但基调过于沉重，不太适合分享到我的个人动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，这种大规模的社会变迁确实让人感到有些不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注气候危机和科技社会关系，支持这类科普信息的传播。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这是一个宏大议题，我目前没有能提供独特见解的专业知识，没必要随口评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但基调过于沉重，不太适合分享到我的个人动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.81
+}

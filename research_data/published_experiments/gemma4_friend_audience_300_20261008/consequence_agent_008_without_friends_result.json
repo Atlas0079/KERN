@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_008_without_friends",
+  "actor": "agent_008",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-df288bc9f90a4339bdc7c02941e89b0c",
+    "object": "chat.completion",
+    "created": 1791452711,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候问题确实严重，但对我现在的生活来说太遥远了，压力已经够大了，不想想这些让人心烦的宏大议题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重，没有产生想点赞的冲动。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学不专业，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种焦虑感比较强的信息没必要转发给朋友。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候问题确实严重，但对我现在的生活来说太遥远了，压力已经够大了，不想想这些让人心烦的宏大议题。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容太沉重，没有产生想点赞的冲动。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学不专业，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种焦虑感比较强的信息没必要转发给朋友。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 12.55
+}

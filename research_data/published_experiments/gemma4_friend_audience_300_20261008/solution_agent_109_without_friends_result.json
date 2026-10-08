@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_109_without_friends",
+  "actor": "agent_109",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-5dabaf0048b74d0385182fb21662ed73",
+    "object": "chat.completion",
+    "created": 1791453882,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保措施挺有意思的，感觉这种宏大的议题通过小行动也能有所改变，挺有希望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活的理念，给这种正能量的内容点个赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但对专业的气候工程不太了解，没什么深入的见解可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容很好，但平时很少转发这种科普类帖子到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保措施挺有意思的，感觉这种宏大的议题通过小行动也能有所改变，挺有希望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活的理念，给这种正能量的内容点个赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但对专业的气候工程不太了解，没什么深入的见解可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容很好，但平时很少转发这种科普类帖子到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.67
+}

@@ -1,0 +1,43 @@
+{
+  "key": "solution_agent_008_without_friends",
+  "actor": "agent_008",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-6bd5a8aa66e241978fcabd4654e6486e",
+    "object": "chat.completion",
+    "created": 1791453445,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些全球性的环保话题离我的生活太远了，我现在得操心的是孩子和家里的开销。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然正能量，但跟我没什么共鸣，没动力点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学不专业，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的议题转发到我的朋友圈里显得有点突兀。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些全球性的环保话题离我的生活太远了，我现在得操心的是孩子和家里的开销。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容虽然正能量，但跟我没什么共鸣，没动力点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学不专业，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种宏大的议题转发到我的朋友圈里显得有点突兀。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.88
+}

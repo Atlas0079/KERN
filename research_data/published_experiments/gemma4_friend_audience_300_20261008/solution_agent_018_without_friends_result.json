@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_018_without_friends",
+  "actor": "agent_018",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-58b1bea9b661462f81382e3ded33a263",
+    "object": "chat.completion",
+    "created": 1791455729,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保工程和方案，感觉面对气候问题还是有希望的，提醒我也要在生活中注意低碳。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护话题比较关心，支持这种传递希望的正能量内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我作为一名读者认同即可，没有特别需要补充的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"目前处于求职和照顾家庭的压力期，刷手机只是为了放松，不打算在朋友圈转发这类严肃话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保工程和方案，感觉面对气候问题还是有希望的，提醒我也要在生活中注意低碳。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护话题比较关心，支持这种传递希望的正能量内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我作为一名读者认同即可，没有特别需要补充的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "目前处于求职和照顾家庭的压力期，刷手机只是为了放松，不打算在朋友圈转发这类严肃话题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.3
+}

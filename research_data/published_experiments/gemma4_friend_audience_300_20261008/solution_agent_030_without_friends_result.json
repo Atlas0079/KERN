@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_030_without_friends",
+  "actor": "agent_030",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-019c17c830684fd8bda22ce23795d668",
+    "object": "chat.completion",
+    "created": 1791453980,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保方案觉得挺有意思的，感觉个体的小行动也能产生影响，心态比较积极。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正能量，而且我对新技术和可持续话题比较感兴趣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别想表达的观点，随手点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类话题比较宏大，平时朋友圈里很少发这类内容，不太习惯转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保方案觉得挺有意思的，感觉个体的小行动也能产生影响，心态比较积极。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正能量，而且我对新技术和可持续话题比较感兴趣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别想表达的观点，随手点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类话题比较宏大，平时朋友圈里很少发这类内容，不太习惯转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.69
+}

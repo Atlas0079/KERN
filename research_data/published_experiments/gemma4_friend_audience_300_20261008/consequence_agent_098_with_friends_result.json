@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_098_with_friends",
+  "actor": "agent_098",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-8d3d99c19ead402ca3d7e10bde71f493",
+    "object": "chat.completion",
+    "created": 1791458301,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的影响确实挺严重的，尤其是对那些沿海城市和岛国来说，感觉是个很宏大的全球性危机。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新观点和科学知识比较开放，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但我对气候科学没有专业见解，没必要发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题对我目前的生活和工作圈子来说太远了，没有转发的必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的影响确实挺严重的，尤其是对那些沿海城市和岛国来说，感觉是个很宏大的全球性危机。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新观点和科学知识比较开放，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但我对气候科学没有专业见解，没必要发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题对我目前的生活和工作圈子来说太远了，没有转发的必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.48
+}

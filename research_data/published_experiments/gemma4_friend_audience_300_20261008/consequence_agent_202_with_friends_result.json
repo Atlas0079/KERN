@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_202_with_friends",
+  "actor": "agent_202",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-092a2a728d4a4c6ca934850f79fde89e",
+    "object": "chat.completion",
+    "created": 1791454340,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，想到未来这么多人的家园会被淹没，挺让人揪心的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态话题，这个报告的内容很重要，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很关注，但这个话题太宏大了，我暂时没有什么能提供的具体建议或深刻见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但我的好友圈大多是家人和同事，转发这个可能不太契合他们的关注点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，想到未来这么多人的家园会被淹没，挺让人揪心的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态话题，这个报告的内容很重要，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很关注，但这个话题太宏大了，我暂时没有什么能提供的具体建议或深刻见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但我的好友圈大多是家人和同事，转发这个可能不太契合他们的关注点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.99
+}

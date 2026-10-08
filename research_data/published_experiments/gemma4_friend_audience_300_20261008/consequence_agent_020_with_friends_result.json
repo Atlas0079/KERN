@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_020_with_friends",
+  "actor": "agent_020",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-3ee6ea25870d4511ae71fbd84ec4b072",
+    "object": "chat.completion",
+    "created": 1791457910,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升带来的人口迁移和资源压力确实是个很严肃的社会问题，读起来让人心沉沉的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有科普性质且关注全球性危机，符合我的兴趣点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这种宏大的气候议题我没什么具体的切入点能直接评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"比较沉重的话题，且我的社交圈层目前不需要传播这个。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升带来的人口迁移和资源压力确实是个很严肃的社会问题，读起来让人心沉沉的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有科普性质且关注全球性危机，符合我的兴趣点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这种宏大的气候议题我没什么具体的切入点能直接评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "比较沉重的话题，且我的社交圈层目前不需要传播这个。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.79
+}

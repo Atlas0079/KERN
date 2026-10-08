@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_174_without_friends",
+  "actor": "agent_174",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-6c1bbfaf8cdf47f89051032cd9b6685b",
+    "object": "chat.completion",
+    "created": 1791455010,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化的影响确实触目惊心，想到未来孩子们生活的环境可能会有这么大的变动，心里觉得挺沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这是一个关于全球环境危机的严肃话题，值得关注和支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很关注，但这类宏大话题我没有特别专业的见解，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"平时社交比较内向，不习惯在自己的主页转发这类令人焦虑的消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化的影响确实触目惊心，想到未来孩子们生活的环境可能会有这么大的变动，心里觉得挺沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这是一个关于全球环境危机的严肃话题，值得关注和支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很关注，但这类宏大话题我没有特别专业的见解，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "平时社交比较内向，不习惯在自己的主页转发这类令人焦虑的消息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.33
+}

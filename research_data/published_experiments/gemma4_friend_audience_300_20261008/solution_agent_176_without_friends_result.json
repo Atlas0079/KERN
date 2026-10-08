@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_176_without_friends",
+  "actor": "agent_176",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-c5b55c1f6f70410f951e0308b404d492",
+    "object": "chat.completion",
+    "created": 1791454597,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的科普，虽然离我的生活比较远，但这种通过技术和行动解决全球问题的思路让我觉得很有希望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新观点和可持续发展比较感兴趣，支持这种正能量的科普内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我没有特别的专业见解可以补充，随便评论一句显得太敷衍。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题对我现在的社交圈来说可能稍微有点沉重或严肃，不打算转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的科普，虽然离我的生活比较远，但这种通过技术和行动解决全球问题的思路让我觉得很有希望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新观点和可持续发展比较感兴趣，支持这种正能量的科普内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我没有特别的专业见解可以补充，随便评论一句显得太敷衍。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题对我现在的社交圈来说可能稍微有点沉重或严肃，不打算转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.34
+}

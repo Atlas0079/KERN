@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_196_with_friends",
+  "actor": "agent_196",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-0b473fbb59ac461990c7f6e33b1b4cc5",
+    "object": "chat.completion",
+    "created": 1791457529,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"我对生态环境一直很关注，这种提供具体解决方案而不是只制造焦虑的内容很对我胃口。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保话题，且帖子提到的具体工程和计划很有参考价值。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较客观，我看完觉得有启发就行，暂时没有特别想表达的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但这类科普信息转发到我的社交圈可能互动不高，没必要特意转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "我对生态环境一直很关注，这种提供具体解决方案而不是只制造焦虑的内容很对我胃口。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保话题，且帖子提到的具体工程和计划很有参考价值。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较客观，我看完觉得有启发就行，暂时没有特别想表达的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然认同，但这类科普信息转发到我的社交圈可能互动不高，没必要特意转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.41
+}

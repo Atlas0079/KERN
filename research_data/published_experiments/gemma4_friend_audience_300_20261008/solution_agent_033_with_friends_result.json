@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_033_with_friends",
+  "actor": "agent_033",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-729a7b8f9da047938331d01469a94723",
+    "object": "chat.completion",
+    "created": 1791458668,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事儿一直挺让我担忧的，看到有些具体的工程和办法在实施，心里稍微踏实了点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普气候变化风险并提供解决方案的内容很正能量，值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但这些专业工程我也说不出什么深奥的见解，点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容挺好，但我的朋友圈大多是老同事和邻居，转发这个可能没那么多人讨论。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事儿一直挺让我担忧的，看到有些具体的工程和办法在实施，心里稍微踏实了点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普气候变化风险并提供解决方案的内容很正能量，值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但这些专业工程我也说不出什么深奥的见解，点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容挺好，但我的朋友圈大多是老同事和邻居，转发这个可能没那么多人讨论。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.47
+}

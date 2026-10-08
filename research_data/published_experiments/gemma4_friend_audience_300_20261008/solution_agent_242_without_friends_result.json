@@ -1,0 +1,43 @@
+{
+  "key": "solution_agent_242_without_friends",
+  "actor": "agent_242",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-aaf60193c0fe4cd39277e443dc0b64d1",
+    "object": "chat.completion",
+    "created": 1791451868,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球气候话题挺宏大的，虽然有道理，但对我目前的生活重心来说太遥远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然正面，但没触动到我的兴趣点，没必要点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种议题没什么好讨论的，我也没在这个领域有深入见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发这个对我的人设或社交圈没什么实际帮助。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球气候话题挺宏大的，虽然有道理，但对我目前的生活重心来说太遥远了。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容虽然正面，但没触动到我的兴趣点，没必要点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种议题没什么好讨论的，我也没在这个领域有深入见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发这个对我的人设或社交圈没什么实际帮助。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.07
+}

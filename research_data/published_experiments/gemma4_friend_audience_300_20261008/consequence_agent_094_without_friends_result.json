@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_094_without_friends",
+  "actor": "agent_094",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-6b67cc21e3d64eee9795f386451747ad",
+    "object": "chat.completion",
+    "created": 1791458953,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，这种全球性的生态危机确实让人感到不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护话题一直比较关注，支持这类科普信息的传播。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但这类宏大课题我没有太多专业见解，不想随便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我平时社交比较低调，除非是非常实用或极具冲击力的内容，否则很少转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，这种全球性的生态危机确实让人感到不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护话题一直比较关注，支持这类科普信息的传播。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但这类宏大课题我没有太多专业见解，不想随便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我平时社交比较低调，除非是非常实用或极具冲击力的内容，否则很少转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.51
+}

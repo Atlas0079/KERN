@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_280_with_friends",
+  "actor": "agent_280",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-2aecb9198eb14d319e99832057959f52",
+    "object": "chat.completion",
+    "created": 1791454309,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候危机听起来太可怕了，想到未来孩子成长的环境可能会这么不稳定，心里就有点焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重，心情比较压抑，没有点赞的冲动。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我只是一个普通的行政人员，面对这种宏大且专业的议题，没什么能评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我不希望在自己的动态里传播这种让人不安的消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候危机听起来太可怕了，想到未来孩子成长的环境可能会这么不稳定，心里就有点焦虑。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容太沉重，心情比较压抑，没有点赞的冲动。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我只是一个普通的行政人员，面对这种宏大且专业的议题，没什么能评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我不希望在自己的动态里传播这种让人不安的消息。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 14.1
+}

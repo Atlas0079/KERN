@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_107_without_friends",
+  "actor": "agent_107",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-e82a090cc9344a52b67365b840f77e5c",
+    "object": "chat.completion",
+    "created": 1791452779,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到荷兰的工程和红树林修复挺有意思的，这种宏观的工程方案确实比单纯喊口号要有力得多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"对这种结合了工程实践和环保理念的内容比较有好感。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但这类议题太大，我没有太专业的观点去发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到荷兰的工程和红树林修复挺有意思的，这种宏观的工程方案确实比单纯喊口号要有力得多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "对这种结合了工程实践和环保理念的内容比较有好感。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但这类议题太大，我没有太专业的观点去发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.08
+}

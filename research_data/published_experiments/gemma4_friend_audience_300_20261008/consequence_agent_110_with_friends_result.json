@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_110_with_friends",
+  "actor": "agent_110",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-afdb8e873c374c81aa83f979fbe75c16",
+    "object": "chat.completion",
+    "created": 1791454239,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比想象中快，想到未来的环境影响，确实让人有些忧虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"平时比较关注环境和生态话题，这类科普内容值得点赞支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然关注但没有特别深刻的见解，不需要特意发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且没有紧迫的分享需求，不打算转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比想象中快，想到未来的环境影响，确实让人有些忧虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "平时比较关注环境和生态话题，这类科普内容值得点赞支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然关注但没有特别深刻的见解，不需要特意发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且没有紧迫的分享需求，不打算转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.65
+}

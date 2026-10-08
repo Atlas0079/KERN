@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_065_without_friends",
+  "actor": "agent_065",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-be7f65e0ccac4838873f5e8ee2b885c7",
+    "object": "chat.completion",
+    "created": 1791451698,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候话题挺宏大的，看到有具体方案和行动方向，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可低碳生活的理念，支持环保行动。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较专业且宏观，我没什么专业见解可以补充，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但这类话题在我的社交圈里传播度不高，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候话题挺宏大的，看到有具体方案和行动方向，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可低碳生活的理念，支持环保行动。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较专业且宏观，我没什么专业见解可以补充，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但这类话题在我的社交圈里传播度不高，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.3
+}

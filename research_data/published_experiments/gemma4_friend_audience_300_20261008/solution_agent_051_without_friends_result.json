@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_051_without_friends",
+  "actor": "agent_051",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-405586dbdb2c4adf8d9cfdb73c1c46d8",
+    "object": "chat.completion",
+    "created": 1791458981,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保话题挺有意义的，而且文中提到的红树林修复和工程案例让我觉得这些宏大的问题还是有实际解决方案的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且具有科普意义，随手点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有什么特别想补充的观点，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普内容看看就好，没必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保话题挺有意义的，而且文中提到的红树林修复和工程案例让我觉得这些宏大的问题还是有实际解决方案的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且具有科普意义，随手点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有什么特别想补充的观点，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普内容看看就好，没必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.2
+}

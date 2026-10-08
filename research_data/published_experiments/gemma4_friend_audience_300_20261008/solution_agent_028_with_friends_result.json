@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_028_with_friends",
+  "actor": "agent_028",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-796e8fc9f92f42ff931899123378af41",
+    "object": "chat.completion",
+    "created": 1791455324,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然这些环保工程听起来挺宏大，但想到为了孩子以后能有个好环境，平时确实得注意节约。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正能量，而且关注可持续发展，是对后代负责的事。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对这些专业工程不太懂，没啥好评论的，静静看看就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容转发到我的圈子里可能没人感兴趣，没必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然这些环保工程听起来挺宏大，但想到为了孩子以后能有个好环境，平时确实得注意节约。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正能量，而且关注可持续发展，是对后代负责的事。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对这些专业工程不太懂，没啥好评论的，静静看看就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容转发到我的圈子里可能没人感兴趣，没必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.08
+}

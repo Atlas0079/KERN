@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_231_without_friends",
+  "actor": "agent_231",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-16ca47b97a64452ab9865b8b4d0c904b",
+    "object": "chat.completion",
+    "created": 1791454712,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这情况听起来挺严重的，虽然离我现在的生活没那么近，但这种全球性的危机确实让人心慌。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容有科普意义，关注气候问题是件正确的事。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但我也不是专家，没什么专业见解可以评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类沉重的话题转发到朋友圈可能会让气氛太压抑，不打算转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这情况听起来挺严重的，虽然离我现在的生活没那么近，但这种全球性的危机确实让人心慌。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容有科普意义，关注气候问题是件正确的事。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但我也不是专家，没什么专业见解可以评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类沉重的话题转发到朋友圈可能会让气氛太压抑，不打算转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.09
+}

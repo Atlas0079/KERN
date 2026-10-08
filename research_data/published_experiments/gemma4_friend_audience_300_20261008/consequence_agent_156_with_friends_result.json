@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_156_with_friends",
+  "actor": "agent_156",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-5bf6eef512b94bbfae3312f51dd530e1",
+    "object": "chat.completion",
+    "created": 1791458507,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，这种规模的气候变化对沿海城市的冲击确实很可怕。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候变化话题一直比较关注，这类科普信息对我来说很有价值。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然关注，但这是一个宏大的全球议题，我没有特别专业的观点需要发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我的社交圈大多是同事和家人，转发这个可能没什么讨论空间。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，这种规模的气候变化对沿海城市的冲击确实很可怕。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候变化话题一直比较关注，这类科普信息对我来说很有价值。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然关注，但这是一个宏大的全球议题，我没有特别专业的观点需要发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我的社交圈大多是同事和家人，转发这个可能没什么讨论空间。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.68
+}

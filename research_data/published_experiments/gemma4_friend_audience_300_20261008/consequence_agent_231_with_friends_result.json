@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_231_with_friends",
+  "actor": "agent_231",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-ffa5acb3f8f04a269881992ccbeee663",
+    "object": "chat.completion",
+    "created": 1791452686,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这消息听起来挺严重的，不过离我的生活比较远，现在得先顾好眼下的日子。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重且与我个人现状关联不大，没觉得需要点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这是一个宏大的全球议题，我没什么专业见解可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种危机感较强的消息不适合转发给我的亲友或前同事。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这消息听起来挺严重的，不过离我的生活比较远，现在得先顾好眼下的日子。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容太沉重且与我个人现状关联不大，没觉得需要点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这是一个宏大的全球议题，我没什么专业见解可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种危机感较强的消息不适合转发给我的亲友或前同事。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 12.97
+}

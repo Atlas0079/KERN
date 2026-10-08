@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_281_with_friends",
+  "actor": "agent_281",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-dbc266a209c7477196405d083a807a16",
+    "object": "chat.completion",
+    "created": 1791457364,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"我对环境和生态保护一直比较关注，看到这种有具体工程方案和行动指南的内容挺有意思的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容符合我的关注领域，且提供了正向的解决方案，值得点赞支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别深刻的见解需要表达，且我社交风格相对内敛。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇内容更像科普，目前没有强烈的冲动将其分享给我的同事或同学。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "我对环境和生态保护一直比较关注，看到这种有具体工程方案和行动指南的内容挺有意思的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容符合我的关注领域，且提供了正向的解决方案，值得点赞支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别深刻的见解需要表达，且我社交风格相对内敛。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇内容更像科普，目前没有强烈的冲动将其分享给我的同事或同学。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.92
+}

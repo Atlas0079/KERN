@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_044_with_friends",
+  "actor": "agent_044",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-3e136d19bf7045f68ace9ef92431eaa5",
+    "object": "chat.completion",
+    "created": 1791459071,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候危机听起来好压抑，想到未来孩子面对的世界可能会这么动荡，心里有点焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容沉重，但这种科普信息很有必要，支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太宏大且专业，我没什么能贡献的建设性意见，不想随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"太负面了，不想在自己的朋友圈里传播这种令人焦虑的消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候危机听起来好压抑，想到未来孩子面对的世界可能会这么动荡，心里有点焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容沉重，但这种科普信息很有必要，支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太宏大且专业，我没什么能贡献的建设性意见，不想随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "太负面了，不想在自己的朋友圈里传播这种令人焦虑的消息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.68
+}

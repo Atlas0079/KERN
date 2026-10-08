@@ -1,0 +1,52 @@
+{
+  "key": "solution_agent_298_with_friends",
+  "actor": "agent_298",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f48abdf4b6254faca37f8c89b5d8fdc5",
+    "object": "chat.completion",
+    "created": 1791454568,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到海平面上升其实有这么多实际的解决方案，心里觉得踏实了不少，而且低碳生活是我一直认同的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护一直很关心，这个帖子传递的正能量值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"希望能表达一下对这些环保工程的赞赏，并分享自己支持低碳生活的态度。\",\n      \"text\": \"看到红树林修复和可再生能源的进展真的很欣慰，每个人的小努力汇聚起来确实能成大气候，支持低碳生活！🌱\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然很好，但我觉得点赞和评论就足够了，不需要特意转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到海平面上升其实有这么多实际的解决方案，心里觉得踏实了不少，而且低碳生活是我一直认同的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护一直很关心，这个帖子传递的正能量值得点赞。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "希望能表达一下对这些环保工程的赞赏，并分享自己支持低碳生活的态度。",
+        "text": "看到红树林修复和可再生能源的进展真的很欣慰，每个人的小努力汇聚起来确实能成大气候，支持低碳生活！🌱"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然很好，但我觉得点赞和评论就足够了，不需要特意转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "看到红树林修复和可再生能源的进展真的很欣慰，每个人的小努力汇聚起来确实能成大气候，支持低碳生活！🌱"
+    }
+  ],
+  "seconds": 17.89
+}

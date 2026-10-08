@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_012_with_friends",
+  "actor": "agent_012",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-7f18bc3c43a544e2b09f9184e77f7c35",
+    "object": "chat.completion",
+    "created": 1791458343,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"之前关注过极端天气，看到这种有具体解决方案的科普帖觉得还挺有希望的，尤其是为了孩子的未来。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且符合我的关注点，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有共鸣，但内容比较专业，我目前没有特别想补充的观点，静静看完就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇内容比较像科普资讯，转发到我的朋友圈可能不太符合我平时分享生活和设计的习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "之前关注过极端天气，看到这种有具体解决方案的科普帖觉得还挺有希望的，尤其是为了孩子的未来。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且符合我的关注点，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有共鸣，但内容比较专业，我目前没有特别想补充的观点，静静看完就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇内容比较像科普资讯，转发到我的朋友圈可能不太符合我平时分享生活和设计的习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.09
+}

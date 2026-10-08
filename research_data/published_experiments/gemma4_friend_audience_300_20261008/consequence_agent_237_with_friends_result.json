@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_237_with_friends",
+  "actor": "agent_237",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-e1a3d512ee04414887be12a01c73a3e0",
+    "object": "chat.completion",
+    "created": 1791455761,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候危机带来的影响比我想象中要快且严重，尤其是涉及人口迁移和资源争夺的部分，挺让人揪心的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很有警示意义，支持这类科普环保的议题。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但这类宏大叙事的议题我没有太多专业见解可以评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"目前还没到必须转发扩散的紧迫感，先关注一下就好。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候危机带来的影响比我想象中要快且严重，尤其是涉及人口迁移和资源争夺的部分，挺让人揪心的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很有警示意义，支持这类科普环保的议题。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但这类宏大叙事的议题我没有太多专业见解可以评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "目前还没到必须转发扩散的紧迫感，先关注一下就好。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.27
+}

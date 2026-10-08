@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_213_with_friends",
+  "actor": "agent_213",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-7832a5d1a1a745fabf63fd2ee222ae73",
+    "object": "chat.completion",
+    "created": 1791451419,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"提到的荷兰工程和红树林修复挺有意思的，结合了工程应用和生态，是个挺正面的话题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且涉及工程实践，符合我的兴趣点，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有共鸣，但这类宏大叙事的话题我没有特别深刻的个人见解要分享。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普性质的内容对我来说是阅读，没必要转发到自己的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "提到的荷兰工程和红树林修复挺有意思的，结合了工程应用和生态，是个挺正面的话题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且涉及工程实践，符合我的兴趣点，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有共鸣，但这类宏大叙事的话题我没有特别深刻的个人见解要分享。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普性质的内容对我来说是阅读，没必要转发到自己的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.46
+}

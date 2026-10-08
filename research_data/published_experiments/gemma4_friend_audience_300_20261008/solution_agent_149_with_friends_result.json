@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_149_with_friends",
+  "actor": "agent_149",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f74db24e47d149e7ab3c1608f1570c41",
+    "object": "chat.completion",
+    "created": 1791458918,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺正能量的，而且提到了一些新技术和环保方案，感觉挺有意义。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的观点，顺手点个赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但内容比较宏大，我没什么专业见解可以补充。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容点赞就行，没必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺正能量的，而且提到了一些新技术和环保方案，感觉挺有意义。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的观点，顺手点个赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但内容比较宏大，我没什么专业见解可以补充。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容点赞就行，没必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.49
+}

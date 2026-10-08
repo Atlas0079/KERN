@@ -1,0 +1,57 @@
+{
+  "key": "consequence_agent_150_with_friends",
+  "actor": "agent_150",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-1e648a851c5949918b9272a449287d52",
+    "object": "chat.completion",
+    "created": 1791454498,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快这么多，想到沿海城市和岛国居民的处境真的挺令人担忧的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直很关心环境和生态保护，这篇帖子提供了很重要的警示信息。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"作为关注气候变化的人，我想表达对受影响地区居民的同情并呼吁关注。\",\n      \"text\": \"看到这些数据真的心惊，尤其是那些岛国居民可能失去家园，希望全球能尽快采取更有效的行动应对气候危机。🌊\"\n    },\n    \"repost\": {\n      \"execute\": true,\n      \"reason\": \"这种具有紧迫感的科学报告值得分享给更多人，提高大家对生态危机的认知。\",\n      \"text\": \"海平面上升不仅是遥远的地理问题，更是关乎数亿人未来的生存危机，值得关注。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快这么多，想到沿海城市和岛国居民的处境真的挺令人担忧的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直很关心环境和生态保护，这篇帖子提供了很重要的警示信息。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "作为关注气候变化的人，我想表达对受影响地区居民的同情并呼吁关注。",
+        "text": "看到这些数据真的心惊，尤其是那些岛国居民可能失去家园，希望全球能尽快采取更有效的行动应对气候危机。🌊"
+      },
+      "repost": {
+        "execute": true,
+        "reason": "这种具有紧迫感的科学报告值得分享给更多人，提高大家对生态危机的认知。",
+        "text": "海平面上升不仅是遥远的地理问题，更是关乎数亿人未来的生存危机，值得关注。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "看到这些数据真的心惊，尤其是那些岛国居民可能失去家园，希望全球能尽快采取更有效的行动应对气候危机。🌊"
+    },
+    {
+      "action": "repost",
+      "text": "海平面上升不仅是遥远的地理问题，更是关乎数亿人未来的生存危机，值得关注。"
+    }
+  ],
+  "seconds": 19.43
+}

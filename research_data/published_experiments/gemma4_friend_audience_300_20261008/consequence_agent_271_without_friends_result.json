@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_271_without_friends",
+  "actor": "agent_271",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-7ad86d3c23c04866a3c4c93531dd4090",
+    "object": "chat.completion",
+    "created": 1791457260,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉海平面上升这件事挺严重的，虽然离我的生活还远，但看到这些数据还是有点危机感。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普性质的公共议题值得支持，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学不专业，没什么能贡献的观点，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但比较沉重，没必要转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉海平面上升这件事挺严重的，虽然离我的生活还远，但看到这些数据还是有点危机感。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普性质的公共议题值得支持，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学不专业，没什么能贡献的观点，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但比较沉重，没必要转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.5
+}

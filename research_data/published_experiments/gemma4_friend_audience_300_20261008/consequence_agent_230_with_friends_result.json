@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_230_with_friends",
+  "actor": "agent_230",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-c58b5bab6f064d36826f88acb2bb9d61",
+    "object": "chat.completion",
+    "created": 1791457941,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候危机确实令人担忧，尤其是涉及到大规模人口迁移和社会资源争夺，具有很强的社会学讨论价值。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这是一个重要的公共议题，点赞以表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这种宏大叙事的话题很难在评论区给出有建设性的短评，倾向于静默阅读。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容较为沉重，且我目前的社交圈层并不太适合转发此类危机警示类信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候危机确实令人担忧，尤其是涉及到大规模人口迁移和社会资源争夺，具有很强的社会学讨论价值。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这是一个重要的公共议题，点赞以表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这种宏大叙事的话题很难在评论区给出有建设性的短评，倾向于静默阅读。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容较为沉重，且我目前的社交圈层并不太适合转发此类危机警示类信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.97
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_137_with_friends",
+  "actor": "agent_137",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-2ae8fd41051042c6bba1f454c142dd39",
+    "object": "chat.completion",
+    "created": 1791456352,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中要快，感觉气候危机确实是个很严肃的问题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很有警示意义，支持分享这类环保科普信息。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得挺严重，但目前没有特别专业的见解可以分享，不方便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这属于比较沉重的话题，不确定我的朋友圈好友是否感兴趣，先不转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中要快，感觉气候危机确实是个很严肃的问题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很有警示意义，支持分享这类环保科普信息。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得挺严重，但目前没有特别专业的见解可以分享，不方便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这属于比较沉重的话题，不确定我的朋友圈好友是否感兴趣，先不转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.86
+}

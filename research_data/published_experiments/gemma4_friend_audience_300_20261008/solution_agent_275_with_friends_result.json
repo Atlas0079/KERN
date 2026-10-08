@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_275_with_friends",
+  "actor": "agent_275",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-2400e238ad3b4591b45fa764b49b131e",
+    "object": "chat.completion",
+    "created": 1791455574,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些工程手段挺专业的，但对于我现在的处境来说，这些宏大叙事离我的生活有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正能量且专业，点个赞支持环保理念。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然对工程感兴趣，但没有特别想分享的见解，不想在这个话题下深入讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容较为严肃且偏科普，不太适合发到我的朋友圈给同事或家长们看。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些工程手段挺专业的，但对于我现在的处境来说，这些宏大叙事离我的生活有点远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正能量且专业，点个赞支持环保理念。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然对工程感兴趣，但没有特别想分享的见解，不想在这个话题下深入讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容较为严肃且偏科普，不太适合发到我的朋友圈给同事或家长们看。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.73
+}

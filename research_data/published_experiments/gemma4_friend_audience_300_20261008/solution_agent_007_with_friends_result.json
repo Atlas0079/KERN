@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_007_with_friends",
+  "actor": "agent_007",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-44b4dbf576ca444a94f4102e41921ffb",
+    "object": "chat.completion",
+    "created": 1791451839,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些环保工程和技术挺有意思的，不过对我目前的实际生活影响不大。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"对科技和社会话题比较关注，这种积极的环保方案值得点赞支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"性格比较内向，且帖子内容较为宏观，没有特别想表达的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然不错，但并不太适合转发给我的家人或前同事看。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些环保工程和技术挺有意思的，不过对我目前的实际生活影响不大。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "对科技和社会话题比较关注，这种积极的环保方案值得点赞支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "性格比较内向，且帖子内容较为宏观，没有特别想表达的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然不错，但并不太适合转发给我的家人或前同事看。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.41
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_289_with_friends",
+  "actor": "agent_289",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-6ed471cba9c847e6a355b11ad82c64be",
+    "object": "chat.completion",
+    "created": 1791453220,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候问题听起来挺触目惊心的，不过对我这种每天得操心账单和孩子作业的人来说，实在太遥远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类新知和全球议题感兴趣，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容太宏大，我没什么专业见解，也没必要在这种帖子下发表看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种危机感太强的内容，转发到我的朋友圈或社交圈感觉不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候问题听起来挺触目惊心的，不过对我这种每天得操心账单和孩子作业的人来说，实在太遥远了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类新知和全球议题感兴趣，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容太宏大，我没什么专业见解，也没必要在这种帖子下发表看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种危机感太强的内容，转发到我的朋友圈或社交圈感觉不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.26
+}

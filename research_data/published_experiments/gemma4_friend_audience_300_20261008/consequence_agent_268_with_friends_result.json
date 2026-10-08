@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_268_with_friends",
+  "actor": "agent_268",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f5202051919747ba9261b462db9f94c2",
+    "object": "chat.completion",
+    "created": 1791452972,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的影响这么严重吗，想到未来的资源争夺和难民问题，感觉有点焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类科普内容感兴趣，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太宏大且沉重，我性格内向，不习惯在公共场合发表此类见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这虽然很重要，但不是我朋友圈好友关注的重点，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的影响这么严重吗，想到未来的资源争夺和难民问题，感觉有点焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类科普内容感兴趣，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太宏大且沉重，我性格内向，不习惯在公共场合发表此类见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这虽然很重要，但不是我朋友圈好友关注的重点，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.04
+}

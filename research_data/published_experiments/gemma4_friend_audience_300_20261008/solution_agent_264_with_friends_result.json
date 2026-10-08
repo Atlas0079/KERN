@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_264_with_friends",
+  "actor": "agent_264",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f4d3d6483eec452e88d27dd557c8476d",
+    "object": "chat.completion",
+    "created": 1791458713,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然是个挺严肃的环境议题，但看到有具体的工程解决方案和个体能参与的小事，感觉还挺有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的理念，而且帖子内容比较正向。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但并没有特别深刻的见解或强烈的表达欲，随手点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题对我目前的社交圈（带娃、工作、生活）来说相关度不高，不需要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然是个挺严肃的环境议题，但看到有具体的工程解决方案和个体能参与的小事，感觉还挺有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的理念，而且帖子内容比较正向。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但并没有特别深刻的见解或强烈的表达欲，随手点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题对我目前的社交圈（带娃、工作、生活）来说相关度不高，不需要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.04
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_135_without_friends",
+  "actor": "agent_135",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-de39a15cba834b12a7136d175491ec6a",
+    "object": "chat.completion",
+    "created": 1791454338,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些技术手段和工程案例挺有意思的，不过最后那段号召个人关灯减肉的说法对我来说有点太理想化了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"对文中提到的海平面上升解决方案和新技术应用感兴趣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有想法，但觉得没必要在这么大的议题下发表个人见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较常规，没有强烈的分享欲望。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些技术手段和工程案例挺有意思的，不过最后那段号召个人关灯减肉的说法对我来说有点太理想化了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "对文中提到的海平面上升解决方案和新技术应用感兴趣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有想法，但觉得没必要在这么大的议题下发表个人见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较常规，没有强烈的分享欲望。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.79
+}

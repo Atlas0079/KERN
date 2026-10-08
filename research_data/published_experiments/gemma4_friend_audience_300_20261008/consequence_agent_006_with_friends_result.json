@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_006_with_friends",
+  "actor": "agent_006",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-6e35917d7e904b0680872ab998e18851",
+    "object": "chat.completion",
+    "created": 1791454553,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实挺严重的，而且涉及这么多大城市，感觉对未来生活的影响很大。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"对这类环保和气候预警的科普内容比较认可，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然关注但没有专业的见解可以贡献，没必要强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但由于不是我的专业领域，且朋友圈大多是亲友和前同事，转发这个可能没什么互动。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实挺严重的，而且涉及这么多大城市，感觉对未来生活的影响很大。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "对这类环保和气候预警的科普内容比较认可，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然关注但没有专业的见解可以贡献，没必要强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但由于不是我的专业领域，且朋友圈大多是亲友和前同事，转发这个可能没什么互动。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.04
+}

@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_267_without_friends",
+  "actor": "agent_267",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-c0be45b5dede4dfaae964e54db6af523",
+    "object": "chat.completion",
+    "created": 1791451463,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然气候问题很重要，但这种宏大的危机感离我的日常生活太远了，看完觉得有点沉重。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同气候危机，但内容太沉重且与我个人生活关联不大，没有点赞的冲动。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这是一个非常严肃且专业的议题，我没有相关专业知识，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我不喜欢在自己的社交空间分享过于焦虑或沉重的话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然气候问题很重要，但这种宏大的危机感离我的日常生活太远了，看完觉得有点沉重。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "虽然认同气候危机，但内容太沉重且与我个人生活关联不大，没有点赞的冲动。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这是一个非常严肃且专业的议题，我没有相关专业知识，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我不喜欢在自己的社交空间分享过于焦虑或沉重的话题。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 15.66
+}

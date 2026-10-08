@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_264_without_friends",
+  "actor": "agent_264",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-5b9ffb1555114f48af55c43b1c8d41ec",
+    "object": "chat.completion",
+    "created": 1791452381,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升速度这么快吗，想到以后孩子成长的环境可能会受到气候影响，感觉有点焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注公共健康和环境科普，支持这类警示性的专业报告。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大且沉重，虽然有感触但不知道该评论什么，不想在公共区域表达焦虑。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这是一个全球性的危机，个人转发一条可能没太大作用，且目前没必要在自己的主页分享这种压抑的消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升速度这么快吗，想到以后孩子成长的环境可能会受到气候影响，感觉有点焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注公共健康和环境科普，支持这类警示性的专业报告。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大且沉重，虽然有感触但不知道该评论什么，不想在公共区域表达焦虑。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这是一个全球性的危机，个人转发一条可能没太大作用，且目前没必要在自己的主页分享这种压抑的消息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.45
+}

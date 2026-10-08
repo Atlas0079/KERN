@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_092_with_friends",
+  "actor": "agent_092",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-958a799d1fb64a8396f8c9bfdb0136e2",
+    "object": "chat.completion",
+    "created": 1791453490,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"作为工程博士，看到荷兰的工程案例挺感兴趣的，不过现在的生活压力让我很难把这些宏大叙事和自己联系起来。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正向，而且提到的工程方案符合我的专业背景，随手点个赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但我性格内向，且这类话题太严肃，没什么想发表的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这内容对我身边的朋友或同行来说可能太远了，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "作为工程博士，看到荷兰的工程案例挺感兴趣的，不过现在的生活压力让我很难把这些宏大叙事和自己联系起来。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正向，而且提到的工程方案符合我的专业背景，随手点个赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但我性格内向，且这类话题太严肃，没什么想发表的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这内容对我身边的朋友或同行来说可能太远了，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.68
+}

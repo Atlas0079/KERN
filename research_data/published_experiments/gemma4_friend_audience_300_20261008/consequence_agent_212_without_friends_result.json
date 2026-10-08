@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_212_without_friends",
+  "actor": "agent_212",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-f2441539eb2f4d6a8ca5b1d10aa61b28",
+    "object": "chat.completion",
+    "created": 1791455638,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这事儿听起来挺严重的，不过离我的生活还挺远，感觉是个宏大的全球性问题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重且专业，没有太强的共鸣，不习惯随便点赞这种危机类消息。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学不专业，没什么能补充的，也不想在这种严肃话题下发表意见。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种消息转发到我的朋友圈或动态里显得太突兀，不符合我的日常分享习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这事儿听起来挺严重的，不过离我的生活还挺远，感觉是个宏大的全球性问题。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容太沉重且专业，没有太强的共鸣，不习惯随便点赞这种危机类消息。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学不专业，没什么能补充的，也不想在这种严肃话题下发表意见。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种消息转发到我的朋友圈或动态里显得太突兀，不符合我的日常分享习惯。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.97
+}

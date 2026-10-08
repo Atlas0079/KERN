@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_101_with_friends",
+  "actor": "agent_101",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-a745efa744c94e31b4a8d83998275c1e",
+    "object": "chat.completion",
+    "created": 1791454903,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然气候问题挺严重的，但离我的生活太远了，感觉是个宏大且沉重的话题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容过于沉重，且与我目前的生活重心没有直接关联，没有点赞欲望。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对这个领域不专业，也没有什么特别想表达的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我不习惯转发这种带有危机感且过于宏大的社会议题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然气候问题挺严重的，但离我的生活太远了，感觉是个宏大且沉重的话题。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容过于沉重，且与我目前的生活重心没有直接关联，没有点赞欲望。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对这个领域不专业，也没有什么特别想表达的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我不习惯转发这种带有危机感且过于宏大的社会议题。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.13
+}

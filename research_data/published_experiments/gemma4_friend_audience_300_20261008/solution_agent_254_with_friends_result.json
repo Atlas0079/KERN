@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_254_with_friends",
+  "actor": "agent_254",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-bf2eb9c5123448ca82800837163cee54",
+    "object": "chat.completion",
+    "created": 1791456797,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"我对环境和生态保护一直很关注，看到这些具体的应对措施让人觉得还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且符合我的科学兴趣，支持这种环保科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很有感触，但没有特别想分享的独特见解，点个赞就足够了。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类话题比较严肃，我觉得先自己消化就好，不需要特意转发到我的朋友圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "我对环境和生态保护一直很关注，看到这些具体的应对措施让人觉得还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且符合我的科学兴趣，支持这种环保科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很有感触，但没有特别想分享的独特见解，点个赞就足够了。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类话题比较严肃，我觉得先自己消化就好，不需要特意转发到我的朋友圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.52
+}

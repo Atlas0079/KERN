@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_173_with_friends",
+  "actor": "agent_173",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-9cccdf4bcb3649c3b76717acfc456072",
+    "object": "chat.completion",
+    "created": 1791458221,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实挺严重的，不过离我的生活和店太远了，感觉是个宏大但遥远的话题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"虽然是个严肃话题，但没有触动我的兴趣点，没必要点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学不专业，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个内容对我朋友圈里的亲友和同行来说没什么实际意义，不转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实挺严重的，不过离我的生活和店太远了，感觉是个宏大但遥远的话题。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "虽然是个严肃话题，但没有触动我的兴趣点，没必要点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学不专业，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个内容对我朋友圈里的亲友和同行来说没什么实际意义，不转发。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 12.94
+}

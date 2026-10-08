@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_134_with_friends",
+  "actor": "agent_134",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-99a1f593f734456ba763d5602679b41c",
+    "object": "chat.completion",
+    "created": 1791456173,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升速度这么快吗，这种全球性的环境变化确实让人感到有些不安，尤其是对沿海城市的影响。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容沉重，但这是一个值得关注的公共议题，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这属于宏观的气候问题，我没有相关专业背景，没什么能给出的建设性意见。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较压抑，且没有具体的行动指南，不适合转发到我的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升速度这么快吗，这种全球性的环境变化确实让人感到有些不安，尤其是对沿海城市的影响。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容沉重，但这是一个值得关注的公共议题，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这属于宏观的气候问题，我没有相关专业背景，没什么能给出的建设性意见。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较压抑，且没有具体的行动指南，不适合转发到我的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.3
+}

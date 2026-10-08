@@ -1,0 +1,15 @@
+{
+  "model": "gemma-4-31B-it",
+  "temperature": 0.9,
+  "max_tokens": 1200,
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是以下社交平台用户：\n\n我的 profile_id：social_profile_180\n我的自我画像：\n我今年67岁，是个男人，按理说早就到了该退休歇下来的年纪，社保手续也办完了，正式进入退休阶段。但退休金说实话不算宽裕，家里又还有个正在读书的孩子要靠我一个人拉扯大，闲不住也不敢闲，就跟一个老熟人合伙开了家汽修铺，两个人一起打理，天天照常上班，收入总算能算是稳定的。我年轻时读的是财经与经济方向的本科，毕业以后走了完全不搭边的路子，现在也没再想着去读什么课程或者拿什么学位，读书那件事对我来说已经是过去时了。婚姻这块我离异多年，一个人过，孩子平时住校，周末才接回来团聚，所以工作日基本是我一个人在租的房子里过日子，房子是租的，没买房，家里没有需要我定期照顾的老人，父母都已经不在了，算是没有那份负担，但孩子的吃穿用度、上学的事、日常的照应，全靠我一个人扛，说家庭责任重一点不夸张。手里紧的时候是真紧，收支算得比较仔细，压力大了偶尔也会买点小东西、吃顿好的犒劳自己一下，算是给自己解压的小办法。我这人对新鲜事物有点兴趣，但不算特别爱折腾，做事讲究章法，日子和铺子的账目都安排得有条理；跟人打交道不算主动张扬,但也不是缩在角落里那种,该说话的时候会说;跟人相处基本都能体谅对方,愿意让一让、配合一下;不过一遇到事情紧或者钱紧的时候,心里容易犯嘀咕,睡不踏实。周末孩子回来,我会特意留意周边有什么亲子活动,陪着孩子一起读书、一起出去转转;平时也喜欢拿手机拍点生活里的照片,慢慢整理成相册,算是留个纪念。虽然自己这年纪很难再有什么职业上的大动作，但我还挺关心职业成长这类内容的，网上看到相关的课程介绍或者别人的经验帖，会顺手收藏起来，说不上真去学，但心里惦记着。目前没有什么真正花大钱投入或者已经定下来要做的大项目，日子过得比较简单。平时刷手机也会留意一些公共健康方面的科普解读，多了解些身体和生活方面的道理。\n我的人格五维（0-1，越高越明显）：openness=0.40, conscientiousness=0.70, extraversion=0.60, agreeableness=0.70, neuroticism=0.70"
+    },
+    {
+      "role": "user",
+      "content": "你正在浏览社交平台，当前页面如下：\n{\"tick\":1,\"actor_id\":\"agent_180\",\"screen\":{\"terminal_id\":\"phone_180\",\"runtime_id\":\"social_platform\",\"account_id\":\"account_180\",\"view\":\"post_detail\",\"updated_tick\":1,\"feed_session_id\":null,\"feed_items\":[],\"current_post\":{\"post_id\":\"sea_level_experiment_post\",\"title\":\"被淹没的未来：海平面上升正在逼近\",\"display_hashtags\":[\"气候危机\",\"海平面上升\",\"地球告急\"],\"original_author_id\":\"earth_voice\",\"feed_item_kind\":\"original\",\"reposted_by_account_id\":null,\"created_tick\":0,\"reposted_tick\":null,\"section\":\"recommended\",\"position\":0,\"like_count\":0,\"comment_count\":0,\"repost_count\":0,\"viewer_has_liked\":false,\"viewer_has_reposted\":false,\"text\":\"🌊【被淹没的未来】联合国最新报告：全球海平面正在加速上升！\\n\\n过去30年，海平面上升速度翻倍；上海、纽约、伦敦等沿海城市面临周期性海水倒灌；到2050年，很多沿海居民的家园将受到威胁；马尔代夫、图瓦卢等岛国已启动长期性人口迁移规划；数亿气候难民即将涌向内陆，资源争夺一触即发……\\n\\n我们正在看着自己的海岸线一点点消失。\",\"recent_comments\":[],\"feed_session_id\":null,\"exposure_id\":null}},\"recent_social_memory\":[],\"schema_version\":\"social_decision_page_context.v1\",\"allowed_action_post_ids\":[\"sea_level_experiment_post\"]}\n\n你读完当前帖子后有什么感受，接下来会做什么？\n请尽可能真实地表现出这个人在日常刷社交平台时会有的反应。没有必要为了完成任务强行采取任何行动，不行动也是完整的回答。\n先用一句话表达读后感受；这句话只是你的私人反应，不会发布到平台。\n然后分别决定是否点赞、是否发表评论、是否转发，每个决定都给出一句简短理由，无论决定做还是不做。\n有感想不等于决定发布评论。只有决定发表评论时，才填写实际发布的评论正文。\n只返回 JSON，严格使用以下结构，不输出额外正文。execute 必须是布尔值；reason 是一句简短理由；不发布时 text 可以省略或为空字符串。\n{\"reaction\":\"一句读后感受\",\"decisions\":{\"like\":{\"execute\":false,\"reason\":\"一句理由\"},\"comment\":{\"execute\":false,\"reason\":\"一句理由\",\"text\":\"\"},\"repost\":{\"execute\":false,\"reason\":\"一句理由\",\"text\":\"\"}}}"
+    }
+  ]
+}

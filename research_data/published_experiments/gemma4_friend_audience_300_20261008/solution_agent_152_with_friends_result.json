@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_152_with_friends",
+  "actor": "agent_152",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-8ceb6abeaa0e47ce9d5f26812c0fe649",
+    "object": "chat.completion",
+    "created": 1791457975,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化确实是个严肃的话题，这些应对措施听起来挺有意思，希望能有效果。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且有科普意义，随手点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但并没有什么特别想发表的专业见解，不便强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种严肃的科普内容不太符合我平时随性的社交风格，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化确实是个严肃的话题，这些应对措施听起来挺有意思，希望能有效果。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且有科普意义，随手点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但并没有什么特别想发表的专业见解，不便强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种严肃的科普内容不太符合我平时随性的社交风格，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.08
+}

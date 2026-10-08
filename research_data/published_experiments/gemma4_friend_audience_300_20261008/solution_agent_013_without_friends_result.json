@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_013_without_friends",
+  "actor": "agent_013",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-c19a791a36984fdf9fa208bcf0a42f6b",
+    "object": "chat.completion",
+    "created": 1791453719,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化确实让人焦虑，不过看到这些具体的工程和方案，感觉还是有一线希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续发展的积极观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但比较内向，且这种宏大的议题不知道该从哪个角度切入评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普内容点赞即可，不需要转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化确实让人焦虑，不过看到这些具体的工程和方案，感觉还是有一线希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续发展的积极观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但比较内向，且这种宏大的议题不知道该从哪个角度切入评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普内容点赞即可，不需要转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.86
+}

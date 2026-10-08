@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_164_with_friends",
+  "actor": "agent_164",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-4b53072b228040a2bd3e49dfd6d36716",
+    "object": "chat.completion",
+    "created": 1791457867,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然这些宏大工程挺震撼的，但对我这种开小店的人来说，感觉离生活有点远，不过低碳生活确实是个好习惯。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新观点和环保话题比较感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，我没什么专业见解，也没必要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题和我的社交圈（邻居、供应商）契合度不高，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然这些宏大工程挺震撼的，但对我这种开小店的人来说，感觉离生活有点远，不过低碳生活确实是个好习惯。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新观点和环保话题比较感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大，我没什么专业见解，也没必要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题和我的社交圈（邻居、供应商）契合度不高，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.03
+}

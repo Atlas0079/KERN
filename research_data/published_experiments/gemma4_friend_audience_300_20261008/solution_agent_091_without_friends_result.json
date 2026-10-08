@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_091_without_friends",
+  "actor": "agent_091",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-d67372e808df456987067f1059c2621b",
+    "object": "chat.completion",
+    "created": 1791458479,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章列举的应对措施挺积极的，而且海平面上升确实是我一直关注的气候风险议题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳行为的意义，且内容与我的兴趣点相符。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但目前的科普内容比较基础，没有特别想讨论或补充的专业观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但还没到需要转发到自己主页向他人强烈推荐的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章列举的应对措施挺积极的，而且海平面上升确实是我一直关注的气候风险议题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳行为的意义，且内容与我的兴趣点相符。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但目前的科普内容比较基础，没有特别想讨论或补充的专业观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但还没到需要转发到自己主页向他人强烈推荐的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.59
+}

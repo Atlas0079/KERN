@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_293_with_friends",
+  "actor": "agent_293",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-34f94f23189f4b569b1e4a4a56d60383",
+    "object": "chat.completion",
+    "created": 1791454847,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题挺沉重的，感觉气候变化对未来的影响比我想象中要紧迫得多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容让人焦虑，但这类科普信息很有价值，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这超出了我的专业领域，也没有太深刻的见解，不方便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较压抑，且我的社交圈主要是同学和家人，转发这个可能不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题挺沉重的，感觉气候变化对未来的影响比我想象中要紧迫得多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容让人焦虑，但这类科普信息很有价值，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这超出了我的专业领域，也没有太深刻的见解，不方便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较压抑，且我的社交圈主要是同学和家人，转发这个可能不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.56
+}

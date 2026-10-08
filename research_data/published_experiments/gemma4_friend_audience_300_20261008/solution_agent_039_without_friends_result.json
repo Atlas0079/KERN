@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_039_without_friends",
+  "actor": "agent_039",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-79cc06bd21c344f1bf76318544a49c19",
+    "object": "chat.completion",
+    "created": 1791457487,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些工程方案听起来很有技术含量，不过现在对我来说，眼下的生活压力比全球气候问题要紧迫得多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正能量，且我对这种利用工程技术解决问题的方案比较感兴趣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同低碳生活，但没有太多想分享的个人见解，也不想在此时过多社交。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题比较宏大，转发到我的主页感觉不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些工程方案听起来很有技术含量，不过现在对我来说，眼下的生活压力比全球气候问题要紧迫得多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正能量，且我对这种利用工程技术解决问题的方案比较感兴趣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同低碳生活，但没有太多想分享的个人见解，也不想在此时过多社交。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题比较宏大，转发到我的主页感觉不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.8
+}

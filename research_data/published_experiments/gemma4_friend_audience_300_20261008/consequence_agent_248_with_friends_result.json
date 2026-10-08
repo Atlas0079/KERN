@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_248_with_friends",
+  "actor": "agent_248",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-a0855bed1ace4aa4bffe197c54086719",
+    "object": "chat.completion",
+    "created": 1791456649,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉气候问题越来越严重了，这种全球性的危机确实让人不安，希望以后有机会能去看看那些美丽的岛国，免得以后真的消失了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很有意义，支持关注气候危机这类公共议题。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然关注但没有专业见解，且这不是我的日常社交圈讨论的话题，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我的好友圈主要是同学和亲戚，转发这个可能不太契合社交氛围。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉气候问题越来越严重了，这种全球性的危机确实让人不安，希望以后有机会能去看看那些美丽的岛国，免得以后真的消失了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很有意义，支持关注气候危机这类公共议题。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然关注但没有专业见解，且这不是我的日常社交圈讨论的话题，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我的好友圈主要是同学和亲戚，转发这个可能不太契合社交氛围。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.56
+}

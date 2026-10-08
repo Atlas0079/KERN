@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_204_without_friends",
+  "actor": "agent_204",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-7a361c31e4414b838713e3dd0b8ddb80",
+    "object": "chat.completion",
+    "created": 1791457420,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉这些宏大的气候议题虽然紧迫，但离我的日常生活还是有些距离，让人觉得有点沉重。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这是一个比较严肃且有意义的警示，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种全球性的议题太宏大，我没什么具体的见解可以分享，也不想在社交场合发表过多看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较压抑，不想在自己的主页分享这种让人焦虑的消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉这些宏大的气候议题虽然紧迫，但离我的日常生活还是有些距离，让人觉得有点沉重。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这是一个比较严肃且有意义的警示，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种全球性的议题太宏大，我没什么具体的见解可以分享，也不想在社交场合发表过多看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较压抑，不想在自己的主页分享这种让人焦虑的消息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.79
+}

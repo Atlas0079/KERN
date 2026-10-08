@@ -1,0 +1,52 @@
+{
+  "key": "consequence_agent_259_without_friends",
+  "actor": "agent_259",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-b0e12e7322324de38edd5914396946f3",
+    "object": "chat.completion",
+    "created": 1791457865,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这形势比我想象中要严峻得多，沿海城市如果真这样，以后孩子在那边生活得考虑更多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境生态，这个话题很重要，得支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"作为退休教师，我习惯于就关注的公共问题表达看法，想提醒大家重视。\",\n      \"text\": \"看到这些数据挺心惊的。我们这辈人得给后代留个像样的地球，希望能有更有效的全球协作来应对气候危机。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但目前我只是在了解阶段，还没到必须转发提醒朋友圈的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这形势比我想象中要严峻得多，沿海城市如果真这样，以后孩子在那边生活得考虑更多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境生态，这个话题很重要，得支持一下。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "作为退休教师，我习惯于就关注的公共问题表达看法，想提醒大家重视。",
+        "text": "看到这些数据挺心惊的。我们这辈人得给后代留个像样的地球，希望能有更有效的全球协作来应对气候危机。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但目前我只是在了解阶段，还没到必须转发提醒朋友圈的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "看到这些数据挺心惊的。我们这辈人得给后代留个像样的地球，希望能有更有效的全球协作来应对气候危机。"
+    }
+  ],
+  "seconds": 17.88
+}

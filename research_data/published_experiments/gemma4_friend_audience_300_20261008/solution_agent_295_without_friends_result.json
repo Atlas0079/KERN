@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_295_without_friends",
+  "actor": "agent_295",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-c2f2951458b34961a74e7582a922d37d",
+    "object": "chat.completion",
+    "created": 1791453282,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到环境治理有具体成效挺让人欣慰的，低碳生活确实是每个人都能参与的事。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护很关注，认同帖子的观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很正向，但我目前没有特别想补充的观点，点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但我觉得没必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到环境治理有具体成效挺让人欣慰的，低碳生活确实是每个人都能参与的事。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护很关注，认同帖子的观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很正向，但我目前没有特别想补充的观点，点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但我觉得没必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.75
+}

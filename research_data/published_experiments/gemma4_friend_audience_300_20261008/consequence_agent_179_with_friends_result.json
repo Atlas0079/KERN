@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_179_with_friends",
+  "actor": "agent_179",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-1244425ce7254b4c88a4f1e6a9e6aaa4",
+    "object": "chat.completion",
+    "created": 1791451479,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个严肃的全球性问题，不过对我目前稳定的生活影响暂时还不明显。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有科普价值，且我本身对新观点和宏观话题比较感兴趣，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太大且比较沉重，我性格偏内向，在这种公共话题下没有太多想发表的个人见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这不像是我平时分享给家人或同事的内容，没有转发的必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个严肃的全球性问题，不过对我目前稳定的生活影响暂时还不明显。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有科普价值，且我本身对新观点和宏观话题比较感兴趣，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太大且比较沉重，我性格偏内向，在这种公共话题下没有太多想发表的个人见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这不像是我平时分享给家人或同事的内容，没有转发的必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.83
+}

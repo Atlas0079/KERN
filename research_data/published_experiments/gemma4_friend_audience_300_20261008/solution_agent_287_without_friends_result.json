@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_287_without_friends",
+  "actor": "agent_287",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-e8d032ffaf714fdc826e1e32de764d71",
+    "object": "chat.completion",
+    "created": 1791455906,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种关于环境可持续的话题挺有意义的，虽然听起来宏大，但最后落到个人行动上还算亲切。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种积极环保的观点，顺手点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较正向但没有特别想讨论的点，没必要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"比较私人的浏览行为，这种科普类内容不一定适合转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种关于环境可持续的话题挺有意义的，虽然听起来宏大，但最后落到个人行动上还算亲切。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种积极环保的观点，顺手点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较正向但没有特别想讨论的点，没必要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "比较私人的浏览行为，这种科普类内容不一定适合转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.71
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_229_with_friends",
+  "actor": "agent_229",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-ce6030e13dde4937b2337d9c6e6c153b",
+    "object": "chat.completion",
+    "created": 1791453322,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度这么快吗，以后沿海城市的房产和生活质量确实会受到很大影响。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有科普性质，且关注全球环境问题，值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得忧心，但这是一个宏大的全球议题，我没有太专业的见解去评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我的社交圈大多是熟人，转发这个可能气氛太压抑。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度这么快吗，以后沿海城市的房产和生活质量确实会受到很大影响。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有科普性质，且关注全球环境问题，值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得忧心，但这是一个宏大的全球议题，我没有太专业的见解去评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我的社交圈大多是熟人，转发这个可能气氛太压抑。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.77
+}

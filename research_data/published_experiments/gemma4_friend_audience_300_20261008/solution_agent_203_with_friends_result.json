@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_203_with_friends",
+  "actor": "agent_203",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-7ab7d871b48b411fa472e8be797932bb",
+    "object": "chat.completion",
+    "created": 1791456514,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意义的科普，虽然跟我现在的摄影工作没关系，但大学学生命科学的时候接触过类似的环境话题，感觉低碳生活确实是每个家庭应该关注的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且具有社会责任感，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有什么特别深刻的观点想表达，随手看看就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的议题转发到朋友圈可能显得太严肃，不符合我平时低调的社交习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意义的科普，虽然跟我现在的摄影工作没关系，但大学学生命科学的时候接触过类似的环境话题，感觉低碳生活确实是每个家庭应该关注的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且具有社会责任感，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有什么特别深刻的观点想表达，随手看看就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种宏大的议题转发到朋友圈可能显得太严肃，不符合我平时低调的社交习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.49
+}

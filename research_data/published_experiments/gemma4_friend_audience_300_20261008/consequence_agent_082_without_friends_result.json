@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_082_without_friends",
+  "actor": "agent_082",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-6aa0520c90824a78b757f669bd950682",
+    "object": "chat.completion",
+    "created": 1791451994,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，想到未来可能会有这么多气候难民，感觉挺沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注气候风险，这个话题对我来说很重要。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很关心，但目前没有特别深刻的见解可以分享，点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我现在的社交状态比较低调，不打算转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，想到未来可能会有这么多气候难民，感觉挺沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注气候风险，这个话题对我来说很重要。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很关心，但目前没有特别深刻的见解可以分享，点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我现在的社交状态比较低调，不打算转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.4
+}

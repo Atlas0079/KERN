@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_218_without_friends",
+  "actor": "agent_218",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-97388d4631f44d99986abd6462feeda2",
+    "object": "chat.completion",
+    "created": 1791452102,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升得这么快吗，想到以后孩子生活在这样的环境下，心里真有点不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注气候变化，这种警示性的内容有必要支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很担忧，但我觉得自己专业知识不足，没什么建设性的建议可以评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种沉重的话题转发到朋友圈可能会让周围的人焦虑，没必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升得这么快吗，想到以后孩子生活在这样的环境下，心里真有点不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注气候变化，这种警示性的内容有必要支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很担忧，但我觉得自己专业知识不足，没什么建设性的建议可以评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种沉重的话题转发到朋友圈可能会让周围的人焦虑，没必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.05
+}

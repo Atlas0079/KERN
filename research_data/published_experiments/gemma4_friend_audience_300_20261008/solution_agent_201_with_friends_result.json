@@ -1,0 +1,52 @@
+{
+  "key": "solution_agent_201_with_friends",
+  "actor": "agent_201",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-72c6f5a7124641419a5fb6f454947ab4",
+    "object": "chat.completion",
+    "created": 1791452996,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"正好是我关注的气候风险话题，而且提到的红树林修复和工程方案挺有意思的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容跟我感兴趣的极端天气和气候风险方向契合，支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"作为一个研究人文社科的学生，想从技术和社会实践的角度互动一下。\",\n      \"text\": \"红树林修复确实是个很棒的自然解决方案，期待看到更多关于生态修复与当地社区共生案例的分享！🌱\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但目前更倾向于自己阅读和讨论，暂时不需要转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "正好是我关注的气候风险话题，而且提到的红树林修复和工程方案挺有意思的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容跟我感兴趣的极端天气和气候风险方向契合，支持一下。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "作为一个研究人文社科的学生，想从技术和社会实践的角度互动一下。",
+        "text": "红树林修复确实是个很棒的自然解决方案，期待看到更多关于生态修复与当地社区共生案例的分享！🌱"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但目前更倾向于自己阅读和讨论，暂时不需要转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "红树林修复确实是个很棒的自然解决方案，期待看到更多关于生态修复与当地社区共生案例的分享！🌱"
+    }
+  ],
+  "seconds": 17.38
+}

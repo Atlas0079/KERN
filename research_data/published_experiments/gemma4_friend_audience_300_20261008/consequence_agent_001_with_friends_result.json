@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_001_with_friends",
+  "actor": "agent_001",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-b4b8d92e36da4daa884ca6d9b059f500",
+    "object": "chat.completion",
+    "created": 1791451657,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉最近极端天气确实越来越多了，海平面上升到这个程度真的挺让人焦虑的，尤其是想到以后孩子成长的环境。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对科学和社会话题比较关注，支持这种科普气候危机的内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得挺严重，但这种宏大的全球议题我没什么专业见解可以评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且对我目前的生活没有直接影响，没必要转发到我的朋友圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉最近极端天气确实越来越多了，海平面上升到这个程度真的挺让人焦虑的，尤其是想到以后孩子成长的环境。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对科学和社会话题比较关注，支持这种科普气候危机的内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得挺严重，但这种宏大的全球议题我没什么专业见解可以评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且对我目前的生活没有直接影响，没必要转发到我的朋友圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.1
+}

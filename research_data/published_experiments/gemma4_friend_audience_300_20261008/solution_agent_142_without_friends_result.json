@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_142_without_friends",
+  "actor": "agent_142",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-6678dfe9f55c44849c796f0bd7e8faf7",
+    "object": "chat.completion",
+    "created": 1791452516,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保工程和低碳建议，感觉海平面上升的问题虽然严重，但还是有希望通过技术和行动来缓解的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直比较关心环境和生态保护，这篇内容积极且有参考价值。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容已经说得很全面了，我倾向于安静地阅读和思考，不想在公开场合过多表达。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发对我来说是个比较大的社交动作，我通常不会轻易转发内容到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保工程和低碳建议，感觉海平面上升的问题虽然严重，但还是有希望通过技术和行动来缓解的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直比较关心环境和生态保护，这篇内容积极且有参考价值。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容已经说得很全面了，我倾向于安静地阅读和思考，不想在公开场合过多表达。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发对我来说是个比较大的社交动作，我通常不会轻易转发内容到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.45
+}

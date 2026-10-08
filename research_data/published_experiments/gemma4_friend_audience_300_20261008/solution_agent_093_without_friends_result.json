@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_093_without_friends",
+  "actor": "agent_093",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-d6d2d85596494f289f0648b4877df89d",
+    "object": "chat.completion",
+    "created": 1791453794,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些年确实感觉到极端天气变多了，看到有具体的工程和修复计划能缓解海平面上升，心里觉得踏实了一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很正能量，而且是我一直关注的生态保护话题，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但我性格比较内向，这种科普类的帖子看看就好，没必要特意发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类信息比较专业，转发到自己的圈子里可能没什么人讨论，没必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些年确实感觉到极端天气变多了，看到有具体的工程和修复计划能缓解海平面上升，心里觉得踏实了一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很正能量，而且是我一直关注的生态保护话题，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但我性格比较内向，这种科普类的帖子看看就好，没必要特意发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类信息比较专业，转发到自己的圈子里可能没什么人讨论，没必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.5
+}

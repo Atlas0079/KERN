@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_158_with_friends",
+  "actor": "agent_158",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-6273becacdc94deca7dc786cbfe55892",
+    "object": "chat.completion",
+    "created": 1791452192,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这种全球性的危机报告感觉挺压抑的，尤其是想到以后资源争夺和人口迁移，莫名地增加了我的焦虑感。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容沉重，但这是一个值得关注的重要议题，点个赞表示支持环保意识。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大话题我没有太专业的见解，而且现在心情比较沉重，不想在评论区讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太过于悲观，不希望把这种焦虑情绪传递给我的社交圈好友。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这种全球性的危机报告感觉挺压抑的，尤其是想到以后资源争夺和人口迁移，莫名地增加了我的焦虑感。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容沉重，但这是一个值得关注的重要议题，点个赞表示支持环保意识。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这类宏大话题我没有太专业的见解，而且现在心情比较沉重，不想在评论区讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太过于悲观，不希望把这种焦虑情绪传递给我的社交圈好友。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.05
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_158_without_friends",
+  "actor": "agent_158",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-2b93a6f418cb4013845f77d9d5b7818d",
+    "object": "chat.completion",
+    "created": 1791451544,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个帖子提到的工程手段挺有意思的，作为学工程的，我对这种大型基础设施方案比较感兴趣。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且涉及工程技术，我比较认可这种解决问题的思路。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但并没有什么特别深刻的见解可以分享，不想强行发言。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容点赞即可，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个帖子提到的工程手段挺有意思的，作为学工程的，我对这种大型基础设施方案比较感兴趣。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且涉及工程技术，我比较认可这种解决问题的思路。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但并没有什么特别深刻的见解可以分享，不想强行发言。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容点赞即可，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.09
+}

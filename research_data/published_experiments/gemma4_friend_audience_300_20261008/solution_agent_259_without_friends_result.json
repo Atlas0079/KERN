@@ -1,0 +1,52 @@
+{
+  "key": "solution_agent_259_without_friends",
+  "actor": "agent_259",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-23cae350f6304031a6eabe8eb6ce907b",
+    "object": "chat.completion",
+    "created": 1791452877,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的工程和修复计划，觉得环保其实是有实实在在的办法的，不能只顾着担心。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境变化和生态保护，这种正能量且有方案的帖子值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"我性格比较外向直接，看到这种科普类的内容习惯性地想分享一下自己的看法。\",\n      \"text\": \"看到红树林修复能起到这么大的作用真是太好了，希望这类生态工程能越来越多，咱们在日常生活中也要把低碳习惯养成。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然认可，但觉得点赞和评论就足够了，不需要特意转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的工程和修复计划，觉得环保其实是有实实在在的办法的，不能只顾着担心。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境变化和生态保护，这种正能量且有方案的帖子值得支持。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "我性格比较外向直接，看到这种科普类的内容习惯性地想分享一下自己的看法。",
+        "text": "看到红树林修复能起到这么大的作用真是太好了，希望这类生态工程能越来越多，咱们在日常生活中也要把低碳习惯养成。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然认可，但觉得点赞和评论就足够了，不需要特意转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "看到红树林修复能起到这么大的作用真是太好了，希望这类生态工程能越来越多，咱们在日常生活中也要把低碳习惯养成。"
+    }
+  ],
+  "seconds": 16.85
+}

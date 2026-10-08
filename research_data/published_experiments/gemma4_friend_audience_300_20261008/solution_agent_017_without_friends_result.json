@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_017_without_friends",
+  "actor": "agent_017",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-edfefd158a3e4f3c908387ce0a6cce5c",
+    "object": "chat.completion",
+    "created": 1791455518,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个挺严重的问题，看到这些具体的应对措施感觉稍微乐观了一点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对极端天气和气候风险比较关注，这个内容很有意义。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但并没有什么特别想补充的观点，且我平时不习惯在网上太活跃。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发有点太高调了，我更习惯安静地浏览和学习。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个挺严重的问题，看到这些具体的应对措施感觉稍微乐观了一点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对极端天气和气候风险比较关注，这个内容很有意义。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但并没有什么特别想补充的观点，且我平时不习惯在网上太活跃。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发有点太高调了，我更习惯安静地浏览和学习。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.59
+}

@@ -1,0 +1,43 @@
+{
+  "key": "solution_agent_182_with_friends",
+  "actor": "agent_182",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-d97f5f006596437ab5ff552096184a96",
+    "object": "chat.completion",
+    "created": 1791456451,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这类环保话题虽然重要，但对我个人的日常生活影响不大，感觉比较宏大。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然正能量，但没有触动我的兴趣点，不习惯随便点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对这类全球性议题没有太多专业见解，且性格内向，不倾向于在公开平台发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这不符合我平时的分享习惯，没必要转发到我的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这类环保话题虽然重要，但对我个人的日常生活影响不大，感觉比较宏大。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容虽然正能量，但没有触动我的兴趣点，不习惯随便点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对这类全球性议题没有太多专业见解，且性格内向，不倾向于在公开平台发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这不符合我平时的分享习惯，没必要转发到我的社交圈。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.83
+}

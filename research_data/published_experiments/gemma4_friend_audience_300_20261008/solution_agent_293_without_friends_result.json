@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_293_without_friends",
+  "actor": "agent_293",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-2e9b7486c2ff4f6cbe558e11b2cdbc76",
+    "object": "chat.completion",
+    "created": 1791458372,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种关于气候变化和可持续生活的讨论挺有意义的，而且文案写得很有希望感，不是单纯的焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持低碳生活和环境保护的积极观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观，我目前没有特别专业的见解可以补充，点赞支持即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但还没到必须分享给所有人知道的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种关于气候变化和可持续生活的讨论挺有意义的，而且文案写得很有希望感，不是单纯的焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持低碳生活和环境保护的积极观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏观，我目前没有特别专业的见解可以补充，点赞支持即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但还没到必须分享给所有人知道的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.49
+}

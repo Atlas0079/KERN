@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_122_with_friends",
+  "actor": "agent_122",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f717dd8401f54274abb25a70c0ba9d9d",
+    "object": "chat.completion",
+    "created": 1791455092,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球气候问题挺严重的，不过看到还有很多工程和方案在实施，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有意义，支持环保这种正确的价值观。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但我对这些专业工程了解不多，没什么具体想评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大的议题转发到我的朋友圈可能不太合适，我平时不常转发这种科普文。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球气候问题挺严重的，不过看到还有很多工程和方案在实施，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有意义，支持环保这种正确的价值观。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但我对这些专业工程了解不多，没什么具体想评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类宏大的议题转发到我的朋友圈可能不太合适，我平时不常转发这种科普文。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.24
+}

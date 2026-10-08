@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_090_with_friends",
+  "actor": "agent_090",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-fa06a56e5bd742cb80aa9ff21967e12e",
+    "object": "chat.completion",
+    "created": 1791451042,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保这事儿确实重要，不过这种宏大的议题对我来说有点远，看完觉得还行，但没到让我激动地想参与讨论的程度。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极向上，支持环保和低碳生活，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候工程这些专业领域不太了解，没什么特别的见解可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇文章太像宣传稿，转发到我的朋友圈或给熟人看可能不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保这事儿确实重要，不过这种宏大的议题对我来说有点远，看完觉得还行，但没到让我激动地想参与讨论的程度。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极向上，支持环保和低碳生活，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候工程这些专业领域不太了解，没什么特别的见解可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇文章太像宣传稿，转发到我的朋友圈或给熟人看可能不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.3
+}

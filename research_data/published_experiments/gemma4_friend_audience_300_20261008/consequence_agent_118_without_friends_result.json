@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_118_without_friends",
+  "actor": "agent_118",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-cfe83a59a1e748ebbbe122b6242ff199",
+    "object": "chat.completion",
+    "created": 1791457955,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事儿听起来挺严重的，得关注一下，但离我的日常生活暂时还比较远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普环保的内容是有意义的，点个赞表示支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得挺震撼，但没有特别专业的见解，不方便随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我平时不习惯在社交平台转发这类宏大叙事的话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事儿听起来挺严重的，得关注一下，但离我的日常生活暂时还比较远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普环保的内容是有意义的，点个赞表示支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得挺震撼，但没有特别专业的见解，不方便随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我平时不习惯在社交平台转发这类宏大叙事的话题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.46
+}

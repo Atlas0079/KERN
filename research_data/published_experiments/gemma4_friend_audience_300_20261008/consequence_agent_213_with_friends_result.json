@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_213_with_friends",
+  "actor": "agent_213",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-cc0c3e8801b045a3b0a146c906e3af6f",
+    "object": "chat.completion",
+    "created": 1791454678,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升速度这么快吗，对沿海城市和资源分配的影响确实是个严肃的全球性问题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有科学警示意义，认同其传达的危机感。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有想法，但这类宏大议题我没有专业见解，没必要发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"朋友圈和联系人大多是家人和同事，转发这个对我目前的社交圈来说意义不大。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升速度这么快吗，对沿海城市和资源分配的影响确实是个严肃的全球性问题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有科学警示意义，认同其传达的危机感。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有想法，但这类宏大议题我没有专业见解，没必要发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "朋友圈和联系人大多是家人和同事，转发这个对我目前的社交圈来说意义不大。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.04
+}

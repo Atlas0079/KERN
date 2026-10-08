@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_121_without_friends",
+  "actor": "agent_121",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-5e56749f9a004050956ebda1de02a798",
+    "object": "chat.completion",
+    "created": 1791456789,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意义的，看到这些具体的工程和修复计划比单纯的焦虑要好得多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"平时就关注环境和生态话题，这种正向的科普值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容已经说得很全面了，我没有额外的专业观点可以补充。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类信息点赞支持即可，没必要特意转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意义的，看到这些具体的工程和修复计划比单纯的焦虑要好得多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "平时就关注环境和生态话题，这种正向的科普值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容已经说得很全面了，我没有额外的专业观点可以补充。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类信息点赞支持即可，没必要特意转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.88
+}

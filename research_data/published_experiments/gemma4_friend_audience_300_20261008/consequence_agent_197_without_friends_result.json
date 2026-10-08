@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_197_without_friends",
+  "actor": "agent_197",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-aa5c9d077b694b289dbb01dc4f2b86ee",
+    "object": "chat.completion",
+    "created": 1791451404,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，气候风险确实是个紧迫的全球性问题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候风险和科学话题感兴趣，支持分享这类预警信息的科普内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且宏大，我暂时没有特别直接的观点要表达。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但这种沉重的预警信息我不确定是否适合转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，气候风险确实是个紧迫的全球性问题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候风险和科学话题感兴趣，支持分享这类预警信息的科普内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且宏大，我暂时没有特别直接的观点要表达。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但这种沉重的预警信息我不确定是否适合转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.46
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_025_without_friends",
+  "actor": "agent_025",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-293e0ff025aa47c7b71afe57091394a1",
+    "object": "chat.completion",
+    "created": 1791455259,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么快吗，以后沿海城市的生活压力会越来越大，得给孩子多考虑一些长远规划。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这类关于气候危机的信息很重要，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然对此很关注，但我性格比较内向，而且这类宏大话题我没有太多专业见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我的社交圈比较小，不觉得有必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么快吗，以后沿海城市的生活压力会越来越大，得给孩子多考虑一些长远规划。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这类关于气候危机的信息很重要，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然对此很关注，但我性格比较内向，而且这类宏大话题我没有太多专业见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我的社交圈比较小，不觉得有必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.23
+}

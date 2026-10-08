@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_224_with_friends",
+  "actor": "agent_224",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-52a66edc120745cda6bb5b7d64795f19",
+    "object": "chat.completion",
+    "created": 1791452394,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种极端天气带来的连锁反应真的挺可怕的，感觉离每个人的生活其实都很近。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候和极端天气一直很关注，这篇文章的内容正是我感兴趣的。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得很忧虑，但我性格内向，不习惯在公共平台发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种沉重的话题我倾向于默默关注，不太想转发到自己的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种极端天气带来的连锁反应真的挺可怕的，感觉离每个人的生活其实都很近。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候和极端天气一直很关注，这篇文章的内容正是我感兴趣的。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得很忧虑，但我性格内向，不习惯在公共平台发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种沉重的话题我倾向于默默关注，不太想转发到自己的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.15
+}

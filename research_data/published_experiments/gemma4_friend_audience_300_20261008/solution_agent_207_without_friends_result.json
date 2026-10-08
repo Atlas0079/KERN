@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_207_without_friends",
+  "actor": "agent_207",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-23146b47fd6944108622a04eba505b45",
+    "object": "chat.completion",
+    "created": 1791454257,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些工程手段很有意思，作为学工程的，看到这种大规模的治理方案还是比较感兴趣的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且涉及工程实践，符合我的兴趣点，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但我性格比较内向，不习惯在公开场合发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这内容对我个人有启发，但没有必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些工程手段很有意思，作为学工程的，看到这种大规模的治理方案还是比较感兴趣的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且涉及工程实践，符合我的兴趣点，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但我性格比较内向，不习惯在公开场合发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这内容对我个人有启发，但没有必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.58
+}

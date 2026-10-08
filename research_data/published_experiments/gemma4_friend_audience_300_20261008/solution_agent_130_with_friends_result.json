@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_130_with_friends",
+  "actor": "agent_130",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-0a26512ba3b949528b86b273c5734407",
+    "object": "chat.completion",
+    "created": 1791457159,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升一直是我关注的气候风险话题，看到有具体的工程方案和修复计划，感觉比单纯的焦虑要有希望得多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且符合我对极端天气和气候风险的关注兴趣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但目前只是浏览阶段，没有特别想深入探讨的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇文章偏向科普和呼吁，转发给朋友圈的人可能兴趣点不同，没必要特意转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升一直是我关注的气候风险话题，看到有具体的工程方案和修复计划，感觉比单纯的焦虑要有希望得多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且符合我对极端天气和气候风险的关注兴趣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但目前只是浏览阶段，没有特别想深入探讨的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇文章偏向科普和呼吁，转发给朋友圈的人可能兴趣点不同，没必要特意转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.83
+}

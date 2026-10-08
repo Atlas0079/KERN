@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_084_with_friends",
+  "actor": "agent_084",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-c1caaf8c065149289119074221d2867f",
+    "object": "chat.completion",
+    "created": 1791454137,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺有意义的，尤其是提到的工程手段和生态修复，挺符合我对技术解决问题的认知。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活的理念，且对文中的工程案例感兴趣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但没什么特别想讨论的，习惯性潜水。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类话题比较宏大，不太适合发到我的朋友圈或社交主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺有意义的，尤其是提到的工程手段和生态修复，挺符合我对技术解决问题的认知。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活的理念，且对文中的工程案例感兴趣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但没什么特别想讨论的，习惯性潜水。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类话题比较宏大，不太适合发到我的朋友圈或社交主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.57
+}

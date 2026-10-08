@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_043_without_friends",
+  "actor": "agent_043",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8b68773459024ae3ad0aa3ab1345cef9",
+    "object": "chat.completion",
+    "created": 1791458994,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到海平面上升其实有应对方案，感觉还是有希望的，生态保护确实很重要。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"平时比较关注环境和生态类话题，这篇文章内容积极且有科普意义。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别强烈的观点需要表达，点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但不需要特意转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到海平面上升其实有应对方案，感觉还是有希望的，生态保护确实很重要。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "平时比较关注环境和生态类话题，这篇文章内容积极且有科普意义。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别强烈的观点需要表达，点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但不需要特意转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.56
+}

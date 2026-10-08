@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_126_without_friends",
+  "actor": "agent_126",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-a782305e11bf4c5ea351e038c47ed7d8",
+    "object": "chat.completion",
+    "created": 1791455976,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这海平面上升得这么快，以后沿海城市的后辈们压力太大了，环境问题真是不能掉以轻心。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态话题比较关注，支持这类科普提醒。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且宏大，我作为一个普通退休教师，没什么专业建议能补充的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但我觉得转发到我自己的圈子里可能太沉重了，不习惯发这种令人焦虑的消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这海平面上升得这么快，以后沿海城市的后辈们压力太大了，环境问题真是不能掉以轻心。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态话题比较关注，支持这类科普提醒。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且宏大，我作为一个普通退休教师，没什么专业建议能补充的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但我觉得转发到我自己的圈子里可能太沉重了，不习惯发这种令人焦虑的消息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.46
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_119_without_friends",
+  "actor": "agent_119",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-e59f702654d046dea78e041a1d2bf9d6",
+    "object": "chat.completion",
+    "created": 1791450982,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些宏大的工程和环保措施，觉得世界还是有希望的，不过对我这种普通人来说，能做的确实只有一些生活小细节。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较积极且有科普性质，符合我对社会和科技关系的关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别深刻的见解想要表达，随便刷刷就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大叙事的内容转发到我的朋友圈可能不太合适，且没有强烈的分享欲。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些宏大的工程和环保措施，觉得世界还是有希望的，不过对我这种普通人来说，能做的确实只有一些生活小细节。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较积极且有科普性质，符合我对社会和科技关系的关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别深刻的见解想要表达，随便刷刷就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种宏大叙事的内容转发到我的朋友圈可能不太合适，且没有强烈的分享欲。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.26
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_026_with_friends",
+  "actor": "agent_026",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-1db31ce3579d40439823c4a7c9beb4ab",
+    "object": "chat.completion",
+    "created": 1791455119,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到关于海平面上升和气候行动的讨论，这种从工程方案到个人行为的分析挺有意思的，让我觉得这些宏大议题其实有切实可行的路径。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候和极端天气一直很关注，这个帖子提供的正面解决方案很积极。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我目前只是在阅读了解，没有特别强烈的观点需要补充。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然不错，但我的社交圈大多是家人和前同事，转发这个可能互动率不高。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到关于海平面上升和气候行动的讨论，这种从工程方案到个人行为的分析挺有意思的，让我觉得这些宏大议题其实有切实可行的路径。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候和极端天气一直很关注，这个帖子提供的正面解决方案很积极。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我目前只是在阅读了解，没有特别强烈的观点需要补充。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然不错，但我的社交圈大多是家人和前同事，转发这个可能互动率不高。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.75
+}

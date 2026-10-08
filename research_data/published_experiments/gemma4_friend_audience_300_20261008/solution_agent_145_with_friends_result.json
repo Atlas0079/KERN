@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_145_with_friends",
+  "actor": "agent_145",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-dcf05da75b384424957311e36387459c",
+    "object": "chat.completion",
+    "created": 1791458727,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到海平面上升有具体的应对方案和希望，这种科学探讨的内容挺吸引我的，而且低碳生活确实是每个人能参与的事。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候话题感兴趣，且认可帖子中提到的可持续生活观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观，我目前没有特别深刻的见解需要分享，点赞表达支持即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普内容虽然不错，但不需要特意转发到我的个人主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到海平面上升有具体的应对方案和希望，这种科学探讨的内容挺吸引我的，而且低碳生活确实是每个人能参与的事。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候话题感兴趣，且认可帖子中提到的可持续生活观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏观，我目前没有特别深刻的见解需要分享，点赞表达支持即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普内容虽然不错，但不需要特意转发到我的个人主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.74
+}

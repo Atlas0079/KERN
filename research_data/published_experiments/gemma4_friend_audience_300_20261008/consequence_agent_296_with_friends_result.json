@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_296_with_friends",
+  "actor": "agent_296",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-b2233a1af96a47d6b3887aa2b0977888",
+    "object": "chat.completion",
+    "created": 1791455898,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候变化真的挺让人担忧的，尤其是想到以后孩子成长的环境可能会受到影响。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类科普性质的极端天气话题感兴趣，支持这类提醒人们关注环境的帖子。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但这种宏大议题我没什么具体的专业见解可以贡献，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，而且我的好友圈大多是家长和同事，转发这个可能不太契合大家的日常聊天氛围。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候变化真的挺让人担忧的，尤其是想到以后孩子成长的环境可能会受到影响。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类科普性质的极端天气话题感兴趣，支持这类提醒人们关注环境的帖子。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但这种宏大议题我没什么具体的专业见解可以贡献，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，而且我的好友圈大多是家长和同事，转发这个可能不太契合大家的日常聊天氛围。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.11
+}

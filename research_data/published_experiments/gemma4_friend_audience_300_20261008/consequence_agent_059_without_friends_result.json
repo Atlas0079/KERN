@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_059_without_friends",
+  "actor": "agent_059",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-4ed132970a794ef9a52610e14007b2b6",
+    "object": "chat.completion",
+    "created": 1791451496,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的影响这么严重吗，感觉这是一个需要长期关注的全球性问题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普环保和气候危机的内容很有意义，支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得很严重，但我也不是专业人士，没什么建设性的观点可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我平时的社交圈子比较小，不太习惯转发这类宏大叙事的内容。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的影响这么严重吗，感觉这是一个需要长期关注的全球性问题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普环保和气候危机的内容很有意义，支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得很严重，但我也不是专业人士，没什么建设性的观点可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我平时的社交圈子比较小，不太习惯转发这类宏大叙事的内容。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.36
+}

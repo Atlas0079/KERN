@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_129_without_friends",
+  "actor": "agent_129",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-3f7ab416903d404fbf131a967ba3faae",
+    "object": "chat.completion",
+    "created": 1791454672,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度这么快，那些岛国的人们真的太不容易了，环境问题确实比想象中更紧迫。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关心生态保护话题，这个内容很有警示意义。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很心酸，但我没什么专业的见解可以提供，安静关注就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种比较沉重且宏大的议题，我不习惯转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度这么快，那些岛国的人们真的太不容易了，环境问题确实比想象中更紧迫。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关心生态保护话题，这个内容很有警示意义。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很心酸，但我没什么专业的见解可以提供，安静关注就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种比较沉重且宏大的议题，我不习惯转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.86
+}

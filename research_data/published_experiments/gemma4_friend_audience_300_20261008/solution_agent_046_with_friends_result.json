@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_046_with_friends",
+  "actor": "agent_046",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-d6fbf5b51ed74b2691aa76722d853f62",
+    "object": "chat.completion",
+    "created": 1791451072,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"关于气候变化和海平面上升的内容，挺有意思的，这些环保工程和低碳行为确实值得关注。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这种科普类且带有正向引导的内容比较认可，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但没有什么特别想发表的见解，没必要强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然不错，但还没到让我觉得必须分享给朋友圈或同学的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "关于气候变化和海平面上升的内容，挺有意思的，这些环保工程和低碳行为确实值得关注。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这种科普类且带有正向引导的内容比较认可，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但没有什么特别想发表的见解，没必要强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然不错，但还没到让我觉得必须分享给朋友圈或同学的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.81
+}

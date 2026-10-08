@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_181_without_friends",
+  "actor": "agent_181",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-26030463daa6416d8b372d8490b4802c",
+    "object": "chat.completion",
+    "created": 1791459188,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"关于气候变化的讨论总是能引起我的思考，这种将宏观工程与个体行动结合的视角挺有意思的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续发展的观点，这种正向的科普内容值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别想补充的专业见解，且性格内向，不倾向于在公共区域随意发言。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但还没到需要分享给所有好友传播的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "关于气候变化的讨论总是能引起我的思考，这种将宏观工程与个体行动结合的视角挺有意思的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续发展的观点，这种正向的科普内容值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别想补充的专业见解，且性格内向，不倾向于在公共区域随意发言。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但还没到需要分享给所有好友传播的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.89
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_020_with_friends",
+  "actor": "agent_020",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-ee51fe69caf64faeb4facce46f36284e",
+    "object": "chat.completion",
+    "created": 1791458697,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的环境议题挺有意思的，虽然离我的日常木工活儿很远，但这种宏观的分析和解决方案我一直挺好奇。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活的理念，且对文中提到的工程方案感兴趣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有想法，但我比较内向，且这类宏大叙事没什么具体的切入点让我直接发表意见。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较常规，不需要转发到我的朋友圈告知他人。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的环境议题挺有意思的，虽然离我的日常木工活儿很远，但这种宏观的分析和解决方案我一直挺好奇。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活的理念，且对文中提到的工程方案感兴趣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有想法，但我比较内向，且这类宏大叙事没什么具体的切入点让我直接发表意见。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较常规，不需要转发到我的朋友圈告知他人。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.04
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_239_with_friends",
+  "actor": "agent_239",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-100f942209e54ae9add7f84b03c820e1",
+    "object": "chat.completion",
+    "created": 1791455229,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"极端天气和海平面上升确实是个严肃的话题，看到有具体的工程和方案在实施，心里觉得稍微踏实了点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很有意义，而且提供了正面且具体的解决方案，值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但这类宏大话题我习惯于先阅读思考，不太习惯在评论区发表看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇文章比较专业且具有科普性质，我觉得点赞关注即可，不需要转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "极端天气和海平面上升确实是个严肃的话题，看到有具体的工程和方案在实施，心里觉得稍微踏实了点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很有意义，而且提供了正面且具体的解决方案，值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但这类宏大话题我习惯于先阅读思考，不太习惯在评论区发表看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇文章比较专业且具有科普性质，我觉得点赞关注即可，不需要转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.47
+}

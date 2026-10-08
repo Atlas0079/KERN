@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_225_with_friends",
+  "actor": "agent_225",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-621bf3872f1a40278e170e4f0846b620",
+    "object": "chat.completion",
+    "created": 1791457719,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个严重的全球性问题，看到这些数据让人感到有些沉重。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有科普意义，且关注的是重要的环境议题，点个赞支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但作为一个内向的人，且没有专业背景在这个领域发表见解，没必要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的气候话题对我个人生活影响较为间接，且我的社交圈比较小，不倾向于转发此类预警类信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个严重的全球性问题，看到这些数据让人感到有些沉重。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有科普意义，且关注的是重要的环境议题，点个赞支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但作为一个内向的人，且没有专业背景在这个领域发表见解，没必要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种宏大的气候话题对我个人生活影响较为间接，且我的社交圈比较小，不倾向于转发此类预警类信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.49
+}

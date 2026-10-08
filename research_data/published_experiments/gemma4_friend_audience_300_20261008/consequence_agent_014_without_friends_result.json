@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_014_without_friends",
+  "actor": "agent_014",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-0bed75f6f2394c08969f9a5ac4d2fb10",
+    "object": "chat.completion",
+    "created": 1791454855,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这形势看着挺严峻的，以后沿海城市的人得怎么生活，感觉世界变数越来越大了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种全球性的气候问题很重要，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得担忧，但我对气候科学不专业，没什么具体想法可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，不打算转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这形势看着挺严峻的，以后沿海城市的人得怎么生活，感觉世界变数越来越大了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种全球性的气候问题很重要，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得担忧，但我对气候科学不专业，没什么具体想法可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，不打算转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.61
+}

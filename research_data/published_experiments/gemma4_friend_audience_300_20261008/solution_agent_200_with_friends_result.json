@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_200_with_friends",
+  "actor": "agent_200",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-4815b9535fa64e5687302b0dc0956127",
+    "object": "chat.completion",
+    "created": 1791451268,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"我对极端天气和气候风险一直很关注，看到这种有具体解决方案的科普内容挺有意思的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容契合我的兴趣点，支持这种正向的气候科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但帖子内容已经比较全面，我暂时没有特别想讨论的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇文章更像是个知识点分享，我觉得点赞支持就足够了，不需要转发到我的朋友圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "我对极端天气和气候风险一直很关注，看到这种有具体解决方案的科普内容挺有意思的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容契合我的兴趣点，支持这种正向的气候科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但帖子内容已经比较全面，我暂时没有特别想讨论的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇文章更像是个知识点分享，我觉得点赞支持就足够了，不需要转发到我的朋友圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.6
+}

@@ -1,0 +1,43 @@
+{
+  "key": "solution_agent_076_with_friends",
+  "actor": "agent_076",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-cdac6bfef5e84422873d43259b679185",
+    "object": "chat.completion",
+    "created": 1791455160,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然这个话题挺宏大的，但我平时关注的更多是技术和游戏，这类环保内容对我来说稍微有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然正能量，但不是我感兴趣的领域，没动力点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学没太深入了解，没什么想发表的专业观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容不太符合我的社交圈风格，转发了也没人讨论。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然这个话题挺宏大的，但我平时关注的更多是技术和游戏，这类环保内容对我来说稍微有点远。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容虽然正能量，但不是我感兴趣的领域，没动力点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学没太深入了解，没什么想发表的专业观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容不太符合我的社交圈风格，转发了也没人讨论。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.22
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_021_without_friends",
+  "actor": "agent_021",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-001fc59585de43238ef02915a411d73e",
+    "object": "chat.completion",
+    "created": 1791458891,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章挺有正能量的，看到有具体的工程和方案在解决环境问题，心里觉得踏实了一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持这种倡导可持续生活和环保的正面内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别深刻的见解需要发表，点个赞就足够了。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但我平时社交比较低调，不习惯转发这类宏大叙事的内容到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章挺有正能量的，看到有具体的工程和方案在解决环境问题，心里觉得踏实了一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持这种倡导可持续生活和环保的正面内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别深刻的见解需要发表，点个赞就足够了。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但我平时社交比较低调，不习惯转发这类宏大叙事的内容到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.62
+}

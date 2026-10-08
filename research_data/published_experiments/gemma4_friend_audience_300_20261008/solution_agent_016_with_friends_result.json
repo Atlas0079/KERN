@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_016_with_friends",
+  "actor": "agent_016",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f7104952c2d24aba87b9f9e02cd0a96f",
+    "object": "chat.completion",
+    "created": 1791455331,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保工程和低碳建议，感觉面对气候变化虽然困难但还是有希望的，为了孩子以后能生活在更好的环境里，确实得关注起来。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我很关注环境和生态类话题，这篇文章传递的正能量和解决方案很吸引我。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但目前只是随手刷到，没有特别强烈的观点需要表达。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但我觉得点赞支持就足够了，不需要转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保工程和低碳建议，感觉面对气候变化虽然困难但还是有希望的，为了孩子以后能生活在更好的环境里，确实得关注起来。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我很关注环境和生态类话题，这篇文章传递的正能量和解决方案很吸引我。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但目前只是随手刷到，没有特别强烈的观点需要表达。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但我觉得点赞支持就足够了，不需要转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.36
+}

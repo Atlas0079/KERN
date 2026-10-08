@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_053_with_friends",
+  "actor": "agent_053",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-34ccf51f284e4e74866888e24b3d9f61",
+    "object": "chat.completion",
+    "created": 1791456272,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个大问题，不过看到还有这么多工程和方案在实施，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类关于环境可持续发展和新科技方案的内容比较感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这类宏大的话题我不太擅长发表评论，且没有特别想讨论的点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较专业且偏向科普，我的好友圈大多是家人和生意伙伴，转发这个可能不太契合他们的关注点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个大问题，不过看到还有这么多工程和方案在实施，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类关于环境可持续发展和新科技方案的内容比较感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这类宏大的话题我不太擅长发表评论，且没有特别想讨论的点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较专业且偏向科普，我的好友圈大多是家人和生意伙伴，转发这个可能不太契合他们的关注点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.54
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_205_with_friends",
+  "actor": "agent_205",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-61e3acd22216458a957611534f2bd783",
+    "object": "chat.completion",
+    "created": 1791455560,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"现在的环境问题真是越来越严重了，想到以后孩子生活在这样的地球上，心里不免有些焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这类科普信息很有价值，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然挺担忧，但这种全球性的大话题我没什么专业建议能给，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容过于沉重且令人不安，不希望在自己的朋友圈里传播这种危机感。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "现在的环境问题真是越来越严重了，想到以后孩子生活在这样的地球上，心里不免有些焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这类科普信息很有价值，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然挺担忧，但这种全球性的大话题我没什么专业建议能给，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容过于沉重且令人不安，不希望在自己的朋友圈里传播这种危机感。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.35
+}

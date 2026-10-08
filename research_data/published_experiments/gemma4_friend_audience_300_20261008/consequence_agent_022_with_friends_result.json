@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_022_with_friends",
+  "actor": "agent_022",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-2018a69e57984c7ea0eb407c30dc60c7",
+    "object": "chat.completion",
+    "created": 1791455272,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这情况听起来挺严重的，不过离我的生活似乎还挺远，感觉是个挺宏大且沉重的话题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然比较沉重，但这种环保科普是有意义的，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学不专业，没什么能贡献的观点，没必要发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种过于压抑的消息不太适合分享到我的朋友圈里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这情况听起来挺严重的，不过离我的生活似乎还挺远，感觉是个挺宏大且沉重的话题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然比较沉重，但这种环保科普是有意义的，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学不专业，没什么能贡献的观点，没必要发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种过于压抑的消息不太适合分享到我的朋友圈里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.61
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_172_without_friends",
+  "actor": "agent_172",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-798776d7dbbc44f09249b3aa2db70ce0",
+    "object": "chat.completion",
+    "created": 1791452310,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候危机确实令人担忧，尤其是涉及到大规模人口迁移和资源争夺，规模太大了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持这类科普气候危机的严肃议题。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大且沉重，我没有足够专业的背景去发表更有深度的见解，简单评论意义不大。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但我的社交圈好友可能更关注生活琐事，且这类信息在主流媒体已经很多了。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候危机确实令人担忧，尤其是涉及到大规模人口迁移和资源争夺，规模太大了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持这类科普气候危机的严肃议题。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大且沉重，我没有足够专业的背景去发表更有深度的见解，简单评论意义不大。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但我的社交圈好友可能更关注生活琐事，且这类信息在主流媒体已经很多了。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.97
+}

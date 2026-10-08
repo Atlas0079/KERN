@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_041_with_friends",
+  "actor": "agent_041",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-8f000144a9da4fca8ea56a9b9f4f0b40",
+    "object": "chat.completion",
+    "created": 1791451371,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这形势看着挺严峻的，尤其是提到沿海大城市和人口迁移，感觉是个挺大的全球性危机。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然有点沉重，但这种科普全球环境危机的内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学不专业，没什么能发表的见解，看看就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太压抑了，不适合转发到我的朋友圈给家人和朋友看。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这形势看着挺严峻的，尤其是提到沿海大城市和人口迁移，感觉是个挺大的全球性危机。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然有点沉重，但这种科普全球环境危机的内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学不专业，没什么能发表的见解，看看就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太压抑了，不适合转发到我的朋友圈给家人和朋友看。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.3
+}

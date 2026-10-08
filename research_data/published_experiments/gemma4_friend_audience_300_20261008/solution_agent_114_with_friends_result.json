@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_114_with_friends",
+  "actor": "agent_114",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-d21bef773a204685a2a818c9d84d624e",
+    "object": "chat.completion",
+    "created": 1791457282,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事儿一直挺关注的，看来还是有办法能缓解，得给后辈留个好环境。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正面，而且是我感兴趣的气候话题，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但这种宏大的话题我没什么专业的见解能补充，没必要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类的东西转发到朋友圈可能太严肃了，不符合我平时的社交风格。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事儿一直挺关注的，看来还是有办法能缓解，得给后辈留个好环境。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正面，而且是我感兴趣的气候话题，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但这种宏大的话题我没什么专业的见解能补充，没必要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类的东西转发到朋友圈可能太严肃了，不符合我平时的社交风格。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.09
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_277_without_friends",
+  "actor": "agent_277",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8f66f560fe9e4aec8b282db11bf9062d",
+    "object": "chat.completion",
+    "created": 1791458221,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事儿听起来挺严重，不过离我的生活还比较远，希望能有有效的应对方案。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"对气候环境话题比较开放且关注，点个赞支持一下环保科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但专业性太强，没什么具体的观点能贡献，不想随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的危机话题转发到自己的主页显得太沉重，没必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事儿听起来挺严重，不过离我的生活还比较远，希望能有有效的应对方案。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "对气候环境话题比较开放且关注，点个赞支持一下环保科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但专业性太强，没什么具体的观点能贡献，不想随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种宏大的危机话题转发到自己的主页显得太沉重，没必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.56
+}

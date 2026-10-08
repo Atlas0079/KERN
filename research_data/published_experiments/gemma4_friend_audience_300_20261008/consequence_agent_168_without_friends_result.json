@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_168_without_friends",
+  "actor": "agent_168",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-9899b7c63bec45818b8a8042bc618a09",
+    "object": "chat.completion",
+    "created": 1791451344,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度确实惊人，作为关注科学话题的人，这种全球规模的变动让人感到不安，但目前的生活压力让我没法对这么宏大的议题产生太强的情绪波动。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"是对科普类信息的认可，支持传播这类科学警告。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且宏大，我没什么能补充的专业观点，也不太想在社交场合主动发言。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发这种焦虑感强的消息对我来说没有实际意义，不需要扩散到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度确实惊人，作为关注科学话题的人，这种全球规模的变动让人感到不安，但目前的生活压力让我没法对这么宏大的议题产生太强的情绪波动。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "是对科普类信息的认可，支持传播这类科学警告。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且宏大，我没什么能补充的专业观点，也不太想在社交场合主动发言。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发这种焦虑感强的消息对我来说没有实际意义，不需要扩散到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.35
+}

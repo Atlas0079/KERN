@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_122_without_friends",
+  "actor": "agent_122",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-75bf41229fab4f588f1eeb2ae4fdfa7e",
+    "object": "chat.completion",
+    "created": 1791458437,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这情况确实挺严重，得给子孙后代留个好环境，不能这么快就毁了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注全球气候问题是好事，支持这类科普信息。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的全球议题，我个人没有什么专业建议可以提供，没必要评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但我平时不怎么转发这类令人焦虑的新闻给朋友。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这情况确实挺严重，得给子孙后代留个好环境，不能这么快就毁了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注全球气候问题是好事，支持这类科普信息。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的全球议题，我个人没有什么专业建议可以提供，没必要评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但我平时不怎么转发这类令人焦虑的新闻给朋友。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.14
+}

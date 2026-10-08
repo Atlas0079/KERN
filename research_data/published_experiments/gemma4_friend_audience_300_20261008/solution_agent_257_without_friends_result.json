@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_257_without_friends",
+  "actor": "agent_257",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-02ab6219e29c45dc8c94d64af05dd4cd",
+    "object": "chat.completion",
+    "created": 1791457732,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保确实很重要，而且看到有具体的工程方案觉得还挺有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很正能量，支持这种可持续生活的倡议。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别想分享的专业见解或个人故事。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"比较私人的阅读，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保确实很重要，而且看到有具体的工程方案觉得还挺有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很正能量，支持这种可持续生活的倡议。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别想分享的专业见解或个人故事。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "比较私人的阅读，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.74
+}

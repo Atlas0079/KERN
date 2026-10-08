@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_042_without_friends",
+  "actor": "agent_042",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-770145977ef74bb08715417443c7bb15",
+    "object": "chat.completion",
+    "created": 1791454425,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中要快，想到未来孩子面对的环境，心里有点沉重。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注生态保护和气候变化，支持这类科普预警内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且是宏观报告，我暂时没有具体的观点或建议要发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然很重要，但目前还没到需要我转发提醒周围人的紧迫程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中要快，想到未来孩子面对的环境，心里有点沉重。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注生态保护和气候变化，支持这类科普预警内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且是宏观报告，我暂时没有具体的观点或建议要发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然很重要，但目前还没到需要我转发提醒周围人的紧迫程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.49
+}

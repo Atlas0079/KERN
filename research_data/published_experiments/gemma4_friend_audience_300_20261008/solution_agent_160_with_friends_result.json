@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_160_with_friends",
+  "actor": "agent_160",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-d1bfb73e17e24dc7870f47726d0d2b0e",
+    "object": "chat.completion",
+    "created": 1791456310,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到海平面上升这种环境话题总让我觉得有些焦虑，但看到有具体的修复计划和解决办法，心里稍微踏实了一点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态保护，这类有正向引导的内容我愿意支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但我性格内向，不太习惯在公开平台发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然好，但我的朋友圈大多是家人和同事，转发这个可能不太自然。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到海平面上升这种环境话题总让我觉得有些焦虑，但看到有具体的修复计划和解决办法，心里稍微踏实了一点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态保护，这类有正向引导的内容我愿意支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但我性格内向，不太习惯在公开平台发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然好，但我的朋友圈大多是家人和同事，转发这个可能不太自然。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.1
+}

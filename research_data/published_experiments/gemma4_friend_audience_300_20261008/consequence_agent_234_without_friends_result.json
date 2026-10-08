@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_234_without_friends",
+  "actor": "agent_234",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-a73b41fb43f64da0afb7acab174fca73",
+    "object": "chat.completion",
+    "created": 1791456881,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉形势挺严峻的，虽然离我目前的生活有点远，但这种环境危机确实让人担心。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同这种环保意识的普及，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这是一个很宏大的全球性话题，我暂时没有什么专业的观点可以贡献。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我平时在社交平台上比较低调，不习惯转发这类大新闻。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉形势挺严峻的，虽然离我目前的生活有点远，但这种环境危机确实让人担心。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同这种环保意识的普及，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这是一个很宏大的全球性话题，我暂时没有什么专业的观点可以贡献。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我平时在社交平台上比较低调，不习惯转发这类大新闻。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.68
+}

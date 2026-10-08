@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_165_with_friends",
+  "actor": "agent_165",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-92b6147bfef54a059a0e7bfeda24f04d",
+    "object": "chat.completion",
+    "created": 1791454381,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的，看到这些具体的应对方案让我觉得气候问题虽然严重但还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态话题，支持这种传递希望的低碳理念。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但作为一个比较内向的人，习惯于安静地阅读而非在公开场合发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容很好，但我觉得不需要特意转发到我的朋友圈，留给自己思考就好。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的，看到这些具体的应对方案让我觉得气候问题虽然严重但还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态话题，支持这种传递希望的低碳理念。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但作为一个比较内向的人，习惯于安静地阅读而非在公开场合发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容很好，但我觉得不需要特意转发到我的朋友圈，留给自己思考就好。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.86
+}

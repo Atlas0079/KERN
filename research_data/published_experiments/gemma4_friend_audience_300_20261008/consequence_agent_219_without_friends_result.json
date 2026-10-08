@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_219_without_friends",
+  "actor": "agent_219",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-591d5e3687824f2089d8780da0c55c32",
+    "object": "chat.completion",
+    "created": 1791457935,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些数据挺触目惊心的，想到以后孩子面对的世界环境可能会这么糟糕，心里不免有些担忧。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种关于气候危机的科普很重要，支持传播相关信息。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很担心，但我也只是个普通人，没什么专业建议能在这类宏大话题下发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，我的社交圈子比较小且倾向于平和，不打算转发这种令人焦虑的消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些数据挺触目惊心的，想到以后孩子面对的世界环境可能会这么糟糕，心里不免有些担忧。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种关于气候危机的科普很重要，支持传播相关信息。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很担心，但我也只是个普通人，没什么专业建议能在这类宏大话题下发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，我的社交圈子比较小且倾向于平和，不打算转发这种令人焦虑的消息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.0
+}

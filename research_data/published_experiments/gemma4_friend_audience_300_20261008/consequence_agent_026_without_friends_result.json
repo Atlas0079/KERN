@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_026_without_friends",
+  "actor": "agent_026",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-827e5bbea53b4269aa635bec48411ad6",
+    "object": "chat.completion",
+    "created": 1791456658,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，这种全球性的气候变化确实让人感到不安，尤其是想到以后会对沿海城市产生的影响。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候和极端天气一直很关注，这种科普性质的内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很有感触，但目前没有特别想讨论的观点，且这类宏大话题评论区通常比较沉重。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但我目前的社交状态比较低调，不打算转发这种引发焦虑的预警信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，这种全球性的气候变化确实让人感到不安，尤其是想到以后会对沿海城市产生的影响。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候和极端天气一直很关注，这种科普性质的内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很有感触，但目前没有特别想讨论的观点，且这类宏大话题评论区通常比较沉重。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但我目前的社交状态比较低调，不打算转发这种引发焦虑的预警信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.85
+}

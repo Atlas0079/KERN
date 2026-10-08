@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_256_with_friends",
+  "actor": "agent_256",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-421be2b30a6d4781b25c1b8c17c14170",
+    "object": "chat.completion",
+    "created": 1791453265,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事儿听起来挺严重的，尤其是对沿海城市的影响，得关注一下未来的社会环境变化。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然比较沉重，但这是一个值得关注的全球性议题，点个赞支持科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这是一个宏大的气候议题，我目前没有专业见解，也没必要在评论区发表浅层的看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容过于沉重且具有危机感，不太适合发到我的朋友圈或动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事儿听起来挺严重的，尤其是对沿海城市的影响，得关注一下未来的社会环境变化。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然比较沉重，但这是一个值得关注的全球性议题，点个赞支持科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这是一个宏大的气候议题，我目前没有专业见解，也没必要在评论区发表浅层的看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容过于沉重且具有危机感，不太适合发到我的朋友圈或动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.56
+}

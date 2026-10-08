@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_291_without_friends",
+  "actor": "agent_291",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-f735d70b79a04a4196220d6f9c9c65fd",
+    "object": "chat.completion",
+    "created": 1791459334,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种气候变化带来的后果确实挺可怕的，尤其是想到未来几十年数亿人的迁移，感觉是个巨大的全球性危机。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"平时就关注气候变化和科普话题，这个内容很有价值。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然关注，但没什么特别的观点要发表，而且我性格比较内向，不太习惯在公共评论区发言。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但没必要转发到自己的主页，不希望在社交圈引起过多讨论。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种气候变化带来的后果确实挺可怕的，尤其是想到未来几十年数亿人的迁移，感觉是个巨大的全球性危机。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "平时就关注气候变化和科普话题，这个内容很有价值。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然关注，但没什么特别的观点要发表，而且我性格比较内向，不太习惯在公共评论区发言。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但没必要转发到自己的主页，不希望在社交圈引起过多讨论。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.42
+}

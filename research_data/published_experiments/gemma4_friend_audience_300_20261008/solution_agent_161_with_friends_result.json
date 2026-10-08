@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_161_with_friends",
+  "actor": "agent_161",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-578ee4e820f24f4f8ec718453f16e10b",
+    "object": "chat.completion",
+    "created": 1791456077,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然气候变化是个宏大且严肃的话题，但看到有具体的解决方案和个人能做的小事，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新知和环保话题比较开放，认可这种积极正向的呼吁。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我个人对此领域并不专业，没什么特别想补充的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题和我的社交圈（孩子家长、邻居等）重合度不高，不太适合转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然气候变化是个宏大且严肃的话题，但看到有具体的解决方案和个人能做的小事，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新知和环保话题比较开放，认可这种积极正向的呼吁。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我个人对此领域并不专业，没什么特别想补充的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题和我的社交圈（孩子家长、邻居等）重合度不高，不太适合转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.33
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_212_with_friends",
+  "actor": "agent_212",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-6dc4d68350cd4b838e989eeaeac5c44f",
+    "object": "chat.completion",
+    "created": 1791456378,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些环保大工程听起来挺宏伟的，不过对我这种过日子的人来说，还是随手关灯这种小事更实在。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很正能量，支持这种保护环境的倡议。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没啥专业见解，也不太想在这种严肃话题下随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题太宏大了，转发到我的朋友圈可能不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些环保大工程听起来挺宏伟的，不过对我这种过日子的人来说，还是随手关灯这种小事更实在。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很正能量，支持这种保护环境的倡议。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没啥专业见解，也不太想在这种严肃话题下随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题太宏大了，转发到我的朋友圈可能不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.37
+}

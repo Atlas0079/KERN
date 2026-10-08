@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_089_with_friends",
+  "actor": "agent_089",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-881e674268aa4e3a9780689279e55044",
+    "object": "chat.completion",
+    "created": 1791457616,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实挺让人焦虑的，不过看到这些具体的应对措施和个体能做的小事，心里稍微踏实了一点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候话题一直很关注，而且这篇内容传递的正向能量让我很认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观，虽然有感触但没有特别想补充的专业观点，点个赞表达支持就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普内容虽然好，但我的好友圈大多是家长和同事，转发这个可能互动率不高。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实挺让人焦虑的，不过看到这些具体的应对措施和个体能做的小事，心里稍微踏实了一点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候话题一直很关注，而且这篇内容传递的正向能量让我很认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏观，虽然有感触但没有特别想补充的专业观点，点个赞表达支持就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普内容虽然好，但我的好友圈大多是家长和同事，转发这个可能互动率不高。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.03
+}

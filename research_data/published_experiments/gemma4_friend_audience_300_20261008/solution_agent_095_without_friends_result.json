@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_095_without_friends",
+  "actor": "agent_095",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-d8a223c601234dde921e871bd2dbe1ed",
+    "object": "chat.completion",
+    "created": 1791451385,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章提到的生态修复和低碳方案挺有意思的，让我想到之前在旅行中看到的一些海岸线景观。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且具有建设性，符合我对可持续发展和新观点的兴趣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但这类宏大话题我更倾向于静静阅读，不太想在社交平台上公开讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的社交圈子不大，且我认为这类科普信息不需要我特意转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章提到的生态修复和低碳方案挺有意思的，让我想到之前在旅行中看到的一些海岸线景观。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且具有建设性，符合我对可持续发展和新观点的兴趣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但这类宏大话题我更倾向于静静阅读，不太想在社交平台上公开讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的社交圈子不大，且我认为这类科普信息不需要我特意转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.21
+}

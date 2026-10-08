@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_256_with_friends",
+  "actor": "agent_256",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-4b30154d0829422daa6ea8f31bf4e98a",
+    "object": "chat.completion",
+    "created": 1791454804,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些工程技术手段和具体行动方案挺有意思的，感觉环保不能只靠口号，得靠实际的基建和习惯改变。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种用技术手段解决环境问题且鼓励低碳生活的观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观，我没有专业相关的深度见解可以补充，点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类的帖子转发给我的朋友圈可能不太契合，没必要特意扩散。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些工程技术手段和具体行动方案挺有意思的，感觉环保不能只靠口号，得靠实际的基建和习惯改变。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种用技术手段解决环境问题且鼓励低碳生活的观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏观，我没有专业相关的深度见解可以补充，点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类的帖子转发给我的朋友圈可能不太契合，没必要特意扩散。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.6
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_051_with_friends",
+  "actor": "agent_051",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-c3f19a0428bb408ca3efd3f1fd98422c",
+    "object": "chat.completion",
+    "created": 1791458818,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"关于环保和气候变化的科普，虽然离我的生活有点远，但这些具体的解决方案听起来挺有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正能量且具有科普性质，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别深刻的见解，没必要强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的议题转发到我的朋友圈可能不太自然，不打算转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "关于环保和气候变化的科普，虽然离我的生活有点远，但这些具体的解决方案听起来挺有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正能量且具有科普性质，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别深刻的见解，没必要强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种宏大的议题转发到我的朋友圈可能不太自然，不打算转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.69
+}

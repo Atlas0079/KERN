@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_241_without_friends",
+  "actor": "agent_241",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-fbe388dfe1334572903110a7f27d3ec7",
+    "object": "chat.completion",
+    "created": 1791453114,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉这个话题很大很宏观，虽然知道环保很重要，但离我的日常生活有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"正能量的内容，支持环保和可持续生活。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"专业性太强，我没什么深入的见解可以分享。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太严肃了，不太符合我平时的分享习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉这个话题很大很宏观，虽然知道环保很重要，但离我的日常生活有点远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "正能量的内容，支持环保和可持续生活。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "专业性太强，我没什么深入的见解可以分享。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太严肃了，不太符合我平时的分享习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.71
+}

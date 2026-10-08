@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_003_with_friends",
+  "actor": "agent_003",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-32c3771267374f26b293c173ac7c7969",
+    "object": "chat.completion",
+    "created": 1791459056,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"我对气候风险一直挺关注的，看到这种有具体工程方案和积极进展的内容，感觉比单纯的焦虑预警要有意义得多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容符合我的兴趣点，且传递的正能量观点值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但目前没有特别深刻的见解想要分享，点个赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容转发意义不大，且我平时社交比较低调，不常转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "我对气候风险一直挺关注的，看到这种有具体工程方案和积极进展的内容，感觉比单纯的焦虑预警要有意义得多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容符合我的兴趣点，且传递的正能量观点值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但目前没有特别深刻的见解想要分享，点个赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容转发意义不大，且我平时社交比较低调，不常转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.22
+}

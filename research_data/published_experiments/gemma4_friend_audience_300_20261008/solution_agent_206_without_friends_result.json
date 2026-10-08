@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_206_without_friends",
+  "actor": "agent_206",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-6318e8707d384494916210cc78b82d99",
+    "object": "chat.completion",
+    "created": 1791451525,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些环保工程和数据挺有意思的，不过对我个人的日常生活影响比较遥远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有一定的信息量，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认可低碳行为，但没有特别想表达的观点，也不太想在公开场合多说话。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"话题比较宏大，不太符合我平时的朋友圈分享习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些环保工程和数据挺有意思的，不过对我个人的日常生活影响比较遥远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有一定的信息量，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认可低碳行为，但没有特别想表达的观点，也不太想在公开场合多说话。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "话题比较宏大，不太符合我平时的朋友圈分享习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.63
+}

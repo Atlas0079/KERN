@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_195_without_friends",
+  "actor": "agent_195",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-f5e822c25d8b4874b0708e973d53e79f",
+    "object": "chat.completion",
+    "created": 1791456006,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这种全球性话题虽然离我现在的生活挺远的，但想到未来的环境变迁和潜在的社会动荡，确实让人感到不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然没那么深刻的共鸣，但这种科普气候危机的内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太宏大，我一个剪辑师没什么专业观点可以发表，不想随便凑热闹。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种沉重的预警类信息不太适合发到我的主页，而且我平时也不太习惯转发这类内容。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这种全球性话题虽然离我现在的生活挺远的，但想到未来的环境变迁和潜在的社会动荡，确实让人感到不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然没那么深刻的共鸣，但这种科普气候危机的内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太宏大，我一个剪辑师没什么专业观点可以发表，不想随便凑热闹。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种沉重的预警类信息不太适合发到我的主页，而且我平时也不太习惯转发这类内容。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.12
+}

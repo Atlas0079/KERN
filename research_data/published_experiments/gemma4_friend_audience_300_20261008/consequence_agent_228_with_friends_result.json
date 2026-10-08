@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_228_with_friends",
+  "actor": "agent_228",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-b3cc7d79d2964c4ba44e90d595f29e9a",
+    "object": "chat.completion",
+    "created": 1791454830,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的生态危机挺令人心惊的，尤其是涉及到人口迁移和社会资源争夺，感觉是一个很复杂的社会学课题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很有警示意义，支持这种传播气候危机的科普信息。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有思考，但这种宏大的议题我倾向于安静地阅读，不太想在评论区发表观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"比较沉重的话题，且我的社交圈大多是同学和邻里，转发这个可能不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的生态危机挺令人心惊的，尤其是涉及到人口迁移和社会资源争夺，感觉是一个很复杂的社会学课题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很有警示意义，支持这种传播气候危机的科普信息。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有思考，但这种宏大的议题我倾向于安静地阅读，不太想在评论区发表观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "比较沉重的话题，且我的社交圈大多是同学和邻里，转发这个可能不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 20.93
+}

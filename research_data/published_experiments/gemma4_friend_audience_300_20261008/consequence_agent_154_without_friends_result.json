@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_154_without_friends",
+  "actor": "agent_154",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-6586e1f06d9542a1b60fcbf108b84cbf",
+    "object": "chat.completion",
+    "created": 1791458924,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的影响这么严重，感觉这些环境问题离我们每个人其实都很近，挺令人揪心的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注环境生态，支持这类科普警示内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大且沉重，我没有太专业的见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"性格比较内向，很少在自己的社交动态里转发这类沉重的话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的影响这么严重，感觉这些环境问题离我们每个人其实都很近，挺令人揪心的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注环境生态，支持这类科普警示内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大且沉重，我没有太专业的见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "性格比较内向，很少在自己的社交动态里转发这类沉重的话题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.95
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_202_with_friends",
+  "actor": "agent_202",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-7cbb5ba0d9e54554bf2cf1c8ede04b52",
+    "object": "chat.completion",
+    "created": 1791456339,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到有具体的工程方案和生态修复措施来应对海平面上升，感觉还是有希望的，而且低碳生活确实是我能参与的小事。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态话题一直很关注，这篇文章传递的正能量和实用信息很对我胃口。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但目前没有特别深刻的见解想要分享，点个赞支持就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容很好，但我的社交圈多是家人和同事，转发这个可能不太符合他们的关注点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到有具体的工程方案和生态修复措施来应对海平面上升，感觉还是有希望的，而且低碳生活确实是我能参与的小事。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态话题一直很关注，这篇文章传递的正能量和实用信息很对我胃口。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但目前没有特别深刻的见解想要分享，点个赞支持就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容很好，但我的社交圈多是家人和同事，转发这个可能不太符合他们的关注点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.88
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_037_without_friends",
+  "actor": "agent_037",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-b293e54ac38549f5827e9696a6148836",
+    "object": "chat.completion",
+    "created": 1791454411,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保工程和措施，觉得海平面上升的问题虽然严重，但还是有希望通过科技和行动来缓解的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对生态环境和气候变化一直比较关注，内容很正能量，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别想分享的独到见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"社交习惯比较低调，这种科普类的东西点赞即可，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保工程和措施，觉得海平面上升的问题虽然严重，但还是有希望通过科技和行动来缓解的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对生态环境和气候变化一直比较关注，内容很正能量，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别想分享的独到见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "社交习惯比较低调，这种科普类的东西点赞即可，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.27
+}

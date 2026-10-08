@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_210_without_friends",
+  "actor": "agent_210",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-1a1b432a84374b1683222841f4c354d2",
+    "object": "chat.completion",
+    "created": 1791459348,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种关于技术手段和环境治理的话题挺有意思的，感觉这种宏观的改变确实能影响到未来的生活方式。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且有启发，支持这种可持续发展的观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但没有特别深刻的见解，不方便在这种专业话题下随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但还没到必须分享给好友知道的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种关于技术手段和环境治理的话题挺有意思的，感觉这种宏观的改变确实能影响到未来的生活方式。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且有启发，支持这种可持续发展的观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但没有特别深刻的见解，不方便在这种专业话题下随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但还没到必须分享给好友知道的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.33
+}

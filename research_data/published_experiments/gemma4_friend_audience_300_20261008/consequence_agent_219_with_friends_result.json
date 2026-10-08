@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_219_with_friends",
+  "actor": "agent_219",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-2db69f47a54c4171b9008c0499b0a033",
+    "object": "chat.completion",
+    "created": 1791452325,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的环境危机听起来很严重，想到未来孩子生活在这样的环境下，心里不免有些担忧。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注气候问题是正确的，点赞表示支持这类科普信息的传播。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得忧虑，但这种宏大的议题我没有专业的见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重且距离生活较远，不适合转发到我的朋友圈中。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的环境危机听起来很严重，想到未来孩子生活在这样的环境下，心里不免有些担忧。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注气候问题是正确的，点赞表示支持这类科普信息的传播。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得忧虑，但这种宏大的议题我没有专业的见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重且距离生活较远，不适合转发到我的朋友圈中。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.87
+}

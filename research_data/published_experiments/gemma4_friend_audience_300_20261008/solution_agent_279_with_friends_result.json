@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_279_with_friends",
+  "actor": "agent_279",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-a4438a56032448f6b3f02b6eacaa3d6e",
+    "object": "chat.completion",
+    "created": 1791451825,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个大问题，不过看到有这么多技术手段和方案在推进，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且具有科普意义，支持这种关注可持续发展的观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别深刻的见解想表达，随性刷刷就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类话题比较宏大，不确定朋友圈的人是否感兴趣，没必要特意转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个大问题，不过看到有这么多技术手段和方案在推进，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且具有科普意义，支持这种关注可持续发展的观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别深刻的见解想表达，随性刷刷就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类话题比较宏大，不确定朋友圈的人是否感兴趣，没必要特意转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.99
+}

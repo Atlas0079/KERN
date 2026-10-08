@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_187_without_friends",
+  "actor": "agent_187",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-6559ed6bd70142b08f83d5d85300ae7b",
+    "object": "chat.completion",
+    "created": 1791459304,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化确实挺让人忧心的，不过看到还有这些具体的方案和行动，心里稍微踏实了一点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"比较认可这种传递希望且鼓励低碳生活的正能量内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但觉得没什么特别的见解可以补充，且性格比较内向，不习惯在公开帖子里发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但没有强烈的冲动想把它分享到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化确实挺让人忧心的，不过看到还有这些具体的方案和行动，心里稍微踏实了一点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "比较认可这种传递希望且鼓励低碳生活的正能量内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但觉得没什么特别的见解可以补充，且性格比较内向，不习惯在公开帖子里发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但没有强烈的冲动想把它分享到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.81
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_186_with_friends",
+  "actor": "agent_186",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-8cac8f7534504417a2184b1ee0fd946d",
+    "object": "chat.completion",
+    "created": 1791458895,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然这种环保话题比较宏大，但看到有具体的工程和方案，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新观点和可持续发展比较开放，认可这种积极的环保导向。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较专业且宏大，我没有太多专业见解可以补充，没必要强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的社交圈多为同学、同事和邻居，转发这个内容对我目前的社交关系没有太大必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然这种环保话题比较宏大，但看到有具体的工程和方案，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新观点和可持续发展比较开放，认可这种积极的环保导向。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较专业且宏大，我没有太多专业见解可以补充，没必要强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的社交圈多为同学、同事和邻居，转发这个内容对我目前的社交关系没有太大必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.95
+}

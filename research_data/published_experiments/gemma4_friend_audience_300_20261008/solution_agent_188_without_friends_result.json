@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_188_without_friends",
+  "actor": "agent_188",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-44ff156ad6134c91825f0169b2eda64e",
+    "object": "chat.completion",
+    "created": 1791457786,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保方案和个体能做的小事，感觉气候问题虽然严峻但还是有希望的，心情舒畅了一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护很感兴趣，这种积极的正向内容我很愿意支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很有感触，但我性格比较内向，在社交平台上习惯于安静地浏览，不太习惯发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇文章的信息量足够，但我没有转发到自己主页的习惯，除非是非常重要且需要提醒他人的事。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保方案和个体能做的小事，感觉气候问题虽然严峻但还是有希望的，心情舒畅了一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护很感兴趣，这种积极的正向内容我很愿意支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很有感触，但我性格比较内向，在社交平台上习惯于安静地浏览，不太习惯发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇文章的信息量足够，但我没有转发到自己主页的习惯，除非是非常重要且需要提醒他人的事。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.68
+}

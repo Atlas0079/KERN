@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_155_with_friends",
+  "actor": "agent_155",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-d59fcd6a1f894309ab2d07f5826208e3",
+    "object": "chat.completion",
+    "created": 1791457394,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的，原来这些技术手段已经在实施了，而且这种全球性问题和个人习惯的关联确实值得思考。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很正能量，且涉及我对感兴趣的技术与社会关系的讨论，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但没有特别想表达的独特见解，没必要强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容适合自己看，转发到朋友圈或给熟人看可能不太自然。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的，原来这些技术手段已经在实施了，而且这种全球性问题和个人习惯的关联确实值得思考。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很正能量，且涉及我对感兴趣的技术与社会关系的讨论，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但没有特别想表达的独特见解，没必要强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容适合自己看，转发到朋友圈或给熟人看可能不太自然。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.89
+}

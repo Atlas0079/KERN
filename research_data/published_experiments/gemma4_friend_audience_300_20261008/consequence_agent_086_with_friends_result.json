@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_086_with_friends",
+  "actor": "agent_086",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-09627895ae4d4f6692d7cf02d2e459d4",
+    "object": "chat.completion",
+    "created": 1791452698,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉挺严重的，但离我的生活好像还挺远的，有点无奈。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普环保类的内容点个赞表示认同就好。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的话题我没什么专业见解，也不太想在公共区域发表意见。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，转发到自己的动态里氛围不太对。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉挺严重的，但离我的生活好像还挺远的，有点无奈。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普环保类的内容点个赞表示认同就好。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的话题我没什么专业见解，也不太想在公共区域发表意见。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，转发到自己的动态里氛围不太对。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.28
+}

@@ -1,0 +1,15 @@
+{
+  "model": "gemma-4-31B-it",
+  "temperature": 0.9,
+  "max_tokens": 1200,
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是以下社交平台用户：\n\n我的 profile_id：social_profile_184\n我的自我画像：\n我今年48岁，是一名女性，正处在职业发展的中期阶段，说不上冲劲十足，但也远没到守成的年纪，手里的事情反而比年轻时更多更杂。大学读的是人文与社会科学方向，这是我目前最高的学历，那几年泡图书馆、写论文的习惯多少留在了性格里。不过这几年我一直觉得知识结构需要补一补，尤其是钱和资源打理这块，所以现在在读财经与经济方向的继续教育课程，一边工作一边补课。工作上我是直播运营，岗位稳定，节奏虽然快，但收入和状态都算踏实。感情上我是单身，也没有自己的孩子，家里主要的牵挂是长辈，我承担着比较重的照护和支持责任，平时要操心的事不少，但整体家庭负担还算中等，没有到喘不过气的程度。经济上基本可控，住的是自己的房子，这点让我心里踏实很多。消费上我比较在意品牌和别人怎么看，买东西会考虑体面和场合，不太愿意将就。性格方面，我很愿意接触新观点新说法,对没接触过的领域也有兴趣去了解;做事讲计划,喜欢把事情安排得有条理,不喜欢临时抱佛脚;社交上不算特别主动,但也不排斥,该出现的场合我会去,私下更愿意维持一个适度的圈子;说话表达比较直接,有想法基本不藏着,不太会为了和气而绕圈子;情绪上大体稳得住,遇事不容易慌。生活里我实际会去参加社区活动,关心楼里楼外的邻里事务;也保持着阅读小说和非虚构作品的习惯,没事就去书店或图书馆转转;偶尔还喜欢动手做点手工,家里小物件坏了自己修一修。除此之外,我对展览和文化类内容比较感兴趣,平时会看一些艺术类纪录片,权当是一种关注和了解；对高端电子产品也留意,常刷新品测评,但目前没有真正投入或者明确要买的计划,算是看看而已。知识话题上,我关注环境和生态方面的变化,也留意新技术怎么一点点改变日常生活,这些是我平时聊天和刷内容时比较常去的方向。\n我的人格五维（0-1，越高越明显）：openness=1.00, conscientiousness=0.70, extraversion=0.50, agreeableness=0.30, neuroticism=0.20\n\n我的平台主要好友类别（platform_friend_categories）：[\"家人亲属\", \"工作同事\", \"继续教育课程同学\", \"社区邻里朋友\", \"大学时期同学\"]"
+    },
+    {
+      "role": "user",
+      "content": "你正在浏览社交平台，当前页面如下：\n{\"tick\":1,\"actor_id\":\"agent_184\",\"screen\":{\"terminal_id\":\"phone_184\",\"runtime_id\":\"social_platform\",\"account_id\":\"account_184\",\"view\":\"post_detail\",\"updated_tick\":1,\"feed_session_id\":null,\"feed_items\":[],\"current_post\":{\"post_id\":\"sea_level_experiment_post\",\"title\":\"救赎之路：海平面上升并非无解\",\"display_hashtags\":[\"气候行动\",\"碳中和\",\"可持续生活\"],\"original_author_id\":\"earth_voice\",\"feed_item_kind\":\"original\",\"reposted_by_account_id\":null,\"created_tick\":0,\"reposted_tick\":null,\"section\":\"recommended\",\"position\":0,\"like_count\":0,\"comment_count\":0,\"repost_count\":0,\"viewer_has_liked\":false,\"viewer_has_reposted\":false,\"text\":\"🌱【救赎之路】全球海平面上升并非无解！\\n\\n荷兰“还地于海”工程可抵御风暴潮侵袭；中国沿海红树林修复计划固碳功能显著；可再生能源装机量首超化石能源，为减缓冰川融化赢回时间；你随手关灯、减少肉食的每一个小行动，都在为海岸线留住一米土地！\\n\\n每一个人的低碳行为，都在铸就希望。\",\"recent_comments\":[],\"feed_session_id\":null,\"exposure_id\":null}},\"recent_social_memory\":[],\"schema_version\":\"social_decision_page_context.v1\",\"allowed_action_post_ids\":[\"sea_level_experiment_post\"]}\n\n你读完当前帖子后有什么感受，接下来会做什么？\n请尽可能真实地表现出这个人在日常刷社交平台时会有的反应。没有必要为了完成任务强行采取任何行动，不行动也是完整的回答。\n先用一句话表达读后感受；这句话只是你的私人反应，不会发布到平台。\n然后分别决定是否点赞、是否发表评论、是否转发，每个决定都给出一句简短理由，无论决定做还是不做。\n有感想不等于决定发布评论。只有决定发表评论时，才填写实际发布的评论正文。\n只返回 JSON，严格使用以下结构，不输出额外正文。execute 必须是布尔值；reason 是一句简短理由；不发布时 text 可以省略或为空字符串。\n{\"reaction\":\"一句读后感受\",\"decisions\":{\"like\":{\"execute\":false,\"reason\":\"一句理由\"},\"comment\":{\"execute\":false,\"reason\":\"一句理由\",\"text\":\"\"},\"repost\":{\"execute\":false,\"reason\":\"一句理由\",\"text\":\"\"}}}"
+    }
+  ]
+}

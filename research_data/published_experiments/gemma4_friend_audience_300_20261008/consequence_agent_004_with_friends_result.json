@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_004_with_friends",
+  "actor": "agent_004",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-71e53cad35754672af7161eee3b6c899",
+    "object": "chat.completion",
+    "created": 1791456588,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化的影响确实挺触目惊心的，不过感觉这些全球性的大问题离我的日常生活还是太远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容很重要，但不是我平时关注的重点，没觉得需要点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学领域不专业，没什么能补充或讨论的，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种严肃且沉重的话题不符合我的转发习惯，不想在朋友圈刷屏。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化的影响确实挺触目惊心的，不过感觉这些全球性的大问题离我的日常生活还是太远了。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "虽然内容很重要，但不是我平时关注的重点，没觉得需要点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学领域不专业，没什么能补充或讨论的，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种严肃且沉重的话题不符合我的转发习惯，不想在朋友圈刷屏。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.74
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_124_without_friends",
+  "actor": "agent_124",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-072fa556684b4f489348278d68d2e02c",
+    "object": "chat.completion",
+    "created": 1791458878,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉挺严重的，虽然离我现在的租房生活很远，但这种大环境的趋势确实让人心慌。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"科普类内容且视角宏大，认可这类警示信息的价值。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然关注但对此类宏大议题没什么专业见解，不想随便发表观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，不觉得有必要转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉挺严重的，虽然离我现在的租房生活很远，但这种大环境的趋势确实让人心慌。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "科普类内容且视角宏大，认可这类警示信息的价值。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然关注但对此类宏大议题没什么专业见解，不想随便发表观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，不觉得有必要转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.99
+}

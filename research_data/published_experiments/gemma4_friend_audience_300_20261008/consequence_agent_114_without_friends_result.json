@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_114_without_friends",
+  "actor": "agent_114",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-00056b55dbaf4263a794fec926ba8b83",
+    "object": "chat.completion",
+    "created": 1791451777,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中要快，这种极端气候的影响规模确实让人有些焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"平时就关注气候类新闻，觉得这种科普很有必要。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且宏大，我没什么专业见解可以补充，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类沉重的话题转发到自己的主页不太合适，不希望让社交圈觉得我太悲观。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中要快，这种极端气候的影响规模确实让人有些焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "平时就关注气候类新闻，觉得这种科普很有必要。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且宏大，我没什么专业见解可以补充，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类沉重的话题转发到自己的主页不太合适，不希望让社交圈觉得我太悲观。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.89
+}

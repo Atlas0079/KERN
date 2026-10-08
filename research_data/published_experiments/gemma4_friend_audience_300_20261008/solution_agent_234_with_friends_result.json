@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_234_with_friends",
+  "actor": "agent_234",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-33b64e96f5364d07bd7778ca907bbf7f",
+    "object": "chat.completion",
+    "created": 1791451359,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺有正能量的，而且提到的红树林修复和可持续生活对我这种学设计的学生来说，其实挺有启发空间的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳环保的观点，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但专业性太强，我没有太深厚的背景去发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"比较私人的浏览，没必要转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺有正能量的，而且提到的红树林修复和可持续生活对我这种学设计的学生来说，其实挺有启发空间的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳环保的观点，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但专业性太强，我没有太深厚的背景去发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "比较私人的浏览，没必要转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.35
+}

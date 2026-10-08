@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_024_with_friends",
+  "actor": "agent_024",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-6a6a6a28dfc8412583bccd862f779f0f",
+    "object": "chat.completion",
+    "created": 1791455188,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到有具体的解决方案和希望，比单纯地刷气候危机新闻要舒服很多，感觉个人的微小努力还是有意义的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对生态保护话题很感兴趣，且正能量的科普内容值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较完整，虽然认同但暂时没有特别想深入讨论的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容我更倾向于自己阅读，没必要特意转发到朋友圈或动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到有具体的解决方案和希望，比单纯地刷气候危机新闻要舒服很多，感觉个人的微小努力还是有意义的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对生态保护话题很感兴趣，且正能量的科普内容值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较完整，虽然认同但暂时没有特别想深入讨论的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容我更倾向于自己阅读，没必要特意转发到朋友圈或动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.96
+}

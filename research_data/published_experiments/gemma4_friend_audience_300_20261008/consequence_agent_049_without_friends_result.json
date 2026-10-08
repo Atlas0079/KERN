@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_049_without_friends",
+  "actor": "agent_049",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-b9c309c5a46e4c2d8c8e935df4a8255f",
+    "object": "chat.completion",
+    "created": 1791458165,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度这么快，想到未来可能影响这么多城市和人们的家园，心里挺沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态话题一直比较关心，支持这种传播环保意识的内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得很严重，但这种宏大的全球性议题我暂时没什么具体的建议或看法可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，转发到自己的主页可能会让气氛太压抑，先关注就好。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度这么快，想到未来可能影响这么多城市和人们的家园，心里挺沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态话题一直比较关心，支持这种传播环保意识的内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得很严重，但这种宏大的全球性议题我暂时没什么具体的建议或看法可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，转发到自己的主页可能会让气氛太压抑，先关注就好。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.68
+}

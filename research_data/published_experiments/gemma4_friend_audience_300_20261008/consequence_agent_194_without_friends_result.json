@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_194_without_friends",
+  "actor": "agent_194",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-d652482d4ad145e0adb7cba9686264d3",
+    "object": "chat.completion",
+    "created": 1791456268,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉世界变化太快了，这种宏大的危机让人心里有点不安，但又觉得离我的日常生活比较遥远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"对这类关注技术和社会环境变化的严肃话题比较感兴趣，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有触动，但这种气候议题太宏大了，我没什么专业的见解可以发表，也不习惯在公开场合讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种沉重的话题转发到自己的主页显得太严肃了，没必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉世界变化太快了，这种宏大的危机让人心里有点不安，但又觉得离我的日常生活比较遥远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "对这类关注技术和社会环境变化的严肃话题比较感兴趣，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有触动，但这种气候议题太宏大了，我没什么专业的见解可以发表，也不习惯在公开场合讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种沉重的话题转发到自己的主页显得太严肃了，没必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.62
+}

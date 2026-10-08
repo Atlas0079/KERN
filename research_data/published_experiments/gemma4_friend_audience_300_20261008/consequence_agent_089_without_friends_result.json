@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_089_without_friends",
+  "actor": "agent_089",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-df89944cedc14b2589c8486e4ffc6d10",
+    "object": "chat.completion",
+    "created": 1791454983,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到海平面上升速度翻倍和气候难民这些词，心里突然有点不安，这种极端天气的影响真的离我们每个人都很近。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注气候和极端天气话题，这篇文章提供了重要信息，点个赞支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重且专业，我目前只是在阅读了解，暂时没有什么能补充的见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然很重要，但转发这种危机感很强的内容可能会让朋友圈氛围太压抑，先收藏在心里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到海平面上升速度翻倍和气候难民这些词，心里突然有点不安，这种极端天气的影响真的离我们每个人都很近。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注气候和极端天气话题，这篇文章提供了重要信息，点个赞支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较沉重且专业，我目前只是在阅读了解，暂时没有什么能补充的见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然很重要，但转发这种危机感很强的内容可能会让朋友圈氛围太压抑，先收藏在心里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.54
+}

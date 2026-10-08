@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_096_with_friends",
+  "actor": "agent_096",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-29c620d2e4eb40a6bcf02062ce40f103",
+    "object": "chat.completion",
+    "created": 1791455448,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然气候问题挺严重的，但看到有具体的工程和方案在实施，感觉稍微安心了一点，不过对我这种生活压力大的人来说，这些宏大叙事离我有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正能量，且传播的是环保意识，点个赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没什么专业见解可以分享，也不太想在这种宏大话题下发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题太严肃且宏大，不太符合我平时的朋友圈风格，转发给熟人可能会显得突兀。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然气候问题挺严重的，但看到有具体的工程和方案在实施，感觉稍微安心了一点，不过对我这种生活压力大的人来说，这些宏大叙事离我有点远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正能量，且传播的是环保意识，点个赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没什么专业见解可以分享，也不太想在这种宏大话题下发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题太严肃且宏大，不太符合我平时的朋友圈风格，转发给熟人可能会显得突兀。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.46
+}

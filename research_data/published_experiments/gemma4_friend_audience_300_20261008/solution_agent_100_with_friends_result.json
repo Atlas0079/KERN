@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_100_with_friends",
+  "actor": "agent_100",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-fbeb0ece7f954a41907d70c0f8890042",
+    "object": "chat.completion",
+    "created": 1791454047,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保工程和个体行动能带来改变，心里觉得挺有希望的，我对环境问题一直比较关注。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持这种传播积极环保方案的内容，符合我对生态保护的关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但内容比较宏观，我更倾向于默默关注而非发表见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容我点赞支持即可，不需要转发到我的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保工程和个体行动能带来改变，心里觉得挺有希望的，我对环境问题一直比较关注。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持这种传播积极环保方案的内容，符合我对生态保护的关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但内容比较宏观，我更倾向于默默关注而非发表见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容我点赞支持即可，不需要转发到我的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.76
+}

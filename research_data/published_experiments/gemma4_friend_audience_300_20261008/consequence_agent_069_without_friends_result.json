@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_069_without_friends",
+  "actor": "agent_069",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-d435b78751f34ea4b5f639a6ae07c79e",
+    "object": "chat.completion",
+    "created": 1791454323,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些数据挺让人不安的，想到未来的环境变化，感觉这个世界变得越来越不稳定了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很有警示意义，支持这类传播气候危机意识的科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太宏大且沉重，我没什么专业见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但我的社交圈比较小，且这类焦虑话题不太适合分享到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些数据挺让人不安的，想到未来的环境变化，感觉这个世界变得越来越不稳定了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很有警示意义，支持这类传播气候危机意识的科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太宏大且沉重，我没什么专业见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但我的社交圈比较小，且这类焦虑话题不太适合分享到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.01
+}

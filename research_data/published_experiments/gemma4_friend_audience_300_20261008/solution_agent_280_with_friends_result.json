@@ -1,0 +1,43 @@
+{
+  "key": "solution_agent_280_with_friends",
+  "actor": "agent_280",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-cf1926afedb54c90a73a302862043f9b",
+    "object": "chat.completion",
+    "created": 1791452102,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候问题确实挺严重的，虽然希望能好转，但感觉这些宏大叙事离我的琐碎生活太远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容太宏大且偏向科普，没有触发我点赞的个人共鸣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我比较内向，而且对这类专业话题没什么发表意见的欲望。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"不需要转发，我的社交圈子对这些内容可能没太大兴趣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候问题确实挺严重的，虽然希望能好转，但感觉这些宏大叙事离我的琐碎生活太远了。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容太宏大且偏向科普，没有触发我点赞的个人共鸣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我比较内向，而且对这类专业话题没什么发表意见的欲望。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "不需要转发，我的社交圈子对这些内容可能没太大兴趣。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 14.44
+}

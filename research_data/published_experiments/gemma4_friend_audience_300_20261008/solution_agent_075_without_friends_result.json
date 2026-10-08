@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_075_without_friends",
+  "actor": "agent_075",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-4c3d5f5876a143c6a8dbafad5cead11b",
+    "object": "chat.completion",
+    "created": 1791458627,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保这事儿挺宏大的，虽然我也认同低碳生活，但感觉离我这个修机器的太远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向，且我对这种全球性的科学探讨比较感兴趣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"没什么专业见解，也没必要在这么严肃的话题下随便凑热闹。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我平时不怎么转发这类东西，社交圈子也小。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保这事儿挺宏大的，虽然我也认同低碳生活，但感觉离我这个修机器的太远了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向，且我对这种全球性的科学探讨比较感兴趣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "没什么专业见解，也没必要在这么严肃的话题下随便凑热闹。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我平时不怎么转发这类东西，社交圈子也小。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.36
+}

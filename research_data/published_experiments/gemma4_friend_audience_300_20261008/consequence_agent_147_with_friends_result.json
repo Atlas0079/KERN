@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_147_with_friends",
+  "actor": "agent_147",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f4ee5a30ad5948139d3b3119a3e3b4e5",
+    "object": "chat.completion",
+    "created": 1791455677,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看完觉得挺沉重的，这种宏大的环境危机让人在焦虑的同时也感到个体很渺小。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容比较压抑，但这种环保科普具有社会意义，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种严肃的全球性话题我没有太专业的见解，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容过于沉重，不符合我平时分享生活点滴的轻量风格。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看完觉得挺沉重的，这种宏大的环境危机让人在焦虑的同时也感到个体很渺小。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容比较压抑，但这种环保科普具有社会意义，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种严肃的全球性话题我没有太专业的见解，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容过于沉重，不符合我平时分享生活点滴的轻量风格。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.04
+}

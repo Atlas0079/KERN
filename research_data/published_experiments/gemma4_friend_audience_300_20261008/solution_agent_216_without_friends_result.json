@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_216_without_friends",
+  "actor": "agent_216",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-cc4638208c6643ff96941ba066b64b19",
+    "object": "chat.completion",
+    "created": 1791454636,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"现在的环保技术还挺先进的，不过对我这种普通人来说，感觉这些宏大的工程离我太远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然离我很远，但这种倡导环保的正能量内容点个赞没坏处。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"没啥特别想评论的，而且我对这类宏大议题没什么专业的见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"没必要转发，我的朋友圈没多少人会对这个感兴趣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "现在的环保技术还挺先进的，不过对我这种普通人来说，感觉这些宏大的工程离我太远了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然离我很远，但这种倡导环保的正能量内容点个赞没坏处。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "没啥特别想评论的，而且我对这类宏大议题没什么专业的见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "没必要转发，我的朋友圈没多少人会对这个感兴趣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.91
+}

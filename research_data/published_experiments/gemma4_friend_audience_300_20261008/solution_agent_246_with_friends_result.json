@@ -1,0 +1,43 @@
+{
+  "key": "solution_agent_246_with_friends",
+  "actor": "agent_246",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-d4d5df8d1bca4ed09392ec71151f1cc8",
+    "object": "chat.completion",
+    "created": 1791453726,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化确实挺严重的，不过这些大工程离我生活太远，普通人关灯减肉感觉作用有限。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容太宏大，对我个人来说没什么共鸣，没必要点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对环保没有太深的研究，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这不是我平时关注的理财或健康话题，转发给朋友也没什么意义。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化确实挺严重的，不过这些大工程离我生活太远，普通人关灯减肉感觉作用有限。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容太宏大，对我个人来说没什么共鸣，没必要点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对环保没有太深的研究，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这不是我平时关注的理财或健康话题，转发给朋友也没什么意义。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.22
+}

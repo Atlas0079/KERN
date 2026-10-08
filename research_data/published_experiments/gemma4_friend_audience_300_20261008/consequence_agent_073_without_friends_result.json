@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_073_without_friends",
+  "actor": "agent_073",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-fef2fdaa62484cf1a548219e6c338162",
+    "object": "chat.completion",
+    "created": 1791451739,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度这么快吗，以后沿海城市的规划得面临很大挑战，得关注一下相关的科普分析。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候话题很感兴趣，支持这类科普内容的传播。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然关注，但这种宏大的议题我没什么特别的观点能贡献，不想随便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃，不太适合发到我的主页上。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度这么快吗，以后沿海城市的规划得面临很大挑战，得关注一下相关的科普分析。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候话题很感兴趣，支持这类科普内容的传播。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然关注，但这种宏大的议题我没什么特别的观点能贡献，不想随便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较严肃，不太适合发到我的主页上。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.71
+}

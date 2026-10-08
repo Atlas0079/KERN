@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_198_without_friends",
+  "actor": "agent_198",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-133a588da58140fc9c7a73cc88f80e11",
+    "object": "chat.completion",
+    "created": 1791452484,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么严重吗，想到沿海城市受影响感觉有点不安，虽然离我目前的生活还远，但确实是个挺揪心的全球问题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普气候危机的内容很有意义，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重且专业，我没有太深入的见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得重要，但我的朋友圈平时更多是分享生活和徒步，转发这个可能太严肃了。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么严重吗，想到沿海城市受影响感觉有点不安，虽然离我目前的生活还远，但确实是个挺揪心的全球问题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普气候危机的内容很有意义，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较沉重且专业，我没有太深入的见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然觉得重要，但我的朋友圈平时更多是分享生活和徒步，转发这个可能太严肃了。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.2
+}

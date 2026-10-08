@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_163_without_friends",
+  "actor": "agent_163",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-460f76ef9de34fe4a876959d902964e2",
+    "object": "chat.completion",
+    "created": 1791452538,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种环境问题挺令人担忧的，尤其是提到人口迁移和资源争夺，感觉对未来的生活稳定性会有很大影响。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"对气候变化和科技/环境类话题比较关注，点赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但没有特别强烈的观点要表达，且这类宏大话题评论起来比较沉重。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种资讯类内容看完就过了，没必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种环境问题挺令人担忧的，尤其是提到人口迁移和资源争夺，感觉对未来的生活稳定性会有很大影响。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "对气候变化和科技/环境类话题比较关注，点赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但没有特别强烈的观点要表达，且这类宏大话题评论起来比较沉重。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种资讯类内容看完就过了，没必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.78
+}

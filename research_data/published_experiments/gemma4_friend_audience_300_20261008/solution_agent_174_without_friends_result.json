@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_174_without_friends",
+  "actor": "agent_174",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-4e1b927b84d2450abf1900ec759b3e40",
+    "object": "chat.completion",
+    "created": 1791454243,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题挺宏大的，看到有具体的工程和修复计划，感觉环境问题还是有解决希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同可持续生活的观点，且内容积极正面。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但没什么专业的见解，不习惯在公开场合发表议论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"觉得内容不错，但不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题挺宏大的，看到有具体的工程和修复计划，感觉环境问题还是有解决希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同可持续生活的观点，且内容积极正面。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但没什么专业的见解，不习惯在公开场合发表议论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "觉得内容不错，但不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.49
+}

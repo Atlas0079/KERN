@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_215_with_friends",
+  "actor": "agent_215",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-00eda53cc8644fa18bb96a20d4ef83b1",
+    "object": "chat.completion",
+    "created": 1791454581,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，这种极端气候变化确实让人担忧，尤其是想到未来孩子生活在什么样的环境下。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注极端天气话题，这个报告非常有价值，点赞支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且宏大，我目前只是关注和了解，没有什么专业的观点可以补充。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容重要，但转发到我的圈子里（大多是家人、同学和合作伙伴）可能不太契合，不需要特意扩散。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，这种极端气候变化确实让人担忧，尤其是想到未来孩子生活在什么样的环境下。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注极端天气话题，这个报告非常有价值，点赞支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且宏大，我目前只是关注和了解，没有什么专业的观点可以补充。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容重要，但转发到我的圈子里（大多是家人、同学和合作伙伴）可能不太契合，不需要特意扩散。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.52
+}

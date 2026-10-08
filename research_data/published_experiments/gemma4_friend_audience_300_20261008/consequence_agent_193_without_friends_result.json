@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_193_without_friends",
+  "actor": "agent_193",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8efe541736cf437bb5ea0704142f027d",
+    "object": "chat.completion",
+    "created": 1791455405,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候危机听起来挺震撼的，感觉是个很宏大的话题，但离我的日常生活还是有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类新鲜的、关于地球和环境的知识比较感兴趣，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这个话题太专业且宏大，我没什么具体的观点能直接给出，不想随便凑热闹。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这对我来说更多是个人了解，没有必要转发到我的社交圈里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候危机听起来挺震撼的，感觉是个很宏大的话题，但离我的日常生活还是有点远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类新鲜的、关于地球和环境的知识比较感兴趣，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这个话题太专业且宏大，我没什么具体的观点能直接给出，不想随便凑热闹。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这对我来说更多是个人了解，没有必要转发到我的社交圈里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.06
+}

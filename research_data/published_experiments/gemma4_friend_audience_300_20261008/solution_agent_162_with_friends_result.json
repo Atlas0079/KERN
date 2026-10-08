@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_162_with_friends",
+  "actor": "agent_162",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-99f59e1831a14b538ea3fd9adee042e3",
+    "object": "chat.completion",
+    "created": 1791457006,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"关于气候变化和可持续发展的讨论挺有意思的，虽然感觉离我的日常生活有点远，但这种宏观的社会议题还挺吸引我的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续发展的观点，且内容比较正向。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较科普且宏大，我没有特别专业的见解可以补充，不太想主动发起社交讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然认可，但这个话题和我的朋友圈社交圈层契合度不高，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "关于气候变化和可持续发展的讨论挺有意思的，虽然感觉离我的日常生活有点远，但这种宏观的社会议题还挺吸引我的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续发展的观点，且内容比较正向。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较科普且宏大，我没有特别专业的见解可以补充，不太想主动发起社交讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然认可，但这个话题和我的朋友圈社交圈层契合度不高，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.4
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_262_with_friends",
+  "actor": "agent_262",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-23b1cb6bbd074a46b91efc1c880c86d8",
+    "object": "chat.completion",
+    "created": 1791457645,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的，虽然我转行了，但这种涉及大规模工程和环境可持续的话题还是能引起我的好奇心。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且具有启发性，支持这种环保的呼吁。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但并没有特别强烈的观点需要表达，点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较科普，不需要转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的，虽然我转行了，但这种涉及大规模工程和环境可持续的话题还是能引起我的好奇心。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且具有启发性，支持这种环保的呼吁。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但并没有特别强烈的观点需要表达，点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较科普，不需要转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.9
+}

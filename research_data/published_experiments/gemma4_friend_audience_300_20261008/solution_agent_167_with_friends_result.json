@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_167_with_friends",
+  "actor": "agent_167",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-e7408a8d624d44fcb8a6f970611b70c6",
+    "object": "chat.completion",
+    "created": 1791451041,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这类关于气候变化和可持续发展的讨论很有意义，虽然宏大但看到有具体方案让人觉得稍微乐观一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和低碳生活的理念，点赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较客观且完整，我倾向于安静地阅读，没有特别想补充的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题比较严肃且宏大，不太符合我平时记录生活或分享个人兴趣的动态风格。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这类关于气候变化和可持续发展的讨论很有意义，虽然宏大但看到有具体方案让人觉得稍微乐观一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和低碳生活的理念，点赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较客观且完整，我倾向于安静地阅读，没有特别想补充的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题比较严肃且宏大，不太符合我平时记录生活或分享个人兴趣的动态风格。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.56
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_191_without_friends",
+  "actor": "agent_191",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-d1ba9199cdd940e1a8d1a6d7b472f030",
+    "object": "chat.completion",
+    "created": 1791453087,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉挺触目惊心的，虽然离我现在的生活还没那么近，但这种环境变化确实让人焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"平时就关注环境和生态议题，这种科普内容值得点个赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但没啥特别想表达的观点，也不习惯在公开场合凑热闹。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种沉重的话题转发到自己主页感觉太压抑了，没必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉挺触目惊心的，虽然离我现在的生活还没那么近，但这种环境变化确实让人焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "平时就关注环境和生态议题，这种科普内容值得点个赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但没啥特别想表达的观点，也不习惯在公开场合凑热闹。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种沉重的话题转发到自己主页感觉太压抑了，没必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.78
+}

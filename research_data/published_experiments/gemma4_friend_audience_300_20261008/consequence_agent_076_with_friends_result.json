@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_076_with_friends",
+  "actor": "agent_076",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-487da0e023da448fab0dec84fa286b34",
+    "object": "chat.completion",
+    "created": 1791458605,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候问题确实挺严重的，虽然离我的生活暂时没直接影响，但看到这些数据还是觉得挺震撼的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"对这类科普和预警信息持支持态度，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但我对气候科学领域不专业，没什么能补充的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，而且我的社交圈大多是技术同学和游戏好友，转发这个可能不太契合氛围。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候问题确实挺严重的，虽然离我的生活暂时没直接影响，但看到这些数据还是觉得挺震撼的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "对这类科普和预警信息持支持态度，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但我对气候科学领域不专业，没什么能补充的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，而且我的社交圈大多是技术同学和游戏好友，转发这个可能不太契合氛围。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.18
+}

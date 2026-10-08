@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_029_with_friends",
+  "actor": "agent_029",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-6aaf5d329f5a492bb903e833d1e5d781",
+    "object": "chat.completion",
+    "created": 1791458135,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化的影响比我想象中要快，虽然离我现在的生活还没那么近，但这种规模的危机确实挺让人担忧的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很有警示意义，支持这类科普信息的传播。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但并没有特别专业的观点可以补充，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大叙事的危机话题在我的朋友圈里可能不够贴切，没必要特意转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化的影响比我想象中要快，虽然离我现在的生活还没那么近，但这种规模的危机确实挺让人担忧的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很有警示意义，支持这类科普信息的传播。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但并没有特别专业的观点可以补充，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类宏大叙事的危机话题在我的朋友圈里可能不够贴切，没必要特意转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.85
+}

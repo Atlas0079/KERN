@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_174_with_friends",
+  "actor": "agent_174",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-2ba1ba3c427f4fb9b580be77b1daab63",
+    "object": "chat.completion",
+    "created": 1791451903,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化确实是个严肃的议题，看到有具体的解决方案和个人能做的小事，觉得还挺有意义的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的观点，这种正能量的内容值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我作为一个关注者，目前没有特别深刻的见解需要发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类话题比较宏大，我的社交圈多为同事和邻里，转发这个可能不太契合大家的日常讨论氛围。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化确实是个严肃的议题，看到有具体的解决方案和个人能做的小事，觉得还挺有意义的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的观点，这种正能量的内容值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我作为一个关注者，目前没有特别深刻的见解需要发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类话题比较宏大，我的社交圈多为同事和邻里，转发这个可能不太契合大家的日常讨论氛围。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 17.22
+}

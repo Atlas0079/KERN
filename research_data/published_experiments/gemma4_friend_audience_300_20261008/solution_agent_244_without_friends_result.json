@@ -1,0 +1,43 @@
+{
+  "key": "solution_agent_244_without_friends",
+  "actor": "agent_244",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-ff15788b20cc4e88a938ab7f02294767",
+    "object": "chat.completion",
+    "created": 1791451224,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些宏大的环保工程听起来挺有意思的，但对我现在的生活来说太遥远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容太严肃且宏大，没到让我产生共鸣想点赞的程度。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候问题没有专业见解，也没什么特别想直接表达的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容转发到我的主页显得太刻意，不符合我的社交习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些宏大的环保工程听起来挺有意思的，但对我现在的生活来说太遥远了。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容太严肃且宏大，没到让我产生共鸣想点赞的程度。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候问题没有专业见解，也没什么特别想直接表达的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容转发到我的主页显得太刻意，不符合我的社交习惯。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 14.76
+}

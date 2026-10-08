@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_137_without_friends",
+  "actor": "agent_137",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-1d1120abc53048d39b5524af6740549f",
+    "object": "chat.completion",
+    "created": 1791457833,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺正能量的，看到这些具体的工程和方案比单纯地焦虑气候变化要好得多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种积极面对环境问题的态度，顺手点个赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我没有特别想补充的专业见解，不便强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容不错，但不是我平时关注的重点领域，不需要转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺正能量的，看到这些具体的工程和方案比单纯地焦虑气候变化要好得多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种积极面对环境问题的态度，顺手点个赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我没有特别想补充的专业见解，不便强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容不错，但不是我平时关注的重点领域，不需要转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.28
+}

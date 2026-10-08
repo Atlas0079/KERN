@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_055_with_friends",
+  "actor": "agent_055",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-178d04af5cb643c6b7b3be7232aed326",
+    "object": "chat.completion",
+    "created": 1791454286,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，这种规模的气候风险确实会对人类公共健康和生存环境产生连锁反应。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候风险和极端天气一直很关注，这个话题很符合我的兴趣点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但我性格内向，且这篇帖子比较宏观，我没有特别想表达的观点，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但对我来说更像是一次信息获取，目前还没有强烈的动力将其转发给好友。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，这种规模的气候风险确实会对人类公共健康和生存环境产生连锁反应。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候风险和极端天气一直很关注，这个话题很符合我的兴趣点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但我性格内向，且这篇帖子比较宏观，我没有特别想表达的观点，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但对我来说更像是一次信息获取，目前还没有强烈的动力将其转发给好友。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.33
+}

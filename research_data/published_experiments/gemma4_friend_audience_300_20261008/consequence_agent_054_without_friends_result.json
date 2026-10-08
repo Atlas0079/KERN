@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_054_without_friends",
+  "actor": "agent_054",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-722135717b9b4bc7940af4a067fa82ac",
+    "object": "chat.completion",
+    "created": 1791457636,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化的影响确实挺严重的，不过离我的生活还比较远，感觉是个宏大的议题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种关于环境和地球未来的科普内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这类宏大话题我没什么专业见解，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这内容比较沉重，且没有特别紧迫的分享必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化的影响确实挺严重的，不过离我的生活还比较远，感觉是个宏大的议题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种关于环境和地球未来的科普内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这类宏大话题我没什么专业见解，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这内容比较沉重，且没有特别紧迫的分享必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.69
+}

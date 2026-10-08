@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_244_with_friends",
+  "actor": "agent_244",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-07413cbe2c4a4cb59dc9bdcdf84f3bbe",
+    "object": "chat.completion",
+    "created": 1791458335,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这消息看着挺吓人的，感觉世界变动太快，希望能离我远点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新知识和全球议题比较好奇，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得挺严重，但这个话题太宏大了，我也没啥专业见解能评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种比较沉重且遥远的消息，不觉得有必要转发给朋友圈的人看。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这消息看着挺吓人的，感觉世界变动太快，希望能离我远点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新知识和全球议题比较好奇，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得挺严重，但这个话题太宏大了，我也没啥专业见解能评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种比较沉重且遥远的消息，不觉得有必要转发给朋友圈的人看。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.31
+}

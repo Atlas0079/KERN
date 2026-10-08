@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_267_without_friends",
+  "actor": "agent_267",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-fa90669191c145c4a89594403e699498",
+    "object": "chat.completion",
+    "created": 1791457921,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保话题挺重要的，不过内容对我来说稍微有点宏大，生活中能做的小事我已经在做了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可低碳生活的理念，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"没有什么特别想分享的观点，且性格比较内向，不习惯在公共区域发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容偏向科普和呼吁，并不太符合我记录生活或分享实用经验的习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保话题挺重要的，不过内容对我来说稍微有点宏大，生活中能做的小事我已经在做了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可低碳生活的理念，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "没有什么特别想分享的观点，且性格比较内向，不习惯在公共区域发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容偏向科普和呼吁，并不太符合我记录生活或分享实用经验的习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.3
+}

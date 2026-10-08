@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_180_without_friends",
+  "actor": "agent_180",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-2d2af975e1a441308958f2ead9e6e081",
+    "object": "chat.completion",
+    "created": 1791459130,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这气候变化真是挺吓人的，不过离我这儿挺远，现在得操心的是店里的活和孩子的学费。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容太宏大了，跟我生活没啥直接关系，没必要点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种全球性的危机我也没什么专业建议能给，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"没必要转发这种让人焦虑的消息给朋友圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这气候变化真是挺吓人的，不过离我这儿挺远，现在得操心的是店里的活和孩子的学费。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容太宏大了，跟我生活没啥直接关系，没必要点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种全球性的危机我也没什么专业建议能给，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "没必要转发这种让人焦虑的消息给朋友圈。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.61
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_228_without_friends",
+  "actor": "agent_228",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-a0106d0d70f449cb9a8dbdc26eab0795",
+    "object": "chat.completion",
+    "created": 1791457496,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候危机真的挺让人忧心的，感觉人文社科视角下的难民和资源问题会变得非常复杂。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注环保和全球议题，认同这类科普信息的传播价值。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但话题太宏大，且我性格偏内向，不习惯在公共评论区发表长篇见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃压抑，不想让自己的社交主页显得太沉重。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候危机真的挺让人忧心的，感觉人文社科视角下的难民和资源问题会变得非常复杂。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注环保和全球议题，认同这类科普信息的传播价值。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但话题太宏大，且我性格偏内向，不习惯在公共评论区发表长篇见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较严肃压抑，不想让自己的社交主页显得太沉重。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.36
+}

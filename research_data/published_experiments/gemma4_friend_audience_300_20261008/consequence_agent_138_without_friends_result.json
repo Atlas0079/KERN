@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_138_without_friends",
+  "actor": "agent_138",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-19359e3676ed46419e617bb40539f8cc",
+    "object": "chat.completion",
+    "created": 1791458850,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度这么快，这些沿海城市和岛国的人们以后该怎么办，真是让人忧心。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态问题，这个提醒很有必要。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很担心，但这种宏大的气候问题我没什么专业的建议能给出，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我平时社交比较低调，不习惯把这类沉重的新闻转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度这么快，这些沿海城市和岛国的人们以后该怎么办，真是让人忧心。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态问题，这个提醒很有必要。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很担心，但这种宏大的气候问题我没什么专业的建议能给出，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我平时社交比较低调，不习惯把这类沉重的新闻转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.57
+}

@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_106_with_friends",
+  "actor": "agent_106",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-492b85cca9ed481ebd0103216b11ee67",
+    "object": "chat.completion",
+    "created": 1791458057,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这内容挺沉重的，海平面上升确实是个大问题，但对我目前的生活来说太遥远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"虽然意识到问题的严重性，但这类宏大叙事的内容没到让我点赞的程度。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学不专业，没什么能发表的见解，也没必要在这种帖子下讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种焦虑感比较强的内容不适合转发到我的社交圈，特别是现在我需要保持心态平稳。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这内容挺沉重的，海平面上升确实是个大问题，但对我目前的生活来说太遥远了。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "虽然意识到问题的严重性，但这类宏大叙事的内容没到让我点赞的程度。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学不专业，没什么能发表的见解，也没必要在这种帖子下讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种焦虑感比较强的内容不适合转发到我的社交圈，特别是现在我需要保持心态平稳。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 14.28
+}

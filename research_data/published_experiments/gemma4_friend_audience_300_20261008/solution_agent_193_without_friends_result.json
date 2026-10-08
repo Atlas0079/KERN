@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_193_without_friends",
+  "actor": "agent_193",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-2e79c057124d48fc839d49d5c9fb931d",
+    "object": "chat.completion",
+    "created": 1791453228,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的，虽然离我生活挺远，但这种全球性的环保方案确实让人觉得有希望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正向，且我对这类宏观的、具有前瞻性的观点比较认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但我对气候科学没专业研究，没什么能直接发表的见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容点赞就行，没必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的，虽然离我生活挺远，但这种全球性的环保方案确实让人觉得有希望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正向，且我对这类宏观的、具有前瞻性的观点比较认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但我对气候科学没专业研究，没什么能直接发表的见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容点赞就行，没必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.55
+}

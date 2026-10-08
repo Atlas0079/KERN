@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_167_without_friends",
+  "actor": "agent_167",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-836e6f7801e44048872cc8ef76ff0f70",
+    "object": "chat.completion",
+    "created": 1791456811,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的解决方案比单纯地焦虑气候变暖要好得多，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种积极且具有建设性的环保视角。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但作为一个内向的人，如果没有特别深刻的见解，通常不倾向于在公共区域评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但还没到必须分享给所有好友的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的解决方案比单纯地焦虑气候变暖要好得多，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种积极且具有建设性的环保视角。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但作为一个内向的人，如果没有特别深刻的见解，通常不倾向于在公共区域评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但还没到必须分享给所有好友的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.24
+}

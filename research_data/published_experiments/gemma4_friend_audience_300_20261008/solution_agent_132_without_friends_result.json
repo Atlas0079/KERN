@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_132_without_friends",
+  "actor": "agent_132",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-199c77f969ab4968b70195ee59aee140",
+    "object": "chat.completion",
+    "created": 1791457664,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保工程和措施，觉得海平面上升这个问题还是有希望解决的，心里踏实了一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护比较关心，这个帖子传递了积极的信号，值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较全面，我作为一个关注者读完即可，没什么特别的观点需要补充。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但转发到我的社交圈可能有点太严肃了，不打算转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保工程和措施，觉得海平面上升这个问题还是有希望解决的，心里踏实了一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护比较关心，这个帖子传递了积极的信号，值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较全面，我作为一个关注者读完即可，没什么特别的观点需要补充。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但转发到我的社交圈可能有点太严肃了，不打算转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.82
+}

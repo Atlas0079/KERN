@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_135_with_friends",
+  "actor": "agent_135",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f932c85ae9a44cd2b4b9c5cbae47abb0",
+    "object": "chat.completion",
+    "created": 1791458789,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的影响比我想象中要快，这种全球性的技术与环境变迁确实让人深思。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有警示意义，关注全球气候变化是必要的。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这是一个宏大的全球议题，我暂时没有特别直接或专业的观点可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"帖子内容比较沉重，不确定我的朋友圈好友是否会对这类预警话题感兴趣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的影响比我想象中要快，这种全球性的技术与环境变迁确实让人深思。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有警示意义，关注全球气候变化是必要的。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这是一个宏大的全球议题，我暂时没有特别直接或专业的观点可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "帖子内容比较沉重，不确定我的朋友圈好友是否会对这类预警话题感兴趣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.48
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_121_with_friends",
+  "actor": "agent_121",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-698e5c1fa8774e90a08289fe1eaa527d",
+    "object": "chat.completion",
+    "created": 1791452161,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升得这么快吗，感觉对以后沿海城市的居住环境影响很大，得关注一下。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态话题一直比较关注，这篇文章提供了有价值的信息。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且属于全球性议题，我目前没有特别直接的看法要发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但转发给我的社交圈（同事、家长等）可能不太合适，没必要在这个时间点刷屏。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升得这么快吗，感觉对以后沿海城市的居住环境影响很大，得关注一下。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态话题一直比较关注，这篇文章提供了有价值的信息。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且属于全球性议题，我目前没有特别直接的看法要发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但转发给我的社交圈（同事、家长等）可能不太合适，没必要在这个时间点刷屏。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.41
+}

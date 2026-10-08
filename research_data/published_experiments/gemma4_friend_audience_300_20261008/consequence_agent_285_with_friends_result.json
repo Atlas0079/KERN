@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_285_with_friends",
+  "actor": "agent_285",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-85f6a7b5efc24d5caf2d42b8ce9b3d0d",
+    "object": "chat.completion",
+    "created": 1791454984,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这种全球性的气候危机确实让人感到不安，尤其是想到未来孩子成长在这样的环境下，挺令人担忧的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有科普意义且提醒人们关注环境问题，值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太宏大且沉重，我个人没有专业的见解可以补充，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然很重要，但这种令人焦虑的消息我不希望在自己的社交圈里过多传播。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这种全球性的气候危机确实让人感到不安，尤其是想到未来孩子成长在这样的环境下，挺令人担忧的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有科普意义且提醒人们关注环境问题，值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太宏大且沉重，我个人没有专业的见解可以补充，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然很重要，但这种令人焦虑的消息我不希望在自己的社交圈里过多传播。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.66
+}

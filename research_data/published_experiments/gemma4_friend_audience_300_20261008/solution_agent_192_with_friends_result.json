@@ -1,0 +1,43 @@
+{
+  "key": "solution_agent_192_with_friends",
+  "actor": "agent_192",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-b7803f6611e3428d84618e264c8e1d14",
+    "object": "chat.completion",
+    "created": 1791454733,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然这类环保议题挺有意义，但目前我得把精力放在找工作和带孩子这些更现实的事情上。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大且偏科普，虽然不反感，但没有触动到我的核心关注点，没动力点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候治理没有专业见解，也没有强烈的表达欲，不打算参与讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的社交圈主要在设计圈和家长群，转发这个内容对我目前的社交关系没有实际意义。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然这类环保议题挺有意义，但目前我得把精力放在找工作和带孩子这些更现实的事情上。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容比较宏大且偏科普，虽然不反感，但没有触动到我的核心关注点，没动力点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候治理没有专业见解，也没有强烈的表达欲，不打算参与讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的社交圈主要在设计圈和家长群，转发这个内容对我目前的社交关系没有实际意义。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 15.4
+}

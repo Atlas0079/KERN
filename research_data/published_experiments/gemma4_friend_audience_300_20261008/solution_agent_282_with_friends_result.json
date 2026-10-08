@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_282_with_friends",
+  "actor": "agent_282",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-4e6055f20a824db699226ad62b40cbf6",
+    "object": "chat.completion",
+    "created": 1791451483,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保话题挺有意义的，看到有具体的工程和方案让我觉得这件事是有希望解决的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且具有科普意义，支持这种可持续生活的倡导。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但目前没有特别深刻的见解想要分享，点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题比较宏大，不太符合我平时发动态的习惯，且朋友圈里大多是家长和前同事，转发这个可能互动不高。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保话题挺有意义的，看到有具体的工程和方案让我觉得这件事是有希望解决的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且具有科普意义，支持这种可持续生活的倡导。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但目前没有特别深刻的见解想要分享，点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题比较宏大，不太符合我平时发动态的习惯，且朋友圈里大多是家长和前同事，转发这个可能互动不高。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.41
+}

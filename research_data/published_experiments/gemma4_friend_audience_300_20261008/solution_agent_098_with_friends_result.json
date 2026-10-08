@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_098_with_friends",
+  "actor": "agent_098",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-bbe4e3f93b754a079397290dc36d739d",
+    "object": "chat.completion",
+    "created": 1791458029,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到提到荷兰的工程项目，让我想起之前学的工程知识，虽然关注环保但这种大课题对我个人生活影响比较遥远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正面且专业，是对可持续发展的一种认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但没有特别想发表的独特见解，没必要强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容过于宏大，不太适合转发到我的个人社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到提到荷兰的工程项目，让我想起之前学的工程知识，虽然关注环保但这种大课题对我个人生活影响比较遥远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正面且专业，是对可持续发展的一种认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但没有特别想发表的独特见解，没必要强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容过于宏大，不太适合转发到我的个人社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.38
+}

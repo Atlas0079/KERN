@@ -1,0 +1,49 @@
+{
+  "key": "solution_agent_044_with_friends",
+  "actor": "agent_044",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-e6a78b607f264ae08eae071b56460909",
+    "object": "chat.completion",
+    "created": 1791451572,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然气候问题很重要，但对我现在这种忙得不可开交的生活状态来说，感觉太宏大且遥远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且有意义，点个赞表示认同即可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"没有太专业的见解，也不想在这么严肃的议题下发表评论。\",\n      \"text\": \"\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发这个对我个人的社交圈子没什么实际帮助，也没到必须分享的程度。\",\n      \"text\": \"\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然气候问题很重要，但对我现在这种忙得不可开交的生活状态来说，感觉太宏大且遥远了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且有意义，点个赞表示认同即可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "没有太专业的见解，也不想在这么严肃的议题下发表评论。",
+        "text": ""
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发这个对我个人的社交圈子没什么实际帮助，也没到必须分享的程度。",
+        "text": ""
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.38
+}

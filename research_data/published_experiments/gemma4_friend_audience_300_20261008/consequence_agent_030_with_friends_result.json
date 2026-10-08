@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_030_with_friends",
+  "actor": "agent_030",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-598955dc2cc74d99a8a7d340065f743d",
+    "object": "chat.completion",
+    "created": 1791458015,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉气候变化的影响比想象中要快且严重，对沿海城市的人来说压力确实很大。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然挺沉重的话题，但这种科普信息很有价值，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这是一个比较宏大的全球性议题，我没有专业的见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较压抑，不太适合分享到我的朋友圈或好友圈里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉气候变化的影响比想象中要快且严重，对沿海城市的人来说压力确实很大。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然挺沉重的话题，但这种科普信息很有价值，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这是一个比较宏大的全球性议题，我没有专业的见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较压抑，不太适合分享到我的朋友圈或好友圈里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.63
+}

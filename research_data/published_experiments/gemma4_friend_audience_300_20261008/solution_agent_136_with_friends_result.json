@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_136_with_friends",
+  "actor": "agent_136",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-c7ead65921874b0182cfa15640fa1eef",
+    "object": "chat.completion",
+    "created": 1791451209,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题我很关注，看到除了危机之外还有具体的解决方案，感觉心情稍微舒缓了一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境变化和生态保护很感兴趣，支持这类科普和正向引导的内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我目前只是在阅读和吸收信息，没有什么特别想补充或讨论的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容不错，但我的好友圈大多是家人和同事，转发这个可能不太符合我的日常社交习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题我很关注，看到除了危机之外还有具体的解决方案，感觉心情稍微舒缓了一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境变化和生态保护很感兴趣，支持这类科普和正向引导的内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我目前只是在阅读和吸收信息，没有什么特别想补充或讨论的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容不错，但我的好友圈大多是家人和同事，转发这个可能不太符合我的日常社交习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.08
+}

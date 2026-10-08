@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_283_with_friends",
+  "actor": "agent_283",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-4f2e4c09ddde4d978a2d57753a37d4e5",
+    "object": "chat.completion",
+    "created": 1791452158,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化的影响确实触目惊心，虽然离我的日常生活还有距离，但作为科学背景出身的人，深知这种趋势的不可逆性。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种科普内容的价值，希望能引起更多人的关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大且沉重，我没有太具体的见解或建议，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类的危机警示帖转发过多容易造成焦虑，且我的社交圈层大多是家长和同事，不太适合转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化的影响确实触目惊心，虽然离我的日常生活还有距离，但作为科学背景出身的人，深知这种趋势的不可逆性。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种科普内容的价值，希望能引起更多人的关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大且沉重，我没有太具体的见解或建议，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类的危机警示帖转发过多容易造成焦虑，且我的社交圈层大多是家长和同事，不太适合转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.67
+}

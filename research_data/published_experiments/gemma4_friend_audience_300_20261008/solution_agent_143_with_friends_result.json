@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_143_with_friends",
+  "actor": "agent_143",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-1ee94f105dd240cc932d37721b7ae36f",
+    "object": "chat.completion",
+    "created": 1791457805,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这种关于气候和环境的议题总是很关注，而且文中提到的红树林修复和工程方案挺有意思，给了人一种希望感。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同这种积极面对气候问题的态度，支持环保行动。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观，我目前的认知还不足以提出什么深刻的见解，点个赞支持即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的社交圈多是家长和老同事，发这个可能不太契合他们的兴趣点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这种关于气候和环境的议题总是很关注，而且文中提到的红树林修复和工程方案挺有意思，给了人一种希望感。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同这种积极面对气候问题的态度，支持环保行动。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏观，我目前的认知还不足以提出什么深刻的见解，点个赞支持即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的社交圈多是家长和老同事，发这个可能不太契合他们的兴趣点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.26
+}

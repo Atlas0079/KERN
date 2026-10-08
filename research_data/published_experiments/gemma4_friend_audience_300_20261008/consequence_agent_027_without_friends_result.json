@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_027_without_friends",
+  "actor": "agent_027",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-16df588eca634493bde38f2e0a64c0a3",
+    "object": "chat.completion",
+    "created": 1791453243,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉这种宏大的气候危机虽然很令人担忧，但离我现在的生活节奏有点远，更多是一种知识性的认知。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然很沉重，但关注气候危机是比较正确且体面的态度。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这是一个非常严肃且专业的话题，我没有太深的研究，不便随意发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类负面预警的信息转发多了会显得太沉重，不符合我想在社交平台上维持的个人观感。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉这种宏大的气候危机虽然很令人担忧，但离我现在的生活节奏有点远，更多是一种知识性的认知。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然很沉重，但关注气候危机是比较正确且体面的态度。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这是一个非常严肃且专业的话题，我没有太深的研究，不便随意发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类负面预警的信息转发多了会显得太沉重，不符合我想在社交平台上维持的个人观感。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.15
+}

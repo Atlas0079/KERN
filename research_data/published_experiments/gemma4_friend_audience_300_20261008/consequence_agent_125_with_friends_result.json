@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_125_with_friends",
+  "actor": "agent_125",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-c584fbd78ffa4b7eb0ed3d910a6a34f1",
+    "object": "chat.completion",
+    "created": 1791458378,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化的影响比我想象中要紧迫得多，那些岛国的人们压力一定很大。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这类环保科普内容很有意义，支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得忧心，但在这个专业领域我没有太多见解，不需要发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我的朋友圈好友大多是专业同学和家人，不太适合转发这条。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化的影响比我想象中要紧迫得多，那些岛国的人们压力一定很大。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这类环保科普内容很有意义，支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得忧心，但在这个专业领域我没有太多见解，不需要发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我的朋友圈好友大多是专业同学和家人，不太适合转发这条。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.35
+}

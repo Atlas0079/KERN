@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_066_with_friends",
+  "actor": "agent_066",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-76695912b3364de2bf4dc4a807f03afa",
+    "object": "chat.completion",
+    "created": 1791457023,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的科普，虽然是大话题，但看到具体工程和个体行动的联系，觉得还挺有希望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有启发性，符合我对新知和可持续发展的关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但这类宏大话题我习惯于阅读了解，不太倾向于发表个人见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但目前我的社交圈层（家人、前同事、同学）可能对这类话题的讨论度不高，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的科普，虽然是大话题，但看到具体工程和个体行动的联系，觉得还挺有希望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有启发性，符合我对新知和可持续发展的关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但这类宏大话题我习惯于阅读了解，不太倾向于发表个人见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但目前我的社交圈层（家人、前同事、同学）可能对这类话题的讨论度不高，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.02
+}

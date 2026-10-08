@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_264_without_friends",
+  "actor": "agent_264",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-7e725de7624447689436dfd847106fe7",
+    "object": "chat.completion",
+    "created": 1791452381,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候问题确实重要，不过这种宏大的叙事离我的日常生活稍微有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有科普意义，点个赞表示支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同低碳生活，但没什么特别想分享的见解，不想在这个话题下社交。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太宏大，不符合我平时记录生活片段的分享习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候问题确实重要，不过这种宏大的叙事离我的日常生活稍微有点远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有科普意义，点个赞表示支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同低碳生活，但没什么特别想分享的见解，不想在这个话题下社交。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太宏大，不符合我平时记录生活片段的分享习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.86
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_221_without_friends",
+  "actor": "agent_221",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-910a1af8c6ee45eba20e165636bed0ff",
+    "object": "chat.completion",
+    "created": 1791452143,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这新闻看着挺吓人的，虽然离我目前的实际生活有点远，但想到未来孩子们面对的世界，确实让人担忧。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种关注全球环境的科普内容有必要支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但我对气候科学不专业，没什么能发表的见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的话题转发到我的圈子里可能不太合适，没必要惊扰到熟人。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这新闻看着挺吓人的，虽然离我目前的实际生活有点远，但想到未来孩子们面对的世界，确实让人担忧。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种关注全球环境的科普内容有必要支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但我对气候科学不专业，没什么能发表的见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种宏大的话题转发到我的圈子里可能不太合适，没必要惊扰到熟人。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.76
+}

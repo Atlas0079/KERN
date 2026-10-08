@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_242_with_friends",
+  "actor": "agent_242",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-6b3e6771d66e474b93863c5779720ae3",
+    "object": "chat.completion",
+    "created": 1791456199,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这类环保话题挺有意思的，虽然离我的日常生活比较远，但整体逻辑很清晰，能看到一些具体的解决方案。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且有启发性，点个赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学没有专业研究，没什么特别深刻的观点需要直接表达。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题对我目前的社交圈层来说相关度不高，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这类环保话题挺有意思的，虽然离我的日常生活比较远，但整体逻辑很清晰，能看到一些具体的解决方案。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且有启发性，点个赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学没有专业研究，没什么特别深刻的观点需要直接表达。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题对我目前的社交圈层来说相关度不高，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.21
+}

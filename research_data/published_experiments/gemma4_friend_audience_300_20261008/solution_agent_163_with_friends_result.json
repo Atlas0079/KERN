@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_163_with_friends",
+  "actor": "agent_163",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-7b1b7c48a7394144ace4a270b8310831",
+    "object": "chat.completion",
+    "created": 1791456608,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的科普，原来除了个人习惯，在工程和生态修复上已经有这么多具体的方案了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新技术改变生活和环境的话题比较感兴趣，内容积极且有启发。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得内容不错，但并没有特别强烈的观点需要表达，且我对这类宏大话题通常先了解而不急于评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然有益，但不是我社交圈关注的重点，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的科普，原来除了个人习惯，在工程和生态修复上已经有这么多具体的方案了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新技术改变生活和环境的话题比较感兴趣，内容积极且有启发。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得内容不错，但并没有特别强烈的观点需要表达，且我对这类宏大话题通常先了解而不急于评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然有益，但不是我社交圈关注的重点，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.0
+}

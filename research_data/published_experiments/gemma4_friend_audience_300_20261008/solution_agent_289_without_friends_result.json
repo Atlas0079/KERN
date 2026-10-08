@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_289_without_friends",
+  "actor": "agent_289",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8baa3d506f27494da58a8c8f4a9613be",
+    "object": "chat.completion",
+    "created": 1791454795,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然这些环保措施听起来很有意义，但对我这样一个每天得精打细算过日子的普通人来说，感觉离我的生活太远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新观点比较感兴趣，且内容正向，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没什么特别想表达的，也不想在这些宏大话题下绕弯子。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容转发到我的社交圈没太大必要，我不怎么主动张罗这些。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然这些环保措施听起来很有意义，但对我这样一个每天得精打细算过日子的普通人来说，感觉离我的生活太远了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新观点比较感兴趣，且内容正向，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没什么特别想表达的，也不想在这些宏大话题下绕弯子。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容转发到我的社交圈没太大必要，我不怎么主动张罗这些。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.83
+}

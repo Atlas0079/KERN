@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_169_with_friends",
+  "actor": "agent_169",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-165c56f40d08435e9136b90771cbd94a",
+    "object": "chat.completion",
+    "created": 1791456962,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章很有正能量，让我觉得环保其实可以通过一些具体的小行动来实现。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活的观点，点赞以示支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但我性格比较内向，不习惯在公开场合发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然不错，但与我的社交圈关注点契合度不高，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章很有正能量，让我觉得环保其实可以通过一些具体的小行动来实现。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活的观点，点赞以示支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但我性格比较内向，不习惯在公开场合发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然不错，但与我的社交圈关注点契合度不高，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.15
+}

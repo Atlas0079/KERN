@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_011_without_friends",
+  "actor": "agent_011",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-2c53a9d90ec64d4fa3f73bad013f1c39",
+    "object": "chat.completion",
+    "created": 1791454231,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保工程和具体的解决方案，心里觉得稍微踏实了一些，而且这些低碳小习惯在日常生活中确实是能做到的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且具有科普性质，我很认同这种可持续生活的理念。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有共鸣，但我性格比较内向，习惯于安静地阅读和思考，不太倾向于在公开场合发表意见。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"觉得点赞支持就足够了，不需要特意转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保工程和具体的解决方案，心里觉得稍微踏实了一些，而且这些低碳小习惯在日常生活中确实是能做到的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且具有科普性质，我很认同这种可持续生活的理念。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有共鸣，但我性格比较内向，习惯于安静地阅读和思考，不太倾向于在公开场合发表意见。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "觉得点赞支持就足够了，不需要特意转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.51
+}

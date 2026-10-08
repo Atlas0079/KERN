@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_039_with_friends",
+  "actor": "agent_039",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-488580526e014335aa97b15001a7c831",
+    "object": "chat.completion",
+    "created": 1791452013,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的危机听起来挺可怕的，尤其是提到资源争夺，让人觉得未来的不确定性又增加了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类改变人类生活的新闻比较关注，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得焦虑，但我对气候科学不专业，没什么能贡献的见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，目前心情已经因为找工作很紧绷，不想在朋友圈传播这种焦虑感。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的危机听起来挺可怕的，尤其是提到资源争夺，让人觉得未来的不确定性又增加了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类改变人类生活的新闻比较关注，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得焦虑，但我对气候科学不专业，没什么能贡献的见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，目前心情已经因为找工作很紧绷，不想在朋友圈传播这种焦虑感。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.85
+}

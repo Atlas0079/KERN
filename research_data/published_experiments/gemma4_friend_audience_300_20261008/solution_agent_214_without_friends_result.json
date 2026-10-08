@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_214_without_friends",
+  "actor": "agent_214",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-edd360baca664a3b8e64e3288b45cb32",
+    "object": "chat.completion",
+    "created": 1791458655,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题挺有意义的，看到具体的技术方案和行动路径，感觉气候问题不再那么绝望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持这种传播正向解决方案和环保意识的内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但帖子已经把观点说得很全面了，我目前没什么特别想补充的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但还没到我觉得必须分享给朋友圈所有人的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题挺有意义的，看到具体的技术方案和行动路径，感觉气候问题不再那么绝望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持这种传播正向解决方案和环保意识的内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但帖子已经把观点说得很全面了，我目前没什么特别想补充的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但还没到我觉得必须分享给朋友圈所有人的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.34
+}

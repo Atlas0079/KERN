@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_015_with_friends",
+  "actor": "agent_015",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-c259428958be4d369766453adb2f3d12",
+    "object": "chat.completion",
+    "created": 1791455892,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到环境治理有具体方案和进展还挺欣慰的，低碳生活确实是每个人都能参与的事情。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"一直关注生态保护，支持这种传递希望且有实际案例的内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容已经写得很全面了，我目前没有特别想补充的专业观点或想法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但这不是我社交圈讨论的重点，没必要特意转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到环境治理有具体方案和进展还挺欣慰的，低碳生活确实是每个人都能参与的事情。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "一直关注生态保护，支持这种传递希望且有实际案例的内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容已经写得很全面了，我目前没有特别想补充的专业观点或想法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然认同，但这不是我社交圈讨论的重点，没必要特意转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.45
+}

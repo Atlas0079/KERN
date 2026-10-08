@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_068_with_friends",
+  "actor": "agent_068",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-9f25e40599ec46268684302cdbfe1f86",
+    "object": "chat.completion",
+    "created": 1791457894,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到海平面上升这么快，想到以后孩子们面对的世界环境会这么不稳定，心里有点沉重。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注全球气候变化是重要的，点个赞支持这类科普信息。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这是一个宏大的全球议题，我作为普通人没有什么具体的建设性意见，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且与我的社交圈日常话题契合度不高，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到海平面上升这么快，想到以后孩子们面对的世界环境会这么不稳定，心里有点沉重。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注全球气候变化是重要的，点个赞支持这类科普信息。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这是一个宏大的全球议题，我作为普通人没有什么具体的建设性意见，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且与我的社交圈日常话题契合度不高，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.35
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_232_without_friends",
+  "actor": "agent_232",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-cd7fe9a90736481a84631c4a2027c107",
+    "object": "chat.completion",
+    "created": 1791458150,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的，把宏观的工程方案和个人低碳行为结合起来说了，正好是我关注的气候风险话题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且符合我的关注点，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但帖子内容比较概括，我暂时没有什么特别深刻的见解需要直接表达。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容我自己看看就行，没必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的，把宏观的工程方案和个人低碳行为结合起来说了，正好是我关注的气候风险话题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且符合我的关注点，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但帖子内容比较概括，我暂时没有什么特别深刻的见解需要直接表达。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容我自己看看就行，没必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.5
+}

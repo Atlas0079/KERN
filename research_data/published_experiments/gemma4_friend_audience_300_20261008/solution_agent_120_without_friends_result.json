@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_120_without_friends",
+  "actor": "agent_120",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-50c47f7a4d8b4510bfe7e76f7439f1a4",
+    "object": "chat.completion",
+    "created": 1791452353,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体工程和低碳行动，感觉面对气候问题还是有希望的，挺正能量。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容客观且积极，支持这种倡导环保的科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别想补充的观点，习惯安静阅读。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种话题比较宏大，不需要特意转发到自己的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体工程和低碳行动，感觉面对气候问题还是有希望的，挺正能量。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容客观且积极，支持这种倡导环保的科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别想补充的观点，习惯安静阅读。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种话题比较宏大，不需要特意转发到自己的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.65
+}

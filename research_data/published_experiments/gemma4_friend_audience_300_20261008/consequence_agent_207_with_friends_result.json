@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_207_with_friends",
+  "actor": "agent_207",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-6b4ca260046e45389fc101ad0ad154c7",
+    "object": "chat.completion",
+    "created": 1791453440,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的影响确实很严重，特别是对沿海大城市的影响，让人感到不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有警示意义，赞同传播这种环保意识。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然关注，但我性格比较内向，且对气候科学不专业，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题比较沉重，我的社交圈大多是老同事和邻居，不太适合转发这种危机感较强的内容。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的影响确实很严重，特别是对沿海大城市的影响，让人感到不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有警示意义，赞同传播这种环保意识。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然关注，但我性格比较内向，且对气候科学不专业，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题比较沉重，我的社交圈大多是老同事和邻居，不太适合转发这种危机感较强的内容。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.84
+}

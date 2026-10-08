@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_241_with_friends",
+  "actor": "agent_241",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-10a9d7705ed644e2aeecff223c5f7dd8",
+    "object": "chat.completion",
+    "created": 1791457819,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保确实很重要，尤其是为了孩子以后能生活在更好的环境里，不过这些工程对我来说稍微有点专业。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"赞同低碳环保的理念，支持这种正能量的科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大且专业，我没什么具体的见解可以补充。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我觉得点赞支持就行，转发到我的朋友圈可能不太符合我的日常分享习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保确实很重要，尤其是为了孩子以后能生活在更好的环境里，不过这些工程对我来说稍微有点专业。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "赞同低碳环保的理念，支持这种正能量的科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大且专业，我没什么具体的见解可以补充。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我觉得点赞支持就行，转发到我的朋友圈可能不太符合我的日常分享习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.73
+}

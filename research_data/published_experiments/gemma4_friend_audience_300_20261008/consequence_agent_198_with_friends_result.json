@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_198_with_friends",
+  "actor": "agent_198",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-42c0bad158d54f00802ea00b15628216",
+    "object": "chat.completion",
+    "created": 1791457146,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候危机听起来挺可怕的，感觉离生活很远但又潜藏着很大的风险。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然比较沉重，但这是一个值得关注的严肃公共议题。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较专业且宏大，我没有太专业的见解可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类警示性内容比较压抑，不太想转发到自己的主页影响心情。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候危机听起来挺可怕的，感觉离生活很远但又潜藏着很大的风险。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然比较沉重，但这是一个值得关注的严肃公共议题。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较专业且宏大，我没有太专业的见解可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类警示性内容比较压抑，不太想转发到自己的主页影响心情。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.12
+}

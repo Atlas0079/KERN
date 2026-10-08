@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_167_with_friends",
+  "actor": "agent_167",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-ab68586d90514f2dbdf4df9f7e0d6089",
+    "object": "chat.completion",
+    "created": 1791454436,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的规模比我想象中要严重，想到以后孩子成长的环境可能会受到这种全球性危机的影响，心里有点沉重。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这是一个很有意义的科普提醒，支持关注气候危机。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然关注但没有很专业的见解，且性格内向，不太倾向于在公共评论区发表观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且宏大，不太适合分享到我的个人主页，更倾向于默默关注。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的规模比我想象中要严重，想到以后孩子成长的环境可能会受到这种全球性危机的影响，心里有点沉重。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这是一个很有意义的科普提醒，支持关注气候危机。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然关注但没有很专业的见解，且性格内向，不太倾向于在公共评论区发表观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较严肃且宏大，不太适合分享到我的个人主页，更倾向于默默关注。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.46
+}

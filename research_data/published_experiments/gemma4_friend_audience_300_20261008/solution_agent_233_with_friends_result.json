@@ -1,0 +1,43 @@
+{
+  "key": "solution_agent_233_with_friends",
+  "actor": "agent_233",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-56fc2d7a05f944b8a081c931f253f520",
+    "object": "chat.completion",
+    "created": 1791450938,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化确实是个大问题，不过这种宏大的话题对我个人生活的影响暂时感觉不那么直接。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然积极，但不是我平时关注的重点，没有强烈的点赞冲动。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这类科普话题比较严肃，我没什么专业见解可以补充，不想随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的好友圈大多是家人和同事，转发这个可能不太符合大家的关注点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化确实是个大问题，不过这种宏大的话题对我个人生活的影响暂时感觉不那么直接。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容虽然积极，但不是我平时关注的重点，没有强烈的点赞冲动。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这类科普话题比较严肃，我没什么专业见解可以补充，不想随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的好友圈大多是家人和同事，转发这个可能不太符合大家的关注点。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 14.45
+}

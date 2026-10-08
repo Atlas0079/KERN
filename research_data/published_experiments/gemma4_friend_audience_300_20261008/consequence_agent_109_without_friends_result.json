@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_109_without_friends",
+  "actor": "agent_109",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-69b273b35329436597f3c2e649ce7691",
+    "object": "chat.completion",
+    "created": 1791457691,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候问题听起来很可怕，想到未来孩子成长的世界可能会面临这么多动荡，心里挺不安的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注环保和地球危机是件正确的事，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得忧心，但这种宏大的专业话题我没什么能给出的具体建议，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，转发到自己的朋友圈可能会让家人也跟着焦虑，还是不发了。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候问题听起来很可怕，想到未来孩子成长的世界可能会面临这么多动荡，心里挺不安的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注环保和地球危机是件正确的事，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得忧心，但这种宏大的专业话题我没什么能给出的具体建议，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，转发到自己的朋友圈可能会让家人也跟着焦虑，还是不发了。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.3
+}

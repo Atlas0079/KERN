@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_025_with_friends",
+  "actor": "agent_025",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-687d507e8e074264b6b03494698c3cca",
+    "object": "chat.completion",
+    "created": 1791452469,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的环境危机确实令人担忧，尤其是对沿海城市的影响，感觉未来的不确定性在增加。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容比较沉重，但这是一个值得关注的严肃话题，点个赞表示认同其重要性。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我性格比较内向，且对气候科学没有专业研究，在这种宏大话题下没什么好发表的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容过于沉重且带有危机感，不太适合发到我的个人动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的环境危机确实令人担忧，尤其是对沿海城市的影响，感觉未来的不确定性在增加。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容比较沉重，但这是一个值得关注的严肃话题，点个赞表示认同其重要性。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我性格比较内向，且对气候科学没有专业研究，在这种宏大话题下没什么好发表的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容过于沉重且带有危机感，不太适合发到我的个人动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.55
+}

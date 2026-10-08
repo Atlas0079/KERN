@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_209_with_friends",
+  "actor": "agent_209",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-8298a656da694db5ba47dddda01c67fa",
+    "object": "chat.completion",
+    "created": 1791452579,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的，这种探讨新技术和生态工程如何改变环境的视角正是我关注的，虽然是个宏大话题，但读起来还算积极。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新技术解决社会问题的观点比较开放，且认同这种可持续发展的方向。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较客观，虽然有感触，但没有特别想补充的观点，且我社交风格偏内向。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题对我个人很有启发，但目前看来不太适合转发给我的商业伙伴或邻里朋友。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的，这种探讨新技术和生态工程如何改变环境的视角正是我关注的，虽然是个宏大话题，但读起来还算积极。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新技术解决社会问题的观点比较开放，且认同这种可持续发展的方向。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较客观，虽然有感触，但没有特别想补充的观点，且我社交风格偏内向。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题对我个人很有启发，但目前看来不太适合转发给我的商业伙伴或邻里朋友。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.81
+}

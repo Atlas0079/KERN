@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_281_without_friends",
+  "actor": "agent_281",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-51413922dba04507b30fc27030a25791",
+    "object": "chat.completion",
+    "created": 1791451733,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，这种大规模的迁移和资源争夺听起来让人挺焦虑的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"平时就关注环境和生态话题，这种科普信息值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但我也没什么专业建议能给，不想随便发表议论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我平时不习惯在社交平台上转发这类危机预警。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，这种大规模的迁移和资源争夺听起来让人挺焦虑的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "平时就关注环境和生态话题，这种科普信息值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但我也没什么专业建议能给，不想随便发表议论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我平时不习惯在社交平台上转发这类危机预警。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.99
+}

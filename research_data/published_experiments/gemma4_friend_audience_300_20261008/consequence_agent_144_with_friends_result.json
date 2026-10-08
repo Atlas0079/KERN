@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_144_with_friends",
+  "actor": "agent_144",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-3431e0dd99c94881aa5535a83cb62ff4",
+    "object": "chat.completion",
+    "created": 1791459377,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉这个话题太宏大了，虽然挺严重，但离我的生活有点远，想到以后孩子成长的环境可能会变糟，心里稍微有点不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普性的警示信息值得支持，关注气候环境是有必要的。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学没太专业的见解，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重且离生活太远，不太会转发到自己的朋友圈里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉这个话题太宏大了，虽然挺严重，但离我的生活有点远，想到以后孩子成长的环境可能会变糟，心里稍微有点不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普性的警示信息值得支持，关注气候环境是有必要的。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学没太专业的见解，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重且离生活太远，不太会转发到自己的朋友圈里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.45
+}

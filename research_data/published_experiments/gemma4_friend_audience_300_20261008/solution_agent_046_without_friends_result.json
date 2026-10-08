@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_046_without_friends",
+  "actor": "agent_046",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-62a76d6e946b4b58be9e4b4f16de9c37",
+    "object": "chat.completion",
+    "created": 1791451781,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然海平面上升听起来很宏大，但看到具体的工程方案和能参与的小行动，觉得还挺有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我比较开放，支持这种探讨可持续发展和环保的正面观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我虽然认同但没什么特别想补充的观点，没必要强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普内容点赞支持就好，不需要转发到我的个人主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然海平面上升听起来很宏大，但看到具体的工程方案和能参与的小行动，觉得还挺有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我比较开放，支持这种探讨可持续发展和环保的正面观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我虽然认同但没什么特别想补充的观点，没必要强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普内容点赞支持就好，不需要转发到我的个人主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.08
+}

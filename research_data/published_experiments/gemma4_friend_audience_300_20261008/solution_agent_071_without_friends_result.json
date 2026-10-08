@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_071_without_friends",
+  "actor": "agent_071",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-6fe4694e78b04385b3f45131090eff30",
+    "object": "chat.completion",
+    "created": 1791453966,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"现在的气候问题确实严重，不过看到这些国家层面的工程和具体措施，觉得还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有建设性，支持这种环保倡议。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但这类宏大话题我没什么专业见解，没必要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"平时不怎么转发这类东西，觉得没必要刷屏。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "现在的气候问题确实严重，不过看到这些国家层面的工程和具体措施，觉得还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有建设性，支持这种环保倡议。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但这类宏大话题我没什么专业见解，没必要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "平时不怎么转发这类东西，觉得没必要刷屏。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.61
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_237_with_friends",
+  "actor": "agent_237",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-b712b3ef33924aa0b14d29c510ebd605",
+    "object": "chat.completion",
+    "created": 1791459213,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题挺有意义的，看到有具体的解决方案比单纯的焦虑要好得多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且有科普性质，支持这种关于可持续生活的讨论。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但目前没有特别想深入探讨的观点，点个赞就足够了。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但还没到一定要分享给好友圈的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题挺有意义的，看到有具体的解决方案比单纯的焦虑要好得多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且有科普性质，支持这种关于可持续生活的讨论。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但目前没有特别想深入探讨的观点，点个赞就足够了。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但还没到一定要分享给好友圈的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.69
+}

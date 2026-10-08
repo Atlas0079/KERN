@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_097_without_friends",
+  "actor": "agent_097",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-1196189b0f7249fbad4406fdc394447e",
+    "object": "chat.completion",
+    "created": 1791456574,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保工程和行动，觉得在气候变化面前还是有希望的，而且生活中的小习惯确实能起到作用。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对生态环境话题一直比较关注，这篇文章传递的正能量值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很有共鸣，但没有特别深刻的见解要分享，点个赞就足够了。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容我平时习惯自己阅读，不需要特意转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保工程和行动，觉得在气候变化面前还是有希望的，而且生活中的小习惯确实能起到作用。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对生态环境话题一直比较关注，这篇文章传递的正能量值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很有共鸣，但没有特别深刻的见解要分享，点个赞就足够了。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容我平时习惯自己阅读，不需要特意转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.14
+}

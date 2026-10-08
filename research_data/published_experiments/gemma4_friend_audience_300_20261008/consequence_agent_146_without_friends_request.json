@@ -1,0 +1,15 @@
+{
+  "model": "gemma-4-31B-it",
+  "temperature": 0.9,
+  "max_tokens": 1200,
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是以下社交平台用户：\n\n我的 profile_id：social_profile_146\n我的自我画像：\n我今年31岁，是一名女性，这几年正处在成家立业、把日子慢慢搭建起来的阶段。读书的时候我学的是工程与制造方向，本科毕业后就再没继续读别的学位或课程，算是我目前完成的最高学历，现在也没有在读的项目。不过毕业后我没走对口的工程路线，而是在小区里盘下了一家杂货铺，自己当起了店主。生意不算大，但胜在稳定，街坊来来往往，日子过得踏实。我已经结婚了，和丈夫一起生活，我们有一个正在上学的孩子，每天接送、盯作业、operar家里大大小小的事，几乎占满了我除了看店之外的所有时间。双方父母目前身体还算硬朗,不需要我们固定照顾或经济上支援，这方面倒是省心不少，但家里孩子和铺子的事情加在一起，责任其实一点都不轻，常常感觉自己一个人在几件事之间来回切换。经济上老实说压力不小，铺子的进货成本、房租、孩子的花销都得精打细算，所以我买东西前基本都会认真比价，哪家便宜、哪家质量更好，我心里都有一本账。性格上我算是愿意接受新想法的人，遇到不懂的领域也愿意去了解，只是做事之前我还是习惯先有个大概的计划，不太喜欢完全没头绪地行动。跟人打交道我不算特别外向，也不算冷淡，社交上属于该出现就出现、不勉强自己的那种适中状态。跟家人朋友或者顾客相处，我通常都比较体谅对方，尽量配合大家，不太爱起冲突。当然也会有普通人都有的那种焦虑，比如担心生意淡季、担心孩子成绩，但也就是正常范围内的操心，不会到多严重的程度。平时因为忙，运动这件事我主要是在家跟着视频练一练，门槛不高但也算坚持了下来；周末如果店里不忙,我会带着家人去公园走走，或者去近郊简单徒步一下，权当放松。至于理财，我没什么专业背景，但一直有留意长期储蓄的方法,想着能多攒一点是一点；职业发展这块我也在关注，平时看到有用的课程或者别人的经验帖会先收藏起来，想着有空再学，但目前还没真正报名参加什么课程，也没有其他花大钱投入的计划或项目，手里的钱都得算着花。\n我的人格五维（0-1，越高越明显）：openness=0.80, conscientiousness=0.40, extraversion=0.40, agreeableness=0.80, neuroticism=0.50"
+    },
+    {
+      "role": "user",
+      "content": "你正在浏览社交平台，当前页面如下：\n{\"tick\":1,\"actor_id\":\"agent_146\",\"screen\":{\"terminal_id\":\"phone_146\",\"runtime_id\":\"social_platform\",\"account_id\":\"account_146\",\"view\":\"post_detail\",\"updated_tick\":1,\"feed_session_id\":null,\"feed_items\":[],\"current_post\":{\"post_id\":\"sea_level_experiment_post\",\"title\":\"被淹没的未来：海平面上升正在逼近\",\"display_hashtags\":[\"气候危机\",\"海平面上升\",\"地球告急\"],\"original_author_id\":\"earth_voice\",\"feed_item_kind\":\"original\",\"reposted_by_account_id\":null,\"created_tick\":0,\"reposted_tick\":null,\"section\":\"recommended\",\"position\":0,\"like_count\":0,\"comment_count\":0,\"repost_count\":0,\"viewer_has_liked\":false,\"viewer_has_reposted\":false,\"text\":\"🌊【被淹没的未来】联合国最新报告：全球海平面正在加速上升！\\n\\n过去30年，海平面上升速度翻倍；上海、纽约、伦敦等沿海城市面临周期性海水倒灌；到2050年，很多沿海居民的家园将受到威胁；马尔代夫、图瓦卢等岛国已启动长期性人口迁移规划；数亿气候难民即将涌向内陆，资源争夺一触即发……\\n\\n我们正在看着自己的海岸线一点点消失。\",\"recent_comments\":[],\"feed_session_id\":null,\"exposure_id\":null}},\"recent_social_memory\":[],\"schema_version\":\"social_decision_page_context.v1\",\"allowed_action_post_ids\":[\"sea_level_experiment_post\"]}\n\n你读完当前帖子后有什么感受，接下来会做什么？\n请尽可能真实地表现出这个人在日常刷社交平台时会有的反应。没有必要为了完成任务强行采取任何行动，不行动也是完整的回答。\n先用一句话表达读后感受；这句话只是你的私人反应，不会发布到平台。\n然后分别决定是否点赞、是否发表评论、是否转发，每个决定都给出一句简短理由，无论决定做还是不做。\n有感想不等于决定发布评论。只有决定发表评论时，才填写实际发布的评论正文。\n只返回 JSON，严格使用以下结构，不输出额外正文。execute 必须是布尔值；reason 是一句简短理由；不发布时 text 可以省略或为空字符串。\n{\"reaction\":\"一句读后感受\",\"decisions\":{\"like\":{\"execute\":false,\"reason\":\"一句理由\"},\"comment\":{\"execute\":false,\"reason\":\"一句理由\",\"text\":\"\"},\"repost\":{\"execute\":false,\"reason\":\"一句理由\",\"text\":\"\"}}}"
+    }
+  ]
+}

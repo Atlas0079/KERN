@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_169_without_friends",
+  "actor": "agent_169",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-adc8ec714c804cf1b6fe877c2fc64943",
+    "object": "chat.completion",
+    "created": 1791451128,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的影响这么严重，想到那些失去家园的人，觉得挺揪心的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这是一个严肃且重要的环保议题，我想表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学不专业，且性格内向，不习惯在公开场合发表看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但目前我的关注重心在求职和照顾家人上，不太会转发这类宏大叙事的内容。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的影响这么严重，想到那些失去家园的人，觉得挺揪心的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这是一个严肃且重要的环保议题，我想表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学不专业，且性格内向，不习惯在公开场合发表看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但目前我的关注重心在求职和照顾家人上，不太会转发这类宏大叙事的内容。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.8
+}

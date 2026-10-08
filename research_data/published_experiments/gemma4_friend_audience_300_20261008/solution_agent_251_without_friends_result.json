@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_251_without_friends",
+  "actor": "agent_251",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-2760ce5d39cb4c2a8eb6fda154db7759",
+    "object": "chat.completion",
+    "created": 1791453767,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的，海平面上升一直是我关注的科学话题，看到这些具体的工程和方案觉得还挺有希望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容契合我的关注领域，且观点积极，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但目前的文案比较像科普宣传，没什么特别想反驳或深入讨论的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较常规，没必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的，海平面上升一直是我关注的科学话题，看到这些具体的工程和方案觉得还挺有希望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容契合我的关注领域，且观点积极，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但目前的文案比较像科普宣传，没什么特别想反驳或深入讨论的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较常规，没必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.72
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_299_with_friends",
+  "actor": "agent_299",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-c03ad0a942054ef2842c030170e2610f",
+    "object": "chat.completion",
+    "created": 1791455079,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然是个宏大的话题，但看到有具体的工程和方案，觉得还挺有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这类环保和可持续发展的正向内容，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容挺客观的，但我对此类专业领域了解不多，没什么特别想发表的见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题对我朋友圈的人来说可能太宏大了，转发出去没太大必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然是个宏大的话题，但看到有具体的工程和方案，觉得还挺有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这类环保和可持续发展的正向内容，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容挺客观的，但我对此类专业领域了解不多，没什么特别想发表的见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题对我朋友圈的人来说可能太宏大了，转发出去没太大必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.19
+}

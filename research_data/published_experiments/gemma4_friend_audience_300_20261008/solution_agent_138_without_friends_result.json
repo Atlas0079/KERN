@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_138_without_friends",
+  "actor": "agent_138",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-cf07ba3c1f1844e2880046bb0ec3b6c4",
+    "object": "chat.completion",
+    "created": 1791458349,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的应对措施心里踏实了不少，环保确实需要大家一起努力。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对生态保护一直很关注，这种传递希望的正向内容值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容已经表达得很全面了，我习惯于安静地阅读和思考，不需要特意发表意见。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我比较内向，不习惯在自己的空间里转发太多内容。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的应对措施心里踏实了不少，环保确实需要大家一起努力。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对生态保护一直很关注，这种传递希望的正向内容值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容已经表达得很全面了，我习惯于安静地阅读和思考，不需要特意发表意见。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我比较内向，不习惯在自己的空间里转发太多内容。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.3
+}

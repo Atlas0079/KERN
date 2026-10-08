@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_182_with_friends",
+  "actor": "agent_182",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-9d585dd11d7040e1be05e33e13fc4677",
+    "object": "chat.completion",
+    "created": 1791456151,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个严肃的全球性问题，不过对我目前的生活影响比较遥远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有科普性质且关注环境危机，点个赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的气候议题我没有专业的见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我不习惯转发这类比较沉重且缺乏个人关联的话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个严肃的全球性问题，不过对我目前的生活影响比较遥远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有科普性质且关注环境危机，点个赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的气候议题我没有专业的见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我不习惯转发这类比较沉重且缺乏个人关联的话题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.42
+}

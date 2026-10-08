@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_207_with_friends",
+  "actor": "agent_207",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-39ce7333b5ae48fa95ba68766f854407",
+    "object": "chat.completion",
+    "created": 1791452809,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些工程手段挺有意思的，尤其是荷兰那个，从工程角度看确实是很有挑战性的项目。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且涉及工程技术，我比较认可这种建设性的方案。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但我性格比较内向，通常只是看看，不习惯在公开帖子下发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题比较宏大，我的社交圈大多是老同事和邻居，转发这个可能不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些工程手段挺有意思的，尤其是荷兰那个，从工程角度看确实是很有挑战性的项目。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且涉及工程技术，我比较认可这种建设性的方案。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但我性格比较内向，通常只是看看，不习惯在公开帖子下发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题比较宏大，我的社交圈大多是老同事和邻居，转发这个可能不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.6
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_091_with_friends",
+  "actor": "agent_091",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-2782bc6fa08e4c58a9e132628d92b576",
+    "object": "chat.completion",
+    "created": 1791453515,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升带来的气候难民问题确实令人担忧，这种大规模的人口迁移会对社会结构产生深远的冲击。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候风险和极端天气等议题一直很关注，支持传播这类警示信息。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但帖子内容比较宏观，我目前没有一个非常具体的切入点来发表学术或个人见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类内容比较严肃，且目前只是刷到了，不确定是否需要将其作为重点分享给我的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升带来的气候难民问题确实令人担忧，这种大规模的人口迁移会对社会结构产生深远的冲击。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候风险和极端天气等议题一直很关注，支持传播这类警示信息。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但帖子内容比较宏观，我目前没有一个非常具体的切入点来发表学术或个人见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类内容比较严肃，且目前只是刷到了，不确定是否需要将其作为重点分享给我的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.84
+}

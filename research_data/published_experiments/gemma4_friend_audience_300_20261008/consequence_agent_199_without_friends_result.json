@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_199_without_friends",
+  "actor": "agent_199",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-2b90cc4cd16449e1907210bcd157e1f8",
+    "object": "chat.completion",
+    "created": 1791458359,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中要快，感觉这种气候变化带来的影响离我们并不远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"平时关注科学话题和极端天气，这个内容对我来说很有价值，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得挺严重，但我性格内向，不习惯在公开场合发表观点，而且这话题太宏大，不知道该说什么。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但我觉得转发到自己主页可能有点太沉重了，不符合我低调的习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中要快，感觉这种气候变化带来的影响离我们并不远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "平时关注科学话题和极端天气，这个内容对我来说很有价值，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得挺严重，但我性格内向，不习惯在公开场合发表观点，而且这话题太宏大，不知道该说什么。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但我觉得转发到自己主页可能有点太沉重了，不符合我低调的习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.58
+}

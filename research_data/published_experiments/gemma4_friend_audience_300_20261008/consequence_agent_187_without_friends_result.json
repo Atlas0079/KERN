@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_187_without_friends",
+  "actor": "agent_187",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-0c655d207afb48228bdba79d411c8534",
+    "object": "chat.completion",
+    "created": 1791452280,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候危机听起来很可怕，想到未来孩子成长的世界会变成这样，心里有点沉重。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有警示意义，认同关注环境问题的必要性。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太大太宏大，作为一个普通人，觉得自己没什么能给出的具体见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"比较内向且不习惯在社交平台传播过于沉重或激进的话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候危机听起来很可怕，想到未来孩子成长的世界会变成这样，心里有点沉重。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有警示意义，认同关注环境问题的必要性。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太大太宏大，作为一个普通人，觉得自己没什么能给出的具体见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "比较内向且不习惯在社交平台传播过于沉重或激进的话题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.66
+}

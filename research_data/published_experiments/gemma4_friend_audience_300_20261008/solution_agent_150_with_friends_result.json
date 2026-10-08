@@ -1,0 +1,52 @@
+{
+  "key": "solution_agent_150_with_friends",
+  "actor": "agent_150",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-d3a426961b084a178d6075c709934932",
+    "object": "chat.completion",
+    "created": 1791455516,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保措施和正面进展，感觉气候问题虽然严峻但还是有希望的，这种积极的基调很打动我。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直很关注环境和生态话题，认可这种传播低碳生活方式的正面内容。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"我想表达对这些环保工程的赞赏，并分享自己对低碳生活的认同。\",\n      \"text\": \"红树林修复确实是个很棒的方案，低碳生活虽然是小事，但集结起来的力量确实惊人，支持！🌱\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容很好，但我觉得点赞和评论已经表达了支持，目前不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保措施和正面进展，感觉气候问题虽然严峻但还是有希望的，这种积极的基调很打动我。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直很关注环境和生态话题，认可这种传播低碳生活方式的正面内容。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "我想表达对这些环保工程的赞赏，并分享自己对低碳生活的认同。",
+        "text": "红树林修复确实是个很棒的方案，低碳生活虽然是小事，但集结起来的力量确实惊人，支持！🌱"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容很好，但我觉得点赞和评论已经表达了支持，目前不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "红树林修复确实是个很棒的方案，低碳生活虽然是小事，但集结起来的力量确实惊人，支持！🌱"
+    }
+  ],
+  "seconds": 17.06
+}

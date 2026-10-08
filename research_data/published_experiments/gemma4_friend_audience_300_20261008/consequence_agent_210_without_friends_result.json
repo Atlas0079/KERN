@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_210_without_friends",
+  "actor": "agent_210",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-0048961fd3014af0af367bf1a22e5d22",
+    "object": "chat.completion",
+    "created": 1791451328,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的环境危机听起来挺沉重的，虽然离我的日常生活还有距离，但确实让人感到不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注社会议题且认同这类科普信息的价值，点个赞表示支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且专业，我对此类话题没有太深刻的见解，不便随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发这种比较压抑的消息可能会影响朋友圈的氛围，没必要特意转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的环境危机听起来挺沉重的，虽然离我的日常生活还有距离，但确实让人感到不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注社会议题且认同这类科普信息的价值，点个赞表示支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且专业，我对此类话题没有太深刻的见解，不便随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发这种比较压抑的消息可能会影响朋友圈的氛围，没必要特意转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.82
+}

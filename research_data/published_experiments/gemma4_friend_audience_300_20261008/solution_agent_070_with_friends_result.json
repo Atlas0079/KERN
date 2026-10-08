@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_070_with_friends",
+  "actor": "agent_070",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-be5db31a7267491495f7a40185ad350d",
+    "object": "chat.completion",
+    "created": 1791454512,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的工程和修复计划，感觉气候问题虽然严重但还是有希望的，挺受启发。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有建设性，支持这种传播可持续生活的号召。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但没有特别专业的见解，点个赞支持就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普内容虽然好，但我的朋友圈大多是同行和同学，转发这个可能不太契合大家的关注点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的工程和修复计划，感觉气候问题虽然严重但还是有希望的，挺受启发。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有建设性，支持这种传播可持续生活的号召。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但没有特别专业的见解，点个赞支持就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普内容虽然好，但我的朋友圈大多是同行和同学，转发这个可能不太契合大家的关注点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.86
+}

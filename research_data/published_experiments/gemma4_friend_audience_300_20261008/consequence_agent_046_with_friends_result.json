@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_046_with_friends",
+  "actor": "agent_046",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-3213751364764a5f826863dabf71db75",
+    "object": "chat.completion",
+    "created": 1791456884,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事儿听起来挺严重的，而且涉及的人口迁移和资源问题挺复杂的，很有社会科学研究的既视感。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这类关于全球气候和公共危机的科普内容我比较感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得内容深刻，但并没有什么特别想发表的直接观点，先看看就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"话题太宏大且沉重，不确定我的好友圈会对这类全球性议题感兴趣，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事儿听起来挺严重的，而且涉及的人口迁移和资源问题挺复杂的，很有社会科学研究的既视感。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这类关于全球气候和公共危机的科普内容我比较感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得内容深刻，但并没有什么特别想发表的直接观点，先看看就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "话题太宏大且沉重，不确定我的好友圈会对这类全球性议题感兴趣，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.84
+}

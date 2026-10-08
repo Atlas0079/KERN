@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_011_with_friends",
+  "actor": "agent_011",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-548a55b6864c40b08cc05178cf0c03f7",
+    "object": "chat.completion",
+    "created": 1791451587,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保举措还挺有希望的，虽然我也在尽力低碳生活，但感觉个体力量在巨大的气候问题面前还是挺渺小的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这篇文章传递的正能量和科学方案我挺认同的，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对这个领域的专业知识了解有限，且性格比较内向，不习惯在公共区域发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然不错，但我的社交圈子大多是家人和邻居，转发这个可能不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保举措还挺有希望的，虽然我也在尽力低碳生活，但感觉个体力量在巨大的气候问题面前还是挺渺小的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这篇文章传递的正能量和科学方案我挺认同的，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对这个领域的专业知识了解有限，且性格比较内向，不习惯在公共区域发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然不错，但我的社交圈子大多是家人和邻居，转发这个可能不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.01
+}

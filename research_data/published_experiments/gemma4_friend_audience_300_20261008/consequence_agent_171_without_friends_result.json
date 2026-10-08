@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_171_without_friends",
+  "actor": "agent_171",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-2243af3aa0e242a1a741b37130d7f8da",
+    "object": "chat.completion",
+    "created": 1791453323,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种极端气候导致的大规模迁移真的很可怕，感觉这种危机感比想象中来得快。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候和极端天气话题一直很关注，内容很有警示意义。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得焦虑，但目前没有特别想分享的观点，先默默关注就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容过于沉重，且我平时社交风格比较低调，不倾向于转发这类危机预警。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种极端气候导致的大规模迁移真的很可怕，感觉这种危机感比想象中来得快。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候和极端天气话题一直很关注，内容很有警示意义。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得焦虑，但目前没有特别想分享的观点，先默默关注就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容过于沉重，且我平时社交风格比较低调，不倾向于转发这类危机预警。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.67
+}

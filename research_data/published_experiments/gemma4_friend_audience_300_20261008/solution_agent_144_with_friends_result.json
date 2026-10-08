@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_144_with_friends",
+  "actor": "agent_144",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-571a9f210d3c47d2a0783d1ffa7d3845",
+    "object": "chat.completion",
+    "created": 1791453135,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意义的科普，虽然离我的生活有点远，但为了孩子以后能生活在更好的环境里，确实得关注一下。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正能量且有启发，随手点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但感觉自己没什么专业见解可以发表，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"话题比较宏大，不太适合发在我的朋友圈给同事和家长朋友看。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意义的科普，虽然离我的生活有点远，但为了孩子以后能生活在更好的环境里，确实得关注一下。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正能量且有启发，随手点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但感觉自己没什么专业见解可以发表，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "话题比较宏大，不太适合发在我的朋友圈给同事和家长朋友看。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.63
+}

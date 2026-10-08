@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_197_without_friends",
+  "actor": "agent_197",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8234b60bfe854e76a6fab19fce4c56e6",
+    "object": "chat.completion",
+    "created": 1791450922,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"我对气候风险一直挺关注的，看到这些具体的工程和方案比纯粹的担忧要让人安心很多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且符合我的兴趣点，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但目前没有特别想深入探讨的观点，先看看就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题比较宏大，我觉得点赞足以表达支持，不需要转发到我的个人主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "我对气候风险一直挺关注的，看到这些具体的工程和方案比纯粹的担忧要让人安心很多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且符合我的兴趣点，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但目前没有特别想深入探讨的观点，先看看就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题比较宏大，我觉得点赞足以表达支持，不需要转发到我的个人主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.35
+}

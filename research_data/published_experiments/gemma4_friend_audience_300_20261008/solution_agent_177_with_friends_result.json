@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_177_with_friends",
+  "actor": "agent_177",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-9ad829f781b746e7b6b5a7423702de22",
+    "object": "chat.completion",
+    "created": 1791457962,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这种关于生态保护和气候变化的讨论总能引起我的关注，而且这种积极的解决方案让我觉得心里踏实了一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态话题，这个帖子的正向引导很合我心意。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观，我虽然感兴趣，但目前没有特别想补充的专业见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但转发到我的朋友圈里，大多数朋友可能对这类宏大叙事不感兴趣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这种关于生态保护和气候变化的讨论总能引起我的关注，而且这种积极的解决方案让我觉得心里踏实了一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态话题，这个帖子的正向引导很合我心意。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏观，我虽然感兴趣，但目前没有特别想补充的专业见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但转发到我的朋友圈里，大多数朋友可能对这类宏大叙事不感兴趣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.29
+}

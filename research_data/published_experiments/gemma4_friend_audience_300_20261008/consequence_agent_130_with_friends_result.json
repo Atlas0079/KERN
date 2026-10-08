@@ -1,0 +1,52 @@
+{
+  "key": "consequence_agent_130_with_friends",
+  "actor": "agent_130",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-54017f35b5574afc9a40059e51cfbc1a",
+    "object": "chat.completion",
+    "created": 1791457129,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，这种极端气候对沿海城市和全球资源分布的影响确实令人担忧。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候风险和极端天气一直很关注，支持分享此类重要信息的科普帖。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"我想就技术手段应对海平面上升这一点分享一下自己的思考。\",\n      \"text\": \"看到这种趋势挺心惊的。好奇现在除了迁移，在工程技术层面（比如像荷兰那种大规模的防洪工程）是否有更高效的全球化解决方案来延缓沿海城市的危机？\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但比较沉重，目前觉得点赞和讨论就足够了，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，这种极端气候对沿海城市和全球资源分布的影响确实令人担忧。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候风险和极端天气一直很关注，支持分享此类重要信息的科普帖。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "我想就技术手段应对海平面上升这一点分享一下自己的思考。",
+        "text": "看到这种趋势挺心惊的。好奇现在除了迁移，在工程技术层面（比如像荷兰那种大规模的防洪工程）是否有更高效的全球化解决方案来延缓沿海城市的危机？"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但比较沉重，目前觉得点赞和讨论就足够了，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "看到这种趋势挺心惊的。好奇现在除了迁移，在工程技术层面（比如像荷兰那种大规模的防洪工程）是否有更高效的全球化解决方案来延缓沿海城市的危机？"
+    }
+  ],
+  "seconds": 19.33
+}

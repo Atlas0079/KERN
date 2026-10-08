@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_175_without_friends",
+  "actor": "agent_175",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-16df6a9af9ab4ff6bcc18bf7100a5b43",
+    "object": "chat.completion",
+    "created": 1791451268,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候问题确实挺严重的，不过这种宏大的全球危机离我现在的生活太远了，感觉挺无力的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普性质的警示帖点个赞表示认同即可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"没有特别的见解，而且这个话题太沉重，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太严肃，不符合我平时分享内容的风格。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候问题确实挺严重的，不过这种宏大的全球危机离我现在的生活太远了，感觉挺无力的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普性质的警示帖点个赞表示认同即可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "没有特别的见解，而且这个话题太沉重，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太严肃，不符合我平时分享内容的风格。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.1
+}

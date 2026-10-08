@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_063_with_friends",
+  "actor": "agent_063",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-388132104fa645e482a9431d02280483",
+    "object": "chat.completion",
+    "created": 1791455651,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章提到的低碳行动和环保工程挺有意思的，感觉这种宏大叙事和个人小习惯的结合很有启发。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我比较开放且愿意接触新观点，支持这种积极的可持续生活理念。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但我性格内向，习惯安静地阅读，没有特别想表达的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这对我来说是一个知识性的了解，不需要转发到我的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章提到的低碳行动和环保工程挺有意思的，感觉这种宏大叙事和个人小习惯的结合很有启发。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我比较开放且愿意接触新观点，支持这种积极的可持续生活理念。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但我性格内向，习惯安静地阅读，没有特别想表达的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这对我来说是一个知识性的了解，不需要转发到我的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.4
+}

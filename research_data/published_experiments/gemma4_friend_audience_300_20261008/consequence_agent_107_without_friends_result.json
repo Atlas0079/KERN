@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_107_without_friends",
+  "actor": "agent_107",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-b3cdfaa7f6a24affa9b72c1e61c10099",
+    "object": "chat.completion",
+    "created": 1791451298,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉海平面上升这事儿离我们还挺远的，但规模这么大，确实挺让人揪心的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然离我生活没直接影响，但这种环保议题值得关注和支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"专业性太强，我没什么能补充的，随看看就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"没必要转发到我的主页，我的关注点更多在生活和店里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉海平面上升这事儿离我们还挺远的，但规模这么大，确实挺让人揪心的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然离我生活没直接影响，但这种环保议题值得关注和支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "专业性太强，我没什么能补充的，随看看就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "没必要转发到我的主页，我的关注点更多在生活和店里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.51
+}

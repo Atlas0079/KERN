@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_296_without_friends",
+  "actor": "agent_296",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-5a3607e047cc4701926e65870fbfbf4b",
+    "object": "chat.completion",
+    "created": 1791452848,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实挺让人担心的，看到有具体的工程和方案在实施，感觉稍微安心了一点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正能量，而且我对气候和科普类话题一直挺关注的。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但没有特别想发表的观点，点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类话题比较宏大，转发到我的朋友圈可能不太合适，没必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实挺让人担心的，看到有具体的工程和方案在实施，感觉稍微安心了一点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正能量，而且我对气候和科普类话题一直挺关注的。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但没有特别想发表的观点，点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类话题比较宏大，转发到我的朋友圈可能不太合适，没必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.34
+}

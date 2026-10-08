@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_214_with_friends",
+  "actor": "agent_214",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-94e345164642462f83169f6d715df632",
+    "object": "chat.completion",
+    "created": 1791458030,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的环境议题挺让人揪心的，尤其是涉及到人口迁移和社会资源争夺，确实是一个巨大的社会挑战。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注气候危机和全球议题，点赞表示认同这种预警。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然对此感兴趣，但这是一个很沉重的专业话题，目前没有特别想表达的观点，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且具有压迫感，不太适合在我的个人社交主页广泛转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的环境议题挺让人揪心的，尤其是涉及到人口迁移和社会资源争夺，确实是一个巨大的社会挑战。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注气候危机和全球议题，点赞表示认同这种预警。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然对此感兴趣，但这是一个很沉重的专业话题，目前没有特别想表达的观点，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较严肃且具有压迫感，不太适合在我的个人社交主页广泛转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.23
+}

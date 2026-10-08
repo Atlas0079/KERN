@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_104_without_friends",
+  "actor": "agent_104",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-e7ea9c65503b49fd9fa269194034bb61",
+    "object": "chat.completion",
+    "created": 1791457880,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升一直是我关注的气候风险点，看到这些具体的工程和生态方案感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容符合我的关注兴趣，而且传递了积极的解决方向。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但帖子内容比较宏观，我暂时没有什么独特的观点需要发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普信息点赞即可，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升一直是我关注的气候风险点，看到这些具体的工程和生态方案感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容符合我的关注兴趣，而且传递了积极的解决方向。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但帖子内容比较宏观，我暂时没有什么独特的观点需要发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普信息点赞即可，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.96
+}

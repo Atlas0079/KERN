@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_279_with_friends",
+  "actor": "agent_279",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-cebe3d499bdd45c2a9b4e16d05b77cfb",
+    "object": "chat.completion",
+    "created": 1791458451,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的影响确实挺触目惊心的，这种全球性的环境变化让人感到有些不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很有警示意义，支持这种传播气候危机的科普信息。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但由于缺乏专业环境知识，没什么具体观点可以补充。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种比较沉重的话题，我通常倾向于静静阅读，不会随便转发到自己的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的影响确实挺触目惊心的，这种全球性的环境变化让人感到有些不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很有警示意义，支持这种传播气候危机的科普信息。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但由于缺乏专业环境知识，没什么具体观点可以补充。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种比较沉重的话题，我通常倾向于静静阅读，不会随便转发到自己的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.51
+}

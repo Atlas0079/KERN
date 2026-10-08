@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_247_with_friends",
+  "actor": "agent_247",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-9bd6247b1d3f47ce886d4e5b81e9dbbd",
+    "object": "chat.completion",
+    "created": 1791456133,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些工程方案和具体的应对措施，感觉气候问题虽然严峻但还是有条理地在解决，挺有启发性的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且具有建设性，符合我对新技术和社会可持续发展的关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但没有特别想分享的专业见解或强烈观点，点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容偏向科普和倡议，目前还没到需要转发给朋友圈扩散的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些工程方案和具体的应对措施，感觉气候问题虽然严峻但还是有条理地在解决，挺有启发性的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且具有建设性，符合我对新技术和社会可持续发展的关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但没有特别想分享的专业见解或强烈观点，点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容偏向科普和倡议，目前还没到需要转发给朋友圈扩散的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.21
+}

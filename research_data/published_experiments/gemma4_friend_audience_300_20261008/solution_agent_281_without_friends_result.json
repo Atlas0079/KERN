@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_281_without_friends",
+  "actor": "agent_281",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-4ff0be21035c4a99bacf02225d8b2de1",
+    "object": "chat.completion",
+    "created": 1791455286,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的工程方案和环保措施，感觉面对气候变化还是有希望的，挺有启发。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护话题一直比较关注，支持这类正能量的科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容已经写得很全面了，我没有特别想补充的专业见解，点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容不错，但这种宏大的话题我不习惯转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的工程方案和环保措施，感觉面对气候变化还是有希望的，挺有启发。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护话题一直比较关注，支持这类正能量的科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容已经写得很全面了，我没有特别想补充的专业见解，点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容不错，但这种宏大的话题我不习惯转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.56
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_067_without_friends",
+  "actor": "agent_067",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-b4cf758c998740c692fef8c7e6b5847e",
+    "object": "chat.completion",
+    "created": 1791459134,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这种全球性的环境危机，感觉很沉重，想到未来孩子成长的世界可能会面临这么多不确定性。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注科技和社会话题，认为这类警示信息很重要，点赞以示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太宏大且沉重，我性格内向，没什么能给出的具体建议，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容重要，但我不习惯在自己的主页转发这类比较压抑的社会危机信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这种全球性的环境危机，感觉很沉重，想到未来孩子成长的世界可能会面临这么多不确定性。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注科技和社会话题，认为这类警示信息很重要，点赞以示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太宏大且沉重，我性格内向，没什么能给出的具体建议，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容重要，但我不习惯在自己的主页转发这类比较压抑的社会危机信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.3
+}

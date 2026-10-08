@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_226_with_friends",
+  "actor": "agent_226",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-5a38822d04e847eca4b57003dfd8edac",
+    "object": "chat.completion",
+    "created": 1791451058,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升引发的难民危机和资源争夺，从社会科学角度看确实是一个非常严峻且复杂的系统性问题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注气候危机和全球社会变迁，这类科普信息很有价值。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很有感触，但这类宏大议题在评论区很难有深入讨论，且我目前没有特别独特的观点要分享。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但转发到我的朋友圈可能略显沉重，且我的好友圈对此类议题的关注点不尽相同。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升引发的难民危机和资源争夺，从社会科学角度看确实是一个非常严峻且复杂的系统性问题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注气候危机和全球社会变迁，这类科普信息很有价值。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很有感触，但这类宏大议题在评论区很难有深入讨论，且我目前没有特别独特的观点要分享。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但转发到我的朋友圈可能略显沉重，且我的好友圈对此类议题的关注点不尽相同。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 17.18
+}

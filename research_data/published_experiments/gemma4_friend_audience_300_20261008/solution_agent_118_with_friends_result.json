@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_118_with_friends",
+  "actor": "agent_118",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-591ca85cf271423e8bdd93646004ad92",
+    "object": "chat.completion",
+    "created": 1791455866,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺正能量的，虽然海平面上升离我生活挺远，但这种环保意识确实值得认可。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活的理念，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，我没有太专业的见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容看看就行，没必要转发到自己的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺正能量的，虽然海平面上升离我生活挺远，但这种环保意识确实值得认可。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活的理念，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大，我没有太专业的见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容看看就行，没必要转发到自己的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.91
+}

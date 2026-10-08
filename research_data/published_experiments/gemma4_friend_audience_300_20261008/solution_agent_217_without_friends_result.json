@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_217_without_friends",
+  "actor": "agent_217",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-ddebf37538a24e6ebec686628246705b",
+    "object": "chat.completion",
+    "created": 1791452659,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题挺宏大的，而且提到的工程和自然修复方案很有意思，感觉低碳生活确实是每个人都能参与的小事。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的正面观点，而且内容比较有建设性。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但目前没有特别深刻的见解可以分享，点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普内容虽然好，但还没到必须转发给朋友圈每个人都知道的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题挺宏大的，而且提到的工程和自然修复方案很有意思，感觉低碳生活确实是每个人都能参与的小事。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的正面观点，而且内容比较有建设性。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但目前没有特别深刻的见解可以分享，点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普内容虽然好，但还没到必须转发给朋友圈每个人都知道的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.45
+}

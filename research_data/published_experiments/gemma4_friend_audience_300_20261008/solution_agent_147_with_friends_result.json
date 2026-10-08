@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_147_with_friends",
+  "actor": "agent_147",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-0fe0c90271cf456eb26ba82320dd0345",
+    "object": "chat.completion",
+    "created": 1791459283,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这种全球性的环保话题总会让人觉得挺宏大且紧迫的，不过这些具体的应对措施听起来还算有希望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且具有科普意义，点个赞支持一下低碳环保。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别想分享的见解，且这类宏大话题评论起来比较谨慎。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"平时不怎么转发这类严肃的科普内容，觉得留在自己的浏览记录里即可。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这种全球性的环保话题总会让人觉得挺宏大且紧迫的，不过这些具体的应对措施听起来还算有希望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且具有科普意义，点个赞支持一下低碳环保。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别想分享的见解，且这类宏大话题评论起来比较谨慎。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "平时不怎么转发这类严肃的科普内容，觉得留在自己的浏览记录里即可。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.97
+}

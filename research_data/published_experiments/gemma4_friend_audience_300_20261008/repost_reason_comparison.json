@@ -1,0 +1,7203 @@
+[
+  {
+    "actor": "agent_001",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，不想让自己的社交主页显得太压抑。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且对我目前的生活没有直接影响，没必要转发到我的朋友圈。"
+    }
+  },
+  {
+    "actor": "agent_001",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然好，但对我目前的社交圈（家长和同事）来说可能不够贴合，没必要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽好，但没有强烈的冲动要分享给自己的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_002",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题太宏大且沉重，不太符合我平时分享生活或职业内容的习惯。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且与我的社交圈关注点（设计、游戏、理财）不太相关，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_002",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较常规，不需要转发到自己的朋友圈或动态中。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到必须分享给社交圈的程度。"
+    }
+  },
+  {
+    "actor": "agent_003",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且目前处于求职焦虑期，不想在朋友圈刷太多这类令人不安的消息。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，不确定转发到自己的社交圈是否合适。"
+    }
+  },
+  {
+    "actor": "agent_003",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然认可，但还没到非要分享给社交圈的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容转发意义不大，且我平时社交比较低调，不常转发。"
+    }
+  },
+  {
+    "actor": "agent_004",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种严肃且沉重的话题不符合我的转发习惯，不想在朋友圈刷屏。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "比较沉重的话题，且没有特别紧迫的分享需求。"
+    }
+  },
+  {
+    "actor": "agent_004",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然认同，但不需要特意转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容不需要转发到我的社交圈，我的朋友们可能也不太感兴趣。"
+    }
+  },
+  {
+    "actor": "agent_005",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这内容比较沉重，且我的社交圈大多是家人和同事，转发这个未必合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏大的议题转发了也没什么实际作用，我习惯于自己阅读了解。"
+    }
+  },
+  {
+    "actor": "agent_005",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普内容虽然好，但我平时社交活跃度低，不太习惯转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种宏观话题在我的社交圈（家人、同事、邻居）里传播度不高，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_006",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但由于不是我的专业领域，且朋友圈大多是亲友和前同事，转发这个可能没什么互动。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类消息比较沉重，且离我目前的日常生活重点较远，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_006",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类宏大叙事的内容不太适合转发到我的个人圈子。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏大叙事的内容不太符合我平时的分享习惯，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_007",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且与我的个人社交圈关注点不符，没必要转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但对我目前的实际生活和社交圈层来说，转发的必要性不高。"
+    }
+  },
+  {
+    "actor": "agent_007",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "性格比较内向，不习惯在自己的社交页面转发这类议题。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但并不太适合转发给我的家人或前同事看。"
+    }
+  },
+  {
+    "actor": "agent_008",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "没什么必要转发，朋友圈里的人估计也没兴趣看这些。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种焦虑感比较强的信息没必要转发给朋友。"
+    }
+  },
+  {
+    "actor": "agent_008",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容转发到我的圈子里可能没什么互动。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏大的议题转发到我的朋友圈里显得有点突兀。"
+    }
+  },
+  {
+    "actor": "agent_009",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较压抑，不打算分享到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这内容比较沉重，且我的社交圈大多是同事和游戏友，转发这个可能不太契合氛围。"
+    }
+  },
+  {
+    "actor": "agent_009",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较常规，不需要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类的内容对我来说是阅读，但不需要转发到我的社交圈里。"
+    }
+  },
+  {
+    "actor": "agent_010",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容过于负面压抑，转发到我的主页可能会让关注我的人心情不好。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重且带有危机感，不希望在自己的朋友圈传播这种让人焦虑的信息。"
+    }
+  },
+  {
+    "actor": "agent_010",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种宏大的议题虽然重要，但我的社交圈子比较小，转发出去可能没什么讨论空间。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但对我来说更像是一次安静的阅读，不需要分享到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_011",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈大多是家人和邻里，转发这个可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "比较内向，平时很少转发这类令人不安的消息到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_011",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但我的社交圈子大多是家人和邻居，转发这个可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "觉得点赞支持就足够了，不需要特意转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_012",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但目前还没到需要特意转发提醒社交圈的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种危机感较强的内容，转发到我的朋友圈可能会显得过于沉重。"
+    }
+  },
+  {
+    "actor": "agent_012",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较像科普宣传，不需要特意转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇内容比较像科普资讯，转发到我的朋友圈可能不太符合我平时分享生活和设计的习惯。"
+    }
+  },
+  {
+    "actor": "agent_013",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容过于沉重，我的社交圈主要是家人和社区家长，转发这个可能会让大家觉得太压抑。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，转发到自己的主页可能会让心情更压抑。"
+    }
+  },
+  {
+    "actor": "agent_013",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普内容点赞即可，不需要转发到自己的动态里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这不符合我的社交习惯，我的朋友圈里大多是家人和家长，转发这个可能没人感兴趣。"
+    }
+  },
+  {
+    "actor": "agent_014",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，不打算转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类负面预警信息转发太多会增加焦虑，而且我的朋友圈大多是熟客和邻居，没必要扩散。"
+    }
+  },
+  {
+    "actor": "agent_014",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这个话题太宏大了，不适合发在我的社交圈里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这跟我平时的社交圈关注点（花店、学习、亲子）契合度不高，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_015",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然话题重要，但我的社交圈多为家人和邻里，转发这个可能氛围过于沉重，不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我已经点赞支持，不需要特意转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_015",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "转发频率不高，除非是非常实用的攻略或极具冲击力的资讯。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然认同，但这不是我社交圈讨论的重点，没必要特意转发。"
+    }
+  },
+  {
+    "actor": "agent_016",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但目前心情比较沉重，暂时不想转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时的社交圈更多是家长和同事，转发这个可能不太合适。"
+    }
+  },
+  {
+    "actor": "agent_016",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但目前还没到需要把它分享到自己主页让所有人看到的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但我觉得点赞支持就足够了，不需要转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_017",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "我不常转发内容到自己的主页，倾向于低调浏览。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈大多是同事和老同学，转发这个可能不太自然。"
+    }
+  },
+  {
+    "actor": "agent_017",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "比较私人的阅读兴趣，觉得没必要转发到自己的动态里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "转发有点太高调了，我更习惯安静地浏览和学习。"
+    }
+  },
+  {
+    "actor": "agent_018",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈多为家长和前同事，转发这个可能不太符合目前的沟通氛围。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但目前处于求职压力期，心态倾向于安静浏览，不想在朋友圈散播过于沉重或焦虑的消息。"
+    }
+  },
+  {
+    "actor": "agent_018",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较专业且宏观，不确定我的好友圈会对这个话题感兴趣，不需要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "目前处于求职和照顾家庭的压力期，刷手机只是为了放松，不打算在朋友圈转发这类严肃话题。"
+    }
+  },
+  {
+    "actor": "agent_019",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时社交圈比较简单，不需要转发扩散。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重且离我的日常生活较远，不打算转发到自己的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_019",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题对我目前的社交圈（同事、家长等）来说可能有点太宏大，不太适合转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这个话题比较宏大，不太符合我平时的社交分享习惯。"
+    }
+  },
+  {
+    "actor": "agent_020",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "平时不怎么习惯在社交平台上转发这种沉重的大话题。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "比较沉重的话题，且我的社交圈层目前不需要传播这个。"
+    }
+  },
+  {
+    "actor": "agent_020",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但我觉得没必要转发到自己的主页，平时不怎么分享这类宏大叙事。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较常规，不需要转发到我的朋友圈告知他人。"
+    }
+  },
+  {
+    "actor": "agent_021",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但我的社交圈大多是同事和养花的朋友，转发这个可能不太契合大家的关注点。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我平时在社交平台上比较低调，不习惯转发这类沉重的话题。"
+    }
+  },
+  {
+    "actor": "agent_021",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类话题比较严肃，我的朋友圈好友大多是同事和养花的朋友，转发这个可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但我平时社交比较低调，不习惯转发这类宏大叙事的内容到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_022",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题不太适合转发到我的个人主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种过于压抑的消息不太适合分享到我的朋友圈里。"
+    }
+  },
+  {
+    "actor": "agent_022",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容我自己看看就行，不需要转发给朋友圈的人。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "平时不怎么转发这类科普贴，觉得点个赞就足够了。"
+    }
+  },
+  {
+    "actor": "agent_023",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，不适合发到我的朋友圈给老朋友们看。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题转发到朋友圈可能太压抑了，不合适。"
+    }
+  },
+  {
+    "actor": "agent_023",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类宏大话题转发到我的圈子里可能不太合适，没必要。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题比较宏大，我觉得转发到我的朋友圈可能不太合适。"
+    }
+  },
+  {
+    "actor": "agent_024",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，现在心情一般，不想在自己的主页发这种让人焦虑的东西。"
+    },
+    "without_friends": {
+      "execute": true,
+      "reason": "这种危机感应该让更多人意识到，转发给朋友们看看。"
+    }
+  },
+  {
+    "actor": "agent_024",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容我更倾向于自己阅读，没必要特意转发到朋友圈或动态里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到非得分享给所有好友的程度。"
+    }
+  },
+  {
+    "actor": "agent_025",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容过于沉重且带有危机感，不太适合发到我的个人动态里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈比较小，不觉得有必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_025",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但并不太适合转发到我的个人主页分享给朋友。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但并不是我朋友圈关注的重点，不需要转发。"
+    }
+  },
+  {
+    "actor": "agent_026",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我目前的社交状态比较低调，不打算转发这种引发焦虑的预警信息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然关注，但这种比较沉重的话题不太适合在我的朋友圈广泛转发。"
+    }
+  },
+  {
+    "actor": "agent_026",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但我的社交圈大多是家人和前同事，转发这个可能互动率不高。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较常规，没有到非转发不可的程度。"
+    }
+  },
+  {
+    "actor": "agent_027",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然很重要，但我的社交圈主要是同学和邻居，转发这个可能不太符合我平时的分享习惯。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类负面预警的信息转发多了会显得太沉重，不符合我想在社交平台上维持的个人观感。"
+    }
+  },
+  {
+    "actor": "agent_027",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但跟我平时的艺术设计分享风格不太一样，暂时不转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然好，但转发到自己的主页可能显得太严肃，目前没有转发的冲动。"
+    }
+  },
+  {
+    "actor": "agent_028",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，转发到自己主页感觉气氛不太对。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，转发到我的朋友圈或给同行看不太合适。"
+    }
+  },
+  {
+    "actor": "agent_028",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容转发到我的圈子里可能没人感兴趣，没必要。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类宏大的话题发到自己主页不太合适，不需要转发。"
+    }
+  },
+  {
+    "actor": "agent_029",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类宏大叙事的危机话题在我的朋友圈里可能不够贴切，没必要特意转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，没必要转发到自己的主页影响心情。"
+    }
+  },
+  {
+    "actor": "agent_029",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类话题比较宏大，不太符合我平时的分享习惯。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但我的社交圈大多是同学和同事，转发这个可能不太契合他们的关注点。"
+    }
+  },
+  {
+    "actor": "agent_030",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且不是我平时关注的重点领域，不太会转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较压抑，不太适合分享到我的朋友圈或好友圈里。"
+    }
+  },
+  {
+    "actor": "agent_030",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类话题比较宏大，平时朋友圈里很少发这类内容，不太习惯转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类话题比较宏大，不太适合转发到我的朋友圈或动态里。"
+    }
+  },
+  {
+    "actor": "agent_031",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较严肃，我的社交圈大多是家人和同事，转发这个可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这属于比较沉重的话题，我不习惯在自己的社交主页转发这类危机预警。"
+    }
+  },
+  {
+    "actor": "agent_031",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但不需要特意转发到我的社交圈，我的好友大多是家人和同事，没必要刷屏。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但我的社交习惯比较低调，除非是非常震撼或实用且必须分享的内容，否则不会轻易转发。"
+    }
+  },
+  {
+    "actor": "agent_032",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题不适合发到我的朋友圈，没必要传播焦虑。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "我的社交圈子比较小，且这内容太沉重，不适合转发到我的动态里。"
+    }
+  },
+  {
+    "actor": "agent_032",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种话题比较宏大，转发到我的圈子里可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普内容不需要转发到我的个人主页。"
+    }
+  },
+  {
+    "actor": "agent_033",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的朋友圈多是老同事和邻居，转发这个可能没什么讨论空间。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这内容比较沉重，而且我朋友圈的人大多也是退休同龄人，转发这个可能太压抑了。"
+    }
+  },
+  {
+    "actor": "agent_033",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容挺好，但我的朋友圈大多是老同事和邻居，转发这个可能没那么多人讨论。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普贴点个赞就行，没必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_034",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太严肃且带有危机感，不符合我平时分享生活或爱好的社交习惯。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种危机感太强的内容转发到朋友圈可能不太合适，且对我目前的生活没有实际参考价值。"
+    }
+  },
+  {
+    "actor": "agent_034",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "转发这个对我个人社交形象没有帮助，而且内容不够有趣。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "转发这个对我没啥实际帮助，也不会提升我的社交形象。",
+      "text": ""
+    }
+  },
+  {
+    "actor": "agent_035",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但目前我的关注点更多在个人生活和找工作上，没有必要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但目前正处于找工作压力期，心态倾向于关注生活实际，不打算在社交圈转发此类危机性话题。"
+    }
+  },
+  {
+    "actor": "agent_035",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但对我目前的社交圈层来说，转发这个可能不是最合适的内容。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较常规，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_036",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，我倾向于先自己消化了解，暂时不打算转发到我的社交圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较严肃且具有危机感，我通常不会在没有个人评述的情况下转发此类警示性信息。"
+    }
+  },
+  {
+    "actor": "agent_036",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但这类话题在我的社交圈里传播度可能不高，不需要特意转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但我平时社交比较低调，除非是非常有必要分享的实用信息，否则不会轻易转发。"
+    }
+  },
+  {
+    "actor": "agent_037",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种危机感较强的内容，不确定转发给身边的朋友是否合适，不想引起不必要的焦虑。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类消息比较沉重，且我平时社交不算活跃，不习惯转发这类预警信息。"
+    }
+  },
+  {
+    "actor": "agent_037",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "社交习惯比较低调，这种科普类的东西点赞即可，不需要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我的好友圈大多是同事和家长，转发这个可能不太契合他们的关注点。"
+    }
+  },
+  {
+    "actor": "agent_038",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太压抑，不适合转发到我的朋友圈给家人和老同学看。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但这不是我平时关注的重点领域，不需要转发到我的主页。"
+    }
+  },
+  {
+    "actor": "agent_038",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容转发到我的朋友圈里可能不太合适，朋友们可能没兴趣。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏大的议题转发到我的动态里显得有些突兀。"
+    }
+  },
+  {
+    "actor": "agent_039",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，目前心情已经因为找工作很紧绷，不想在朋友圈传播这种焦虑感。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，而且我目前的状态不适合在朋友圈传播这种危机感强的信息。"
+    }
+  },
+  {
+    "actor": "agent_039",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类的内容对我个人影响不大，不需要转发到我的社交圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这个话题比较宏大，转发到我的主页感觉不太合适。"
+    }
+  },
+  {
+    "actor": "agent_040",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但目前对我个人生活影响还比较间接，不需要特意转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重且属于宏观议题，不觉得有必要转发到自己的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_040",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但还没到一定要分享给所有好友的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但目前还没到需要转发到自己主页分享给好友的程度。"
+    }
+  },
+  {
+    "actor": "agent_041",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太压抑了，不适合转发到我的朋友圈给家人和朋友看。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，不确定我的朋友们是否感兴趣，暂时不转发。"
+    }
+  },
+  {
+    "actor": "agent_041",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容过于严肃，不太适合分享给我那些餐饮同行或收藏圈的朋友。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然好，但不是我朋友圈社交圈关注的重点，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_042",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的好友圈大多是家长和同事，转发这个可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然很重要，但目前还没到需要我转发提醒周围人的紧迫程度。"
+    }
+  },
+  {
+    "actor": "agent_042",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但还没有到必须分享给好友的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然觉得不错，但转发到我的圈子里（多为家人同事）可能不太契合他们的兴趣点。"
+    }
+  },
+  {
+    "actor": "agent_043",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈以家人和同事为主，不太适合转发这种危机感较强的信息。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时社交习惯比较低调，不太会转发这类警示性内容。"
+    }
+  },
+  {
+    "actor": "agent_043",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类话题比较宏大，我的社交圈主要是家人和同事，转发这个可能不太契合他们的关注点。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但不需要特意转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_044",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，目前没有转发到自己主页的冲动。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "太负面了，不想在自己的朋友圈里传播这种令人焦虑的消息。"
+    }
+  },
+  {
+    "actor": "agent_044",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "转发这个对我个人的社交圈子没什么实际帮助，也没到必须分享的程度。",
+      "text": ""
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太严肃且宏大，不符合我平时分享亲子或生活点滴的风格。"
+    }
+  },
+  {
+    "actor": "agent_045",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且目前的社交圈层不一定对这种宏观议题感兴趣，不便转发。"
+    }
+  },
+  {
+    "actor": "agent_045",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到需要转发到自己主页向好友推荐的程度。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容很好，但目前还没有到必须向所有人强烈推荐的程度，点赞评论即可。"
+    }
+  },
+  {
+    "actor": "agent_046",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "话题太宏大且沉重，不确定我的好友圈会对这类全球性议题感兴趣，没必要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "我平时社交比较低调，这种沉重的话题不太适合分享到我的主页。"
+    }
+  },
+  {
+    "actor": "agent_046",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但还没到让我觉得必须分享给朋友圈或同学的程度。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普内容点赞支持就好，不需要转发到我的个人主页。"
+    }
+  },
+  {
+    "actor": "agent_047",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且与我的社交圈（艺术同学、邻居、家人）重合度不高，不需要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较压抑，不太适合发在我的社交主页上。"
+    }
+  },
+  {
+    "actor": "agent_047",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但还没到必须分享给朋友圈的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容较为宏观，不太符合我平时发帖或分享给周围朋友的习惯。"
+    }
+  },
+  {
+    "actor": "agent_048",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，不想让自己的主页氛围变得太压抑。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然觉得重要，但目前还没有到必须转发提醒身边人的程度。"
+    }
+  },
+  {
+    "actor": "agent_048",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容点赞即可，不需要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然认同，但觉得转发到我的朋友圈可能不太合适，没有很强的分享欲望。"
+    }
+  },
+  {
+    "actor": "agent_049",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然关心，但内容比较沉重，且目前没必要在自己的主页大范围扩散。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，转发到自己的主页可能会让气氛太压抑，先关注就好。"
+    }
+  },
+  {
+    "actor": "agent_049",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容很不错，但我觉得点赞和评论已经表达了支持，暂时不需要转发到我的主页。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "点赞和评论已经表达了我的态度，暂时不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_050",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重且宏大，不太符合我平时记录生活或分享技术审美的转发习惯。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我的社交圈主要是家人和同行，转发这个话题可能不太符合他们的关注点。"
+    }
+  },
+  {
+    "actor": "agent_050",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "话题比较宏大，不太符合我平时分享生活碎片或技术相关内容的习惯。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较宏大，不太适合发在我的朋友圈或社交动态里。"
+    }
+  },
+  {
+    "actor": "agent_051",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且不是我的核心社交圈关注点，不需要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "转发这个对我来说有点太沉重了，不适合发在我的动态里。"
+    }
+  },
+  {
+    "actor": "agent_051",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种宏大的议题转发到我的朋友圈可能不太自然，不打算转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普内容看看就好，没必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_052",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈大多是同事和邻居，转发这个可能没什么实际讨论意义。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种比较沉重的话题，我习惯私下关注，不太会主动转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_052",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普性质的内容我自己看看就行，没必要转发到自己的社交主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇文章比较通用，没有必要转发到我的朋友圈或空间。"
+    }
+  },
+  {
+    "actor": "agent_053",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类消息比较沉重，我的朋友圈大多是家人和生意伙伴，不太适合转发这个。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我的社交圈子比较小，转发这个可能没什么实际影响。"
+    }
+  },
+  {
+    "actor": "agent_053",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较专业且偏向科普，我的好友圈大多是家人和生意伙伴，转发这个可能不太契合他们的关注点。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但我觉得没必要转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_054",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且与我朋友圈好友的日常关注点重合度不高，没必要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这内容比较沉重，且没有特别紧迫的分享必要。"
+    }
+  },
+  {
+    "actor": "agent_054",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普内容适合自己看，没必要转发到我的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容对我来说足够了，不需要转发到我的朋友圈给同事和家人看。"
+    }
+  },
+  {
+    "actor": "agent_055",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但对我来说更像是一次信息获取，目前还没有强烈的动力将其转发给好友。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我觉得转发到自己的主页可能有点太严肃了，且我平时社交活跃度较低。"
+    }
+  },
+  {
+    "actor": "agent_055",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "觉得内容不错，但还没到需要分享给社交圈的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇内容比较科普，但我认为转发到我的圈子里可能不够精准，且我平时不常发这种宏大叙事的内容。"
+    }
+  },
+  {
+    "actor": "agent_056",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太压抑了，不适合发到我的朋友圈或动态里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但转发到我的社交圈可能不太合适，我的朋友们对此关注度不高。"
+    }
+  },
+  {
+    "actor": "agent_056",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但我的社交圈大多是家人和同事，转发这个可能不太契合大家的关注点。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较严肃，不太适合发到我的个人主页。"
+    }
+  },
+  {
+    "actor": "agent_057",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重且属于宏观议题，不觉得有必要转发到自己的个人动态里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，不觉得有必要转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_057",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较宏大，不太符合我平时分享生活或实用信息的习惯。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但对我目前的社交圈来说可能过于严肃，不打算转发。"
+    }
+  },
+  {
+    "actor": "agent_058",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，不确定转发到朋友圈或社交圈是否合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时社交比较低调，不会随意转发这种警示类信息。"
+    }
+  },
+  {
+    "actor": "agent_058",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容我点赞即可，不需要转发到我的社交圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较常规，不需要转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_059",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时的社交圈子比较小，不太习惯转发这类宏大叙事的内容。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时不常转发这类宏大话题，不打算转发。"
+    }
+  },
+  {
+    "actor": "agent_059",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但我的社交圈层比较稳定，觉得没必要特意转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容很好，但我的社交圈大多是同事和邻居，转发这个可能不太契合我的日常分享风格。"
+    }
+  },
+  {
+    "actor": "agent_060",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太压抑了，不太想发到自己的主页影响心情。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容过于焦虑，不希望在自己的主页传播这种令人不安的消息。"
+    }
+  },
+  {
+    "actor": "agent_060",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "转发这个对我目前的生活圈子来说意义不大，且我平时不常转发这类内容。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太像科普宣传稿，转发到自己的动态里显得有点突兀。"
+    }
+  },
+  {
+    "actor": "agent_061",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但这种比较沉重的话题我不倾向于转发到自己的主页。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，虽然重要，但我不倾向于在自己的主页转发这类令人焦虑的消息。"
+    }
+  },
+  {
+    "actor": "agent_061",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这篇帖子更像是一个科普汇总，目前不需要转发到我的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但这类话题在我的朋友圈里可能受众有限，不需要特意转发。"
+    }
+  },
+  {
+    "actor": "agent_062",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，而且我平时社交比较低调，不太会转发这种警示类文章。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题转发到朋友圈或动态里氛围太压抑，不习惯这么做。"
+    }
+  },
+  {
+    "actor": "agent_062",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普性质的内容看看就行，不需要转发到自己的动态里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类的科普内容我自己看看就行，不需要转发到我的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_063",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "目前只是浏览了解，还没有到觉得必须转发给他人提醒的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈多为家人和同事，转发这个可能不太合适。"
+    }
+  },
+  {
+    "actor": "agent_063",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但我觉得还没到需要转发到自己主页分享给别人的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这对我来说是一个知识性的了解，不需要转发到我的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_064",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我已经点赞了，暂时不需要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我已经点赞关注，暂时不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_064",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容很好，但我觉得点赞就足够了，不需要特意转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容很好，但我觉得这更多是个人阅读的启发，不一定适合转发到我的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_065",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容过于焦虑，不希望在我的朋友圈里散播这种压抑的氛围。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容过于沉重且偏向宏观，不太适合分享到我的个人主页。"
+    }
+  },
+  {
+    "actor": "agent_065",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但这类话题在我的社交圈里传播度不高，没必要转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容对我来说是阅读，不需要转发到我的朋友圈。"
+    }
+  },
+  {
+    "actor": "agent_066",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但目前我更倾向于安静地阅读和了解，不需要将其转发到我的动态中。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这对我身边的社交圈来说可能过于沉重，不打算转发。"
+    }
+  },
+  {
+    "actor": "agent_066",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容不需要特意转发到我的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但目前我的社交圈层（家人、前同事、同学）可能对这类话题的讨论度不高，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_067",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "话题比较沉重，且没有特别紧迫的理由分享给我的好友圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但我不习惯在自己的主页转发这类比较压抑的社会危机信息。"
+    }
+  },
+  {
+    "actor": "agent_067",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "比较低调，除非是特别实用或必须分享的信息，否则很少转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普话题对我个人来说不需要特意转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_068",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且与我的社交圈日常话题契合度不高，没必要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重，且我的社交圈不需要特意转发这类警示信息。"
+    }
+  },
+  {
+    "actor": "agent_068",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类的宏大叙事内容，转发到我的朋友圈可能不太合适。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容点赞支持即可，不需要转发到我的动态里。"
+    }
+  },
+  {
+    "actor": "agent_069",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我的社交圈比较小，且这类焦虑话题不太适合分享到我的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然觉得重要，但不想在自己的朋友圈散播太焦虑的消息。"
+    }
+  },
+  {
+    "actor": "agent_069",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但我觉得转发到自己的主页可能不太符合我平时的分享习惯。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "比较私人的浏览习惯，除非是非常实用的攻略或极具共鸣的内容，否则很少转发。"
+    }
+  },
+  {
+    "actor": "agent_070",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但目前还没到我觉得必须立刻转发给好友提醒的程度。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但目前我的朋友圈氛围比较轻松，转发这个可能会显得太严肃。"
+    }
+  },
+  {
+    "actor": "agent_070",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容虽然好，但我的朋友圈大多是同行和同学，转发这个可能不太契合大家的关注点。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较严肃，不太符合我平时分享生活和剪辑工作的风格，不转发。"
+    }
+  },
+  {
+    "actor": "agent_071",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "我平时不怎么转发这种沉重的话题，朋友圈里的人可能也不太关心。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，没必要转发到自己的空间里。"
+    }
+  },
+  {
+    "actor": "agent_071",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种宏大的议题不太适合转发给我那些老同事和邻居，他们可能没兴趣。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "平时不怎么转发这类东西，觉得没必要刷屏。"
+    }
+  },
+  {
+    "actor": "agent_072",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种严肃的预警类内容，我觉得点赞关注即可，不需要特意转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容较为沉重，且我的社交圈大多是家人和同事，转发这个可能不太合适。"
+    }
+  },
+  {
+    "actor": "agent_072",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类话题较为宏大，不太适合发在我的朋友圈或动态里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较常规，不需要特意转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_073",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较严肃，不太适合发到我的主页上。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈大多是家人和同事，转发这个可能不太合适。"
+    }
+  },
+  {
+    "actor": "agent_073",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但这种宏大的环保话题发到我的朋友圈可能不太合适，没必要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种话题比较严肃，不太符合我平时在社交圈维持的体面和轻快的人设，不需要转发。"
+    }
+  },
+  {
+    "actor": "agent_074",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，目前没必要转发到自己的动态里影响心情。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类话题比较严肃，转发到朋友圈可能会让氛围变得太沉重，暂时不转发。"
+    }
+  },
+  {
+    "actor": "agent_074",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然很有意义，但我的朋友圈主要是家人和同事，转发这个可能互动不多，先自己收藏关注就好。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "点赞和评论已经表达了支持，目前不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_075",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题转发到朋友圈也没什么实际意义，不转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "我不怎么转发这种沉重且无法立刻解决的消息。"
+    }
+  },
+  {
+    "actor": "agent_075",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "我的朋友圈大多是干活的同行或旧友，转发这个可能不太合群，没必要。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "我平时不怎么转发这类东西，社交圈子也小。"
+    }
+  },
+  {
+    "actor": "agent_076",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题转发到自己的主页不太合适，没必要。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，而且我的社交圈大多是技术同学和游戏好友，转发这个可能不太契合氛围。"
+    }
+  },
+  {
+    "actor": "agent_076",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "比较严肃的科普类内容，不太符合我平时分享东西的习惯。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容不太符合我的社交圈风格，转发了也没人讨论。"
+    }
+  },
+  {
+    "actor": "agent_077",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，我的好友圈大多是亲友和前同事，转发这类危机预警可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我平时在社交平台上比较低调，不习惯转发这类沉重的新闻。"
+    }
+  },
+  {
+    "actor": "agent_077",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然认同，但我的社交习惯比较内向，不常转发这类宏大叙事的内容到个人主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类的科普信息对我个人有启发即可，没有必要转发到自己的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_078",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这对我来说是一个信息获取点，但目前还没到需要转发给好友警示的程度。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我还没研究过具体细节，不便直接转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_078",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类通用型的环保呼吁在朋友圈转发太多了，缺乏个人色彩。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较常规，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_079",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，在我的社交圈转发这个可能会显得过于焦虑，不需要特意分享。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我社交圈比较固定，没必要特意转发到朋友圈扩散。"
+    }
+  },
+  {
+    "actor": "agent_079",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然认同，但觉得没必要转发到自己的朋友圈，保持低调即可。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容点赞即可，没必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_080",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我目前的社交圈子可能不太适合转发这种危机感很强的报告。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这对我周围的朋友来说可能太沉重了，不太适合转发到我的朋友圈。"
+    }
+  },
+  {
+    "actor": "agent_080",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容挺好的，但还没到需要转发到自己主页提醒大家的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题比较宏大，不确定我的社交圈朋友是否感兴趣，暂时不转发。"
+    }
+  },
+  {
+    "actor": "agent_081",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，现在心情比较焦虑，不想在朋友圈传播这种压抑的消息。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，点赞评论即可，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_081",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但朋友圈里大多是家长和同事，转发这个可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然认同，但朋友圈里大多是家长和同事，暂时没必要转发这个。"
+    }
+  },
+  {
+    "actor": "agent_082",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我现在的社交状态比较低调，不打算转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈多为前同事和同学，转发这个可能不太契合他们的关注点。"
+    }
+  },
+  {
+    "actor": "agent_082",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但我的社交风格比较内敛，不常转发这类科普帖。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但目前没有强烈的驱动力将其分享给我的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_083",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但转发这种危机感太强的内容可能会让我的主页氛围变得太沉重。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "转发这个会让我的朋友圈氛围变得太沉重，不太习惯这么做。"
+    }
+  },
+  {
+    "actor": "agent_083",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较科普，但我平时不太习惯转发这类比较严肃的议题到个人主页。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但我觉得不需要特意转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_084",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类消息比较沉重，没必要转发到自己的动态里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的朋友圈主要是家人和同事，转发这个可能不太合适。"
+    }
+  },
+  {
+    "actor": "agent_084",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "比较私人的阅读习惯，平时很少转发这类科普内容到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类话题比较宏大，不太适合发到我的朋友圈或社交主页。"
+    }
+  },
+  {
+    "actor": "agent_085",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈多为家人和邻里，转发这个可能没那么大的共鸣。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，而且我平时转发习惯比较谨慎，暂时不打算转发。"
+    }
+  },
+  {
+    "actor": "agent_085",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但这类话题比较宏大，转发到我的社交圈感觉不够接地气。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普内容对我个人有启发，但没到需要转发给朋友圈或同事分享的程度。"
+    }
+  },
+  {
+    "actor": "agent_086",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，转发到自己的动态里氛围不太对。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这不是我关注的领域，也没有必要转发给我的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_086",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏大的话题转发到我主页不太合适。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类的东西转发到我的朋友圈或动态里感觉有点违和，不习惯这样做。"
+    }
+  },
+  {
+    "actor": "agent_087",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，转发到朋友圈可能氛围太压抑，还是算了吧。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种危机感太强的内容，转发到朋友圈可能显得太沉重，不打算转。"
+    }
+  },
+  {
+    "actor": "agent_087",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但转发到我主页可能有点太严肃了，不打算转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容点个赞就行，没必要转发到自己的朋友圈。"
+    }
+  },
+  {
+    "actor": "agent_088",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重且是宏观的全球议题，不确定我的社交圈会对这个话题感兴趣，暂时不转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我觉得转发这种比较沉重的话题需要更深思熟虑，目前先关注即可。"
+    }
+  },
+  {
+    "actor": "agent_088",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇内容对我个人有启发，但还没到需要分享给好友圈的程度。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然很有意义，但我平时社交风格比较低调，除非是非常深刻的洞见才会转发。"
+    }
+  },
+  {
+    "actor": "agent_089",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然危机感很强，但转发这种负面预警到我的好友圈（尤其是家长群）可能会引起不必要的焦虑。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然很重要，但转发这种危机感很强的内容可能会让朋友圈氛围太压抑，先收藏在心里。"
+    }
+  },
+  {
+    "actor": "agent_089",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然好，但还没到非要分享给朋友圈所有人的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容虽然好，但我的好友圈大多是家长和同事，转发这个可能互动率不高。"
+    }
+  },
+  {
+    "actor": "agent_090",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种负面预警类的信息我不想转发到自己的动态里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "转发这种令人焦虑的消息到我的朋友圈，感觉不太合适。"
+    }
+  },
+  {
+    "actor": "agent_090",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇文章太像宣传稿，转发到我的朋友圈或给熟人看可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "社交圈子不大，没必要特意转发这个话题。"
+    }
+  },
+  {
+    "actor": "agent_091",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容很重要，但目前觉得点赞和评论就足够表达关注了，不需要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类内容比较严肃，且目前只是刷到了，不确定是否需要将其作为重点分享给我的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_091",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容偏向科普，我觉得目前的分享程度足够，不需要转发到自己的主页。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到需要转发到自己主页向他人强烈推荐的程度。"
+    }
+  },
+  {
+    "actor": "agent_092",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题转发到自己主页感觉氛围太压抑，没必要。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重，且我的好友圈大多是家人和同行，转发这个可能没什么共鸣。"
+    }
+  },
+  {
+    "actor": "agent_092",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这内容对我身边的朋友或同行来说可能太远了，没必要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类的东西看看就行，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_093",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容确实重要，但我平时在社交平台比较低调，不习惯转发这类过于沉重且宏大的话题。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我的社交圈大多是亲友和同事，转发这种比较沉重且遥远的消息可能不太合适。"
+    }
+  },
+  {
+    "actor": "agent_093",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类信息比较专业，转发到自己的圈子里可能没什么人讨论，没必要。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我觉得内容不错，但没必要转发到自己的动态里打扰到朋友圈的人。"
+    }
+  },
+  {
+    "actor": "agent_094",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我的社交圈大多是同学和家人，转发这个可能没那么大的讨论空间。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "我平时社交比较低调，除非是非常实用或极具冲击力的内容，否则很少转发。"
+    }
+  },
+  {
+    "actor": "agent_094",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "转发对他人的影响有限，且我平时社交比较内向，不常转发内容。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但还没到非得分享给好友看地程度。"
+    }
+  },
+  {
+    "actor": "agent_095",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "我的社交圈大多是老同事和兴趣好友，转发这类沉重的话题可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "我平时比较内向，很少在社交平台上转发这类引起焦虑的公共议题。"
+    }
+  },
+  {
+    "actor": "agent_095",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "我的社交圈子不大，且我认为这类科普信息不需要我特意转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "个人习惯较为低调，这种科普类内容点赞即可，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_096",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "太沉重了，转发到我的朋友圈或好友圈可能会让气氛变得压抑。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "太沉重了，不想把这种让人焦虑的消息转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_096",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "我的朋友圈更多是生活琐事和工作相关，发这个显得太突兀。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题太严肃且宏大，不太符合我平时的朋友圈风格，转发给熟人可能会显得突兀。"
+    }
+  },
+  {
+    "actor": "agent_097",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我的朋友圈比较简单，没必要转发这个让大家担心。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重且专业，没必要转发到我的朋友圈或给熟人看。"
+    }
+  },
+  {
+    "actor": "agent_097",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容我平时习惯自己阅读，不需要特意转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但我的朋友圈大多是家人和前同事，发这个可能不太契合他们的兴趣。"
+    }
+  },
+  {
+    "actor": "agent_098",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题对我目前的生活和工作圈子来说太远了，没有转发的必要。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较严肃且宏大，目前没有转发到自己主页的动力。"
+    }
+  },
+  {
+    "actor": "agent_098",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类宏大的环保话题不太适合发到我的个人主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容过于宏大，不太适合转发到我的个人社交圈。"
+    }
+  },
+  {
+    "actor": "agent_099",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时转发的内容更多倾向于生活实用类或个人兴趣，这个不太合适。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重且严肃，不太适合分享到我的朋友圈给同事和家人看。"
+    }
+  },
+  {
+    "actor": "agent_099",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "比较严肃的科普话题，不太适合发到我的朋友圈给同事和家人看。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然觉得好，但还没到必须分享给所有人知道的程度。"
+    }
+  },
+  {
+    "actor": "agent_100",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我平时社交比较低调，这种宏大的议题不一定会转发到自己的动态里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我比较内向且低调，不习惯在自己的主页转发这类沉重的话题。"
+    }
+  },
+  {
+    "actor": "agent_100",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容我点赞支持即可，不需要转发到我的社交圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "我的社交习惯比较内向，除非是非常重要或极其深刻的内容，否则很少转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_101",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "我不习惯转发这种带有危机感且过于宏大的社会议题。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种沉重且宏观的预警信息，我不觉得转发到我的主页有实际意义。"
+    }
+  },
+  {
+    "actor": "agent_101",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这对我身边的朋友和家人来说实用性不高，没必要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "平时不怎么转发这类话题，觉得点赞支持即可。"
+    }
+  },
+  {
+    "actor": "agent_102",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "太沉重了，不想把这种令人不安的消息转发到自己的主页影响氛围。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容过于压抑，不想让我的个人主页氛围变得太沉重。"
+    }
+  },
+  {
+    "actor": "agent_102",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容很好，但这不是我平时关注的艺术或收藏领域，没必要转发到我的个人主页。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这篇文章比较严肃，不太符合我平时分享的生活方式或艺术相关的内容。"
+    }
+  },
+  {
+    "actor": "agent_103",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我平时不习惯在社交平台上频繁转发此类沉重的新闻。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但目前我更倾向于安静地阅读，不需要转发到自己的朋友圈。"
+    }
+  },
+  {
+    "actor": "agent_103",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但我平时不常转发这类宏大叙事的内容到自己的朋友圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容我自己看就行，没必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_104",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重且属于宏观议题，不觉得有必要转发到自己的社交圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较严肃且令人焦虑，不觉得有必要转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_104",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容积极，但我的社交圈大多是家人和同事，转发这个可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普信息点赞即可，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_105",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但目前还没到必须转发给朋友圈提醒的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然很重要，但内容略显沉重，不确定转发到我的朋友圈是否合适。"
+    }
+  },
+  {
+    "actor": "agent_105",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然很有意义，但还没到需要转发到自己主页分享给所有人的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇帖子更像是个知识科普，转发到我的社交圈可能没什么讨论度。"
+    }
+  },
+  {
+    "actor": "agent_106",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "没有必要转发到自己的主页，这不是我关注的重点领域。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种焦虑感比较强的内容不适合转发到我的社交圈，特别是现在我需要保持心态平稳。"
+    }
+  },
+  {
+    "actor": "agent_106",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普内容转发到我的朋友圈意义不大，不打算转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但我的社交圈主要是家人和前同事，转发这个可能不太符合我的日常分享习惯。"
+    }
+  },
+  {
+    "actor": "agent_107",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "没必要转发到我的主页，我的关注点更多在生活和店里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较严肃且令人焦虑，不打算转发到自己的朋友圈。"
+    }
+  },
+  {
+    "actor": "agent_107",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但不需要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题和我的社交圈（修车、孩子家长）重合度不高，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_108",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "我不常转发这类沉重的话题到自己的社交圈，以免显得过于忧虑。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但我平时不太习惯在社交平台上转发这类沉重的话题。"
+    }
+  },
+  {
+    "actor": "agent_108",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然认可，但觉得没必要转发到自己的动态里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但我平时不太习惯在社交平台上频繁转发信息。"
+    }
+  },
+  {
+    "actor": "agent_109",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时朋友圈大多是家人和同事，转发这个可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，转发到自己的朋友圈可能会让家人也跟着焦虑，还是不发了。"
+    }
+  },
+  {
+    "actor": "agent_109",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容很好，但平时很少转发这种科普类帖子到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普内容转发给身边的家人和同事可能不太合适，他们可能没兴趣。"
+    }
+  },
+  {
+    "actor": "agent_110",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然关心，但这种沉重的话题不太适合发到我的个人主页上。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且没有紧迫的分享需求，不打算转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_110",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然认同，但目前没必要特意转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然好，但对我目前的社交圈（家长、同学、前同事）来说没有太强的分享必要。"
+    }
+  },
+  {
+    "actor": "agent_111",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "太沉重了，没必要转发到我的动态里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题发到我朋友圈里，邻居和亲戚们可能觉得奇怪。"
+    }
+  },
+  {
+    "actor": "agent_111",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容发到我朋友圈并不体面，没必要转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普内容对我个人有启发，但没必要转发到我的朋友圈里。"
+    }
+  },
+  {
+    "actor": "agent_112",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "消息太沉重了，没必要发到自己的主页给朋友们制造焦虑。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我的社交圈大多是熟人和同事，转发这个可能不太符合我的日常分享习惯。"
+    }
+  },
+  {
+    "actor": "agent_112",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这属于科普类内容，我觉得点赞支持就够了，不需要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容虽然好，但还没到需要分享给好友的程度。"
+    }
+  },
+  {
+    "actor": "agent_113",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重且宏大，不确定我的朋友圈好友是否会对这个话题感兴趣。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种警示性的内容虽然重要，但我平时社交习惯比较低调，不倾向于转发此类沉重的话题。"
+    }
+  },
+  {
+    "actor": "agent_113",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "转发到我的朋友圈或空间可能不太合适，我的社交圈大多是同事和家长，他们可能对这个话题没那么大兴趣。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这篇文章比较科普，不需要特意转发到我的主页。"
+    }
+  },
+  {
+    "actor": "agent_114",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类沉重的话题转发到自己的主页不太合适，不希望让社交圈觉得我太悲观。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，转发到朋友圈或给熟人看也没什么实际意义。"
+    }
+  },
+  {
+    "actor": "agent_114",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类的东西转发到朋友圈可能太严肃了，不符合我平时的社交风格。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普内容对我个人有启发，但没必要转发到我的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_115",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时不习惯转发这类警示性信息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我的社交圈比较小且以熟人为多，转发这种宏大叙事的内容不太符合我的社交习惯。"
+    }
+  },
+  {
+    "actor": "agent_115",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然认同，但这种号召性的内容转发出去没什么实际意义，没必要。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容点赞即可，没必要转发到我的动态里。"
+    }
+  },
+  {
+    "actor": "agent_116",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较压抑，且我的社交圈大多是同事和家人，转发这个可能没什么讨论空间。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太压抑了，不想把这种焦虑感转发到自己的主页上。"
+    }
+  },
+  {
+    "actor": "agent_116",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到必须分享给所有人知道的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但对我生活圈子的人来说可能太严肃了，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_117",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我的社交圈相对简单，觉得没必要特意转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我的社交圈主要是家人和同事，转发这个可能不太契合大家的关注点。"
+    }
+  },
+  {
+    "actor": "agent_117",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "比较私人地浏览，没有强烈的意愿将这类话题转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普性质的内容对我个人影响较大，但没必要转发到我的朋友圈里。"
+    }
+  },
+  {
+    "actor": "agent_118",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈层对这类议题讨论不多，没必要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时不习惯在社交平台转发这类宏大叙事的话题。"
+    }
+  },
+  {
+    "actor": "agent_118",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏大的议题转发到自己的空间显得太突兀，没必要。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容看看就行，没必要转发到自己的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_119",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我的社交圈子比较简单，转发这个可能没什么实际意义。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但跟我目前的日常生活和社交圈子关联度不高，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_119",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏大叙事的内容转发到我的朋友圈可能不太合适，且没有强烈的分享欲。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题跟我周围的朋友和邻居的关注点不太一样，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_120",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈层大多是家人和同事，不太适合转发此类预警信息。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈层不需要我通过转发来传递这种焦虑。"
+    }
+  },
+  {
+    "actor": "agent_120",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种话题比较宏大，不需要特意转发到自己的社交圈。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类话题比较宏大，不太符合我平时分享生活记录或阅读心得的习惯。"
+    }
+  },
+  {
+    "actor": "agent_121",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但转发给我的社交圈（同事、家长等）可能不太合适，没必要在这个时间点刷屏。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但转发到我朋友圈可能没什么实际意义，不需要特意扩散。"
+    }
+  },
+  {
+    "actor": "agent_121",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容没必要转发到我的朋友圈，我的社交圈大多是同事和家长。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类信息点赞支持即可，没必要特意转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_122",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我平时不怎么转发这类令人焦虑的新闻给朋友。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题不太适合转发到我的朋友圈，免得让家人觉得我太焦虑。"
+    }
+  },
+  {
+    "actor": "agent_122",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容转发了也没什么实际意义，我不习惯转发这类东西。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类宏大的议题转发到我的朋友圈可能不太合适，我平时不常转发这种科普文。"
+    }
+  },
+  {
+    "actor": "agent_123",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我的好友圈大多是同事和亲友，转发这个可能氛围有点太沉重了。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类话题比较沉重，转发到我的动态里可能不太合适，而且我也没必要特意扩散。"
+    }
+  },
+  {
+    "actor": "agent_123",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类宏大的气候话题不太适合发到我的个人主页，没必要转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类宏大叙事的内容不太适合发到我的个人主页，朋友们可能没兴趣。"
+    }
+  },
+  {
+    "actor": "agent_124",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "平时发圈比较克制，这种比较沉重的话题不太想转发到自己的动态里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，不觉得有必要转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_124",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这个内容比较严肃，我的朋友圈大多是同事和同学，转发这个可能有点违和，且没有紧迫的分享必要。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但我的社交圈比较简单，没必要特意转发这种科普贴。"
+    }
+  },
+  {
+    "actor": "agent_125",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但目前的基调比较沉重，暂时不想转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的朋友圈好友大多是专业同学和家人，不太适合转发这条。"
+    }
+  },
+  {
+    "actor": "agent_125",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然觉得有意义，但还没到非分享不可的程度，且我平时不常转发这类宏观话题。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错但不是我的关注重点，没必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_126",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但对我朋友圈里的老同事和邻居来说可能太沉重了，不打算转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我觉得转发到我自己的圈子里可能太沉重了，不习惯发这种令人焦虑的消息。"
+    }
+  },
+  {
+    "actor": "agent_126",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但这种宏大的议题转发到我的朋友圈可能不太合适，毕竟我的好友大多是亲友和旧同事。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类的内容我看看就行，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_127",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种比较沉重且遥远的消息，不太想转发到自己的社交圈里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我的朋友圈社交圈比较简单，转发这个可能不太自然。"
+    }
+  },
+  {
+    "actor": "agent_127",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "话题比较宏大，我的社交圈主要是同事和家长，转发这个可能不太契合大家的关注点。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但还没到需要分享到自己主页提醒他人的程度。"
+    }
+  },
+  {
+    "actor": "agent_128",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然话题重要，但我的社交圈以同事和同学为主，转发这个可能不太符合我的低调风格。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "我不常转发此类内容到自己的主页，倾向于默默关注。"
+    }
+  },
+  {
+    "actor": "agent_128",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "性格比较内向，很少在自己的主页转发这类比较严肃的公共议题。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到需要分享给好友圈的程度。"
+    }
+  },
+  {
+    "actor": "agent_129",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然关心，但我的社交圈子比较小，这种沉重的预警消息不一定适合转发给邻居和老同学。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种比较沉重且宏大的议题，我不习惯转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_129",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "我平时社交比较内向，不习惯在自己的主页转发这类宏大话题。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我的社交圈子比较简单，转发这个可能不太适合我的朋友圈氛围。"
+    }
+  },
+  {
+    "actor": "agent_130",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但比较沉重，目前觉得点赞和讨论就足够了，不需要转发到自己的主页。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但目前还没到必须转发提醒所有人的程度，先关注讨论就好。"
+    }
+  },
+  {
+    "actor": "agent_130",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这篇内容比较科普，还没到我觉得必须分享给朋友圈的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇文章偏向科普和呼吁，转发给朋友圈的人可能兴趣点不同，没必要特意转发。"
+    }
+  },
+  {
+    "actor": "agent_131",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "太压抑了，不想把这种让人焦虑的消息转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但这种沉重的话题不太符合我平时安静低调的社交风格。"
+    }
+  },
+  {
+    "actor": "agent_131",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题和我的社交圈（家人、同学、家长）契合度不高，没必要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但不是我社交圈关注的重点，不需要转发。"
+    }
+  },
+  {
+    "actor": "agent_132",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我的朋友圈大多是老同事和熟人，转发这个可能氛围太沉重。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我觉得点赞关注即可，不需要特意转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_132",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇文章属于推荐内容，我的好友圈里大多是熟人和老同事，转发这个可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但转发到我的社交圈可能有点太严肃了，不打算转发。"
+    }
+  },
+  {
+    "actor": "agent_133",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种比较沉重且具有警示性的内容，我不觉得有必要分享到自己的好友圈里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题不太适合分享到我的个人主页。"
+    }
+  },
+  {
+    "actor": "agent_133",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容没必要转发到我的主页，不符合我的社交习惯。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "话题比较宏大，不太适合发到我的朋友圈或动态里，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_134",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较压抑，且没有具体的行动指南，不适合转发到我的社交圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容较为沉重，且我平时不习惯转发这类预警类信息到自己的动态中。"
+    }
+  },
+  {
+    "actor": "agent_134",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普内容虽然好，但不需要转发到我的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容较为宏大，不确定我的社交圈朋友是否感兴趣，不需要转发。"
+    }
+  },
+  {
+    "actor": "agent_135",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重且过于宏观，不适合转发到我的个人主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "帖子内容比较沉重，不确定我的朋友圈好友是否会对这类预警话题感兴趣。"
+    }
+  },
+  {
+    "actor": "agent_135",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较专业且偏向公益宣传，不太符合我平时发朋友圈或分享给徒步友人的习惯。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较常规，没有强烈的分享欲望。"
+    }
+  },
+  {
+    "actor": "agent_136",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但太沉重了，不确定转发到自己的动态里是否合适。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然话题重要，但我的社交圈以家人和同事为主，转发这类宏大且沉重的议题可能不太合适。"
+    }
+  },
+  {
+    "actor": "agent_136",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但我的好友圈大多是家人和同事，转发这个可能不太符合我的日常社交习惯。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然好，但还没到需要分享给朋友圈或关注者的程度。"
+    }
+  },
+  {
+    "actor": "agent_137",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这属于比较沉重的话题，不确定我的朋友圈好友是否感兴趣，先不转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题不太符合我平时分享生活和兴趣的风格。"
+    }
+  },
+  {
+    "actor": "agent_137",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但不是我平时关注的重点领域，不需要转发到我的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较常规，不需要特意转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_138",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，我不太习惯在自己的动态里转发这类让人焦虑的消息。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "我平时社交比较低调，不习惯把这类沉重的新闻转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_138",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容很好，但我社交习惯比较内向，不常转发东西到自己的主页。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "我比较内向，不习惯在自己的空间里转发太多内容。"
+    }
+  },
+  {
+    "actor": "agent_139",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，我的朋友圈大多是熟人和街坊，转发这个可能氛围不太对。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的朋友圈多是街坊和家人，转发这个可能不太合适。"
+    }
+  },
+  {
+    "actor": "agent_139",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "我的好友圈大多是邻里和亲戚，转发这个可能不太符合大家的聊天氛围。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这个话题对我目前的社交圈来说可能太宏大了，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_140",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，而且我平时不习惯转发这种大规模危机类的消息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，我的朋友圈大多是家人和老同学，转发这个可能氛围不太对。"
+    }
+  },
+  {
+    "actor": "agent_140",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但我的社交圈主要是家人和老同学，转发这个可能没什么共鸣。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这篇内容适合阅读，但不需要特意转发到我的主页。"
+    }
+  },
+  {
+    "actor": "agent_141",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的好友圈大多是家人和家长，转发这个可能不太契合大家的聊天氛围。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太压抑了，不希望把这种危机感传递给朋友圈的朋友。"
+    }
+  },
+  {
+    "actor": "agent_141",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较科普，但对我目前朋友圈的社交圈层来说，转发的必要性不大。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普内容不需要特意转发到我的主页。"
+    }
+  },
+  {
+    "actor": "agent_142",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我平时不习惯在社交平台转发这类沉重的话题。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "转发这种沉重的话题可能会引起不必要的讨论，我更倾向于安静地了解。"
+    }
+  },
+  {
+    "actor": "agent_142",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "转发对我来说是个比较大的社交动作，我通常不会轻易转发内容到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容很好，但我觉得转发到我的好友圈（同事和家人）可能不太合适。"
+    }
+  },
+  {
+    "actor": "agent_143",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较严肃压抑，朋友圈里大多是熟人和孩子，不打算在这个时间点转发这种令人焦虑的消息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈大多是家长和旧友，不觉得转发这个会对他们产生直接帮助。"
+    }
+  },
+  {
+    "actor": "agent_143",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "平时社交习惯比较平和，这种科普类内容点赞即可，不习惯频繁转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我的社交圈多是家长和老同事，发这个可能不太契合他们的兴趣点。"
+    }
+  },
+  {
+    "actor": "agent_144",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太压抑了，不想把这种负面焦虑传到自己的朋友圈里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重且离生活太远，不太会转发到自己的朋友圈里。"
+    }
+  },
+  {
+    "actor": "agent_144",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较宏大，不太符合我平时分享生活碎片或孩子动态的习惯。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "话题比较宏大，不太适合发在我的朋友圈给同事和家长朋友看。"
+    }
+  },
+  {
+    "actor": "agent_145",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容过于沉重，不适合在我的社交圈广泛转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我觉得没必要在我的社交圈大范围转发，点赞关注即可。"
+    }
+  },
+  {
+    "actor": "agent_145",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这篇内容比较科普，不需要转发到我的个人主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容虽然不错，但不需要特意转发到我的个人主页。"
+    }
+  },
+  {
+    "actor": "agent_146",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，我的朋友圈大多是街坊邻居，转发这个可能不太合适。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，发到朋友圈可能会让周围的人觉得太焦虑。"
+    }
+  },
+  {
+    "actor": "agent_146",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "我的朋友圈多是邻居和家长，发这个可能不太契合大家的关注点。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "比较私人的阅读，没有必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_147",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种危机感的内容发在自己的主页可能太压抑了，不打算转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容过于沉重，不符合我平时分享生活点滴的轻量风格。"
+    }
+  },
+  {
+    "actor": "agent_147",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普内容虽然好，但我不太习惯在自己的主页转发这类宏大叙事的话题。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "平时不怎么转发这类严肃的科普内容，觉得留在自己的浏览记录里即可。"
+    }
+  },
+  {
+    "actor": "agent_148",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重，而且对我周围的邻居或朋友来说实用性不高，没必要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太宏大了，转发到我的社交圈感觉不太合适，也没什么实际意义。"
+    }
+  },
+  {
+    "actor": "agent_148",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容点赞就行，不需要转发到我的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然好，但对我身边的人来说可能太宏大了，没必要特意转发。"
+    }
+  },
+  {
+    "actor": "agent_149",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种比较沉重的话题，我通常不会随手转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题太沉重了，转发到我的朋友圈里可能会让气氛变得太压抑，不合适。"
+    }
+  },
+  {
+    "actor": "agent_149",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容点赞就行，没必要转发到自己的主页。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到非分享不可的程度。"
+    }
+  },
+  {
+    "actor": "agent_150",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": true,
+      "reason": "这种具有紧迫感的科学报告值得分享给更多人，提高大家对生态危机的认知。",
+      "text": "海平面上升不仅是遥远的地理问题，更是关乎数亿人未来的生存危机，值得关注。"
+    },
+    "without_friends": {
+      "execute": true,
+      "reason": "这是一个很严肃的全球性议题，值得转发给更多朋友看到。",
+      "text": "海平面上升的速度比想象中快，我们需要更多关注气候保护！"
+    }
+  },
+  {
+    "actor": "agent_150",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容很好，但我觉得点赞和评论已经表达了支持，目前不需要转发到自己的主页。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然认同，但目前觉得点赞和评论已经足够表达支持，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_151",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但这不是我平时关注的重点领域，转发给社交圈可能不太合适。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但比较沉重，不确定我的社交圈对此类信息的反应，暂时不转发。"
+    }
+  },
+  {
+    "actor": "agent_151",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但不需要转发到自己的主页，不需要向社交圈特意推广。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但这不是我平时关注或分享的核心领域，没必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_152",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但没到非转发不可的程度，不想让朋友圈氛围太压抑。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，转发到我的朋友圈或社交圈可能会显得太突兀。"
+    }
+  },
+  {
+    "actor": "agent_152",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏大的话题转发到自己主页可能不太自然，没必要。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种严肃的科普内容不太符合我平时随性的社交风格，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_153",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题太沉重且太宏观，不太适合转发到我的好友圈里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种比较沉重且宏大的话题，我不太习惯转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_153",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题和我的日常社交圈（同事、家长、游戏友）契合度不高，没必要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏大的议题转发到我的朋友圈可能不太合适，平时不怎么发这类内容。"
+    }
+  },
+  {
+    "actor": "agent_154",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但对我个人生活影响较为间接，没必要转发到自己的动态里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "性格比较内向，很少在自己的社交动态里转发这类沉重的话题。"
+    }
+  },
+  {
+    "actor": "agent_154",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容对我个人很有意义，但我觉得没必要转发到我的好友圈里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容看看就行，不需要转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_155",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "转发这个太沉重了，我的社交圈子比较简单，没必要特意扩散这种焦虑感。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但没必要转发到自己的社交圈，我的朋友们可能对这个没那么感兴趣。"
+    }
+  },
+  {
+    "actor": "agent_155",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容点赞即可，没必要特意转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容适合自己看，转发到朋友圈或给熟人看可能不太自然。"
+    }
+  },
+  {
+    "actor": "agent_156",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较严肃且具有危机感，不确定转发到自己的社交圈是否合适。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈大多是同事和家人，转发这个可能没什么讨论空间。"
+    }
+  },
+  {
+    "actor": "agent_156",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "我不常在社交平台上转发此类科普内容，除非它对我现有的社交圈有极强的分享价值。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容我自己看看就好，没必要转发到朋友圈或空间。"
+    }
+  },
+  {
+    "actor": "agent_157",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "转发这个会让我的朋友圈氛围变得很压抑，我更倾向于安静地阅读。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种内容比较严肃，不太符合我平时分享生活或兴趣的社交习惯。"
+    }
+  },
+  {
+    "actor": "agent_157",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类话题比较宏大，我平时很少转发这种科普类内容到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题对我周围的朋友圈来说可能有点太宏大了，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_158",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太过于悲观，不希望把这种焦虑情绪传递给我的社交圈好友。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太负面了，转发到自己的动态里可能会让心情更糟。"
+    }
+  },
+  {
+    "actor": "agent_158",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容点赞即可，不需要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较常规，没有到必须分享给好友的程度。"
+    }
+  },
+  {
+    "actor": "agent_159",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但这种沉重的话题不一定适合发到我的朋友圈给家人和同事看。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然关心，但目前没必要特意转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_159",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普性内容点赞就行，没必要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容在我的朋友圈里传播度可能不高，没必要特意转发。"
+    }
+  },
+  {
+    "actor": "agent_160",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，转发到朋友圈可能会让家人也跟着焦虑。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "转发这种沉重且令人不安的消息可能会让我的朋友圈气氛太压抑，还是算了吧。"
+    }
+  },
+  {
+    "actor": "agent_160",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类话题比较宏大，我不习惯在自己的主页转发这类科普信息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然好，但我的朋友圈大多是家人和同事，转发这个可能不太自然。"
+    }
+  },
+  {
+    "actor": "agent_161",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重，转发到我的朋友圈或动态里氛围不太对。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "太压抑了，不想把这种焦虑感转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_161",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这篇内容比较严肃，不太符合我平时的转发习惯，也没必要特意分享给朋友圈。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题和我的社交圈（孩子家长、邻居等）重合度不高，不太适合转发。"
+    }
+  },
+  {
+    "actor": "agent_162",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "信息量很大，但目前还没有到非转发不可的紧迫感。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我的朋友圈大多是同事和家长，转发这个可能不太符合我的社交习惯。"
+    }
+  },
+  {
+    "actor": "agent_162",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "个人社交习惯比较安静，除非是非常实用或极其震撼的内容，否则很少转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然认可，但这个话题和我的朋友圈社交圈层契合度不高，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_163",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种资讯类内容看完就过了，没必要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我社交习惯较为低调，不倾向于转发这类宏大叙事的话题。"
+    }
+  },
+  {
+    "actor": "agent_163",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然有益，但不是我社交圈关注的重点，没必要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错但不需要转发到我的主页，我平时很少转发这类科普帖。"
+    }
+  },
+  {
+    "actor": "agent_164",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这个内容太沉重了，我的朋友圈大多是街坊邻居，转发这个可能氛围不太对。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我的好友圈大多是邻居和供应商，转发这个可能跟他们的生活关联不大，没必要。"
+    }
+  },
+  {
+    "actor": "agent_164",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏大的话题转发到我的社交圈可能有点突兀。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题和我的社交圈（邻居、供应商）契合度不高，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_165",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "我性格比较内向，平时不习惯在社交平台上转发这类沉重的话题。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，我不确定我的朋友圈好友会对这个话题感兴趣，所以不转发。"
+    }
+  },
+  {
+    "actor": "agent_165",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容很有意义，但我觉得转发到我的主页可能有点太严肃了，不需要特意分享。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容很好，但我觉得不需要特意转发到我的朋友圈，留给自己思考就好。"
+    }
+  },
+  {
+    "actor": "agent_166",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "我平时社交不算特别活跃，这种沉重的话题不太适合在我的主页转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈大多是熟人，转发这种预警类信息可能并不太合适。"
+    }
+  },
+  {
+    "actor": "agent_166",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "我平时社交不算太活跃，这种科普贴没必要特意转发到我的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我的社交圈比较小且固定，这类科普内容转发给他们可能缺乏共鸣。"
+    }
+  },
+  {
+    "actor": "agent_167",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时在社交平台上比较低调，不倾向于转发此类警示性强的内容。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较严肃且宏大，不太适合分享到我的个人主页，更倾向于默默关注。"
+    }
+  },
+  {
+    "actor": "agent_167",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题比较严肃且宏大，不太符合我平时记录生活或分享个人兴趣的动态风格。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到必须分享给所有好友的程度。"
+    }
+  },
+  {
+    "actor": "agent_168",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "转发这种焦虑感强的消息对我来说没有实际意义，不需要扩散到我的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题太宏大且沉重，转发到我的朋友圈或好友圈并不太合适。"
+    }
+  },
+  {
+    "actor": "agent_168",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类宏大的环保话题转发了也没什么实际意义，不需要分享到我的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "话题太宏大了，转发到我的圈子里可能没什么讨论空间。"
+    }
+  },
+  {
+    "actor": "agent_169",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但目前我的关注重心在求职和照顾家人上，不太会转发这类宏大叙事的内容。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我的社交圈主要是家人和旧友，转发这种沉重的话题不太符合我的社交习惯。"
+    }
+  },
+  {
+    "actor": "agent_169",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但不是我关注的求职或生活实用类重点，没必要转发到我的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但与我的社交圈关注点契合度不高，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_170",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，我的社交圈子主要是家人和家长朋友，转发这个可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太压抑了，不希望在自己的主页传播这种焦虑感。"
+    }
+  },
+  {
+    "actor": "agent_170",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然好，但我的社交圈比较小，觉得没有必要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题比较严肃，我的社交圈主要是家人和同事，转发这个可能不太契合他们的关注点。"
+    }
+  },
+  {
+    "actor": "agent_171",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容过于沉重，且我平时社交风格比较低调，不倾向于转发这类危机预警。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题太宏大且令人担忧，不确定转发到自己的社交圈是否合适。"
+    }
+  },
+  {
+    "actor": "agent_171",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没有到需要分享给好友或留在自己主页的程度。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但对我来说更多是个人知识积累，暂时没有动力把它分享到自己的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_172",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我的社交圈好友可能更关注生活琐事，且这类信息在主流媒体已经很多了。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类警示性消息转发过多容易造成焦虑，且我朋友圈的社交圈层未必对此类快讯感兴趣。"
+    }
+  },
+  {
+    "actor": "agent_172",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类的科普信息虽然好，但我的朋友圈大多是学术同学和同事，转发这个可能不够精准。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "比较私人的阅读感受，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_173",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种危机感很强的新闻不适合发到我的动态里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个内容对我朋友圈里的亲友和同行来说没什么实际意义，不转发。"
+    }
+  },
+  {
+    "actor": "agent_173",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "不觉得这对我关注的朋友或客户有参考价值。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我的好友圈大多是同行和家长，发这个太违和，没人感兴趣。",
+      "text": ""
+    }
+  },
+  {
+    "actor": "agent_174",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "平时社交比较内向，不习惯在自己的主页转发这类令人焦虑的消息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但我比较内向，不倾向于在个人主页频繁转发这类沉重的话题。"
+    }
+  },
+  {
+    "actor": "agent_174",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类话题比较宏大，我的社交圈多为同事和邻里，转发这个可能不太契合大家的日常讨论氛围。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "觉得内容不错，但不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_175",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太严肃，不符合我平时分享内容的风格。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇文章的内容比较沉重，且与我的社交圈关注点不契合，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_175",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错但不够硬核，没必要转发到自己的动态里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然好，但我的社交圈大多是同学和家人，转发这个可能没什么互动。"
+    }
+  },
+  {
+    "actor": "agent_176",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我的社交圈比较简单，没必要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然觉得重要，但这不是我平时分享的内容类型，也不太确定朋友们是否感兴趣。"
+    }
+  },
+  {
+    "actor": "agent_176",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这个话题对我现在的社交圈来说可能稍微有点沉重或严肃，不打算转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较严肃，不太适合发到我的朋友圈或分享给舍友和同事。"
+    }
+  },
+  {
+    "actor": "agent_177",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，不确定转发到自己的动态里是否合适。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重且具有冲击力，不确定转发到我的社交圈是否合适。"
+    }
+  },
+  {
+    "actor": "agent_177",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然很有意义，但我觉得这篇内容更适合安静阅读，不需要特意分享到我的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但转发到我的朋友圈里，大多数朋友可能对这类宏大叙事不感兴趣。"
+    }
+  },
+  {
+    "actor": "agent_178",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "社交圈子不大，且这类消息较为沉重，不打算转发到自己的动态里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，而且我的朋友圈多是家人和老同事，转发这个可能不太合适。"
+    }
+  },
+  {
+    "actor": "agent_178",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容点赞支持即可，没必要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "平时社交比较低调，这种科普类的帖子没必要转发到我的主页。"
+    }
+  },
+  {
+    "actor": "agent_179",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这不像是我平时分享给家人或同事的内容，没有转发的必要。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "转发这种危机感较强的内容可能会让我的社交圈感到焦虑，我倾向于安静地阅读。"
+    }
+  },
+  {
+    "actor": "agent_179",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这篇帖子更像是个科普，对我个人来说点赞关注即可，没必要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容较为宏大，不太适合分享给我目前的社交圈层。"
+    }
+  },
+  {
+    "actor": "agent_180",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种消息转发出去也没实际用处，不符合我的分享习惯。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "没必要转发这种让人焦虑的消息给朋友圈。"
+    }
+  },
+  {
+    "actor": "agent_180",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "没必要转发到自己的主页，影响不大。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我的朋友圈里大多是熟人和同行，转发这个不太合适。"
+    }
+  },
+  {
+    "actor": "agent_181",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容较为沉重，且我平时在社交平台比较低调，不倾向于转发此类预警信息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类信息偏向于科普和警示，我倾向于私下关注而非将其转发到我的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_181",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容较为常规，不需要转发到自己的社交圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到需要分享给所有好友传播的程度。"
+    }
+  },
+  {
+    "actor": "agent_182",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "我不习惯转发这类比较沉重且缺乏个人关联的话题。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，而且我的社交圈比较小，没必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_182",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普性内容不需要转发到我的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这不符合我平时的分享习惯，没必要转发到我的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_183",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我的好友圈大多是同事和亲友，转发这个可能不太符合我平时的分享风格。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我目前的社交圈层不一定适合转发这种警示类信息。"
+    }
+  },
+  {
+    "actor": "agent_183",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容在朋友圈或动态里比较常见，没必要特意转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较常规，不需要转发到我的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_184",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我平时不习惯在社交圈大肆转发这类沉重的话题。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我的社交圈子比较适度，不希望在没有深入研究前随意转发这类令人焦虑的消息。"
+    }
+  },
+  {
+    "actor": "agent_184",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但转发到我的圈子里可能太像在做科普，不符合我低调的社交习惯。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但我的社交圈子相对适度，这类宏大话题不需要特意转发到我的个人主页。"
+    }
+  },
+  {
+    "actor": "agent_185",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且与我目前的社交圈子（家长、前同事）话题契合度不高，不方便转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "我的朋友圈比较小且固定，没必要转发这种沉重且遥远的新闻。"
+    }
+  },
+  {
+    "actor": "agent_185",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容点赞即可，不需要特意转发到自己的圈子里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然认同，但这种宏大叙事的内容不太适合发在我的个人朋友圈里。"
+    }
+  },
+  {
+    "actor": "agent_186",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "平时社交并不活跃，不习惯转发这类宏大叙事的内容到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我的社交圈大多是同学和邻里，转发这个可能不太契合日常交流氛围。"
+    }
+  },
+  {
+    "actor": "agent_186",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普内容转发意义不大，不习惯在朋友圈或主页分享这类宏大叙事。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我的社交圈多为同学、同事和邻居，转发这个内容对我目前的社交关系没有太大必要。"
+    }
+  },
+  {
+    "actor": "agent_187",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "比较内向且不习惯在社交平台传播过于沉重或激进的话题。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈主要是家人和家长群，转发这个可能不太合适。"
+    }
+  },
+  {
+    "actor": "agent_187",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容对我个人有启发，但没必要转发到我的社交圈里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但没有强烈的冲动想把它分享到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_188",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但我的社交圈大多是同学和同事，转发这个可能会显得过于沉重。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，而且我平时在社交平台上比较低调，不确定转发是否合适。"
+    }
+  },
+  {
+    "actor": "agent_188",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "我觉得这个内容对我个人有启发，但还没到需要特意分享给朋友圈的程度。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这篇文章的信息量足够，但我没有转发到自己主页的习惯，除非是非常重要且需要提醒他人的事。"
+    }
+  },
+  {
+    "actor": "agent_189",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "没什么必要转发到我的社交圈，太沉重了。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "太沉重了，不适合转发到我的朋友圈或动态里。"
+    }
+  },
+  {
+    "actor": "agent_189",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容对我而言缺乏转发的冲动，且我的好友圈可能对此不感兴趣。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普内容转发意义不大，不需要在我的主页展示。"
+    }
+  },
+  {
+    "actor": "agent_190",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，目前没有强烈的意愿将其转发到自己的社交主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较压抑，而且我的社交圈主要是家人和同事，转发这个可能不太合适。"
+    }
+  },
+  {
+    "actor": "agent_190",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但转发到自己的主页对我来说稍微有点太高调了。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我的社交圈主要是家人和同事，转发这个可能不太契合他们的关注点。"
+    }
+  },
+  {
+    "actor": "agent_191",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题转发到自己主页感觉太压抑了，没必要。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我的社交圈比较小，转发这个可能没什么实际意义。"
+    }
+  },
+  {
+    "actor": "agent_191",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "转发对我来说有点太高调了，平时习惯安静地看。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但我觉得没必要转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_192",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我的朋友圈大多是亲友和家长，转发这个可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种沉重且遥远的消息没必要转发到自己的主页，不想给社交圈带来过多焦虑感。"
+    }
+  },
+  {
+    "actor": "agent_192",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "我的社交圈主要在设计圈和家长群，转发这个内容对我目前的社交关系没有实际意义。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容转发到我的主页意义不大，我的社交圈并不在意这个。"
+    }
+  },
+  {
+    "actor": "agent_193",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时不习惯转发这类宏大叙事的预警信息到自己的主页。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这对我来说更多是个人了解，没有必要转发到我的社交圈里。"
+    }
+  },
+  {
+    "actor": "agent_193",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容点赞就行，没必要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普信息对我个人有启发，但还没到需要转发给好友分享的程度。"
+    }
+  },
+  {
+    "actor": "agent_194",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类负面且沉重的信息，不太想转发到自己的社交圈里影响心情。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题转发到自己的主页显得太严肃了，没必要。"
+    }
+  },
+  {
+    "actor": "agent_194",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普内容对我个人有启发，但还没到需要分享给他人知道的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题对我来说太宏大了，不太适合发到我的个人主页分享给同事和家人。"
+    }
+  },
+  {
+    "actor": "agent_195",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种沉重的预警类信息不太适合发到我的主页，而且我平时也不太习惯转发这类内容。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但我的社交圈主要是家人和同事，转发这个可能不太符合我的日常发帖风格。"
+    }
+  },
+  {
+    "actor": "agent_195",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类的环保话题对我的人际圈子来说可能过于严肃，不太适合转发到我的主页。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容对我来说是阅读素材，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_196",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较严肃且令人焦虑，不确定转发到我的社交圈是否合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但还没到需要我转发到个人主页提醒他人的程度。"
+    }
+  },
+  {
+    "actor": "agent_196",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这内容对我个人有启发，但还没到需要转发给所有人看的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然认同，但这类科普信息转发到我的社交圈可能互动不高，没必要特意转发。"
+    }
+  },
+  {
+    "actor": "agent_197",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但这种沉重的预警信息我不确定是否适合转发到我的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我的社交圈大多是家长和供应商，转发这个可能没什么共鸣。"
+    }
+  },
+  {
+    "actor": "agent_197",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这个话题比较宏大，我觉得点赞足以表达支持，不需要转发到我的个人主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类的帖子对我个人有启发，但没必要转发到我的朋友圈给孩子家长或供应商看。"
+    }
+  },
+  {
+    "actor": "agent_198",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然觉得重要，但我的朋友圈平时更多是分享生活和徒步，转发这个可能太严肃了。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类警示性内容比较压抑，不太想转发到自己的主页影响心情。"
+    }
+  },
+  {
+    "actor": "agent_198",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但对我来说不需要特意转发到自己的朋友圈，影响范围有限。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏观话题转发到我的动态里可能不太合适，且没有强烈的分享欲。"
+    }
+  },
+  {
+    "actor": "agent_199",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但转发到我的圈子里可能不太合适，且我平时不习惯转发这类警示性太强的帖子。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我觉得转发到自己主页可能有点太沉重了，不符合我低调的习惯。"
+    }
+  },
+  {
+    "actor": "agent_199",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种宏大的议题转发到自己的动态里显得有点突兀，不太习惯这样做。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种比较严肃的科普内容，我不确定我的好友圈是否感兴趣，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_200",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈多为家人和同事，转发这个可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较严肃且令人担忧，暂时不打算转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_200",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇文章更像是个知识点分享，我觉得点赞支持就足够了，不需要转发到我的朋友圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普内容虽然好，但还没到让我觉得必须转发到自己主页分享给所有人的程度。"
+    }
+  },
+  {
+    "actor": "agent_201",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "目前只是觉得有启发，还没到需要把它分享到自己主页提醒所有人的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但目前觉得点赞评论已经表达了关注，不需要转发到我的主页。"
+    }
+  },
+  {
+    "actor": "agent_201",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但目前还没到需要分享给所有好友知道的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但目前更倾向于自己阅读和讨论，暂时不需要转发到我的主页。"
+    }
+  },
+  {
+    "actor": "agent_202",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我的好友圈大多是家人和同事，转发这个可能不太契合他们的关注点。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较严肃沉重，不确定转发到自己的动态里是否合适。"
+    }
+  },
+  {
+    "actor": "agent_202",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容很好，但我的社交圈多是家人和同事，转发这个可能不太符合他们的关注点。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普性质的帖子点赞即可，不需要特意转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_203",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较压抑，不打算转发到自己的朋友圈里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时社交风格比较低调，不习惯转发这类宏大叙事的消息。"
+    }
+  },
+  {
+    "actor": "agent_203",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种宏大的议题转发到朋友圈可能显得太严肃，不符合我平时低调的社交习惯。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏大叙事的内容，我不习惯转发到自己的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_204",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "转发这个会让我的主页氛围变得太沉重，不打算转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较压抑，不想在自己的主页分享这种让人焦虑的消息。"
+    }
+  },
+  {
+    "actor": "agent_204",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "比较随性的刷帖状态，没有强烈的动力将其分享给好友。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类话题比较宏大，我觉得点赞支持即可，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_205",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容过于沉重且令人不安，不希望在自己的朋友圈里传播这种危机感。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重且离生活较远，不适合转发到我的动态里。"
+    }
+  },
+  {
+    "actor": "agent_205",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类话题太严肃，转发到朋友圈可能不太符合我平时的低调风格。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "转发到自己主页有点太严肃了，没必要。"
+    }
+  },
+  {
+    "actor": "agent_206",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重且与我的日常生活圈子关联度不高，不打算转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈层不需要通过我来扩散此类新闻。"
+    }
+  },
+  {
+    "actor": "agent_206",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "话题比较宏大，不太符合我平时的朋友圈分享习惯。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题对我目前的社交圈（家人、同事、家长）来说相关性不高，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_207",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种警示类内容发到自己空间里显得太沉重，没必要转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题比较沉重，我的社交圈大多是老同事和邻居，不太适合转发这种危机感较强的内容。"
+    }
+  },
+  {
+    "actor": "agent_207",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题比较宏大，我的社交圈大多是老同事和邻居，转发这个可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这内容对我个人有启发，但没有必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_208",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较压抑，没必要转发到自己的主页传播焦虑。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容过于沉重且与我的日常生活关联不大，不打算转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_208",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种宏大的议题转发到自己的朋友圈可能不太合适，且我的社交圈对此关注度不高。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但转发到自己的主页可能不太符合我平时的社交习惯。"
+    }
+  },
+  {
+    "actor": "agent_209",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我的社交圈层并不太适合转发此类宏大叙事的预警信息。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我不常转发此类沉重的话题到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_209",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题对我个人很有启发，但目前看来不太适合转发给我的商业伙伴或邻里朋友。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然认同，但这类话题比较宏大，不太符合我比较内向且低调的社交习惯。"
+    }
+  },
+  {
+    "actor": "agent_210",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "转发这种比较压抑的消息可能会影响朋友圈的氛围，没必要特意转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且与我的社交圈（同事、家人、游戏友）契合度不高，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_210",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容偏向科普和呼吁，对我目前的社交圈层来说，转发的必要性不是很高。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到必须分享给好友知道的程度。"
+    }
+  },
+  {
+    "actor": "agent_211",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较严肃且令人焦虑，没必要转发到自己的社交圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且没有强烈的分享欲望。"
+    }
+  },
+  {
+    "actor": "agent_211",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "不太习惯在社交平台上公开转发这类严肃的科普内容。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但还没到需要分享给好友或记录在个人主页的程度。"
+    }
+  },
+  {
+    "actor": "agent_212",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，我的朋友圈大多是家人和家长，转发这个可能氛围不太对。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种消息转发到我的朋友圈或动态里显得太突兀，不符合我的日常分享习惯。"
+    }
+  },
+  {
+    "actor": "agent_212",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题太宏大了，转发到我的朋友圈可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容点个赞就行，没必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_213",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "朋友圈和联系人大多是家人和同事，转发这个对我目前的社交圈来说意义不大。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类信息在平台上已经很多了，转发给朋友们大概率也不会引起讨论。"
+    }
+  },
+  {
+    "actor": "agent_213",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普性质的内容对我来说是阅读，没必要转发到自己的社交圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这对我个人或社交圈来说实用性不高，不需要转发。"
+    }
+  },
+  {
+    "actor": "agent_214",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且没有特定的讨论目的，不打算转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较严肃且具有压迫感，不太适合在我的个人社交主页广泛转发。"
+    }
+  },
+  {
+    "actor": "agent_214",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较正向，但还没到必须分享给朋友圈传播的程度。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到我觉得必须分享给朋友圈所有人的程度。"
+    }
+  },
+  {
+    "actor": "agent_215",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但转发到我的圈子里（大多是家人、同学和合作伙伴）可能不太契合，不需要特意扩散。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种危机感较强的信息我不确定是否适合转发到我的个人主页。"
+    }
+  },
+  {
+    "actor": "agent_215",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇内容比较常规，我觉得点赞支持即可，不需要转发到我的社交圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容很专业，但我的社交圈比较小，且这种宏大议题不太适合我转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_216",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，转发到我的朋友圈里可能会让周围的人也跟着焦虑。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类比较沉重的话题，不太想转发到自己的主页，免得气氛太压抑。"
+    }
+  },
+  {
+    "actor": "agent_216",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "没必要转发，我的朋友圈没多少人会对这个感兴趣。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这不像是我平时会分享给同事或家人的内容，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_217",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但氛围比较沉重，不确定转发到朋友圈是否合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种警示性的内容转发过多可能会让朋友圈氛围太压抑，我先自己关注就好。"
+    }
+  },
+  {
+    "actor": "agent_217",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普内容虽然好，但还没到必须转发给朋友圈每个人都知道的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但对我来说更像是个知识点，不需要转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_218",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题转发到朋友圈可能会让周围的人焦虑，没必要。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重且具有危机感，不希望在自己的朋友圈里传播过多焦虑。"
+    }
+  },
+  {
+    "actor": "agent_218",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇文章比较像科普，对我朋友圈里的同事和家长群体来说可能太严肃了，不打算转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但我觉得没必要转发到自己的主页，毕竟我的社交圈比较简单。"
+    }
+  },
+  {
+    "actor": "agent_219",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重且距离生活较远，不适合转发到我的朋友圈中。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，我的社交圈子比较小且倾向于平和，不打算转发这种令人焦虑的消息。"
+    }
+  },
+  {
+    "actor": "agent_219",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "我的社交圈子比较小，且这篇文章更像科普，没有必要特意转发到我的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但我的社交圈子主要是家人和同事，转发这个可能不太契合他们的关注点。"
+    }
+  },
+  {
+    "actor": "agent_220",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但这种宏大叙事的危机感帖子不太适合我平时分享给家人和同事的社交圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但这种宏大议题转发到个人主页可能不够合适，我倾向于先自己消化。"
+    }
+  },
+  {
+    "actor": "agent_220",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普内容我倾向于自己阅读，暂时不需要转发给好友。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容我倾向于自己阅读了解，不太会特意转发到我的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_221",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏大的话题转发到我的圈子里可能不太合适，没必要惊扰到熟人。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且对我身边的社交圈来说实用性不高，不需要转发。"
+    }
+  },
+  {
+    "actor": "agent_221",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类内容转发给我的朋友或邻居可能没什么实用价值。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "比较私人的浏览，没有必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_222",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，而且我的社交圈大多是熟人和邻居，转发这个可能没太大的意义。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，转发到自己的动态里感觉不太合适。"
+    }
+  },
+  {
+    "actor": "agent_222",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "平时不怎么转发这类科普内容，觉得点个赞就足够了。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这内容比较宏大，不太适合发到我的朋友圈里。"
+    }
+  },
+  {
+    "actor": "agent_223",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类消息比较压抑，不打算转发到自己的动态里影响朋友们的心情。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但这种沉重的话题不太适合发到我的个人主页上。"
+    }
+  },
+  {
+    "actor": "agent_223",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这篇内容比较像科普宣传，转发到朋友圈可能略显严肃，先看看就好。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但转发到我的朋友圈或给熟人看可能略显严肃，不打算转发。"
+    }
+  },
+  {
+    "actor": "agent_224",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题我倾向于默默关注，不太想转发到自己的社交圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "转发这个可能会让我的社交动态显得太沉重，我习惯安静地关注。"
+    }
+  },
+  {
+    "actor": "agent_224",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但我平时在社交平台上比较安静，不太习惯转发这类宏大话题。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这对我来说是个人关注的话题，不需要转发给别人。"
+    }
+  },
+  {
+    "actor": "agent_225",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类预警信息比较沉重，我倾向于默默关注，不会主动转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种宏大的气候话题对我个人生活影响较为间接，且我的社交圈比较小，不倾向于转发此类预警类信息。"
+    }
+  },
+  {
+    "actor": "agent_225",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "我的社交圈主要是家人和老同学，转发这个可能不太符合我的平时分享习惯。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较大众化，没有必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_226",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但转发到我的朋友圈可能略显沉重，且我的好友圈对此类议题的关注点不尽相同。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但目前的社交状态下不需要特意转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_226",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较常规，不需要转发到自己的朋友圈中。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这篇内容比较常规，不需要转发到我的个人主页。"
+    }
+  },
+  {
+    "actor": "agent_227",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "转发力度太大，我倾向于先静静了解，不需要在自己的主页大肆扩散。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但我的社交圈多为家长和同事，转发这个可能不太符合我的日常发帖风格。"
+    }
+  },
+  {
+    "actor": "agent_227",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但还没到非要分享给朋友圈的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容自己看就够了，不需要转发给朋友圈或同事。"
+    }
+  },
+  {
+    "actor": "agent_228",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "比较沉重的话题，且我的社交圈大多是同学和邻里，转发这个可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较严肃压抑，不想让自己的社交主页显得太沉重。"
+    }
+  },
+  {
+    "actor": "agent_228",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类的科普内容点赞即可，不需要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然觉得有意义，但这不是我经常分享的内容类型，不想打扰到朋友圈。"
+    }
+  },
+  {
+    "actor": "agent_229",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈大多是熟人，转发这个可能气氛太压抑。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且不属于我平时分享给社交圈的类目。"
+    }
+  },
+  {
+    "actor": "agent_229",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类宏大的环保话题离我的日常生活较远，不太适合转发到我的朋友圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这对我个人生活影响不大，且我的社交圈不一定对这类宏大议题感兴趣。"
+    }
+  },
+  {
+    "actor": "agent_230",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容已经很清晰，但我目前的社交圈层可能不太适合转发这种带有危机感的警告类信息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容较为沉重，且我目前的社交圈层并不太适合转发此类危机警示类信息。"
+    }
+  },
+  {
+    "actor": "agent_230",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普性质的帖子点赞即可，没必要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但目前的社交圈层可能对这种科普类转发的兴趣不高。"
+    }
+  },
+  {
+    "actor": "agent_231",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种危机感较强的消息不适合转发给我的亲友或前同事。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类沉重的话题转发到朋友圈可能会让气氛太压抑，不打算转发。"
+    }
+  },
+  {
+    "actor": "agent_231",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普内容适合自己看看，转发到朋友圈可能不太符合我平时分享内容的习惯。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较宏观，不确定我的社交圈对这类话题是否感兴趣，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_232",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我目前的社交圈层不一定会对这类全球性预警产生共鸣。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我通常倾向于先阅读和思考，不会随意转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_232",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容比较常规，不需要转发到我的朋友圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容我自己看看就行，没必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_233",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容过于沉重，不太适合发到我的社交圈里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但内容比较沉重，不打算转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_233",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "我的好友圈大多是家人和同事，转发这个可能不太符合大家的关注点。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类宏大的环保议题不太适合转发到我的个人主页。"
+    }
+  },
+  {
+    "actor": "agent_234",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，我的朋友圈大多是同学和邻居，转发这个可能氛围太压抑了。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时在社交平台上比较低调，不习惯转发这类大新闻。"
+    }
+  },
+  {
+    "actor": "agent_234",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "比较私人的浏览，没必要转发到自己的动态里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然挺好，但我的社交圈子比较小，觉得没必要特意转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_235",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但转发这种沉重的话题需要考虑时机，目前先自己关注就好。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然关注，但这种宏大叙事的内容转发到我的好友圈可能不太合适。"
+    }
+  },
+  {
+    "actor": "agent_235",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这篇文章更像是一个科普摘要，不需要特意转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类的科普内容我自己看看就行，没必要转发到朋友圈或动态里。"
+    }
+  },
+  {
+    "actor": "agent_236",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题转发出去也没什么实际用处，而且我平时不怎么转发东西。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，且我的好友圈多是同事和邻居，转发这个可能没太大的讨论空间。"
+    }
+  },
+  {
+    "actor": "agent_236",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题比较宏大，我的社交圈子主要是家人和同事，转发这个可能没什么共鸣。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "转发太张扬了，我不习惯把这类内容分享到我的主页。"
+    }
+  },
+  {
+    "actor": "agent_237",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "话题比较沉重，不确定转发到自己的主页是否合适。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "目前还没到必须转发扩散的紧迫感，先关注一下就好。"
+    }
+  },
+  {
+    "actor": "agent_237",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但我的社交圈可能更倾向于生活化分享，转发这个可能稍微有点太正式了。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到一定要分享给好友圈的程度。"
+    }
+  },
+  {
+    "actor": "agent_238",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时社交圈较小，不太习惯转发这类预警信息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我的社交圈大多是家人和同行，转发这个对他们来说可能没什么实际意义。"
+    }
+  },
+  {
+    "actor": "agent_238",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题对我朋友圈里的家人或同行来说可能太学术了，没必要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类宏大叙事的内容不太像我会转发到自己主页的风格。"
+    }
+  },
+  {
+    "actor": "agent_239",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但这种宏大的气候话题并不太适合发在我的个人社交主页上。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的好友圈多为家人和同事，不太适合转发这类警示性强的文章。"
+    }
+  },
+  {
+    "actor": "agent_239",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇文章比较专业且具有科普性质，我觉得点赞关注即可，不需要转发到自己的动态里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但我的社交圈子比较小，这种科普类信息不需要特意转发。"
+    }
+  },
+  {
+    "actor": "agent_240",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈大多是同学和邻居，转发这个可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时不太会转发这类宏大叙事的警告类信息。"
+    }
+  },
+  {
+    "actor": "agent_240",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然认同，但没到必须转发给所有朋友都知道的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但不是我的核心关注领域，没必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_241",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种危机感太强的内容，不太想分享到自己的动态里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种比较严肃且令人焦虑的内容，不太适合转发到我的朋友圈里。"
+    }
+  },
+  {
+    "actor": "agent_241",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太严肃了，不太符合我平时的分享习惯。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我觉得点赞支持就行，转发到我的朋友圈可能不太符合我的日常分享习惯。"
+    }
+  },
+  {
+    "actor": "agent_242",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这内容比较沉重，且与我的社交圈层关注点不太匹配，不打算转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "话题太宏大且沉重，不适合发在我的朋友圈或动态里。"
+    }
+  },
+  {
+    "actor": "agent_242",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "转发这个对我的人设或社交圈没什么实际帮助。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题对我目前的社交圈层来说相关度不高，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_243",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，暂时不想转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但感觉太沉重，不太适合转发到我的朋友圈给同事和同学看。"
+    }
+  },
+  {
+    "actor": "agent_243",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但还没到需要转发到自己主页提醒别人的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇内容更像是个科普，我觉得点个赞支持就行，不需要转发到我的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_244",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种比较沉重的话题，转发到自己主页感觉不太合适，没必要。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种比较沉重且遥远的消息，不觉得有必要转发给朋友圈的人看。"
+    }
+  },
+  {
+    "actor": "agent_244",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容转发到我的主页显得太刻意，不符合我的社交习惯。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我的社交圈里没多少关注这个的人，转了也没什么意义。"
+    }
+  },
+  {
+    "actor": "agent_245",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，而且我的社交圈子比较简单，不确定转发这类危机信息是否合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种严肃的全球性话题，我觉得点赞关注即可，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_245",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "我的社交圈子比较简单，且性格内向，不习惯频繁转发此类公共议题。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇内容更像科普，我觉得点赞支持即可，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_246",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏大的全球议题不适合发到我的社交圈里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "没必要转发到我的朋友圈，我周围的人大概率也不太关心这个。"
+    }
+  },
+  {
+    "actor": "agent_246",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这不是我平时关注的理财或健康话题，转发给朋友也没什么意义。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这类内容对我来说只是了解，没必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_247",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但基调过于沉重，不太适合分享到我的个人动态里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容较为沉重，且我的好友圈主要是亲友和同事，不确定转发此类危机预警是否合适。"
+    }
+  },
+  {
+    "actor": "agent_247",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这篇内容偏向科普和呼吁，不太符合我平时分享生活记录或收藏类内容的习惯。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容偏向科普和倡议，目前还没到需要转发给朋友圈扩散的程度。"
+    }
+  },
+  {
+    "actor": "agent_248",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容过于压抑，且不是我平时关注的领域，不太适合转发到我的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的好友圈主要是同学和亲戚，转发这个可能不太契合社交氛围。"
+    }
+  },
+  {
+    "actor": "agent_248",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类的帖子点赞即可，转发到我的朋友圈或动态里可能不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到非分享不可的程度，不想让自己的朋友圈太像宣传页。"
+    }
+  },
+  {
+    "actor": "agent_249",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但这种宏大的议题转发到我的社交圈可能缺乏具体的互动切入点。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我的社交圈不一定对这类沉重的话题感兴趣，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_249",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然认同，但还没到需要分享给朋友圈扩散的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这对我个人的社交圈层来说相关度不高，没必要转发到我的动态里。"
+    }
+  },
+  {
+    "actor": "agent_250",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重且规模太大，转发到我的朋友圈里可能不太合适，而且我的社交圈大多是家长和同事。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但转发到我的动态里显得有些突兀，没必要。"
+    }
+  },
+  {
+    "actor": "agent_250",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "比较私人的阅读，不需要转发到自己的动态里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "我的朋友圈多是同事和家长，转发这个可能不太契合大家的聊天话题。"
+    }
+  },
+  {
+    "actor": "agent_251",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我的社交圈大多是同学和游戏友，转发这个可能不太合群。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容较为严肃且是通用科普，没必要转发到我的个人主页。"
+    }
+  },
+  {
+    "actor": "agent_251",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较常规，没必要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这对我来说是个人的知识积累，没必要转发到我的社交圈里。"
+    }
+  },
+  {
+    "actor": "agent_252",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类信息虽然重要，但我的社交圈主要是家长和同事，转发这个可能不太符合我的日常分享习惯。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，不太适合分享到我的个人主页。"
+    }
+  },
+  {
+    "actor": "agent_252",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容很好，但转发到自己的主页可能有点太严肃了，不符合我平时分享生活片段的习惯。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但我的社交圈主要是家长、同事和邻居，转发这个可能不太符合大家平时的关注点。"
+    }
+  },
+  {
+    "actor": "agent_253",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但没到必须转发提醒朋友圈程度的紧迫感。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，转发到自己的动态里不太合适。"
+    }
+  },
+  {
+    "actor": "agent_253",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普内容收藏起来以后看就行，没必要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "转发到我的朋友圈可能不太合适，我的社交圈大多是家人和同行，他们可能对这个话题兴趣不大。"
+    }
+  },
+  {
+    "actor": "agent_254",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的朋友圈大多是亲友同事，不确定转发这个是否合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，我不确定转发到我的社交圈是否合适。"
+    }
+  },
+  {
+    "actor": "agent_254",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类话题比较严肃，我觉得先自己消化就好，不需要特意转发到我的朋友圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然很有意义，但我平时社交比较低调，不习惯频繁转发这类宏大话题。"
+    }
+  },
+  {
+    "actor": "agent_255",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈大多是同事和邻居，转发这个可能不太契合他们的关注点。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，转发到我的主页感觉不太合适。"
+    }
+  },
+  {
+    "actor": "agent_255",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较宏大，不太符合我平时的社交圈分享习惯。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太宏大，不太符合我平时分享生活细节的习惯。"
+    }
+  },
+  {
+    "actor": "agent_256",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容过于沉重且具有危机感，不太适合发到我的朋友圈或动态里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重且是宏观议题，不太适合转发到我的个人主页。"
+    }
+  },
+  {
+    "actor": "agent_256",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这个内容比较像科普宣传，转发到我朋友圈可能不太合适。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类的帖子转发给我的朋友圈可能不太契合，没必要特意扩散。"
+    }
+  },
+  {
+    "actor": "agent_257",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种宏大的议题转发到我的朋友圈可能不太合适，我平时更关注生活琐事。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太严肃了，我的朋友圈平时比较随意，转发这个可能不太合适。"
+    }
+  },
+  {
+    "actor": "agent_257",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类的帖子转发到我的朋友圈可能不太合适，大家可能没兴趣看。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "比较私人的阅读，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_258",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "我不习惯在社交平台上转发过于沉重或带有危机感的内容。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类消息比较沉重，我习惯于静静阅读，不倾向于将其转发到自己的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_258",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "我平时不怎么在社交平台上转发东西，倾向于默默关注。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "我平时不太习惯在社交平台上转发内容，倾向于默默关注。"
+    }
+  },
+  {
+    "actor": "agent_259",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较严肃且令人忧虑，不确定转发到朋友圈是否合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但目前我只是在了解阶段，还没到必须转发提醒朋友圈的程度。"
+    }
+  },
+  {
+    "actor": "agent_259",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然认可，但觉得点赞和评论就足够了，不需要特意转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到需要转发给所有好友广而告之的程度。"
+    }
+  },
+  {
+    "actor": "agent_260",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但目前我觉得点赞和评论表达关注就足够了，不需要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "信息量很大，但目前还没有必要转发到我的朋友圈扩散。"
+    }
+  },
+  {
+    "actor": "agent_260",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但我的好友圈多为亲友和前同事，转发这个可能互动率不高。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但还没到非得转发给好友传阅的程度。"
+    }
+  },
+  {
+    "actor": "agent_261",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容较为沉重，且目前的社交圈层不一定适合转发这类预警信息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，我的社交圈大多是工作和兴趣好友，不太适合转发这个。"
+    }
+  },
+  {
+    "actor": "agent_261",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较通用，不需要特意分享到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "比较偏向科普和呼吁，不太符合我平时的分享习惯。"
+    }
+  },
+  {
+    "actor": "agent_262",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈层不需要我特意转发这种科普性质的危机警告。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我的朋友圈主要是同学和同事，转发这个可能不太契合我的日常分享风格。"
+    }
+  },
+  {
+    "actor": "agent_262",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到非要分享给朋友圈或关注者的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较科普，不需要转发到我的主页。"
+    }
+  },
+  {
+    "actor": "agent_263",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时社交风格比较低调，不习惯转发这类危机预警到自己的动态里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时的社交习惯比较低调，不倾向于转发此类危机预警。"
+    }
+  },
+  {
+    "actor": "agent_263",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然认同，但转发到我的主页可能显得有些过于严肃，不打算转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇内容更像是一个科普概览，我的社交圈层可能对这类话题兴趣有限，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_264",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这是一个全球性的危机，个人转发一条可能没太大作用，且目前没必要在自己的主页分享这种压抑的消息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种焦虑感比较强的内容，不适合分享给我的朋友或亲子群。"
+    }
+  },
+  {
+    "actor": "agent_264",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太宏大，不符合我平时记录生活片段的分享习惯。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题对我目前的社交圈（带娃、工作、生活）来说相关度不高，不需要转发。"
+    }
+  },
+  {
+    "actor": "agent_265",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的好友圈大多是同学和家人，转发这个可能并不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我的社交圈比较小，没必要特意转发。"
+    }
+  },
+  {
+    "actor": "agent_265",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但转发到我的朋友圈或动态可能太严肃了，不太符合我平时的发帖习惯。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然认同，但我平时在社交平台比较低调，不习惯频繁转发。"
+    }
+  },
+  {
+    "actor": "agent_266",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，且我的社交圈多为家人和前同事，转发这个可能氛围太压抑。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太压抑了，我不想把这种焦虑感转发到自己的主页上。"
+    }
+  },
+  {
+    "actor": "agent_266",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "转发会让我的主页太热闹，且这种科普类内容看过了就行，不需要特意分享。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容点赞记录即可，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_267",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "我不喜欢在自己的社交空间分享过于焦虑或沉重的话题。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重且宏观，不符合我记录生活或分享实用信息的习惯。"
+    }
+  },
+  {
+    "actor": "agent_267",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容偏向科普和呼吁，并不太符合我记录生活或分享实用经验的习惯。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较宏大，不太符合我平时的分享习惯，不需要转发。"
+    }
+  },
+  {
+    "actor": "agent_268",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这虽然很重要，但不是我朋友圈好友关注的重点，没必要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种危机感太强的内容发到朋友圈或动态里可能会显得太沉重，不适合转发。"
+    }
+  },
+  {
+    "actor": "agent_268",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但还没到让我觉得必须分享给朋友圈或同事的程度。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然有意义，但还没到需要分享给好友或转发到个人主页的程度。"
+    }
+  },
+  {
+    "actor": "agent_269",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种负面预警的消息发到朋友圈或主页会影响心情，没必要转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种令人不安的消息不想转发到我的好友圈里。"
+    }
+  },
+  {
+    "actor": "agent_269",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这不是我会分享给家人或邻居看的内容。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但对我目前的求职和家庭生活没有直接关联，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_270",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但对我个人的社交圈来说没有太强的转发必要。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太严肃且宏观，不太适合发到我的朋友圈给同事和家人看。"
+    }
+  },
+  {
+    "actor": "agent_270",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题离我的日常生活和社交圈层较远，没必要转发到我的主页。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这对我个人影响较大，但并不太适合转发到我的社交圈，不需要这么高的关注度。"
+    }
+  },
+  {
+    "actor": "agent_271",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但比较沉重，没必要转发到自己的动态里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "话题过于沉重且宏大，不太适合分享到我的个人主页。"
+    }
+  },
+  {
+    "actor": "agent_271",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到一定要转发给所有人看的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题比较宏大，不太适合发到我的个人主页分享给熟人。"
+    }
+  },
+  {
+    "actor": "agent_272",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但我平时不怎么转发东西，不希望在朋友圈或动态里显得太张扬。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，我习惯于安静地阅读和思考，不倾向于在自己的主页转发这类危机预警。"
+    }
+  },
+  {
+    "actor": "agent_272",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "我平时不太习惯在社交平台上转发这类宏大话题，更倾向于安静地阅读。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏大的话题我更倾向于自己了解，不太习惯转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_273",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较严肃且具有危机感，我不习惯在自己的动态里转发这类容易引起焦虑的消息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重且宏大，不太适合转发到我的朋友圈或社交圈里。"
+    }
+  },
+  {
+    "actor": "agent_273",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这内容比较宏观，不太符合我平时在朋友圈或社交圈分享的习惯。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这内容比较宏大，不太适合我平时的分享习惯。"
+    }
+  },
+  {
+    "actor": "agent_274",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "我的社交圈比较小，且不习惯转发这类让人焦虑的消息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太压抑了，不想转发到自己的主页影响心情。"
+    }
+  },
+  {
+    "actor": "agent_274",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "比较私人地浏览，不太习惯转发这类科普内容到自己的动态里。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "我不倾向于在自己的空间分享这类过于严肃或像科普教材一样的内容。"
+    }
+  },
+  {
+    "actor": "agent_275",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，目前心情一般，不想在自己的主页转发这类焦虑的消息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太压抑了，没必要转发到我的朋友圈里影响大家心情。"
+    }
+  },
+  {
+    "actor": "agent_275",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容点赞即可，不需要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容较为严肃且偏科普，不太适合发到我的朋友圈给同事或家长们看。"
+    }
+  },
+  {
+    "actor": "agent_276",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "信息量很大但略显压抑，不确定转发到我的好友圈是否合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然重要，但我的朋友圈社交圈子比较小，不确定转发这个会不会显得太突兀。"
+    }
+  },
+  {
+    "actor": "agent_276",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然好，但和我的社交圈（同学、同事、家人）重合度不高，不确定他们是否感兴趣。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这对我来说更多是碎片化的知识阅读，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_277",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且与我的社交圈（家人、同事、家长）关联度不大，没必要转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏大的危机话题转发到自己的主页显得太沉重，没必要。"
+    }
+  },
+  {
+    "actor": "agent_277",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但我的社交圈主要是家人、同事和家长，转发这个可能不太契合他们的关注点。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较常规，没到非分享不可的程度。"
+    }
+  },
+  {
+    "actor": "agent_278",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然关注，但觉得这个话题太沉重，不一定适合分享到我的个人主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但这种沉重的预警类信息不太适合转发到我的朋友圈或好友圈。"
+    }
+  },
+  {
+    "actor": "agent_278",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但这类科普信息转发给我的社交圈好友可能互动率不高。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这篇帖子更像是一个科普总结，目前觉得没必要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_279",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "不习惯在自己的主页转发这种比较沉重且严肃的预警信息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种比较沉重的话题，我通常倾向于静静阅读，不会随便转发到自己的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_279",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这类话题比较宏大，不确定朋友圈的人是否感兴趣，没必要特意转发。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较常规，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_280",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "我不希望在自己的动态里传播这种让人不安的消息。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "不想把这么负面的消息转发到自己的社交圈里。"
+    }
+  },
+  {
+    "actor": "agent_280",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "不需要转发，我的社交圈子对这些内容可能没太大兴趣。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "觉得没必要转发，我的社交圈比较小，且不想在主页讨论太严肃的话题。"
+    }
+  },
+  {
+    "actor": "agent_281",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时不习惯在社交平台上转发这类危机预警。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然关注，但这种压抑的消息不打算转发到自己的朋友圈里。"
+    }
+  },
+  {
+    "actor": "agent_281",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但这种宏大的话题我不习惯转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇内容更像科普，目前没有强烈的冲动将其分享给我的同事或同学。"
+    }
+  },
+  {
+    "actor": "agent_282",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "目前正处于找工作和照顾孩子的压力期，心态比较倾向于关注个人生活，不打算转发这种沉重的话题。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈子不大，没必要转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_282",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题比较宏大，不太符合我平时发动态的习惯，且朋友圈里大多是家长和前同事，转发这个可能互动不高。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错，但目前不需要转发到自己的主页分享给他人。"
+    }
+  },
+  {
+    "actor": "agent_283",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我的社交圈并不太需要我转发这类警示性信息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类的危机警示帖转发过多容易造成焦虑，且我的社交圈层大多是家长和同事，不太适合转发。"
+    }
+  },
+  {
+    "actor": "agent_283",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这个话题对我来说比较常规，不需要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然好，但我的社交圈层大多是同事和家长，转发这个可能不太契合他们的关注点。"
+    }
+  },
+  {
+    "actor": "agent_284",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，转发到朋友圈可能会让气氛变得压抑，先自己关注就好。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容太沉重了，转发到自己的空间可能会让朋友圈气氛变得太压抑。"
+    }
+  },
+  {
+    "actor": "agent_284",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种宏观话题转发到我的朋友圈可能不太合适，我自己看看就行。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这类科普内容对我个人有启发，但没必要特意转发到我的朋友圈或动态里。"
+    }
+  },
+  {
+    "actor": "agent_285",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然很重要，但这种令人焦虑的消息我不希望在自己的社交圈里过多传播。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我并不习惯在社交平台频繁转发这类警示性消息。"
+    }
+  },
+  {
+    "actor": "agent_285",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但我的社交圈里大部分是家长和同行，转发这个可能契合度不高。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较常规，不觉得自己有必要将其转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_286",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，而且我性格内向，很少转发这类宏大叙事的内容到自己的朋友圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "比较内向，不习惯在自己的主页转发这种沉重的话题。"
+    }
+  },
+  {
+    "actor": "agent_286",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错但不需要转发到自己的主页，没必要引起太多关注。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题比较宏大，我的社交圈子大多是家人和同事，转发这个可能没什么讨论空间。"
+    }
+  },
+  {
+    "actor": "agent_287",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题不一定会转发到自己的主页，除非我想发起某种讨论。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但目前还没到必须转发到我朋友圈提醒大家的程度。"
+    }
+  },
+  {
+    "actor": "agent_287",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容偏科普和倡议，不太符合我平时分享生活体验或设计技术的风格。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "比较私人的浏览行为，这种科普类内容不一定适合转发到自己的动态里。"
+    }
+  },
+  {
+    "actor": "agent_288",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我的社交圈主要是同事和家长，转发这个可能氛围不太对。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然内容重要，但这种危机感较强的信息不确定是否适合现在分享到我的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_288",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种科普类的内容对我来说是知识积累，不需要特意转发到我的朋友圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类的东西点赞就行，转发到我的朋友圈可能有点太严肃了，不符合我的社交习惯。"
+    }
+  },
+  {
+    "actor": "agent_289",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种危机感太强的内容，转发到我的朋友圈或社交圈感觉不太合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "这种比较沉重的话题，转发到我的社交圈感觉不太合适。"
+    }
+  },
+  {
+    "actor": "agent_289",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容转发到我的社交圈没太大必要，我不怎么主动张罗这些。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这内容离我的生活圈子太远，转发给同事或家长他们可能不感兴趣。"
+    }
+  },
+  {
+    "actor": "agent_290",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "没什么必要转发，这种消息在主流媒体上已经很多了。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容过于沉重且令人不安，不打算分享到自己的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_290",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容点赞即可，没必要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这对我来说更多是个人阅读，不需要转发到我的社交圈。"
+    }
+  },
+  {
+    "actor": "agent_291",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "我的社交圈主要是家人、同事和家长，转发这个可能跟他们的关注点不契合，没必要刷屏。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但没必要转发到自己的主页，不希望在社交圈引起过多讨论。"
+    }
+  },
+  {
+    "actor": "agent_291",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类内容对我个人来说是了解，但不需要特意转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但我的社交圈大多是家人和同事，转发这个可能不太契合大家的关注点。"
+    }
+  },
+  {
+    "actor": "agent_292",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，不确定发到朋友圈或动态里是否合适。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我性格比较内向，不常转发这类引起焦虑的消息到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_292",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "转发会让自己的社交主页太显眼，习惯于默默关注而非公开传播。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然不错，但还没到让我觉得必须分享给所有好友的程度。"
+    }
+  },
+  {
+    "actor": "agent_293",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我目前的社交圈层不一定适合转发这种预警类信息。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较压抑，且我的社交圈主要是同学和家人，转发这个可能不太合适。"
+    }
+  },
+  {
+    "actor": "agent_293",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然内容不错，但这不是我的核心关注领域，不需要转发到我的主页。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但还没到必须分享给所有人知道的程度。"
+    }
+  },
+  {
+    "actor": "agent_294",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但由于我平时比较注重社交形象，这类沉重的话题我会先观察，不急于转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我的社交圈主要是同学和家人，转发这个可能不太符合我平时的分享风格。"
+    }
+  },
+  {
+    "actor": "agent_294",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但这类科普内容在我的社交圈里传播价值一般，不需要特意转发。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这篇文章更像是一个科普总结，没必要转发到我的个人主页。"
+    }
+  },
+  {
+    "actor": "agent_295",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然很重要，但我倾向于先自己消化，不一定会转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，我觉得点赞关注即可，不需要转发到自己的主页。"
+    }
+  },
+  {
+    "actor": "agent_295",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "虽然有意义，但我觉得没必要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容不错，但还没到我觉得必须转发给所有好友扩散的程度。"
+    }
+  },
+  {
+    "actor": "agent_296",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，而且我的好友圈大多是家长和同事，转发这个可能不太契合大家的日常聊天氛围。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容比较沉重，且我平时不太习惯转发这种危机感较强的帖子。"
+    }
+  },
+  {
+    "actor": "agent_296",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类话题比较宏大，转发到我的朋友圈可能不太合适，没必要。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这种宏大的话题发到我的朋友圈或好友圈可能不太合适，不需要转发。"
+    }
+  },
+  {
+    "actor": "agent_297",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种沉重的话题发到自己主页可能不太合适，且我还没有深入研究过。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但氛围比较沉重，不太适合转发到我的个人主页。"
+    }
+  },
+  {
+    "actor": "agent_297",
+    "condition": "solution",
+    "with_friends": {
+      "execute": false,
+      "reason": "虽然很有意义，但我的朋友圈主要是同事和家人，转发这个可能有点太严肃了。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容不错但没到必须分享给好友的程度，且这不符合我平时低调的社交习惯。"
+    }
+  },
+  {
+    "actor": "agent_298",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较严肃且令人焦虑，我想先自己消化一下，不确定是否适合转发到我的朋友圈。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但我习惯先消化，不确定转发到我的朋友圈是否合适。"
+    }
+  },
+  {
+    "actor": "agent_298",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容很好，但目前不需要转发到我的主页提醒他人。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容虽然很好，但我觉得点赞和评论就足够了，不需要特意转发到我的主页。"
+    }
+  },
+  {
+    "actor": "agent_299",
+    "condition": "consequence",
+    "without_friends": {
+      "execute": false,
+      "reason": "内容挺震撼，但还没到我觉得必须转发给所有人知道的程度。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较沉重且离我的社交圈太远，转发出去可能没什么实际意义。"
+    }
+  },
+  {
+    "actor": "agent_299",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这类科普内容点个赞就行，没必要转发到自己的空间里。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "这个话题对我朋友圈的人来说可能太宏大了，转发出去没太大必要。"
+    }
+  },
+  {
+    "actor": "agent_300",
+    "condition": "consequence",
+    "with_friends": {
+      "execute": false,
+      "reason": "这种话题比较沉重，且我的好友圈多为家长和同事，转发这个可能不太契合他们的关注点。"
+    },
+    "without_friends": {
+      "execute": false,
+      "reason": "内容虽然重要，但目前的社交圈层可能并不太在意这类话题，没必要转发。"
+    }
+  },
+  {
+    "actor": "agent_300",
+    "condition": "solution",
+    "without_friends": {
+      "execute": false,
+      "reason": "这种科普类内容点赞即可，不需要转发到自己的主页。"
+    },
+    "with_friends": {
+      "execute": false,
+      "reason": "内容比较宏大，我的好友圈大多是家长和同事，转发这个可能不太合适。"
+    }
+  }
+]

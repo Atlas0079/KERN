@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_096_without_friends",
+  "actor": "agent_096",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-aad80e6d329643e4be25482985e17814",
+    "object": "chat.completion",
+    "created": 1791453706,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然觉得环保很重要，但这些宏大的工程和全球话题离我的琐碎生活太远了，有点无力感。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且有意义，点个赞表示支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"没什么专业的见解可以分享，也不想在这么严肃的话题下发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的朋友圈更多是生活琐事和工作相关，发这个显得太突兀。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然觉得环保很重要，但这些宏大的工程和全球话题离我的琐碎生活太远了，有点无力感。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且有意义，点个赞表示支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "没什么专业的见解可以分享，也不想在这么严肃的话题下发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的朋友圈更多是生活琐事和工作相关，发这个显得太突兀。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.88
+}

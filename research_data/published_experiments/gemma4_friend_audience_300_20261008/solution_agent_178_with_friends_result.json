@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_178_with_friends",
+  "actor": "agent_178",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-46a7a0dd591e4d96a017e02f5be8ac77",
+    "object": "chat.completion",
+    "created": 1791452964,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"最近确实在关注极端天气，看到这些应对方案让人感觉稍微宽心了一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且是我关注的气候话题，点个赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有共鸣，但这些专业工程和计划我了解得不够深，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"平时社交比较低调，这种科普类的帖子没必要转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "最近确实在关注极端天气，看到这些应对方案让人感觉稍微宽心了一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且是我关注的气候话题，点个赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有共鸣，但这些专业工程和计划我了解得不够深，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "平时社交比较低调，这种科普类的帖子没必要转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.27
+}

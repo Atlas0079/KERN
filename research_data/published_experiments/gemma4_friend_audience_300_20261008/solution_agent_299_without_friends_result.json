@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_299_without_friends",
+  "actor": "agent_299",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-d4d17aa281974c4b9a493f6f9b33ac19",
+    "object": "chat.completion",
+    "created": 1791452605,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些环保方案听起来很有条理，而且提醒人们小细节也很重要，挺有道理的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有建设性，我愿意支持这种倡导可持续生活的观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但我觉得这些大工程和生活习惯对我来说比较遥远，没什么特别想补充的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普内容点个赞就行，没必要转发到自己的空间里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些环保方案听起来很有条理，而且提醒人们小细节也很重要，挺有道理的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有建设性，我愿意支持这种倡导可持续生活的观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但我觉得这些大工程和生活习惯对我来说比较遥远，没什么特别想补充的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普内容点个赞就行，没必要转发到自己的空间里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.38
+}

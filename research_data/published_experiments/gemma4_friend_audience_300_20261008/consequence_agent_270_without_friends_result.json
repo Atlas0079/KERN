@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_270_without_friends",
+  "actor": "agent_270",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-555ae8aac9384cf497ef82d770eba1c8",
+    "object": "chat.completion",
+    "created": 1791457716,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事听起来挺严重，不过对我现在的生活来说感觉还是比较遥远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这类科普性质的公益信息值得支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"气候问题太宏大，我没有专业的见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但对我个人的社交圈来说没有太强的转发必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事听起来挺严重，不过对我现在的生活来说感觉还是比较遥远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这类科普性质的公益信息值得支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "气候问题太宏大，我没有专业的见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但对我个人的社交圈来说没有太强的转发必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.46
+}

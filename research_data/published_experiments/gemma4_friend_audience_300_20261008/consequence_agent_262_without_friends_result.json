@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_262_without_friends",
+  "actor": "agent_262",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-26ecbf746d3c4488a3f6604920f66255",
+    "object": "chat.completion",
+    "created": 1791456486,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉规模很大，虽然离我目前的日常生活还比较远，但这种全球性的危机确实让人有些焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有警示意义，且我比较愿意关注这类新知识和全球议题。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但作为一个非专业人士，不知道该评论什么，且目前没有强烈的表达欲。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我的社交圈层不需要我特意转发这种科普性质的危机警告。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉规模很大，虽然离我目前的日常生活还比较远，但这种全球性的危机确实让人有些焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有警示意义，且我比较愿意关注这类新知识和全球议题。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但作为一个非专业人士，不知道该评论什么，且目前没有强烈的表达欲。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我的社交圈层不需要我特意转发这种科普性质的危机警告。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.02
+}

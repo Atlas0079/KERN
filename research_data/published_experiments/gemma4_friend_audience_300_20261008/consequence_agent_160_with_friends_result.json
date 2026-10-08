@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_160_with_friends",
+  "actor": "agent_160",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-5887082db3b24a0a8b3f9904e5ab4924",
+    "object": "chat.completion",
+    "created": 1791455444,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些数据觉得挺心慌的，想到以后环境恶化对孩子那一辈的影响，心里就焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态话题，这个报告很重要。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很担心，但我性格内向，不习惯在公开场合发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，转发到朋友圈可能会让家人也跟着焦虑。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些数据觉得挺心慌的，想到以后环境恶化对孩子那一辈的影响，心里就焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态话题，这个报告很重要。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很担心，但我性格内向，不习惯在公开场合发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，转发到朋友圈可能会让家人也跟着焦虑。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.54
+}

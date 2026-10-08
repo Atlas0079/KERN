@@ -1,0 +1,52 @@
+{
+  "key": "solution_agent_201_without_friends",
+  "actor": "agent_201",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-7194b0d89240418c8db13d9ae16b85d8",
+    "object": "chat.completion",
+    "created": 1791452908,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题刚好是我最近关注的气候风险方向，看到有具体的工程和修复案例，感觉比单纯的焦虑要有意义得多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容跟我关注的极端天气和气候风险很契合，支持这种正向的科普。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"作为一个相关专业学生，想就红树林修复这种自然解决方案分享一下我的看法。\",\n      \"text\": \"红树林修复确实是个很棒的基于自然的解决方案（NbS），不仅能固碳，对沿海社区的防灾减灾作用也非常明显！👏\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容不错，但目前还没到需要分享给所有好友知道的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题刚好是我最近关注的气候风险方向，看到有具体的工程和修复案例，感觉比单纯的焦虑要有意义得多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容跟我关注的极端天气和气候风险很契合，支持这种正向的科普。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "作为一个相关专业学生，想就红树林修复这种自然解决方案分享一下我的看法。",
+        "text": "红树林修复确实是个很棒的基于自然的解决方案（NbS），不仅能固碳，对沿海社区的防灾减灾作用也非常明显！👏"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容不错，但目前还没到需要分享给所有好友知道的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "红树林修复确实是个很棒的基于自然的解决方案（NbS），不仅能固碳，对沿海社区的防灾减灾作用也非常明显！👏"
+    }
+  ],
+  "seconds": 18.4
+}

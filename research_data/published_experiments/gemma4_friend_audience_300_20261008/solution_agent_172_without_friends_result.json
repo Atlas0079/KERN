@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_172_without_friends",
+  "actor": "agent_172",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-1545cf346e274acb9406df86527bdf3f",
+    "object": "chat.completion",
+    "created": 1791458273,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺正能量的，把宏观的环保工程和个人的微小行动结合在一起，读起来让人觉得气候问题虽然严峻但并非绝望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同这种可持续生活的理念，支持环保正能量内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有共鸣，但内容比较常规，没有特别强烈的观点想要补充或讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"比较私人的阅读感受，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺正能量的，把宏观的环保工程和个人的微小行动结合在一起，读起来让人觉得气候问题虽然严峻但并非绝望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同这种可持续生活的理念，支持环保正能量内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有共鸣，但内容比较常规，没有特别强烈的观点想要补充或讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "比较私人的阅读感受，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.38
+}

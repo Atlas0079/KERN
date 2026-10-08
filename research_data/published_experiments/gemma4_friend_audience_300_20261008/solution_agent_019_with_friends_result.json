@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_019_with_friends",
+  "actor": "agent_019",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-097f73bb5be1438fb8d73e0d32af727b",
+    "object": "chat.completion",
+    "created": 1791455934,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然海平面上升听起来很遥远且宏大，但看到有一些具体的工程和个人能做的小事，觉得还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极向上，且鼓励低碳生活，认同这种环保态度。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但我对气候工程这些专业话题没什么发表意见的专业知识，点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题对我目前的社交圈（同事、家长等）来说可能有点太宏大，不太适合转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然海平面上升听起来很遥远且宏大，但看到有一些具体的工程和个人能做的小事，觉得还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极向上，且鼓励低碳生活，认同这种环保态度。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但我对气候工程这些专业话题没什么发表意见的专业知识，点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题对我目前的社交圈（同事、家长等）来说可能有点太宏大，不太适合转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.66
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_123_without_friends",
+  "actor": "agent_123",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8aa715302ec74f03b24a7059e08f6e4f",
+    "object": "chat.completion",
+    "created": 1791454664,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保方案还挺有意思的，不过对我现在的生活影响不大，感觉是个正能量的科普贴。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较积极且具有科普性质，随手点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同低碳生活，但没有特别深刻的见解想发表，也没必要特意讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大的气候话题不太适合发到我的个人主页，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保方案还挺有意思的，不过对我现在的生活影响不大，感觉是个正能量的科普贴。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较积极且具有科普性质，随手点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同低碳生活，但没有特别深刻的见解想发表，也没必要特意讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类宏大的气候话题不太适合发到我的个人主页，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.18
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_217_without_friends",
+  "actor": "agent_217",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-44c037ddc5d941fd932e33aed22becc3",
+    "object": "chat.completion",
+    "created": 1791455417,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度这么快吗，感觉这是一个很宏大但又让人不安的议题，得关注一下。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容沉重，但这种关注全球气候危机的科普内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这个话题太专业且宏大，我目前没有很深刻的见解，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种警示性的内容转发过多可能会让朋友圈氛围太压抑，我先自己关注就好。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度这么快吗，感觉这是一个很宏大但又让人不安的议题，得关注一下。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容沉重，但这种关注全球气候危机的科普内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这个话题太专业且宏大，我目前没有很深刻的见解，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种警示性的内容转发过多可能会让朋友圈氛围太压抑，我先自己关注就好。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.19
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_003_without_friends",
+  "actor": "agent_003",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-068835a8442545adb7cbbd3e80618c5c",
+    "object": "chat.completion",
+    "created": 1791457363,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个严重的极端天气风险，看到有具体的工程和修复计划在实施，感觉稍微有希望一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候风险一直很关注，这篇文章提供了一些积极的解决方案，值得点赞支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观，我目前没有特别独特的见解想分享，刷到就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然认可，但还没到非要分享给社交圈的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个严重的极端天气风险，看到有具体的工程和修复计划在实施，感觉稍微有希望一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候风险一直很关注，这篇文章提供了一些积极的解决方案，值得点赞支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏观，我目前没有特别独特的见解想分享，刷到就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然认可，但还没到非要分享给社交圈的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.54
+}

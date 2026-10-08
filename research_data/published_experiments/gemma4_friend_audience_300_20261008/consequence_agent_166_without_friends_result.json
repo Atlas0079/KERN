@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_166_without_friends",
+  "actor": "agent_166",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-7c55c3db2ab841f1a9a294570dc190a9",
+    "object": "chat.completion",
+    "created": 1791451936,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的趋势确实令人担忧，这种气候风险对沿海城市的影响太大了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候风险和极端天气比较关注，认同这个科普内容的价值。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且具有权威性，我目前只是关注了解，没有特别的观点需要讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我平时社交不算特别活跃，这种沉重的话题不太适合在我的主页转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的趋势确实令人担忧，这种气候风险对沿海城市的影响太大了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候风险和极端天气比较关注，认同这个科普内容的价值。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且具有权威性，我目前只是关注了解，没有特别的观点需要讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我平时社交不算特别活跃，这种沉重的话题不太适合在我的主页转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.47
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_085_without_friends",
+  "actor": "agent_085",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8d6849a402c94a6f881ae1b017caef88",
+    "object": "chat.completion",
+    "created": 1791454659,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这几年极端天气确实多，看到有具体的工程和修复计划感觉还是有希望的，不过个人关灯这种小事真的能起大作用吗？\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对科学类和气候变化话题感兴趣，且内容比较积极，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较科普，我看完觉得有收获就行，没有什么特别想反驳或深入讨论的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但这类话题比较宏大，转发到我的社交圈感觉不够接地气。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这几年极端天气确实多，看到有具体的工程和修复计划感觉还是有希望的，不过个人关灯这种小事真的能起大作用吗？",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对科学类和气候变化话题感兴趣，且内容比较积极，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较科普，我看完觉得有收获就行，没有什么特别想反驳或深入讨论的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但这类话题比较宏大，转发到我的社交圈感觉不够接地气。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.62
+}

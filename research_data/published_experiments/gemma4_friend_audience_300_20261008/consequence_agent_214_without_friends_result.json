@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_214_without_friends",
+  "actor": "agent_214",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-e3d43fd525154d73826ddcf93ff71aa4",
+    "object": "chat.completion",
+    "created": 1791456700,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升带来的气候难民问题挺触目惊心的，这不仅是环境问题，更是深刻的社会议题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注全球气候议题，支持这类科普信息的传播。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但目前没有特别独特的观点要分享，点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且没有特定的讨论目的，不打算转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升带来的气候难民问题挺触目惊心的，这不仅是环境问题，更是深刻的社会议题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注全球气候议题，支持这类科普信息的传播。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但目前没有特别独特的观点要分享，点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且没有特定的讨论目的，不打算转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.3
+}

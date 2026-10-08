@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_272_with_friends",
+  "actor": "agent_272",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-024cbef985aa46068600cf6411a5ec5f",
+    "object": "chat.completion",
+    "created": 1791454018,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到气候变化有具体的解决方案和正面进展，心里感觉踏实了一些，环保确实需要每个人共同努力。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护很感兴趣，这篇文章传递的观点很积极，我想表示支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但我性格比较内向，这种科普类内容点个赞就足够了，不需要特意发表看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我平时不太习惯在社交平台上转发这类宏大话题，更倾向于安静地阅读。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到气候变化有具体的解决方案和正面进展，心里感觉踏实了一些，环保确实需要每个人共同努力。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护很感兴趣，这篇文章传递的观点很积极，我想表示支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但我性格比较内向，这种科普类内容点个赞就足够了，不需要特意发表看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我平时不太习惯在社交平台上转发这类宏大话题，更倾向于安静地阅读。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.37
+}

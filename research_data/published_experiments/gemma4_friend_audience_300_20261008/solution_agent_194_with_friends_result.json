@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_194_with_friends",
+  "actor": "agent_194",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-4a7cce1f41b24f28a79266e13a80c813",
+    "object": "chat.completion",
+    "created": 1791455693,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的环境问题虽然听起来很宏大且令人担忧，但看到有具体的解决方案和个人能做的小事，感觉稍微宽心了一点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我比较认可这种积极面对问题的态度，也支持可持续生活的理念。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我虽然有共鸣，但没什么特别想补充的，且性格比较内向，不习惯在公开帖下评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题对我来说太宏大了，不太适合发到我的个人主页分享给同事和家人。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的环境问题虽然听起来很宏大且令人担忧，但看到有具体的解决方案和个人能做的小事，感觉稍微宽心了一点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我比较认可这种积极面对问题的态度，也支持可持续生活的理念。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我虽然有共鸣，但没什么特别想补充的，且性格比较内向，不习惯在公开帖下评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题对我来说太宏大了，不太适合发到我的个人主页分享给同事和家人。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.15
+}

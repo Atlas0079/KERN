@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_195_with_friends",
+  "actor": "agent_195",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-e2d1d5b4ab504fa29ccf4831ebd47afd",
+    "object": "chat.completion",
+    "created": 1791456032,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的环境危机听起来挺沉重的，尤其是提到人口迁移和资源争夺，让人觉得未来的不确定性在增加。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有警示意义，且关注全球气候问题是我比较认可的价值观。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大且沉重的话题，我没有太专业的观点可以发表，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容重要，但我的社交圈主要是家人和同事，转发这个可能不太符合我的日常发帖风格。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的环境危机听起来挺沉重的，尤其是提到人口迁移和资源争夺，让人觉得未来的不确定性在增加。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有警示意义，且关注全球气候问题是我比较认可的价值观。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大且沉重的话题，我没有太专业的观点可以发表，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容重要，但我的社交圈主要是家人和同事，转发这个可能不太符合我的日常发帖风格。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.19
+}

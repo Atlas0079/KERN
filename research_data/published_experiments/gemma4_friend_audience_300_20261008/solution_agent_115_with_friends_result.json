@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_115_with_friends",
+  "actor": "agent_115",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-0299bb12ace6407c8e6b9a4a7000583c",
+    "object": "chat.completion",
+    "created": 1791459296,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到有具体的工程和修复计划让我觉得海平面上升这个问题还是有应对方案的，挺有意思。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候风险和生态保护一直很关注，内容符合我的兴趣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但没什么特别想补充的观点，习惯性先看看。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容点赞即可，没必要转发到我的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到有具体的工程和修复计划让我觉得海平面上升这个问题还是有应对方案的，挺有意思。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候风险和生态保护一直很关注，内容符合我的兴趣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但没什么特别想补充的观点，习惯性先看看。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容点赞即可，没必要转发到我的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.95
+}

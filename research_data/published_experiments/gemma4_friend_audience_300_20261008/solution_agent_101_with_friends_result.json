@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_101_with_friends",
+  "actor": "agent_101",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-3ef2be8ddc024c9298e9912b1b07eb90",
+    "object": "chat.completion",
+    "created": 1791453093,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"关于气候变化和海平面上升的话题很有意义，但对我目前的具体生活影响不大，只是随便看看。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有正能量，点个赞表示支持低碳环保。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对这个领域的专业知识了解不多，没什么具体想法需要表达。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这对我身边的朋友和家人来说实用性不高，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "关于气候变化和海平面上升的话题很有意义，但对我目前的具体生活影响不大，只是随便看看。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有正能量，点个赞表示支持低碳环保。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对这个领域的专业知识了解不多，没什么具体想法需要表达。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这对我身边的朋友和家人来说实用性不高，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.66
+}

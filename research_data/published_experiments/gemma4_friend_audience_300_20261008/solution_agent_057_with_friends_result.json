@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_057_with_friends",
+  "actor": "agent_057",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-97355b7bf46e4fb091872a04581e6aff",
+    "object": "chat.completion",
+    "created": 1791456924,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章传递的正能量挺好的，让原本觉得很绝望的全球气候问题看起来有了希望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持低碳生活和环保行动，点个赞鼓励一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，我目前没有太专业的见解，点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但对我目前的社交圈来说可能过于严肃，不打算转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章传递的正能量挺好的，让原本觉得很绝望的全球气候问题看起来有了希望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持低碳生活和环保行动，点个赞鼓励一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大，我目前没有太专业的见解，点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但对我目前的社交圈来说可能过于严肃，不打算转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.18
+}

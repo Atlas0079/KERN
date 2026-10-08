@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_113_with_friends",
+  "actor": "agent_113",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-eff127e692d54a2b99a1640c6ad60de0",
+    "object": "chat.completion",
+    "created": 1791453898,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个严重的问题，看到有具体的工程和修复计划让人稍微宽心一点，而且跟我之前关注的科学话题很契合。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且符合我的专业兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有共鸣，但这种科普性质的帖子我通常只是静静看完，不需要特意发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发到我的朋友圈或空间可能不太合适，我的社交圈大多是同事和家长，他们可能对这个话题没那么大兴趣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个严重的问题，看到有具体的工程和修复计划让人稍微宽心一点，而且跟我之前关注的科学话题很契合。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且符合我的专业兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有共鸣，但这种科普性质的帖子我通常只是静静看完，不需要特意发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发到我的朋友圈或空间可能不太合适，我的社交圈大多是同事和家长，他们可能对这个话题没那么大兴趣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.69
+}

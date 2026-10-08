@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_142_without_friends",
+  "actor": "agent_142",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-4183b83f91c540a9a1f3a365806412f7",
+    "object": "chat.completion",
+    "created": 1791456784,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中要快，想到沿海城市和岛国的处境，感觉环境危机真的迫在眉睫。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"一直关注生态环境话题，认同这种警示性的科普内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且宏大，我性格内向，在这种科普帖下没什么特别想发表的见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但我平时不习惯在社交平台转发这类沉重的话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中要快，想到沿海城市和岛国的处境，感觉环境危机真的迫在眉睫。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "一直关注生态环境话题，认同这种警示性的科普内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且宏大，我性格内向，在这种科普帖下没什么特别想发表的见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但我平时不习惯在社交平台转发这类沉重的话题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.25
+}

@@ -1,0 +1,52 @@
+{
+  "key": "consequence_agent_260_without_friends",
+  "actor": "agent_260",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-920119a84e0946d99326055f5189caa8",
+    "object": "chat.completion",
+    "created": 1791452921,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快这么多，这些沿海城市和岛国的人们太可怜了，环境危机真的迫在眉睫。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态话题，这种警示性的科普内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"作为一名退休教师，我习惯于在看到严肃议题时分享一点思考并引起讨论。\",\n      \"text\": \"看到这些数据触目惊心。气候变化不再是远方的预言，而是近在咫尺的危机，我们每一个人都应该意识到环保的紧迫性。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但目前我觉得点赞和评论表达关注就足够了，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快这么多，这些沿海城市和岛国的人们太可怜了，环境危机真的迫在眉睫。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态话题，这种警示性的科普内容值得支持。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "作为一名退休教师，我习惯于在看到严肃议题时分享一点思考并引起讨论。",
+        "text": "看到这些数据触目惊心。气候变化不再是远方的预言，而是近在咫尺的危机，我们每一个人都应该意识到环保的紧迫性。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但目前我觉得点赞和评论表达关注就足够了，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "看到这些数据触目惊心。气候变化不再是远方的预言，而是近在咫尺的危机，我们每一个人都应该意识到环保的紧迫性。"
+    }
+  ],
+  "seconds": 17.76
+}

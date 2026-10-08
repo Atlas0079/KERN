@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_143_with_friends",
+  "actor": "agent_143",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f0c9c4dcfe514775a2bee416d838f7a5",
+    "object": "chat.completion",
+    "created": 1791453905,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么快，想到沿海城市和那些岛国，确实让人心不安，这对后代的影响太深远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注气候议题，支持这类科普警示内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很担心，但这种宏大议题我没什么专业的建议可以给出，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我的社交圈大多是家长和旧友，不觉得转发这个会对他们产生直接帮助。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么快，想到沿海城市和那些岛国，确实让人心不安，这对后代的影响太深远了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注气候议题，支持这类科普警示内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很担心，但这种宏大议题我没什么专业的建议可以给出，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我的社交圈大多是家长和旧友，不觉得转发这个会对他们产生直接帮助。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.49
+}

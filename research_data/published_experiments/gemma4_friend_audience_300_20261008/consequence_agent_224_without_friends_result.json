@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_224_without_friends",
+  "actor": "agent_224",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-b61a0f86a63546b9b575a21a4397af5e",
+    "object": "chat.completion",
+    "created": 1791456966,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度这么快吗，如果真的影响到这么多城市，未来的生活压力得增加多少。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候和极端天气一直比较关注，觉得这个话题很重要。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很担心，但我性格内向，而且这类宏大话题我没什么能给出的具体建议，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发这个可能会让我的社交动态显得太沉重，我习惯安静地关注。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度这么快吗，如果真的影响到这么多城市，未来的生活压力得增加多少。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候和极端天气一直比较关注，觉得这个话题很重要。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很担心，但我性格内向，而且这类宏大话题我没什么能给出的具体建议，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发这个可能会让我的社交动态显得太沉重，我习惯安静地关注。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.92
+}

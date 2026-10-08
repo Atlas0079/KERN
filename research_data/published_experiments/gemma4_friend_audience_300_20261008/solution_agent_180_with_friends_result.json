@@ -1,0 +1,43 @@
+{
+  "key": "solution_agent_180_with_friends",
+  "actor": "agent_180",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-4e745835f07341da9bd66789a5577e0b",
+    "object": "chat.completion",
+    "created": 1791458694,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些环保工程听起来挺宏大，但对我这种每天在修车铺忙活的人来说，离生活太远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"虽然是好事，但没太触动我，没必要点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对这些专业的气候问题没什么见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的朋友圈里大多是熟人和同行，转发这个不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些环保工程听起来挺宏大，但对我这种每天在修车铺忙活的人来说，离生活太远了。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "虽然是好事，但没太触动我，没必要点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对这些专业的气候问题没什么见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的朋友圈里大多是熟人和同行，转发这个不太合适。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.03
+}

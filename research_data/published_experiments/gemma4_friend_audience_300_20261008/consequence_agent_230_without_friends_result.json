@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_230_without_friends",
+  "actor": "agent_230",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-fbd8a0d369014f339c8db5cbfd9a2ddd",
+    "object": "chat.completion",
+    "created": 1791457105,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇帖子提醒了我环境问题的紧迫性，尤其是对沿海城市和社会结构的潜在冲击，挺让人忧心的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这是一个严肃且重要的全球性议题，支持这类科普内容的传播。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但这类宏大议题很难在简短的评论里给出有深度的见解，不便随意发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容已经很清晰，但我目前的社交圈层可能不太适合转发这种带有危机感的警告类信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇帖子提醒了我环境问题的紧迫性，尤其是对沿海城市和社会结构的潜在冲击，挺让人忧心的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这是一个严肃且重要的全球性议题，支持这类科普内容的传播。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但这类宏大议题很难在简短的评论里给出有深度的见解，不便随意发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容已经很清晰，但我目前的社交圈层可能不太适合转发这种带有危机感的警告类信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.27
+}

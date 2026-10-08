@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_121_without_friends",
+  "actor": "agent_121",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-c05628dd4d2d4758adeafa5ecdf9f1cd",
+    "object": "chat.completion",
+    "created": 1791452297,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升速度这么快，以后沿海城市的人确实挺难办的，这种环境问题得引起重视。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对生态和环境话题比较关注，支持这类科普预警。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容是联合国报告的汇总，没什么具体争议或需要探讨的点，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但转发到我朋友圈可能没什么实际意义，不需要特意扩散。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升速度这么快，以后沿海城市的人确实挺难办的，这种环境问题得引起重视。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对生态和环境话题比较关注，支持这类科普预警。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容是联合国报告的汇总，没什么具体争议或需要探讨的点，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但转发到我朋友圈可能没什么实际意义，不需要特意扩散。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.42
+}

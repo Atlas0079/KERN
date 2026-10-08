@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_079_without_friends",
+  "actor": "agent_079",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-34b9f0346f4f44ff97e389266b77a8ff",
+    "object": "chat.completion",
+    "created": 1791456615,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保措施挺有希望的，为了孩子以后能生活在更好的环境里，确实得关注这些生态问题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且符合我对环境生态的关注，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别想发表的深刻见解，看看就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容点赞即可，没必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保措施挺有希望的，为了孩子以后能生活在更好的环境里，确实得关注这些生态问题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且符合我对环境生态的关注，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别想发表的深刻见解，看看就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容点赞即可，没必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.31
+}

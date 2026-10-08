@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_222_without_friends",
+  "actor": "agent_222",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8d30c35fc1f44a5e856aa5ef4f3e876c",
+    "object": "chat.completion",
+    "created": 1791458967,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉这个世界变化太快，这些全球性的危机听起来离我很远，但又让人心里有点不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普类的信息挺有意义的，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学不专业，没什么能发表的见解，不方便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，转发到自己的动态里感觉不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉这个世界变化太快，这些全球性的危机听起来离我很远，但又让人心里有点不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普类的信息挺有意义的，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学不专业，没什么能发表的见解，不方便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，转发到自己的动态里感觉不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.78
+}

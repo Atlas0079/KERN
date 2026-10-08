@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_170_with_friends",
+  "actor": "agent_170",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-9b8862e58d6747ea86aaa924d9edc33f",
+    "object": "chat.completion",
+    "created": 1791452353,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化的影响比我想象中要严重，想到未来孩子成长的环境可能会受到这些影响，觉得有点担忧。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类科普内容感兴趣，且认同关注气候危机的必要性。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这种宏大的议题我不太知道该评论什么，而且我性格比较内向，不习惯在公开帖子下发表见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，我的社交圈子主要是家人和家长朋友，转发这个可能不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化的影响比我想象中要严重，想到未来孩子成长的环境可能会受到这些影响，觉得有点担忧。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类科普内容感兴趣，且认同关注气候危机的必要性。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这种宏大的议题我不太知道该评论什么，而且我性格比较内向，不习惯在公开帖子下发表见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，我的社交圈子主要是家人和家长朋友，转发这个可能不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.13
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_172_with_friends",
+  "actor": "agent_172",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-0f469b85fb7941388d304476002c7831",
+    "object": "chat.completion",
+    "created": 1791453000,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题挺沉重的，作为人文社科背景的人，想到未来大规模人口迁移带来的社会结构冲击，感觉很复杂。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这是一个严肃且重要的环保议题，点赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观且带有警示性，我目前没有特别想补充的观点，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类警示性消息转发过多容易造成焦虑，且我朋友圈的社交圈层未必对此类快讯感兴趣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题挺沉重的，作为人文社科背景的人，想到未来大规模人口迁移带来的社会结构冲击，感觉很复杂。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这是一个严肃且重要的环保议题，点赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏观且带有警示性，我目前没有特别想补充的观点，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类警示性消息转发过多容易造成焦虑，且我朋友圈的社交圈层未必对此类快讯感兴趣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.19
+}

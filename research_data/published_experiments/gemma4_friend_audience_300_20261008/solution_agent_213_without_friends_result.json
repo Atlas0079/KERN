@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_213_without_friends",
+  "actor": "agent_213",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-0213752ea0f44e99b609e9154402d484",
+    "object": "chat.completion",
+    "created": 1791455391,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些工程方案和数据挺有意思的，虽然这种号召低碳生活的文案略显常规，但整体观点我能接受。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"对这类涉及工程应用和环境科学的话题比较感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较客观，我没有特别想反驳或补充的观点，没必要发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这对我个人或社交圈来说实用性不高，不需要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些工程方案和数据挺有意思的，虽然这种号召低碳生活的文案略显常规，但整体观点我能接受。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "对这类涉及工程应用和环境科学的话题比较感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较客观，我没有特别想反驳或补充的观点，没必要发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这对我个人或社交圈来说实用性不高，不需要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.6
+}

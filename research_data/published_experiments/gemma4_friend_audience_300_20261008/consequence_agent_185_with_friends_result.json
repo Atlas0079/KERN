@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_185_with_friends",
+  "actor": "agent_185",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-a5562dd3b3cb44d183fde2c7f95d1e77",
+    "object": "chat.completion",
+    "created": 1791455685,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么快吗，这些沿海城市的压力确实很大，得关注一下这种环境趋势。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有警示意义且来源可靠，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这是一个宏大的全球性话题，我没有专业背景，没什么特别想发表的见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且与我目前的社交圈子（家长、前同事）话题契合度不高，不方便转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么快吗，这些沿海城市的压力确实很大，得关注一下这种环境趋势。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有警示意义且来源可靠，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这是一个宏大的全球性话题，我没有专业背景，没什么特别想发表的见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且与我目前的社交圈子（家长、前同事）话题契合度不高，不方便转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.09
+}

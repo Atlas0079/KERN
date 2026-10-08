@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_148_without_friends",
+  "actor": "agent_148",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-008c741a1bc4461ead3fb1bd8b222212",
+    "object": "chat.completion",
+    "created": 1791458749,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么快吗，虽然离我目前的实际生活有点远，但这种全球性的趋势确实挺让人担忧的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类新知识和全球议题比较感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但我对气候科学不专业，没什么实质性的观点可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太宏大了，转发到我的社交圈感觉不太合适，也没什么实际意义。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么快吗，虽然离我目前的实际生活有点远，但这种全球性的趋势确实挺让人担忧的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类新知识和全球议题比较感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但我对气候科学不专业，没什么实质性的观点可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太宏大了，转发到我的社交圈感觉不太合适，也没什么实际意义。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.75
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_018_with_friends",
+  "actor": "agent_018",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-3e4e819491d547fda8063c30f5835563",
+    "object": "chat.completion",
+    "created": 1791452172,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章提到红树林修复和低碳生活，挺契合我对生态环境的关注，看完觉得还挺有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且符合我的环保兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但这类宏大话题我更倾向于安静阅读，没什么特别的观点需要表达。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较专业且宏观，不确定我的好友圈会对这个话题感兴趣，不需要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章提到红树林修复和低碳生活，挺契合我对生态环境的关注，看完觉得还挺有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且符合我的环保兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但这类宏大话题我更倾向于安静阅读，没什么特别的观点需要表达。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较专业且宏观，不确定我的好友圈会对这个话题感兴趣，不需要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.13
+}

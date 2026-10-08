@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_220_with_friends",
+  "actor": "agent_220",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-aaacfc6707a749c2920b6d523aeae4a6",
+    "object": "chat.completion",
+    "created": 1791454202,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"我对气候风险一直挺关注的，看到这些具体的应对措施感觉还挺有希望，而且低碳生活确实是每个人都能参与的事。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很有正能量，而且符合我的科普兴趣点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别强烈的观点需要表达，点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容我倾向于自己阅读了解，不太会特意转发到我的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "我对气候风险一直挺关注的，看到这些具体的应对措施感觉还挺有希望，而且低碳生活确实是每个人都能参与的事。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很有正能量，而且符合我的科普兴趣点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别强烈的观点需要表达，点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容我倾向于自己阅读了解，不太会特意转发到我的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.03
+}

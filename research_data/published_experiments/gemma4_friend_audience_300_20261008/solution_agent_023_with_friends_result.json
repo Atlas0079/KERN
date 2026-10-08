@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_023_with_friends",
+  "actor": "agent_023",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-92d08f5a6717448bb41ca9b016857211",
+    "object": "chat.completion",
+    "created": 1791456990,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些环保工程听起来很有意思，尤其是那个荷兰的工程，让我想起年轻时学的工程结构知识了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有启发，对我这种对新鲜事物好奇的人来说是个不错的分享。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有兴趣，但我对气候科学并不专业，没什么特别想发表的见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题比较宏大，我觉得转发到我的朋友圈可能不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些环保工程听起来很有意思，尤其是那个荷兰的工程，让我想起年轻时学的工程结构知识了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有启发，对我这种对新鲜事物好奇的人来说是个不错的分享。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有兴趣，但我对气候科学并不专业，没什么特别想发表的见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题比较宏大，我觉得转发到我的朋友圈可能不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.38
+}

@@ -1,0 +1,52 @@
+{
+  "key": "solution_agent_074_without_friends",
+  "actor": "agent_074",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-36c1a27e5e7940e6923d8795b882d756",
+    "object": "chat.completion",
+    "created": 1791455189,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到有具体的应对方案和正面进展，感觉气候问题虽然严峻但还是有希望的，而且低碳生活确实是我能参与的小事。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对生态保护一直很关注，这种传播希望和环保行动的帖子很正能量。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"我想分享一下自己在生活中实践低碳的小习惯，激励彼此。\",\n      \"text\": \"看到红树林修复的消息很欣慰，平时在家里我也在尽量引导孩子养成节电和减少浪费的习惯，每一步小改变都很重要！🌱\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"点赞和评论已经表达了支持，目前不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到有具体的应对方案和正面进展，感觉气候问题虽然严峻但还是有希望的，而且低碳生活确实是我能参与的小事。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对生态保护一直很关注，这种传播希望和环保行动的帖子很正能量。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "我想分享一下自己在生活中实践低碳的小习惯，激励彼此。",
+        "text": "看到红树林修复的消息很欣慰，平时在家里我也在尽量引导孩子养成节电和减少浪费的习惯，每一步小改变都很重要！🌱"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "点赞和评论已经表达了支持，目前不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "看到红树林修复的消息很欣慰，平时在家里我也在尽量引导孩子养成节电和减少浪费的习惯，每一步小改变都很重要！🌱"
+    }
+  ],
+  "seconds": 16.61
+}

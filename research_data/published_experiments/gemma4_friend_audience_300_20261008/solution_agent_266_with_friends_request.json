@@ -1,0 +1,15 @@
+{
+  "model": "gemma-4-31B-it",
+  "temperature": 0.9,
+  "max_tokens": 1200,
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是以下社交平台用户：\n\n我的 profile_id：social_profile_266\n我的自我画像：\n我是女性，今年51岁，已经走到职业生涯的后期阶段。回头看这些年，大学时读的是艺术与设计专业，本科毕业后就一直在这个方向上摸索，这也是我目前为止最高的学历，现在没有再读任何学位或课程项目。前不久我从原来的单位离职了，眼下正处于找工作的状态，一边投简历一边琢磨接下来想做点什么。\n\n家里这边，我先生和我结婚很多年了，孩子已经成年，不用再操心他们的日常起居，但家里的长辈这几年身体不太好，照顾和照应他们的事基本落在我身上，家里事情不少，责任压得也重。我们现在是跟长辈住在一起，方便照看，经济上还算过得去，没有特别紧绷，但也没什么富余可以随意挥霍，只是如果是能带来体验和感受的事情，比如一次旅行或者一场展览，我还是愿意专门留出预算去做。\n\n性格上，我算是很愿意接受新想法和新观点的人，对没接触过的领域也有兴趣去了解；做事我会先有个大致计划，不算特别严谨但心里有谱。跟人打交道这块，我更偏内向，不太主动往人堆里凑，社交对我来说是消耗而不是充电。跟别人共事时，我会在配合别人和坚持自己想法之间找平衡，不会一味退让也不会一直坚持己见。压力大的时候，我容易往坏处想，情绪会跟着绷起来，这点我自己是清楚的。\n\n平时的生活里，我会跟着视频在家做一些简单的运动，不去健身房，就是跟练居家的动作；喜欢看书，小说和非虚构类都看，没事就去书店或图书馆转转；手机里存了不少照片，没事就整理一下生活里拍的这些影像，算是留个记录。这几年我开始对家居设计这块上心，平时会收藏一些装修的案例图，琢磨以后要是有机会重新布置家里能用得上，不过目前还没有真正投入去改造，也没有什么具体的大项目计划在推进。另外我对气候方面的话题一直挺关注，尤其是极端天气是怎么形成的、会带来什么样的影响，这些新闻和科普我都愿意花时间看。\n我的人格五维（0-1，越高越明显）：openness=0.90, conscientiousness=0.40, extraversion=0.10, agreeableness=0.60, neuroticism=0.70\n\n我的平台主要好友类别（platform_friend_categories）：[\"家人亲属\", \"前同事及职场人脉\", \"大学艺术专业同学\", \"现实生活中的熟人朋友\"]"
+    },
+    {
+      "role": "user",
+      "content": "你正在浏览社交平台，当前页面如下：\n{\"tick\":1,\"actor_id\":\"agent_266\",\"screen\":{\"terminal_id\":\"phone_266\",\"runtime_id\":\"social_platform\",\"account_id\":\"account_266\",\"view\":\"post_detail\",\"updated_tick\":1,\"feed_session_id\":null,\"feed_items\":[],\"current_post\":{\"post_id\":\"sea_level_experiment_post\",\"title\":\"救赎之路：海平面上升并非无解\",\"display_hashtags\":[\"气候行动\",\"碳中和\",\"可持续生活\"],\"original_author_id\":\"earth_voice\",\"feed_item_kind\":\"original\",\"reposted_by_account_id\":null,\"created_tick\":0,\"reposted_tick\":null,\"section\":\"recommended\",\"position\":0,\"like_count\":0,\"comment_count\":0,\"repost_count\":0,\"viewer_has_liked\":false,\"viewer_has_reposted\":false,\"text\":\"🌱【救赎之路】全球海平面上升并非无解！\\n\\n荷兰“还地于海”工程可抵御风暴潮侵袭；中国沿海红树林修复计划固碳功能显著；可再生能源装机量首超化石能源，为减缓冰川融化赢回时间；你随手关灯、减少肉食的每一个小行动，都在为海岸线留住一米土地！\\n\\n每一个人的低碳行为，都在铸就希望。\",\"recent_comments\":[],\"feed_session_id\":null,\"exposure_id\":null}},\"recent_social_memory\":[],\"schema_version\":\"social_decision_page_context.v1\",\"allowed_action_post_ids\":[\"sea_level_experiment_post\"]}\n\n你读完当前帖子后有什么感受，接下来会做什么？\n请尽可能真实地表现出这个人在日常刷社交平台时会有的反应。没有必要为了完成任务强行采取任何行动，不行动也是完整的回答。\n先用一句话表达读后感受；这句话只是你的私人反应，不会发布到平台。\n然后分别决定是否点赞、是否发表评论、是否转发，每个决定都给出一句简短理由，无论决定做还是不做。\n有感想不等于决定发布评论。只有决定发表评论时，才填写实际发布的评论正文。\n只返回 JSON，严格使用以下结构，不输出额外正文。execute 必须是布尔值；reason 是一句简短理由；不发布时 text 可以省略或为空字符串。\n{\"reaction\":\"一句读后感受\",\"decisions\":{\"like\":{\"execute\":false,\"reason\":\"一句理由\"},\"comment\":{\"execute\":false,\"reason\":\"一句理由\",\"text\":\"\"},\"repost\":{\"execute\":false,\"reason\":\"一句理由\",\"text\":\"\"}}}"
+    }
+  ]
+}

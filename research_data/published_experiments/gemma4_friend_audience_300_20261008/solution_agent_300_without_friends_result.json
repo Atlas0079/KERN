@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_300_without_friends",
+  "actor": "agent_300",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8df66a70e50643b98553987d82d6372c",
+    "object": "chat.completion",
+    "created": 1791453498,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到海平面上升有解决方案还挺令人欣慰的，而且这些低碳小习惯我也在尝试实践。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境变化和生态保护很关注，支持这类正能量的科普内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但内容比较宏观，没什么特别想补充或讨论的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容点赞即可，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到海平面上升有解决方案还挺令人欣慰的，而且这些低碳小习惯我也在尝试实践。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境变化和生态保护很关注，支持这类正能量的科普内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但内容比较宏观，没什么特别想补充或讨论的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容点赞即可，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 17.32
+}

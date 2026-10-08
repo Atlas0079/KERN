@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_250_with_friends",
+  "actor": "agent_250",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-99df524027ee45c581c5e77d89d4a632",
+    "object": "chat.completion",
+    "created": 1791454820,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么快，想到以后孩子成长的世界可能会面临这么多环境危机，心里就有点焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这类关于气候危机和技术社会影响的科普内容我一直比较关注，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得事态严重，但我一个普通人事员在气候问题上没什么专业见解，没必要发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重且规模太大，转发到我的朋友圈里可能不太合适，而且我的社交圈大多是家长和同事。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么快，想到以后孩子成长的世界可能会面临这么多环境危机，心里就有点焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这类关于气候危机和技术社会影响的科普内容我一直比较关注，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得事态严重，但我一个普通人事员在气候问题上没什么专业见解，没必要发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重且规模太大，转发到我的朋友圈里可能不太合适，而且我的社交圈大多是家长和同事。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.42
+}

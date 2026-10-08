@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_032_with_friends",
+  "actor": "agent_032",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-9e8b99c110f34eab910b69fd7f39c5fa",
+    "object": "chat.completion",
+    "created": 1791457704,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个大问题，不过这种科普贴看着还行，挺有条理的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有条理，支持这种环保科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没什么特别想发表的看法，直接点赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种话题比较宏大，转发到我的圈子里可能不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个大问题，不过这种科普贴看着还行，挺有条理的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有条理，支持这种环保科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没什么特别想发表的看法，直接点赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种话题比较宏大，转发到我的圈子里可能不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.58
+}

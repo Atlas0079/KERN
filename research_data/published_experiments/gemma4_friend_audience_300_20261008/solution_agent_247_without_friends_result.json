@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_247_without_friends",
+  "actor": "agent_247",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-5be8d23b47fb48f1b08e13d72bc0d0b9",
+    "object": "chat.completion",
+    "created": 1791455588,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的工程案例和技术手段，感觉海平面上升这个问题在技术层面还是有希望解决的，挺有启发。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新技术解决社会问题的内容比较感兴趣，且支持低碳环保的理念。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但内容比较宏观，我暂时没有什么独特的观点想要分享。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇内容偏向科普和呼吁，不太符合我平时分享生活记录或收藏类内容的习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的工程案例和技术手段，感觉海平面上升这个问题在技术层面还是有希望解决的，挺有启发。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新技术解决社会问题的内容比较感兴趣，且支持低碳环保的理念。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但内容比较宏观，我暂时没有什么独特的观点想要分享。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇内容偏向科普和呼吁，不太符合我平时分享生活记录或收藏类内容的习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.16
+}

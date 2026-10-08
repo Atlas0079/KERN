@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_116_with_friends",
+  "actor": "agent_116",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-15db4526cee84a3d91bfb1c6a73b4340",
+    "object": "chat.completion",
+    "created": 1791455853,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保话题挺有意义的，而且提到的红树林修复听起来挺有设计感和美感的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的观点，点个赞鼓励一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，我没什么专业见解可以发表，不想随便凑热闹。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但对我生活圈子的人来说可能太严肃了，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保话题挺有意义的，而且提到的红树林修复听起来挺有设计感和美感的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的观点，点个赞鼓励一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大，我没什么专业见解可以发表，不想随便凑热闹。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但对我生活圈子的人来说可能太严肃了，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.23
+}

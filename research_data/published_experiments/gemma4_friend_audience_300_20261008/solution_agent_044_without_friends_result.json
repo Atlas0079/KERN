@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_044_without_friends",
+  "actor": "agent_044",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-768ea54cfc8940c68adc5308c7fbc323",
+    "object": "chat.completion",
+    "created": 1791452117,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种宏大的环保议题虽然重要，但对我现在每天忙于代码、孩子和账单的生活来说，显得有些遥远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然不深研，但低碳生活和环保的方向是对的，随手点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学没有专业见解，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太严肃且宏大，不符合我平时分享亲子或生活点滴的风格。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种宏大的环保议题虽然重要，但对我现在每天忙于代码、孩子和账单的生活来说，显得有些遥远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然不深研，但低碳生活和环保的方向是对的，随手点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学没有专业见解，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太严肃且宏大，不符合我平时分享亲子或生活点滴的风格。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.22
+}

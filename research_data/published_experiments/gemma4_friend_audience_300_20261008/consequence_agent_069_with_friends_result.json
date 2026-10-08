@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_069_with_friends",
+  "actor": "agent_069",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-8a859560b2f14ce0a5e5661121061043",
+    "object": "chat.completion",
+    "created": 1791458247,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到海平面上升这么快，想到以后孩子成长的世界可能会面临这些危机，觉得挺不安的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注气候变化和新技术对未来的影响，支持这类科普资讯。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太沉重且宏大，作为内向的人，不习惯在公开场合发表此类议论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得重要，但不想在自己的朋友圈散播太焦虑的消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到海平面上升这么快，想到以后孩子成长的世界可能会面临这些危机，觉得挺不安的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注气候变化和新技术对未来的影响，支持这类科普资讯。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太沉重且宏大，作为内向的人，不习惯在公开场合发表此类议论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然觉得重要，但不想在自己的朋友圈散播太焦虑的消息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.0
+}

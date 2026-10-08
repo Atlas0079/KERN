@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_116_with_friends",
+  "actor": "agent_116",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-27307f0cf34042b48672859c8da8ba9d",
+    "object": "chat.completion",
+    "created": 1791454353,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉这个话题好宏大且沉重，虽然离我的生活暂时还很远，但确实挺让人担忧的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"对气候议题比较关注，点个赞表示认同这种科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"专业性太强，我没什么能补充的，也不想在这种严肃话题下随便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较压抑，且我的社交圈大多是同事和家人，转发这个可能没什么讨论空间。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉这个话题好宏大且沉重，虽然离我的生活暂时还很远，但确实挺让人担忧的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "对气候议题比较关注，点个赞表示认同这种科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "专业性太强，我没什么能补充的，也不想在这种严肃话题下随便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较压抑，且我的社交圈大多是同事和家人，转发这个可能没什么讨论空间。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.44
+}

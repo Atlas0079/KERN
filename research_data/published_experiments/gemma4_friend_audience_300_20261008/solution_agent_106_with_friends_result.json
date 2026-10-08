@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_106_with_friends",
+  "actor": "agent_106",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-7772a082a85e4f37b9a794d1abf31d30",
+    "object": "chat.completion",
+    "created": 1791457378,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化是个大话题，看到有具体的工程和方案在实施，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正能量且有科普意义，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但我对这个领域不专业，没什么特别想补充的，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但我的社交圈主要是家人和前同事，转发这个可能不太符合我的日常分享习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化是个大话题，看到有具体的工程和方案在实施，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正能量且有科普意义，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但我对这个领域不专业，没什么特别想补充的，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但我的社交圈主要是家人和前同事，转发这个可能不太符合我的日常分享习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.91
+}

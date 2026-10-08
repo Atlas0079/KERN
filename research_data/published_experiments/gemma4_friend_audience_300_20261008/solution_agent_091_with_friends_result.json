@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_091_with_friends",
+  "actor": "agent_091",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-33d41b4c596f420e9916b75e34173669",
+    "object": "chat.completion",
+    "created": 1791452525,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章提到的具体工程和生态修复方案挺有意思的，正好是我关注的气候风险话题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活和生态修复的观点，且话题契合我的兴趣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但目前只是快速浏览，没有特别深刻的学术见解或强烈的表达欲，点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容偏向科普，我觉得目前的分享程度足够，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章提到的具体工程和生态修复方案挺有意思的，正好是我关注的气候风险话题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活和生态修复的观点，且话题契合我的兴趣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但目前只是快速浏览，没有特别深刻的学术见解或强烈的表达欲，点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容偏向科普，我觉得目前的分享程度足够，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.69
+}

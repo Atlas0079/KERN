@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_193_with_friends",
+  "actor": "agent_193",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-4a729818992345e99c809795dec03aae",
+    "object": "chat.completion",
+    "created": 1791456867,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球气候话题挺宏大的，虽然离我的生活比较远，但能看到一些实际的解决方案还不错。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正能量，且我比较愿意接受这种关于可持续发展的新鲜观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但没有特别强烈的观点想直接表达，没必要强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普信息对我个人有启发，但还没到需要转发给好友分享的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球气候话题挺宏大的，虽然离我的生活比较远，但能看到一些实际的解决方案还不错。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正能量，且我比较愿意接受这种关于可持续发展的新鲜观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但没有特别强烈的观点想直接表达，没必要强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普信息对我个人有启发，但还没到需要转发给好友分享的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.3
+}

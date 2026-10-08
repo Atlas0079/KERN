@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_253_with_friends",
+  "actor": "agent_253",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-8af2fdf257a04dc8b2d12550a5a3f8ab",
+    "object": "chat.completion",
+    "created": 1791459227,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升和生态保护一直是我关注的话题，看到有具体的解决方案和行动方向，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容符合我的兴趣点，且传递了积极正向的环保信息。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但这类宏大话题我没有太多专业的见解可以发表，点个赞支持就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发到我的朋友圈可能不太合适，我的社交圈大多是家人和同行，他们可能对这个话题兴趣不大。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升和生态保护一直是我关注的话题，看到有具体的解决方案和行动方向，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容符合我的兴趣点，且传递了积极正向的环保信息。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但这类宏大话题我没有太多专业的见解可以发表，点个赞支持就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发到我的朋友圈可能不太合适，我的社交圈大多是家人和同行，他们可能对这个话题兴趣不大。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.25
+}

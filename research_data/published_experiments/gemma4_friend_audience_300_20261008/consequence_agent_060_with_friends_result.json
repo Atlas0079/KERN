@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_060_with_friends",
+  "actor": "agent_060",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-fd206ee8c4bb4697a0013402e1c54ae0",
+    "object": "chat.completion",
+    "created": 1791458905,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看完感觉压力好大，现在生活已经挺紧绷了，结果地球环境还这么糟糕，这种宏大的危机感让人觉得有些无力。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类全球性话题和新知比较好奇，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太沉重且专业，我没有足够的知识储备去参与讨论，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容过于焦虑，不希望在自己的主页传播这种令人不安的消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看完感觉压力好大，现在生活已经挺紧绷了，结果地球环境还这么糟糕，这种宏大的危机感让人觉得有些无力。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类全球性话题和新知比较好奇，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太沉重且专业，我没有足够的知识储备去参与讨论，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容过于焦虑，不希望在自己的主页传播这种令人不安的消息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.92
+}

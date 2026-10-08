@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_055_without_friends",
+  "actor": "agent_055",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8d2175e5ed7448e7a8ea5e10fda240e1",
+    "object": "chat.completion",
+    "created": 1791457585,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇帖子提到的红树林修复和气候风险缓解措施很有意思，跟我关注的极端天气和健康环境议题挺契合的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且符合我对气候风险和可持续生活的关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但我性格比较内向，通常倾向于安静阅读而非主动参与讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"觉得内容不错，但还没到需要分享给社交圈的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇帖子提到的红树林修复和气候风险缓解措施很有意思，跟我关注的极端天气和健康环境议题挺契合的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且符合我对气候风险和可持续生活的关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但我性格比较内向，通常倾向于安静阅读而非主动参与讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "觉得内容不错，但还没到需要分享给社交圈的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.14
+}

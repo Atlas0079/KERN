@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_291_without_friends",
+  "actor": "agent_291",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-e07a43a6d2a647b0abd213c4e78c6d03",
+    "object": "chat.completion",
+    "created": 1791451157,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"平时关注气候变化，看到这些具体的工程和修复计划感觉还挺有希望的，不过个人能起到的作用确实很有限。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且符合我对科普类话题的兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有什么特别想表达的观点，且性格比较内向，不习惯在公开场合评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类内容对我个人来说是了解，但不需要特意转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "平时关注气候变化，看到这些具体的工程和修复计划感觉还挺有希望的，不过个人能起到的作用确实很有限。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且符合我对科普类话题的兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有什么特别想表达的观点，且性格比较内向，不习惯在公开场合评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类内容对我个人来说是了解，但不需要特意转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.48
+}

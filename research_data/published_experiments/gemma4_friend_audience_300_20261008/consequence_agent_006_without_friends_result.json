@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_006_without_friends",
+  "actor": "agent_006",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-9782250402d7445ea7ebb4172d9e09a0",
+    "object": "chat.completion",
+    "created": 1791456909,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事儿听起来挺严重的，尤其是对沿海城市的影响，得关注一下。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很有警示意义，支持这种科普环保的帖子。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但这种宏大的气候议题我没什么专业的观点可以评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类消息比较沉重，且离我目前的日常生活重点较远，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事儿听起来挺严重的，尤其是对沿海城市的影响，得关注一下。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很有警示意义，支持这种科普环保的帖子。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但这种宏大的气候议题我没什么专业的观点可以评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类消息比较沉重，且离我目前的日常生活重点较远，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.65
+}

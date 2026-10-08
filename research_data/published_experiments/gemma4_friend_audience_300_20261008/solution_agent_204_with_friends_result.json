@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_204_with_friends",
+  "actor": "agent_204",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f670ff3b18cf4d17bfa8654dcd8d2f00",
+    "object": "chat.completion",
+    "created": 1791457880,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些技术手段和环境治理措施还挺有意思的，感觉气候问题虽然宏大，但确实在一点点被尝试解决。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正向，且我对技术如何改变社会现状比较感兴趣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这种宏大的话题我不太习惯在社交平台上发表直接的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"比较随性的刷帖状态，没有强烈的动力将其分享给好友。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些技术手段和环境治理措施还挺有意思的，感觉气候问题虽然宏大，但确实在一点点被尝试解决。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正向，且我对技术如何改变社会现状比较感兴趣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这种宏大的话题我不太习惯在社交平台上发表直接的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "比较随性的刷帖状态，没有强烈的动力将其分享给好友。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.85
+}

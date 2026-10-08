@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_275_with_friends",
+  "actor": "agent_275",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-a6d2f306b8094398b921c77634bbf3c7",
+    "object": "chat.completion",
+    "created": 1791453336,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这情况听起来挺严重的，尤其是提到人口迁移和资源争夺，感觉对未来社会稳定影响很大。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然挺沉重，但这种警示性的科普内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大的气候议题我没有专业见解，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太压抑了，没必要转发到我的朋友圈里影响大家心情。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这情况听起来挺严重的，尤其是提到人口迁移和资源争夺，感觉对未来社会稳定影响很大。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然挺沉重，但这种警示性的科普内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这类宏大的气候议题我没有专业见解，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太压抑了，没必要转发到我的朋友圈里影响大家心情。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.25
+}

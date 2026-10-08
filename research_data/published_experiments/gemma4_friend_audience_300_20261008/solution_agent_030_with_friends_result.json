@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_030_with_friends",
+  "actor": "agent_030",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-fbe66c2977bf46e79557281ae161620e",
+    "object": "chat.completion",
+    "created": 1791459202,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保工程和具体行动还挺有希望的，感觉低碳生活确实是每个人都能参与的事。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且具有建设性，支持这种环保倡议。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别想表达的观点，点个赞就可以了。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类话题比较宏大，不太适合转发到我的朋友圈或动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保工程和具体行动还挺有希望的，感觉低碳生活确实是每个人都能参与的事。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且具有建设性，支持这种环保倡议。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别想表达的观点，点个赞就可以了。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类话题比较宏大，不太适合转发到我的朋友圈或动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.69
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_231_without_friends",
+  "actor": "agent_231",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-c2905c9179c94eddb4a9e49286279da8",
+    "object": "chat.completion",
+    "created": 1791459275,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"全球气候问题确实严重，不过看到有些具体工程和方案在起作用，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种传播环保意识且带有建设性方案的内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但并没有什么特别深刻的见解可以补充，看看就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观，不确定我的社交圈对这类话题是否感兴趣，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "全球气候问题确实严重，不过看到有些具体工程和方案在起作用，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种传播环保意识且带有建设性方案的内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但并没有什么特别深刻的见解可以补充，看看就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较宏观，不确定我的社交圈对这类话题是否感兴趣，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.02
+}

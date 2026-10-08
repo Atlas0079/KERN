@@ -1,0 +1,52 @@
+{
+  "key": "consequence_agent_130_without_friends",
+  "actor": "agent_130",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-fa0a0a0e50db48969a3c7b07648d3160",
+    "object": "chat.completion",
+    "created": 1791458623,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，想到以后沿海城市可能受影响，确实挺让人担忧的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候风险和极端天气一直很关注，这个内容很有价值。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"我想从技术和社会影响的角度探讨一下，这种趋势会对沿海基础设施产生什么影响。\",\n      \"text\": \"海平面上升的速度确实惊人，除了人口迁移，这些沿海城市的排水系统和基础设施得经历怎样的升级才能应对？感觉技术改造的压力非常大。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容重要，但目前还没到必须转发提醒所有人的程度，先关注讨论就好。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，想到以后沿海城市可能受影响，确实挺让人担忧的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候风险和极端天气一直很关注，这个内容很有价值。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "我想从技术和社会影响的角度探讨一下，这种趋势会对沿海基础设施产生什么影响。",
+        "text": "海平面上升的速度确实惊人，除了人口迁移，这些沿海城市的排水系统和基础设施得经历怎样的升级才能应对？感觉技术改造的压力非常大。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容重要，但目前还没到必须转发提醒所有人的程度，先关注讨论就好。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "海平面上升的速度确实惊人，除了人口迁移，这些沿海城市的排水系统和基础设施得经历怎样的升级才能应对？感觉技术改造的压力非常大。"
+    }
+  ],
+  "seconds": 17.72
+}

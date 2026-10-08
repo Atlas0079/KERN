@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_289_with_friends",
+  "actor": "agent_289",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-18a9f6c65a23409f89852145664a6326",
+    "object": "chat.completion",
+    "created": 1791455133,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然这种全球议题挺宏大的，但我挺好奇这些具体工程是怎么运作的，不过对我现在的生活影响不大。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容挺正能量的，对我来说点个赞没什么成本。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学没有专业见解，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这内容离我的生活圈子太远，转发给同事或家长他们可能不感兴趣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然这种全球议题挺宏大的，但我挺好奇这些具体工程是怎么运作的，不过对我现在的生活影响不大。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容挺正能量的，对我来说点个赞没什么成本。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学没有专业见解，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这内容离我的生活圈子太远，转发给同事或家长他们可能不感兴趣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.68
+}

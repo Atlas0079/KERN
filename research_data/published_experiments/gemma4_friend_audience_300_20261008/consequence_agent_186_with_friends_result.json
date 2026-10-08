@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_186_with_friends",
+  "actor": "agent_186",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f172e37dd6f54a4cb2497ac84242cd38",
+    "object": "chat.completion",
+    "created": 1791455596,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事听起来挺严重，虽然离我的生活还没那么近，但这种规模的危机确实让人心头一沉。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有警示意义，支持传播这类环保议题。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这是一个宏大的全球性问题，我没有专业的见解可以补充，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但我的社交圈大多是同学和邻里，转发这个可能不太契合日常交流氛围。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事听起来挺严重，虽然离我的生活还没那么近，但这种规模的危机确实让人心头一沉。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有警示意义，支持传播这类环保议题。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这是一个宏大的全球性问题，我没有专业的见解可以补充，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但我的社交圈大多是同学和邻里，转发这个可能不太契合日常交流氛围。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.92
+}

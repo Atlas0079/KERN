@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_019_without_friends",
+  "actor": "agent_019",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-ad157dd825a5433c9b6b1b634a9246c6",
+    "object": "chat.completion",
+    "created": 1791457186,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保措施挺有意思的，感觉虽然是个大话题，但个人确实能出一点力。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正能量且有科普性质，支持低碳生活。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别深刻的见解，不需要特意发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题比较宏大，不太符合我平时的社交分享习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保措施挺有意思的，感觉虽然是个大话题，但个人确实能出一点力。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正能量且有科普性质，支持低碳生活。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别深刻的见解，不需要特意发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题比较宏大，不太符合我平时的社交分享习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.85
+}

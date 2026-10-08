@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_038_without_friends",
+  "actor": "agent_038",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-c72c8713c3ce4d9e8e22f79921c2ec3d",
+    "object": "chat.completion",
+    "created": 1791456045,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么快吗，对沿海城市影响确实很大，挺令人担忧的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普性质的全球危机提醒很有意义，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，我对此类专业领域没有太多见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但这不是我平时关注的重点领域，不需要转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么快吗，对沿海城市影响确实很大，挺令人担忧的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普性质的全球危机提醒很有意义，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大，我对此类专业领域没有太多见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但这不是我平时关注的重点领域，不需要转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.01
+}

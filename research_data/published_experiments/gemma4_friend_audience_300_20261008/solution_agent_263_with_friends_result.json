@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_263_with_friends",
+  "actor": "agent_263",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-2e1bee00e903449c9b21a08cf37f74bf",
+    "object": "chat.completion",
+    "created": 1791458288,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升一直是我关注的生态话题，看到有具体工程和修复计划的进展，感觉稍微安心了一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且符合我对环境生态的持续关注，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很有感触，但这类宏大话题我习惯于阅读和了解，不太倾向于在评论区发表观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇内容更像是一个科普概览，我的社交圈层可能对这类话题兴趣有限，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升一直是我关注的生态话题，看到有具体工程和修复计划的进展，感觉稍微安心了一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且符合我对环境生态的持续关注，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很有感触，但这类宏大话题我习惯于阅读和了解，不太倾向于在评论区发表观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇内容更像是一个科普概览，我的社交圈层可能对这类话题兴趣有限，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.35
+}

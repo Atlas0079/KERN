@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_102_without_friends",
+  "actor": "agent_102",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-f91e55d7a82a49598bf3c7badbc2b140",
+    "object": "chat.completion",
+    "created": 1791452058,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保工程和具体行动，觉得挺有意义的，虽然海平面上升听起来很遥远但确实让人有点担心。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很积极且有建设性，我想支持一下这种可持续生活的理念。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但我性格比较内向，这种宏大的话题我不知道该怎么评论才合适。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇文章比较严肃，不太符合我平时分享的生活方式或艺术相关的内容。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保工程和具体行动，觉得挺有意义的，虽然海平面上升听起来很遥远但确实让人有点担心。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很积极且有建设性，我想支持一下这种可持续生活的理念。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但我性格比较内向，这种宏大的话题我不知道该怎么评论才合适。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇文章比较严肃，不太符合我平时分享的生活方式或艺术相关的内容。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.89
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_048_with_friends",
+  "actor": "agent_048",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-e7d8067d8f3e48b4986d74c460d94b0c",
+    "object": "chat.completion",
+    "created": 1791459254,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意义的，虽然海平面上升听起来很遥远，但这种环保意识确实应该从小培养，给孩子留个更好的环境。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态话题比较关心，支持这种正能量的低碳号召。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我只是随手翻阅，没有特别想讨论的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但觉得转发到我的朋友圈可能不太合适，没有很强的分享欲望。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意义的，虽然海平面上升听起来很遥远，但这种环保意识确实应该从小培养，给孩子留个更好的环境。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态话题比较关心，支持这种正能量的低碳号召。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我只是随手翻阅，没有特别想讨论的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然认同，但觉得转发到我的朋友圈可能不太合适，没有很强的分享欲望。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.15
+}

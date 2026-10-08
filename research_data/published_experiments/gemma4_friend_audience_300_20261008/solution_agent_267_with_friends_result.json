@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_267_with_friends",
+  "actor": "agent_267",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-5fb4394f0e8e46c8a64ba16449b7d901",
+    "object": "chat.completion",
+    "created": 1791458997,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保确实很重要，而且文章提到的小行动也比较容易在生活中实践。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活的理念，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但并没有特别想表达的观点，不习惯在推荐帖下评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，不太符合我平时的分享习惯，不需要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保确实很重要，而且文章提到的小行动也比较容易在生活中实践。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活的理念，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但并没有特别想表达的观点，不习惯在推荐帖下评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较宏大，不太符合我平时的分享习惯，不需要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.33
+}

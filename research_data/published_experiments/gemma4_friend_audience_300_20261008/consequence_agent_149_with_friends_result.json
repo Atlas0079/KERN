@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_149_with_friends",
+  "actor": "agent_149",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-193cdcc32a32471a9a9d391a0be1eb89",
+    "object": "chat.completion",
+    "created": 1791458481,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉这个话题挺宏大且沉重的，虽然离我的日常生活比较远，但这种全球性的环境变化确实让人担忧。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新技术和全球性话题比较感兴趣，点个赞支持一下这种科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得挺严重，但我对气候科学并不专业，没什么合适的观点可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题太沉重了，转发到我的朋友圈里可能会让气氛变得太压抑，不合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉这个话题挺宏大且沉重的，虽然离我的日常生活比较远，但这种全球性的环境变化确实让人担忧。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新技术和全球性话题比较感兴趣，点个赞支持一下这种科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得挺严重，但我对气候科学并不专业，没什么合适的观点可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题太沉重了，转发到我的朋友圈里可能会让气氛变得太压抑，不合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.48
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_155_without_friends",
+  "actor": "agent_155",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-dd2f1cb4e6eb4fbb823be833cc42b3ed",
+    "object": "chat.completion",
+    "created": 1791452654,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这情况听起来挺严重的，尤其是提到大城市被淹没和气候难民，感觉这种全球性的技术和社会变动最终还是会影响到每个普通人的生活。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较有冲击力，而且我对这类探讨技术、环境与社会关系的话题比较感兴趣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得事态严重，但这类宏大叙事的话题我没什么具体建议或观点能直接贡献，不方便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发这个太沉重了，我的社交圈子比较简单，没必要特意扩散这种焦虑感。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这情况听起来挺严重的，尤其是提到大城市被淹没和气候难民，感觉这种全球性的技术和社会变动最终还是会影响到每个普通人的生活。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较有冲击力，而且我对这类探讨技术、环境与社会关系的话题比较感兴趣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得事态严重，但这类宏大叙事的话题我没什么具体建议或观点能直接贡献，不方便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发这个太沉重了，我的社交圈子比较简单，没必要特意扩散这种焦虑感。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 17.25
+}

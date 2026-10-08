@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_007_without_friends",
+  "actor": "agent_007",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-b60b25a7904842a1a65240336d125a5a",
+    "object": "chat.completion",
+    "created": 1791456381,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化的影响确实在扩大，这种宏大的社会议题让人感到不安，但对我当下的生活来说太遥远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注科技和社会话题，认可这类科普信息的价值。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"性格内向且没有太多专业见解，不习惯在公共场合发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且与我的个人社交圈关注点不符，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化的影响确实在扩大，这种宏大的社会议题让人感到不安，但对我当下的生活来说太遥远了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注科技和社会话题，认可这类科普信息的价值。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "性格内向且没有太多专业见解，不习惯在公共场合发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且与我的个人社交圈关注点不符，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.38
+}

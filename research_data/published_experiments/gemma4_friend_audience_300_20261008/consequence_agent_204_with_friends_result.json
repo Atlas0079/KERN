@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_204_with_friends",
+  "actor": "agent_204",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-46da3ad8da394f40a6f71bd473102d05",
+    "object": "chat.completion",
+    "created": 1791453027,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事儿听起来挺可怕的，想到这么多城市和岛国会被淹没，感觉挺沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容比较压抑，但这个议题很重要，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的气候议题我没什么专业见解，也没必要在评论区发表看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发这个会让我的主页氛围变得太沉重，不打算转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事儿听起来挺可怕的，想到这么多城市和岛国会被淹没，感觉挺沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容比较压抑，但这个议题很重要，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的气候议题我没什么专业见解，也没必要在评论区发表看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发这个会让我的主页氛围变得太沉重，不打算转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.71
+}

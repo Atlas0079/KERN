@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_041_without_friends",
+  "actor": "agent_041",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-89eb4e769c744e579fac992a55402bf3",
+    "object": "chat.completion",
+    "created": 1791457542,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种环保议题挺宏大的，虽然离我日常的厨房生活比较远，但看到有具体的解决方案还是觉得挺有意义的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持低碳环保的正能量内容，点个赞鼓励一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候工程和红树林这些专业领域了解不多，没什么能发表的见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然好，但不是我朋友圈社交圈关注的重点，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种环保议题挺宏大的，虽然离我日常的厨房生活比较远，但看到有具体的解决方案还是觉得挺有意义的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持低碳环保的正能量内容，点个赞鼓励一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候工程和红树林这些专业领域了解不多，没什么能发表的见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然好，但不是我朋友圈社交圈关注的重点，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.78
+}

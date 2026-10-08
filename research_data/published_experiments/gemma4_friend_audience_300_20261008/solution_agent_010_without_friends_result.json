@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_010_without_friends",
+  "actor": "agent_010",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-cb521b2f2a324a4c8d5b4c552caccb52",
+    "object": "chat.completion",
+    "created": 1791454809,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章把气候问题讲得比较积极，看到有具体的工程和方案，感觉没那么绝望了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活的理念，且对这种提供解决方案的内容有好感。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但性格比较内向，且没有特别强烈的观点想在公共场合表达。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然不错，但对我来说更像是一次安静的阅读，不需要分享到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章把气候问题讲得比较积极，看到有具体的工程和方案，感觉没那么绝望了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活的理念，且对这种提供解决方案的内容有好感。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但性格比较内向，且没有特别强烈的观点想在公共场合表达。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然不错，但对我来说更像是一次安静的阅读，不需要分享到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.09
+}

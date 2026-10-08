@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_140_without_friends",
+  "actor": "agent_140",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-760c58c013fe4e7ea92def234171b49a",
+    "object": "chat.completion",
+    "created": 1791459065,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的科普，原来除了担心环境恶化，还有这么多具体的工程和方案在尝试解决。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新知识和环保类话题比较开放，这种正向的科普内容值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但内容比较宏大，我没有特别专业的见解去评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇内容适合阅读，但不需要特意转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的科普，原来除了担心环境恶化，还有这么多具体的工程和方案在尝试解决。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新知识和环保类话题比较开放，这种正向的科普内容值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但内容比较宏大，我没有特别专业的见解去评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇内容适合阅读，但不需要特意转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.48
+}

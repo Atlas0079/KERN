@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_171_with_friends",
+  "actor": "agent_171",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-c08d81cce0544a19887dc46f7ae39a8a",
+    "object": "chat.completion",
+    "created": 1791456976,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，这种极端气候带来的连锁反应确实让人感到焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候和极端天气话题比较关注，支持这类科普信息的传播。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很有感触，但内容比较沉重，暂时没有想好怎么评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题太宏大且令人担忧，不确定转发到自己的社交圈是否合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，这种极端气候带来的连锁反应确实让人感到焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候和极端天气话题比较关注，支持这类科普信息的传播。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很有感触，但内容比较沉重，暂时没有想好怎么评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题太宏大且令人担忧，不确定转发到自己的社交圈是否合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.07
+}

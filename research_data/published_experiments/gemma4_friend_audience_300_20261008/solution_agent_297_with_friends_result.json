@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_297_with_friends",
+  "actor": "agent_297",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-ab0a7eb76dba4c8c9a75a5c989ecb285",
+    "object": "chat.completion",
+    "created": 1791455244,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的，没想到海平面上升还有这么多具体的解决方案，而且红树林固碳这个点很专业。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类环保和可持续发展的新知识很感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我只是随便看看，没什么特别想补充的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然很有意义，但我的朋友圈主要是同事和家人，转发这个可能有点太严肃了。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的，没想到海平面上升还有这么多具体的解决方案，而且红树林固碳这个点很专业。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类环保和可持续发展的新知识很感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我只是随便看看，没什么特别想补充的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然很有意义，但我的朋友圈主要是同事和家人，转发这个可能有点太严肃了。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.5
+}

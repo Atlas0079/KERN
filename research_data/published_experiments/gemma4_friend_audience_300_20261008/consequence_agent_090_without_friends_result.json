@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_090_without_friends",
+  "actor": "agent_090",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-3ae59357d13a4203bcfd67d79e79c5b5",
+    "object": "chat.completion",
+    "created": 1791452530,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这消息看着挺让人心慌的，不过这些全球性的气候问题对我现在的生活影响不大，感觉太遥远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重且离我太远，没有点赞的冲动。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学没那么专业，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种负面预警类的信息我不想转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这消息看着挺让人心慌的，不过这些全球性的气候问题对我现在的生活影响不大，感觉太遥远了。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容太沉重且离我太远，没有点赞的冲动。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学没那么专业，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种负面预警类的信息我不想转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.93
+}

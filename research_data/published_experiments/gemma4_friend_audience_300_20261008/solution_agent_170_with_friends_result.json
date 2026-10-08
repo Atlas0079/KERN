@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_170_with_friends",
+  "actor": "agent_170",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-bb3e8c1fd485407fa043e46cc8f247c6",
+    "object": "chat.completion",
+    "created": 1791454968,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然是个宏大的气候话题，但看到有具体的解决方案和个人能做的小事，感觉还挺有意义的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新知识和可持续发展的观点比较感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我作为一个旁观者没什么特别想补充的，不太习惯在公共区域主动发表见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题比较严肃，我的社交圈主要是家人和同事，转发这个可能不太契合他们的关注点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然是个宏大的气候话题，但看到有具体的解决方案和个人能做的小事，感觉还挺有意义的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新知识和可持续发展的观点比较感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我作为一个旁观者没什么特别想补充的，不太习惯在公共区域主动发表见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题比较严肃，我的社交圈主要是家人和同事，转发这个可能不太契合他们的关注点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.24
+}

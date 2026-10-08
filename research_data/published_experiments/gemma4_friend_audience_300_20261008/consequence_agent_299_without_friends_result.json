@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_299_without_friends",
+  "actor": "agent_299",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-bfc9f98cffd6438ebb008b6c9b969363",
+    "object": "chat.completion",
+    "created": 1791451630,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事儿听起来挺严重的，尤其是提到那些大城市和气候难民，感觉是个挺大的全球性危机。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类全球议题比较关注，点个赞表示认同这种科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得事态严重，但我也没啥专业见解能提供，没必要强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容挺震撼，但还没到我觉得必须转发给所有人知道的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事儿听起来挺严重的，尤其是提到那些大城市和气候难民，感觉是个挺大的全球性危机。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类全球议题比较关注，点个赞表示认同这种科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得事态严重，但我也没啥专业见解能提供，没必要强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容挺震撼，但还没到我觉得必须转发给所有人知道的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.03
+}

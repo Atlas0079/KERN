@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_141_without_friends",
+  "actor": "agent_141",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-ab76d23ca560400698a91512e1eba06e",
+    "object": "chat.completion",
+    "created": 1791457650,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉这个话题挺沉重的，想到未来孩子成长的环境可能会受到这些全球性危机的影响，心里有点焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普环保和气候危机的内容很有意义，支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很关注，但面对这种全球尺度的大问题，我没什么专业的建议或观点能分享，不想随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太压抑了，不希望把这种危机感传递给朋友圈的朋友。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉这个话题挺沉重的，想到未来孩子成长的环境可能会受到这些全球性危机的影响，心里有点焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普环保和气候危机的内容很有意义，支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很关注，但面对这种全球尺度的大问题，我没什么专业的建议或观点能分享，不想随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太压抑了，不希望把这种危机感传递给朋友圈的朋友。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.59
+}

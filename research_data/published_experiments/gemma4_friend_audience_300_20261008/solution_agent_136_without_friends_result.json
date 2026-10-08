@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_136_without_friends",
+  "actor": "agent_136",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-83f46a9dbb3b4d4c8a61ced5ef0431da",
+    "object": "chat.completion",
+    "created": 1791456084,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这种关于环境变化和生态保护的科普内容总是能引起我的关注，而且这种积极的视角让人觉得有希望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且符合我的科普兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但没有特别强烈的观点想要表达，静静看完就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然好，但还没到需要分享给朋友圈或关注者的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这种关于环境变化和生态保护的科普内容总是能引起我的关注，而且这种积极的视角让人觉得有希望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且符合我的科普兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但没有特别强烈的观点想要表达，静静看完就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然好，但还没到需要分享给朋友圈或关注者的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.11
+}

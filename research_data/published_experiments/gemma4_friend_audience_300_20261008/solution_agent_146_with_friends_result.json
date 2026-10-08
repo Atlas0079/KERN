@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_146_with_friends",
+  "actor": "agent_146",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-d4146d9aada24d03b285384c176563c2",
+    "object": "chat.completion",
+    "created": 1791455377,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保确实重要，不过这些宏大的工程离我的生活太远了，还是得在日常小事上努力。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"文章传递的正能量挺好的，支持一下低碳生活。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较专业且宏大，我没什么专业见解可以补充，不想随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的朋友圈多是邻居和家长，发这个可能不太契合大家的关注点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保确实重要，不过这些宏大的工程离我的生活太远了，还是得在日常小事上努力。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "文章传递的正能量挺好的，支持一下低碳生活。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较专业且宏大，我没什么专业见解可以补充，不想随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的朋友圈多是邻居和家长，发这个可能不太契合大家的关注点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.1
+}

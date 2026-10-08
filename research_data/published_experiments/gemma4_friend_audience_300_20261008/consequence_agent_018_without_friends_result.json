@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_018_without_friends",
+  "actor": "agent_018",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-fc39262edb2f47c398ac77ab6677e2b6",
+    "object": "chat.completion",
+    "created": 1791457350,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到海平面上升这么快真的挺令人揪心的，这不仅是环境问题，以后对沿海城市的居民影响太大了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"一直比较关注环境和生态保护，这种提醒人们关注气候危机的内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得担忧，但这种宏大的全球性话题，我暂时没有很专业的见解去评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但目前处于求职压力期，心态倾向于安静浏览，不想在朋友圈散播过于沉重或焦虑的消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到海平面上升这么快真的挺令人揪心的，这不仅是环境问题，以后对沿海城市的居民影响太大了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "一直比较关注环境和生态保护，这种提醒人们关注气候危机的内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得担忧，但这种宏大的全球性话题，我暂时没有很专业的见解去评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但目前处于求职压力期，心态倾向于安静浏览，不想在朋友圈散播过于沉重或焦虑的消息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.88
+}

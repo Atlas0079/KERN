@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_177_without_friends",
+  "actor": "agent_177",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-9f8267ad8da54f439f8c1ac7c767ff3a",
+    "object": "chat.completion",
+    "created": 1791453891,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度这么快吗，想到以后孩子长大面对的世界可能是这样的，心里突然有点不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"一直关注环境和生态话题，这种科普信息很有必要。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很担心，但这种宏大的气候问题我没有专业见解，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，不确定转发到自己的动态里是否合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度这么快吗，想到以后孩子长大面对的世界可能是这样的，心里突然有点不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "一直关注环境和生态话题，这种科普信息很有必要。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很担心，但这种宏大的气候问题我没有专业见解，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，不确定转发到自己的动态里是否合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.04
+}

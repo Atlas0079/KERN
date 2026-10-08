@@ -1,0 +1,52 @@
+{
+  "key": "consequence_agent_081_without_friends",
+  "actor": "agent_081",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-1a2ddcbf61de4561bc29e4ac0ddd39bc",
+    "object": "chat.completion",
+    "created": 1791457704,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些数据挺心惊的，想到孩子以后长大要面对这样的环境，真的让人焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注气候变化，支持这类警示性的科普内容。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"作为母亲，很想表达对下一代生存环境的担忧。\",\n      \"text\": \"看到这些报告真的挺揪心的，想到孩子们以后要生活在这样的世界，我们现在能做点什么来缓解这种情况吗？\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，点赞评论即可，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些数据挺心惊的，想到孩子以后长大要面对这样的环境，真的让人焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注气候变化，支持这类警示性的科普内容。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "作为母亲，很想表达对下一代生存环境的担忧。",
+        "text": "看到这些报告真的挺揪心的，想到孩子们以后要生活在这样的世界，我们现在能做点什么来缓解这种情况吗？"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，点赞评论即可，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "看到这些报告真的挺揪心的，想到孩子们以后要生活在这样的世界，我们现在能做点什么来缓解这种情况吗？"
+    }
+  ],
+  "seconds": 16.23
+}

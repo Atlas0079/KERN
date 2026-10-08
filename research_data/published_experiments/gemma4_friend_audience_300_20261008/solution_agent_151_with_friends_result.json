@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_151_with_friends",
+  "actor": "agent_151",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-870cce62de8f47299c588f5ba2593fdc",
+    "object": "chat.completion",
+    "created": 1791451951,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"关于气候变化和海平面上升的内容挺有启发性的，看到有具体的工程和方案在实施，感觉比单纯地焦虑要好。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种积极且有建设性的环保观点，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但并没有特别想分享的见解或强烈的表达欲望。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但不需要转发到自己的主页，不需要向社交圈特意推广。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "关于气候变化和海平面上升的内容挺有启发性的，看到有具体的工程和方案在实施，感觉比单纯地焦虑要好。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种积极且有建设性的环保观点，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但并没有特别想分享的见解或强烈的表达欲望。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但不需要转发到自己的主页，不需要向社交圈特意推广。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.51
+}

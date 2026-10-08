@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_030_without_friends",
+  "actor": "agent_030",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-ab920150dd6641eeb1a1aea29accfacc",
+    "object": "chat.completion",
+    "created": 1791457467,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉海平面上升这件事离我们虽然有距离，但影响确实挺巨大的，挺令人担忧的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种关注全球环境问题的科普贴值得点赞支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但自己在这个领域没有专业见解，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且不是我平时关注的重点领域，不太会转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉海平面上升这件事离我们虽然有距离，但影响确实挺巨大的，挺令人担忧的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种关注全球环境问题的科普贴值得点赞支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但自己在这个领域没有专业见解，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且不是我平时关注的重点领域，不太会转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.23
+}

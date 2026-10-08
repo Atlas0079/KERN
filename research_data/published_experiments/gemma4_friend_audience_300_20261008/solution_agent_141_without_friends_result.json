@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_141_without_friends",
+  "actor": "agent_141",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-24e933fe87c44295b62323a730d7fe77",
+    "object": "chat.completion",
+    "created": 1791458492,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种关于环境治理的大工程挺有意思的，不过对于我现在的生活来说稍微有点遥远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续发展的正能量内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观，我没有太多专业见解可以补充，点个赞就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普内容不需要特意转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种关于环境治理的大工程挺有意思的，不过对于我现在的生活来说稍微有点遥远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续发展的正能量内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏观，我没有太多专业见解可以补充，点个赞就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普内容不需要特意转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.24
+}

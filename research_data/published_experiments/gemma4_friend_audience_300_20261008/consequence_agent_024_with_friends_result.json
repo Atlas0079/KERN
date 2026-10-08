@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_024_with_friends",
+  "actor": "agent_024",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-a6711be775de4bab9330c2381b8c4edd",
+    "object": "chat.completion",
+    "created": 1791453678,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种环境危机真的挺让人焦虑的，想到以后孩子生活在什么样的世界，心里有点不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注生态环境话题，这个报告很重要，支持这类科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但这类宏大议题我暂时没什么建设性的想法可以评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，现在心情一般，不想在自己的主页发这种让人焦虑的东西。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种环境危机真的挺让人焦虑的，想到以后孩子生活在什么样的世界，心里有点不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注生态环境话题，这个报告很重要，支持这类科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但这类宏大议题我暂时没什么建设性的想法可以评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，现在心情一般，不想在自己的主页发这种让人焦虑的东西。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.71
+}

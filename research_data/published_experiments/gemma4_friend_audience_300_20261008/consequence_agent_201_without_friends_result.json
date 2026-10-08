@@ -1,0 +1,52 @@
+{
+  "key": "consequence_agent_201_without_friends",
+  "actor": "agent_201",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-35eaac4df911492285264041b311737f",
+    "object": "chat.completion",
+    "created": 1791452563,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升带来的气候风险确实触目惊心，这和我最近关注的极端天气和气候连锁反应非常契合。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容非常有价值，且正是我关注的专业兴趣点。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"我想从社会科学的角度探讨一下气候难民迁徙可能带来的社会影响。\",\n      \"text\": \"看到‘数亿气候难民’这几个字真的心惊，除了地理上的淹没，这种大规模人口迁移带来的社会结构冲击和资源重新分配，可能才是未来最复杂且亟需研究的课题。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"目前只是觉得有启发，还没到需要把它分享到自己主页提醒所有人的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升带来的气候风险确实触目惊心，这和我最近关注的极端天气和气候连锁反应非常契合。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容非常有价值，且正是我关注的专业兴趣点。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "我想从社会科学的角度探讨一下气候难民迁徙可能带来的社会影响。",
+        "text": "看到‘数亿气候难民’这几个字真的心惊，除了地理上的淹没，这种大规模人口迁移带来的社会结构冲击和资源重新分配，可能才是未来最复杂且亟需研究的课题。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "目前只是觉得有启发，还没到需要把它分享到自己主页提醒所有人的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "看到‘数亿气候难民’这几个字真的心惊，除了地理上的淹没，这种大规模人口迁移带来的社会结构冲击和资源重新分配，可能才是未来最复杂且亟需研究的课题。"
+    }
+  ],
+  "seconds": 18.52
+}

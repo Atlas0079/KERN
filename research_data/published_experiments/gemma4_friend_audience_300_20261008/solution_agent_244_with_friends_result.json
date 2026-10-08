@@ -1,0 +1,43 @@
+{
+  "key": "solution_agent_244_with_friends",
+  "actor": "agent_244",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f98c0c442cfc4058b57563425edd2e66",
+    "object": "chat.completion",
+    "created": 1791458306,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然挺有意思，但感觉离我的生活太远了，这种宏大的议题我没太想法。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容太专业且宏大，没有触动我的点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候问题没什么专业见解，也没必要在这类帖子下发表意见。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的社交圈里没多少关注这个的人，转了也没什么意义。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然挺有意思，但感觉离我的生活太远了，这种宏大的议题我没太想法。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容太专业且宏大，没有触动我的点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候问题没什么专业见解，也没必要在这类帖子下发表意见。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的社交圈里没多少关注这个的人，转了也没什么意义。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.75
+}

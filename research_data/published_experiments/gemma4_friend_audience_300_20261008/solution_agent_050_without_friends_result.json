@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_050_without_friends",
+  "actor": "agent_050",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-c0d15facfc5b4454bdc73a295e4a7d65",
+    "object": "chat.completion",
+    "created": 1791453407,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保工程和具体方案还挺有启发性的，感觉在宏观气候问题面前，个体的小习惯确实也能凑成希望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且具有建设性，支持这种传播可持续生活方式的帖子。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别想补充的专业见解，随手点个赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"话题比较宏大，不太符合我平时分享生活碎片或技术相关内容的习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保工程和具体方案还挺有启发性的，感觉在宏观气候问题面前，个体的小习惯确实也能凑成希望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且具有建设性，支持这种传播可持续生活方式的帖子。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别想补充的专业见解，随手点个赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "话题比较宏大，不太符合我平时分享生活碎片或技术相关内容的习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.36
+}

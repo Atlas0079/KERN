@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_096_with_friends",
+  "actor": "agent_096",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-a08e2d1d208f4a6ab46a8fdb54559576",
+    "object": "chat.completion",
+    "created": 1791452310,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看着这些大城市和岛国的处境，感觉世界好不稳定，有点为孩子未来的环境感到焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很严肃且重要，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的气候议题我没什么专业见解，不方便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"太沉重了，转发到我的朋友圈或好友圈可能会让气氛变得压抑。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看着这些大城市和岛国的处境，感觉世界好不稳定，有点为孩子未来的环境感到焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很严肃且重要，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的气候议题我没什么专业见解，不方便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "太沉重了，转发到我的朋友圈或好友圈可能会让气氛变得压抑。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.97
+}

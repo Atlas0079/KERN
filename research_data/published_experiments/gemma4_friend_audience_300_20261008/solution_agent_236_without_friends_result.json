@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_236_without_friends",
+  "actor": "agent_236",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-425f816e9de149f39d4e4c107524a752",
+    "object": "chat.completion",
+    "created": 1791450996,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实挺可怕的，不过看到有些工程方案和实际行动，感觉还没到完全没救的地步。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对极端天气和气候话题一直挺关注的，这个内容有意义。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但我平时不太习惯在社交平台上发表评论，尤其是面对这种大话题。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发太张扬了，我不习惯把这类内容分享到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实挺可怕的，不过看到有些工程方案和实际行动，感觉还没到完全没救的地步。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对极端天气和气候话题一直挺关注的，这个内容有意义。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但我平时不太习惯在社交平台上发表评论，尤其是面对这种大话题。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发太张扬了，我不习惯把这类内容分享到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.74
+}

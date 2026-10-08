@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_040_with_friends",
+  "actor": "agent_040",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-d38009f05a764d5ab4e60b0c9060fa02",
+    "object": "chat.completion",
+    "created": 1791459187,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺有正能量的，看到这些具体的工程和方案，觉得气候问题还是有希望解决的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续发展的观点，给个赞鼓励一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但这类宏大话题我没有特别深刻的见解可以分享，点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但目前还没到需要转发到自己主页分享给好友的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺有正能量的，看到这些具体的工程和方案，觉得气候问题还是有希望解决的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续发展的观点，给个赞鼓励一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但这类宏大话题我没有特别深刻的见解可以分享，点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但目前还没到需要转发到自己主页分享给好友的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.48
+}

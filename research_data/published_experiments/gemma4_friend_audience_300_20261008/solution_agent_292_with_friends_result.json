@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_292_with_friends",
+  "actor": "agent_292",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-fa37f62f4b5845cfa76d259d4782980b",
+    "object": "chat.completion",
+    "created": 1791456104,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这种关于生态保护和气候变化的科普内容，心里还是挺有共鸣的，觉得低碳生活确实很重要。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"比较关注环境变化和生态保护，支持这种正向的环保科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"性格内向，这种宏大的议题虽然认同，但没什么特别想发表的见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发会让自己的社交主页太显眼，习惯于默默关注而非公开传播。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这种关于生态保护和气候变化的科普内容，心里还是挺有共鸣的，觉得低碳生活确实很重要。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "比较关注环境变化和生态保护，支持这种正向的环保科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "性格内向，这种宏大的议题虽然认同，但没什么特别想发表的见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发会让自己的社交主页太显眼，习惯于默默关注而非公开传播。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.81
+}

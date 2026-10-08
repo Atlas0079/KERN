@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_113_without_friends",
+  "actor": "agent_113",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-eeb2c94c9d52488eb50ed0ad4c51e3ee",
+    "object": "chat.completion",
+    "created": 1791458098,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到红树林修复和海平面上升的话题，还是能唤起我博士期间对生命科学和环境议题的关注，感觉这些方案挺有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且符合我的专业兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但并没有什么特别想分享的见解，且平时在社交平台比较安静。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇文章比较科普，不需要特意转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到红树林修复和海平面上升的话题，还是能唤起我博士期间对生命科学和环境议题的关注，感觉这些方案挺有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且符合我的专业兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但并没有什么特别想分享的见解，且平时在社交平台比较安静。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇文章比较科普，不需要特意转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.86
+}

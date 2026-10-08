@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_064_without_friends",
+  "actor": "agent_064",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-e5f4ddee937e41aea42f125a28d3fa1e",
+    "object": "chat.completion",
+    "created": 1791451689,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保工程和数据，感觉海平面上升的问题虽然严峻，但只要有科学方案和大家共同努力还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护很关注，这个帖子传递了积极且有建设性的信息，值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很有感触，但目前没有特别独特的观点想要分享，先默默支持就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容很好，但我觉得点赞就足够了，不需要特意转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保工程和数据，感觉海平面上升的问题虽然严峻，但只要有科学方案和大家共同努力还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护很关注，这个帖子传递了积极且有建设性的信息，值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很有感触，但目前没有特别独特的观点想要分享，先默默支持就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容很好，但我觉得点赞就足够了，不需要特意转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 17.03
+}

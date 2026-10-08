@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_112_without_friends",
+  "actor": "agent_112",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-078a6a602d014eb4bab6c17fe41c8ee8",
+    "object": "chat.completion",
+    "created": 1791458179,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的，尤其是提到工程方案的部分，让环保问题看起来没那么绝望，反而有了技术可循。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种积极探讨解决方案的视角，且内容有一定的信息量。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但由于我对气候科学没有专业深钻，目前没什么独特的见解可以补充。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这属于科普类内容，我觉得点赞支持就够了，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的，尤其是提到工程方案的部分，让环保问题看起来没那么绝望，反而有了技术可循。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种积极探讨解决方案的视角，且内容有一定的信息量。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但由于我对气候科学没有专业深钻，目前没什么独特的见解可以补充。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这属于科普类内容，我觉得点赞支持就够了，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.68
+}

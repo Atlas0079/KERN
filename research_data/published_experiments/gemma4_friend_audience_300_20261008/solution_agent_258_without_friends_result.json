@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_258_without_friends",
+  "actor": "agent_258",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-700cab9c9f8141ee8895c034214bca75",
+    "object": "chat.completion",
+    "created": 1791456367,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到有具体的工程和计划在实施，感觉海平面上升这个问题虽然严峻，但还是有希望通过技术和行动来缓解的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对生态环境和气候变化比较关注，认可这种传递希望且有具体方案的内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但内容比较宏大，我没什么专业建议或特别想补充的，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我平时不太习惯在社交平台上转发内容，倾向于默默关注。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到有具体的工程和计划在实施，感觉海平面上升这个问题虽然严峻，但还是有希望通过技术和行动来缓解的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对生态环境和气候变化比较关注，认可这种传递希望且有具体方案的内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但内容比较宏大，我没什么专业建议或特别想补充的，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我平时不太习惯在社交平台上转发内容，倾向于默默关注。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.52
+}

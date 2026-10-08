@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_256_without_friends",
+  "actor": "agent_256",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-d07b927a30d24edd97c6b6fb9fd55b84",
+    "object": "chat.completion",
+    "created": 1791455706,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的影响这么严重吗，感觉这种宏观的自然危机离生活挺远，但对沿海城市的人来说确实挺揪心的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注新技术和社会关系的变迁，这种全球性的预警信息值得点赞支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然关注，但我对气候科学并不专业，没什么建设性的观点可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重且是宏观议题，不太适合转发到我的个人主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的影响这么严重吗，感觉这种宏观的自然危机离生活挺远，但对沿海城市的人来说确实挺揪心的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注新技术和社会关系的变迁，这种全球性的预警信息值得点赞支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然关注，但我对气候科学并不专业，没什么建设性的观点可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重且是宏观议题，不太适合转发到我的个人主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.93
+}

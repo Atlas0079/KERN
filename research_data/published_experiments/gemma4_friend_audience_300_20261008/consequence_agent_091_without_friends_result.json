@@ -1,0 +1,52 @@
+{
+  "key": "consequence_agent_091_without_friends",
+  "actor": "agent_091",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-75202a816a5f41c382588d337b5697c7",
+    "object": "chat.completion",
+    "created": 1791450939,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升导致的难民问题确实很严重，这不仅是自然科学问题，更会引发巨大的社会冲突。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候风险和极端天气这类议题一直比较关注，支持这类科普内容。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"作为人文社科专业的学生，我想从社会影响的角度分享一点看法。\",\n      \"text\": \"除了环境破坏，数亿气候难民带来的资源争夺和人口迁移压力，可能是未来几十年最严峻的社会治理挑战。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容很重要，但目前觉得点赞和评论就足够表达关注了，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升导致的难民问题确实很严重，这不仅是自然科学问题，更会引发巨大的社会冲突。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候风险和极端天气这类议题一直比较关注，支持这类科普内容。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "作为人文社科专业的学生，我想从社会影响的角度分享一点看法。",
+        "text": "除了环境破坏，数亿气候难民带来的资源争夺和人口迁移压力，可能是未来几十年最严峻的社会治理挑战。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容很重要，但目前觉得点赞和评论就足够表达关注了，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "除了环境破坏，数亿气候难民带来的资源争夺和人口迁移压力，可能是未来几十年最严峻的社会治理挑战。"
+    }
+  ],
+  "seconds": 16.58
+}

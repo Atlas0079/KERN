@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_029_without_friends",
+  "actor": "agent_029",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-adb36603307044b8942bd84de3ab5121",
+    "object": "chat.completion",
+    "created": 1791458467,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么快吗，虽然离我生活没那么近，但这种规模的危机确实让人有点不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普类的内容有价值，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但我也不是这个领域的专家，没什么有建设性的观点可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，没必要转发到自己的主页影响心情。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么快吗，虽然离我生活没那么近，但这种规模的危机确实让人有点不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普类的内容有价值，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但我也不是这个领域的专家，没什么有建设性的观点可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，没必要转发到自己的主页影响心情。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.23
+}

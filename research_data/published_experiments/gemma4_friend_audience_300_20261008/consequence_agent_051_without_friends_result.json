@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_051_without_friends",
+  "actor": "agent_051",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-30103b4ddf36404d99bce84cb5db9358",
+    "object": "chat.completion",
+    "created": 1791457143,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这消息看着挺触目惊心的，虽然离我的生活暂时没直接影响，但气候变化确实是个挺严肃的大问题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这类科普公共议题的内容值得支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的全球性话题我没什么专业见解，也没必要发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发这个对我来说有点太沉重了，不适合发在我的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这消息看着挺触目惊心的，虽然离我的生活暂时没直接影响，但气候变化确实是个挺严肃的大问题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这类科普公共议题的内容值得支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的全球性话题我没什么专业见解，也没必要发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发这个对我来说有点太沉重了，不适合发在我的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.15
+}

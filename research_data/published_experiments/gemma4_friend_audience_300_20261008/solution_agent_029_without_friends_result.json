@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_029_without_friends",
+  "actor": "agent_029",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-027bf91c54ff41b091e6f38999c5c923",
+    "object": "chat.completion",
+    "created": 1791454095,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些工程案例觉得还挺有意思的，不过生活细节上的低碳建议对我来说比较常规。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正面且有科普性质，支持这种可持续发展的观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有什么特别深刻的见解需要分享。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类话题比较宏大，不太符合我平时的分享习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些工程案例觉得还挺有意思的，不过生活细节上的低碳建议对我来说比较常规。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正面且有科普性质，支持这种可持续发展的观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有什么特别深刻的见解需要分享。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类话题比较宏大，不太符合我平时的分享习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.16
+}

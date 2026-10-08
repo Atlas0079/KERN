@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_267_with_friends",
+  "actor": "agent_267",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-35815f87523042c2889c56acfe7ff2b8",
+    "object": "chat.completion",
+    "created": 1791456747,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个严重的问题，不过感觉离我的日常生活还比较远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容重要，但这种宏大的气候议题并不是我平时关注的重点，没有特别的触动。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对这个领域不专业，也没有什么想表达的观点，不习惯在不熟悉的领域发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重且宏观，不符合我记录生活或分享实用信息的习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个严重的问题，不过感觉离我的日常生活还比较远。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "虽然内容重要，但这种宏大的气候议题并不是我平时关注的重点，没有特别的触动。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对这个领域不专业，也没有什么想表达的观点，不习惯在不熟悉的领域发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重且宏观，不符合我记录生活或分享实用信息的习惯。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.92
+}

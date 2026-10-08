@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_057_with_friends",
+  "actor": "agent_057",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-c795f58f0d8345a195368290a977098d",
+    "object": "chat.completion",
+    "created": 1791454004,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么严重吗，感觉这种全球性的环境危机离我们虽然远，但确实挺让人焦虑的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注公共科普和全球议题，点赞表示支持这类警示性内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得挺严重，但由于缺乏专业知识，没什么能深入讨论的，不想随意发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重且属于宏观议题，不觉得有必要转发到自己的个人动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么严重吗，感觉这种全球性的环境危机离我们虽然远，但确实挺让人焦虑的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注公共科普和全球议题，点赞表示支持这类警示性内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得挺严重，但由于缺乏专业知识，没什么能深入讨论的，不想随意发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重且属于宏观议题，不觉得有必要转发到自己的个人动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.42
+}

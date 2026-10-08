@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_210_with_friends",
+  "actor": "agent_210",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f5c9dbd10b8645029598a3bb12c39ce8",
+    "object": "chat.completion",
+    "created": 1791452423,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的，没想到这些技术方案已经能这么具体地应对海平面上升了，社会发展和环境治理的结合点确实值得琢磨。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正向且有启发性，支持这种关于可持续发展的讨论。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但我对这个专业领域了解不多，没什么能深入补充的，不便随意发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容偏向科普和呼吁，对我目前的社交圈层来说，转发的必要性不是很高。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的，没想到这些技术方案已经能这么具体地应对海平面上升了，社会发展和环境治理的结合点确实值得琢磨。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正向且有启发性，支持这种关于可持续发展的讨论。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但我对这个专业领域了解不多，没什么能深入补充的，不便随意发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容偏向科普和呼吁，对我目前的社交圈层来说，转发的必要性不是很高。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.79
+}

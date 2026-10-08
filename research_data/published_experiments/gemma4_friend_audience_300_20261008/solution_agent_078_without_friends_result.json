@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_078_without_friends",
+  "actor": "agent_078",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-89745071d1fd4be485c5ee776bf9c3b4",
+    "object": "chat.completion",
+    "created": 1791456628,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种宏大的环保话题挺有意义的，不过文风稍微有点像宣传手册，不够生活化。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持低碳生活和环境修复，这种正能量内容习惯性点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别强烈的观点需要表达，也没打算在这个话题上深聊。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较常规，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种宏大的环保话题挺有意义的，不过文风稍微有点像宣传手册，不够生活化。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持低碳生活和环境修复，这种正能量内容习惯性点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别强烈的观点需要表达，也没打算在这个话题上深聊。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较常规，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.15
+}

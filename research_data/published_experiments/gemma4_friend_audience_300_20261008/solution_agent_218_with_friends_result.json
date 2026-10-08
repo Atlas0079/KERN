@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_218_with_friends",
+  "actor": "agent_218",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-e365a589ee93441b8dc453e2fdd53d2e",
+    "object": "chat.completion",
+    "created": 1791451966,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实让人担心，不过看到这些具体的应对工程和方案，心里稍微踏实了一点，环保确实得从点滴做起。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且客观，关注气候变化是我比较在意的话题，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这些专业工程话题我没什么能补充的，不方便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇文章比较像科普，对我朋友圈里的同事和家长群体来说可能太严肃了，不打算转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实让人担心，不过看到这些具体的应对工程和方案，心里稍微踏实了一点，环保确实得从点滴做起。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且客观，关注气候变化是我比较在意的话题，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这些专业工程话题我没什么能补充的，不方便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇文章比较像科普，对我朋友圈里的同事和家长群体来说可能太严肃了，不打算转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.99
+}

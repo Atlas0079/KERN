@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_068_without_friends",
+  "actor": "agent_068",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-5c91faef0d7940febfd13ea151daa0f4",
+    "object": "chat.completion",
+    "created": 1791456071,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化确实是个大问题，看到有具体的工程和方案在实施，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正面且有建设性，支持这种环保科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别专业的见解可以分享，不需要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类的宏大叙事内容，转发到我的朋友圈可能不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化确实是个大问题，看到有具体的工程和方案在实施，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正面且有建设性，支持这种环保科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别专业的见解可以分享，不需要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类的宏大叙事内容，转发到我的朋友圈可能不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.44
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_005_with_friends",
+  "actor": "agent_005",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-27e007a5d61b451b9a846708e203ee93",
+    "object": "chat.completion",
+    "created": 1791457511,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"平时一直关注极端天气，看到这些具体的应对措施觉得还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容符合我对气候风险的关注，且传递了积极的解决方向。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但性格内向且没有特别想深入探讨的专业观点，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种宏观话题在我的社交圈（家人、同事、邻居）里传播度不高，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "平时一直关注极端天气，看到这些具体的应对措施觉得还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容符合我对气候风险的关注，且传递了积极的解决方向。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但性格内向且没有特别想深入探讨的专业观点，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种宏观话题在我的社交圈（家人、同事、邻居）里传播度不高，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.05
+}

@@ -1,0 +1,43 @@
+{
+  "key": "solution_agent_014_without_friends",
+  "actor": "agent_014",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-d2054080fb924f338581454ed86ba623",
+    "object": "chat.completion",
+    "created": 1791453473,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些环保工程听起来很有条理，不过对我现在的生活影响不大，感觉离我有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"虽然观点正确，但没到让我产生共鸣或想要支持的程度。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学没有专业见解，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题太宏大了，不适合发在我的社交圈里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些环保工程听起来很有条理，不过对我现在的生活影响不大，感觉离我有点远。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "虽然观点正确，但没到让我产生共鸣或想要支持的程度。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学没有专业见解，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题太宏大了，不适合发在我的社交圈里。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.96
+}

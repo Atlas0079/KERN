@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_181_with_friends",
+  "actor": "agent_181",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-e41a730e775b4b54859ce39ae1758470",
+    "object": "chat.completion",
+    "created": 1791453614,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章在探讨气候变化和可持续发展，挺有意义的，而且提到的工程案例让我有点好奇。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活的理念，且内容具有正面引导意义。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但并没有什么特别想表达的观点，倾向于安静阅读。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容较为常规，不需要转发到自己的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章在探讨气候变化和可持续发展，挺有意义的，而且提到的工程案例让我有点好奇。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活的理念，且内容具有正面引导意义。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但并没有什么特别想表达的观点，倾向于安静阅读。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容较为常规，不需要转发到自己的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.63
+}

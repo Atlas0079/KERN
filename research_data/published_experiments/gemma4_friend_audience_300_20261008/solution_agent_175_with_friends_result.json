@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_175_with_friends",
+  "actor": "agent_175",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-1beccfa6c8b1489b89052a95b9b414cc",
+    "object": "chat.completion",
+    "created": 1791456325,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保话题挺有意义的，不过感觉离我的生活和专业领域有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正能量且有一定知识量，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"没什么专业见解可以分享，也不想在这个话题下发表太直接的看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然好，但我的社交圈大多是同学和家人，转发这个可能没什么互动。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保话题挺有意义的，不过感觉离我的生活和专业领域有点远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正能量且有一定知识量，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "没什么专业见解可以分享，也不想在这个话题下发表太直接的看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然好，但我的社交圈大多是同学和家人，转发这个可能没什么互动。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.76
+}

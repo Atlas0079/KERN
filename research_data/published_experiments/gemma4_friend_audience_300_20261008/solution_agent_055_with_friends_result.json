@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_055_with_friends",
+  "actor": "agent_055",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-c1bd6d52e6e64ece8215e143b43713bb",
+    "object": "chat.completion",
+    "created": 1791459041,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是全球性的气候危机，看到这些具体的应对措施让我觉得稍微有了一些希望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候风险和极端天气一直很关注，这个帖子的内容非常符合我的兴趣点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容很有意义，但我性格比较内向，习惯于安静地阅读，不太倾向于在公共评论区发表看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇内容比较科普，但我认为转发到我的圈子里可能不够精准，且我平时不常发这种宏大叙事的内容。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是全球性的气候危机，看到这些具体的应对措施让我觉得稍微有了一些希望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候风险和极端天气一直很关注，这个帖子的内容非常符合我的兴趣点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然内容很有意义，但我性格比较内向，习惯于安静地阅读，不太倾向于在公共评论区发表看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇内容比较科普，但我认为转发到我的圈子里可能不够精准，且我平时不常发这种宏大叙事的内容。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.61
+}

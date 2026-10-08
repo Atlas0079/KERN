@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_276_without_friends",
+  "actor": "agent_276",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-db719e86a50d4434963c3813b043e5dc",
+    "object": "chat.completion",
+    "created": 1791456353,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种关于环保和技术应对气候变化的讨论挺有意思的，感觉是一个很宏大的议题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很正能量，而且我对新技术如何改善社会现状一直比较感兴趣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但这类宏大叙事我没什么专业见解可以补充，不想随便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这对我来说更多是碎片化的知识阅读，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种关于环保和技术应对气候变化的讨论挺有意思的，感觉是一个很宏大的议题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很正能量，而且我对新技术如何改善社会现状一直比较感兴趣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但这类宏大叙事我没什么专业见解可以补充，不想随便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这对我来说更多是碎片化的知识阅读，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.71
+}

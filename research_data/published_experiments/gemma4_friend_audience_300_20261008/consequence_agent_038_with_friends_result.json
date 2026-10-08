@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_038_with_friends",
+  "actor": "agent_038",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-44895e3255dc4456a56db5bbdb176361",
+    "object": "chat.completion",
+    "created": 1791453823,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个严重的全球问题，不过对我现在的生活来说太遥远了，有点沉重。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然离我较远，但这种科普性的警示内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"没什么专业的见解可以发表，也不太想在这么沉重的话题下讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太压抑，不适合转发到我的朋友圈给家人和老同学看。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个严重的全球问题，不过对我现在的生活来说太遥远了，有点沉重。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然离我较远，但这种科普性的警示内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "没什么专业的见解可以发表，也不太想在这么沉重的话题下讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太压抑，不适合转发到我的朋友圈给家人和老同学看。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.0
+}

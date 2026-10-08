@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_047_without_friends",
+  "actor": "agent_047",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-9a343c9fbabc4ca0b12b1f89f701bc4a",
+    "object": "chat.completion",
+    "created": 1791455528,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉这个话题太宏大且沉重了，虽然很严重，但离我的日常生活似乎有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种关于全球气候的科普信息有价值，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"专业性太强，我没什么深入的观点可以发表，不想随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较压抑，不太适合发在我的社交主页上。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉这个话题太宏大且沉重了，虽然很严重，但离我的日常生活似乎有点远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种关于全球气候的科普信息有价值，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "专业性太强，我没什么深入的观点可以发表，不想随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较压抑，不太适合发在我的社交主页上。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.74
+}

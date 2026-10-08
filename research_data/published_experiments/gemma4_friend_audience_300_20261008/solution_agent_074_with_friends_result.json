@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_074_with_friends",
+  "actor": "agent_074",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-7844f32c6365404f91199d6e15bfeaec",
+    "object": "chat.completion",
+    "created": 1791451753,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的保护措施和低碳建议，觉得海平面上升的问题虽然严重，但只要大家一起行动还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直很关注环境和生态保护，这类有正面引导意义的内容很值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容已经写得很完整了，我目前没有特别想补充的观点，点赞支持即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然很有意义，但我的朋友圈主要是家人和同事，转发这个可能互动不多，先自己收藏关注就好。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的保护措施和低碳建议，觉得海平面上升的问题虽然严重，但只要大家一起行动还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直很关注环境和生态保护，这类有正面引导意义的内容很值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容已经写得很完整了，我目前没有特别想补充的观点，点赞支持即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然很有意义，但我的朋友圈主要是家人和同事，转发这个可能互动不多，先自己收藏关注就好。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.7
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_265_without_friends",
+  "actor": "agent_265",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-3a90b21a86f649ec89cdfb2625ef25df",
+    "object": "chat.completion",
+    "created": 1791456231,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，想到未来可能出现大规模的气候难民，感觉挺不安的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"一直关注气候和环境话题，支持这类科普预警内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这类宏大议题我不知道该怎么评论，且性格比较内向，不习惯在公共场合发表观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但我的社交圈比较小，没必要特意转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，想到未来可能出现大规模的气候难民，感觉挺不安的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "一直关注气候和环境话题，支持这类科普预警内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这类宏大议题我不知道该怎么评论，且性格比较内向，不习惯在公共场合发表观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但我的社交圈比较小，没必要特意转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.73
+}

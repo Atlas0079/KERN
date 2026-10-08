@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_184_with_friends",
+  "actor": "agent_184",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-5eaa5ff498ed46809e80af16f31d16de",
+    "object": "chat.completion",
+    "created": 1791456728,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比想象中快，这种全球性的生态危机确实让人感到不安，而且它最终会影响到每个人的生存资源。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态变化一直很关注，支持这类传播危机意识的科普内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且宏大，我倾向于先阅读相关报告了解细节，暂时没有具体的观点要直接表达。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但我的社交圈子比较适度，不希望在没有深入研究前随意转发这类令人焦虑的消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比想象中快，这种全球性的生态危机确实让人感到不安，而且它最终会影响到每个人的生存资源。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态变化一直很关注，支持这类传播危机意识的科普内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且宏大，我倾向于先阅读相关报告了解细节，暂时没有具体的观点要直接表达。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但我的社交圈子比较适度，不希望在没有深入研究前随意转发这类令人焦虑的消息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.27
+}

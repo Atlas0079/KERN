@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_271_without_friends",
+  "actor": "agent_271",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-d2c36817755a4f57b4023b9e7ede52b8",
+    "object": "chat.completion",
+    "created": 1791451642,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意义的科普，看到这些工程和方案让人觉得环境问题还是有希望解决的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和低碳生活，这种正能量的内容值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没什么特别的见解可以分享，点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但还没到一定要转发给所有人看的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意义的科普，看到这些工程和方案让人觉得环境问题还是有希望解决的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和低碳生活，这种正能量的内容值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没什么特别的见解可以分享，点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但还没到一定要转发给所有人看的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.84
+}

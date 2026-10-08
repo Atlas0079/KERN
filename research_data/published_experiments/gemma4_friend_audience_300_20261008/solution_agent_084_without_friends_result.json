@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_084_without_friends",
+  "actor": "agent_084",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-07bc7e8b762846938890145b4a44b513",
+    "object": "chat.completion",
+    "created": 1791454129,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题挺宏大的，看到红树林修复和工程方案，让我想起大学学工程时的那种系统性解决问题的感觉，挺有意思。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有建设性，我对这种探讨可持续发展的观点比较认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但这类宏大叙事我习惯于静静阅读，不太想发表自己的看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"比较私人的阅读习惯，平时很少转发这类科普内容到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题挺宏大的，看到红树林修复和工程方案，让我想起大学学工程时的那种系统性解决问题的感觉，挺有意思。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有建设性，我对这种探讨可持续发展的观点比较认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但这类宏大叙事我习惯于静静阅读，不太想发表自己的看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "比较私人的阅读习惯，平时很少转发这类科普内容到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.39
+}

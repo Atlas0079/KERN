@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_129_without_friends",
+  "actor": "agent_129",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-13257ba301ed4f4e91923695390593e8",
+    "object": "chat.completion",
+    "created": 1791453580,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保工程和低碳行动，觉得面对气候变化还是有希望的，心里踏实了一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我很关心生态保护话题，这个帖子的内容正合我意。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我倾向于安静地阅读和认同，不需要发表额外观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我平时社交比较内向，不习惯在自己的主页转发这类宏大话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保工程和低碳行动，觉得面对气候变化还是有希望的，心里踏实了一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我很关心生态保护话题，这个帖子的内容正合我意。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我倾向于安静地阅读和认同，不需要发表额外观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我平时社交比较内向，不习惯在自己的主页转发这类宏大话题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.92
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_001_with_friends",
+  "actor": "agent_001",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-c28665c167c546a9aa1bb0f5e5d92177",
+    "object": "chat.completion",
+    "created": 1791452500,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"最近确实经常看到极端天气的新闻，看到这种有具体解决方案和正面进展的内容，心里感觉踏实了一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种倡导可持续生活的正能量内容，也符合我对科学和社会话题的关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但并没有特别强烈的观点需要表达，刷到就点个赞就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然好，但对我目前的社交圈（家长和同事）来说可能不够贴合，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "最近确实经常看到极端天气的新闻，看到这种有具体解决方案和正面进展的内容，心里感觉踏实了一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种倡导可持续生活的正能量内容，也符合我对科学和社会话题的关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但并没有特别强烈的观点需要表达，刷到就点个赞就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然好，但对我目前的社交圈（家长和同事）来说可能不够贴合，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.53
+}

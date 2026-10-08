@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_046_without_friends",
+  "actor": "agent_046",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-b92d95d67d3142b186a7cba412cd72b8",
+    "object": "chat.completion",
+    "created": 1791457335,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这事儿听起来挺严重的，虽然离我的生活暂时没直接影响，但这种全球性的危机确实让人心慌。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"科普类的内容值得支持，而且我对这种宏大议题比较感兴趣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感想，但这种专业性很强的话题，我没啥能直接评论的，不想随便发表意见。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我平时社交比较低调，这种沉重的话题不太适合分享到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这事儿听起来挺严重的，虽然离我的生活暂时没直接影响，但这种全球性的危机确实让人心慌。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "科普类的内容值得支持，而且我对这种宏大议题比较感兴趣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感想，但这种专业性很强的话题，我没啥能直接评论的，不想随便发表意见。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我平时社交比较低调，这种沉重的话题不太适合分享到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.48
+}

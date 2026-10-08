@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_014_with_friends",
+  "actor": "agent_014",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-2fdbcc31be394ad1bac50759d3260404",
+    "object": "chat.completion",
+    "created": 1791459010,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些全球气候问题听起来很宏大，但看到环保能从生活小事做起，我觉得还挺有意义的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的正面观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但内容太专业且宏大，我没什么具体的专业见解可以补充。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这跟我平时的社交圈关注点（花店、学习、亲子）契合度不高，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些全球气候问题听起来很宏大，但看到环保能从生活小事做起，我觉得还挺有意义的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的正面观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但内容太专业且宏大，我没什么具体的专业见解可以补充。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这跟我平时的社交圈关注点（花店、学习、亲子）契合度不高，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.65
+}

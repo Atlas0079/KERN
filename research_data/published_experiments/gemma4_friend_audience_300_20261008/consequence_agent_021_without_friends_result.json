@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_021_without_friends",
+  "actor": "agent_021",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-ba8687ae314c4c6e868d9399a127058f",
+    "object": "chat.completion",
+    "created": 1791456839,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化的影响比我想象中要快，想到那些失去家园的人，心里挺沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这是一个很重要的警示，支持这类科普内容的传播。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且宏大，我没什么专业的见解可以补充，不便随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但我平时在社交平台上比较低调，不习惯转发这类沉重的话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化的影响比我想象中要快，想到那些失去家园的人，心里挺沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这是一个很重要的警示，支持这类科普内容的传播。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且宏大，我没什么专业的见解可以补充，不便随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但我平时在社交平台上比较低调，不习惯转发这类沉重的话题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.98
+}

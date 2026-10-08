@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_238_without_friends",
+  "actor": "agent_238",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-049ee2155c6749199854b21eb8ef4fb6",
+    "object": "chat.completion",
+    "created": 1791452619,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的消息听起来挺严重的，想到以后可能会有这么多流离失所的人，心里觉得挺沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注气候变化是个重要话题，点个赞支持一下这种科普提醒。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得忧虑，但这类宏大的全球议题我没什么专业见解可以评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我平时社交圈较小，不太习惯转发这类预警信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的消息听起来挺严重的，想到以后可能会有这么多流离失所的人，心里觉得挺沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注气候变化是个重要话题，点个赞支持一下这种科普提醒。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得忧虑，但这类宏大的全球议题我没什么专业见解可以评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我平时社交圈较小，不太习惯转发这类预警信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.65
+}

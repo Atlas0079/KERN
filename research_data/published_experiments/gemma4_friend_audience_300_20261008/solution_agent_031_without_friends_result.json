@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_031_without_friends",
+  "actor": "agent_031",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-21629440c0444d36a7e4fbdb444d9b6f",
+    "object": "chat.completion",
+    "created": 1791459269,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个严肃的话题，看到有具体的工程方案和修复计划，感觉比纯粹的焦虑要好一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对极端天气和气候话题比较关注，这篇内容传递了积极的解决方向，值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较概括，我目前没有特别想深入讨论的专业见解，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但我的社交习惯比较低调，除非是非常震撼或实用且必须分享的内容，否则不会轻易转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个严肃的话题，看到有具体的工程方案和修复计划，感觉比纯粹的焦虑要好一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对极端天气和气候话题比较关注，这篇内容传递了积极的解决方向，值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较概括，我目前没有特别想深入讨论的专业见解，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但我的社交习惯比较低调，除非是非常震撼或实用且必须分享的内容，否则不会轻易转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.84
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_190_without_friends",
+  "actor": "agent_190",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-0eaa462006ac4f2b9bf6cd6f3080f4a1",
+    "object": "chat.completion",
+    "created": 1791453107,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实让人焦虑，看到有具体的工程和修复计划在实施，感觉稍微有了一些掌控感。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候和极端天气话题一直很关注，这个内容比较正向且有信息量。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同低碳生活，但我性格内向，且没想出什么特别犀利或独特的观点，不习惯随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然不错，但转发到自己的主页对我来说稍微有点太高调了。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实让人焦虑，看到有具体的工程和修复计划在实施，感觉稍微有了一些掌控感。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候和极端天气话题一直很关注，这个内容比较正向且有信息量。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同低碳生活，但我性格内向，且没想出什么特别犀利或独特的观点，不习惯随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然不错，但转发到自己的主页对我来说稍微有点太高调了。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.47
+}

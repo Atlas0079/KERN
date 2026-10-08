@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_164_without_friends",
+  "actor": "agent_164",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8169a5e19e03472199f758e02440732d",
+    "object": "chat.completion",
+    "created": 1791454997,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么快吗，感觉这种全球性的危机离我的小店很远，但听起来确实挺可怕的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类新知和全球议题挺感兴趣，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得震撼，但这类专业宏大的话题我没什么能补充的，不方便随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个内容太沉重了，我的朋友圈大多是街坊邻居，转发这个可能氛围不太对。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么快吗，感觉这种全球性的危机离我的小店很远，但听起来确实挺可怕的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类新知和全球议题挺感兴趣，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得震撼，但这类专业宏大的话题我没什么能补充的，不方便随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个内容太沉重了，我的朋友圈大多是街坊邻居，转发这个可能氛围不太对。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.1
+}

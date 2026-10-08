@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_163_without_friends",
+  "actor": "agent_163",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8941c98a587e4ab9a233f09d9dc030d3",
+    "object": "chat.completion",
+    "created": 1791459144,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些环保措施听起来很有意思，尤其是红树林修复，感觉科技和自然结合得不错。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这种探讨新技术和可持续发展的话题比较感兴趣，支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但没什么特别想表达的观点，没必要强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错但不需要转发到我的主页，我平时很少转发这类科普帖。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些环保措施听起来很有意思，尤其是红树林修复，感觉科技和自然结合得不错。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这种探讨新技术和可持续发展的话题比较感兴趣，支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但没什么特别想表达的观点，没必要强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错但不需要转发到我的主页，我平时很少转发这类科普帖。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.18
+}

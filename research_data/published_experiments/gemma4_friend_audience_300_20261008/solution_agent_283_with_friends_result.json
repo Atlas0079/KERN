@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_283_with_friends",
+  "actor": "agent_283",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-0957c8220dd44aefa603f09361d6ef9c",
+    "object": "chat.completion",
+    "created": 1791452455,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺正能量的，关于气候变化和生态修复的科普很有意义，不过和我目前的生活节奏关系不大。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可低碳生活的理念，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有共鸣，但没有特别想分享的观点或问题，没必要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然好，但我的社交圈层大多是同事和家长，转发这个可能不太契合他们的关注点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺正能量的，关于气候变化和生态修复的科普很有意义，不过和我目前的生活节奏关系不大。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可低碳生活的理念，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有共鸣，但没有特别想分享的观点或问题，没必要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然好，但我的社交圈层大多是同事和家长，转发这个可能不太契合他们的关注点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.98
+}

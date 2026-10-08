@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_243_with_friends",
+  "actor": "agent_243",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-731539575bf9486e8fb2c62f63676b20",
+    "object": "chat.completion",
+    "created": 1791455948,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中要快，这种极端天气的连锁反应确实挺让人焦虑的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"平时就关注气候变化和极端天气，这类科普信息值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且专业，暂时没有什么能补充的观点，点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容重要，但感觉太沉重，不太适合转发到我的朋友圈给同事和同学看。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中要快，这种极端天气的连锁反应确实挺让人焦虑的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "平时就关注气候变化和极端天气，这类科普信息值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且专业，暂时没有什么能补充的观点，点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容重要，但感觉太沉重，不太适合转发到我的朋友圈给同事和同学看。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.9
+}

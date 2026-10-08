@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_185_with_friends",
+  "actor": "agent_185",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-afc6883314dc4ff5874b4739c54734bf",
+    "object": "chat.completion",
+    "created": 1791454970,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章讲的环境保护很有意义，看到全球在采取行动，心里觉得比较踏实。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的正能量内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很专业，但我没有太深入的见解，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但这种宏大叙事的内容不太适合发在我的个人朋友圈里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章讲的环境保护很有意义，看到全球在采取行动，心里觉得比较踏实。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的正能量内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很专业，但我没有太深入的见解，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然认同，但这种宏大叙事的内容不太适合发在我的个人朋友圈里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.64
+}

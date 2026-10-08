@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_216_with_friends",
+  "actor": "agent_216",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f6779d8242d54a7a959f4a7b8397dcd4",
+    "object": "chat.completion",
+    "created": 1791451584,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这消息看着挺吓人的，虽然离我生活挺远，但这种全球性的危机确实让人担心。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然焦虑，但这种科普环保和气候危机的正能量内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学没有专业研究，没什么能贡献的见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，转发到我的朋友圈里可能会让周围的人也跟着焦虑。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这消息看着挺吓人的，虽然离我生活挺远，但这种全球性的危机确实让人担心。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然焦虑，但这种科普环保和气候危机的正能量内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学没有专业研究，没什么能贡献的见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，转发到我的朋友圈里可能会让周围的人也跟着焦虑。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.09
+}

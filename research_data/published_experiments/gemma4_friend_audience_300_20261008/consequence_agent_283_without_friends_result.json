@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_283_without_friends",
+  "actor": "agent_283",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-afdc73b570a64af6a1382748c2a027ae",
+    "object": "chat.completion",
+    "created": 1791451119,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化带来的影响确实触目惊心，尤其是对沿海城市和岛国的威胁，让人感到不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普全球危机的内容有价值，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这是一个宏大的全球性议题，我个人没有太多专业见解可以贡献，不需要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但我的社交圈并不太需要我转发这类警示性信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化带来的影响确实触目惊心，尤其是对沿海城市和岛国的威胁，让人感到不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普全球危机的内容有价值，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这是一个宏大的全球性议题，我个人没有太多专业见解可以贡献，不需要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但我的社交圈并不太需要我转发这类警示性信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.7
+}

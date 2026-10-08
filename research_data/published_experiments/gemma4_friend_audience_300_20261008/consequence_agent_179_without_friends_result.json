@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_179_without_friends",
+  "actor": "agent_179",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-b78a0bbdc8d74d4bbbeec18c6c94d5ce",
+    "object": "chat.completion",
+    "created": 1791456719,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的影响确实很深远，这种全球性的气候趋势让人感到不安，但又觉得是个值得思考的严肃议题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容沉重，但这种科普性的预警信息很有价值，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，我没有专业的见解，且性格内向，不习惯在公开平台就这类严肃议题发表个人看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发这种危机感较强的内容可能会让我的社交圈感到焦虑，我倾向于安静地阅读。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的影响确实很深远，这种全球性的气候趋势让人感到不安，但又觉得是个值得思考的严肃议题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容沉重，但这种科普性的预警信息很有价值，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大，我没有专业的见解，且性格内向，不习惯在公开平台就这类严肃议题发表个人看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发这种危机感较强的内容可能会让我的社交圈感到焦虑，我倾向于安静地阅读。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.27
+}

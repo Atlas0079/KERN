@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_249_with_friends",
+  "actor": "agent_249",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-1e34d4a6512d46f3a4dad2814e0e00cd",
+    "object": "chat.completion",
+    "created": 1791454522,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度确实惊人，这种宏观的生态危机对沿海城市的影响不可小觑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"对这种科普类且具有警示意义的全球议题表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容是客观的报告总结，我目前没有特别想补充的观点或建议。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但这种宏大的议题转发到我的社交圈可能缺乏具体的互动切入点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度确实惊人，这种宏观的生态危机对沿海城市的影响不可小觑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "对这种科普类且具有警示意义的全球议题表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容是客观的报告总结，我目前没有特别想补充的观点或建议。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但这种宏大的议题转发到我的社交圈可能缺乏具体的互动切入点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.0
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_007_with_friends",
+  "actor": "agent_007",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-2edb5c9b16ea4d2880cd88a47fe2eedf",
+    "object": "chat.completion",
+    "created": 1791458681,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化对沿海城市的影响确实严重，这种全球性的社会议题挺让人担忧的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对科技和社会话题比较关注，认可这种科普信息的传播。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但我性格比较内向，这种宏大的话题不太习惯在公开场合发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但对我目前的实际生活和社交圈层来说，转发的必要性不高。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化对沿海城市的影响确实严重，这种全球性的社会议题挺让人担忧的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对科技和社会话题比较关注，认可这种科普信息的传播。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但我性格比较内向，这种宏大的话题不太习惯在公开场合发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但对我目前的实际生活和社交圈层来说，转发的必要性不高。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.7
+}

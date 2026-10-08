@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_086_without_friends",
+  "actor": "agent_086",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-bcbbb273d5db4bc3b6aae88dee83f0c5",
+    "object": "chat.completion",
+    "created": 1791452959,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保话题挺有意义的，不过对我来说稍微有点宏大，感觉离我的日常生活比较远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容挺正能量的，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"没什么特别想发表的观点，也不太习惯在公共区域评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的话题转发到我主页不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保话题挺有意义的，不过对我来说稍微有点宏大，感觉离我的日常生活比较远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容挺正能量的，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "没什么特别想发表的观点，也不太习惯在公共区域评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种宏大的话题转发到我主页不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.12
+}

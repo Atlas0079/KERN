@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_130_without_friends",
+  "actor": "agent_130",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-0de16b18f9b64420b5790fa4a2f301ad",
+    "object": "chat.completion",
+    "created": 1791454958,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"我对极端天气和气候风险一直很关注，看到这种有具体工程案例和解决方案的帖子觉得挺有启发。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且符合我的关注兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很有意义，但目前没有特别想探讨的观点，先看看就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇内容比较科普，还没到我觉得必须分享给朋友圈的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "我对极端天气和气候风险一直很关注，看到这种有具体工程案例和解决方案的帖子觉得挺有启发。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且符合我的关注兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很有意义，但目前没有特别想探讨的观点，先看看就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇内容比较科普，还没到我觉得必须分享给朋友圈的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.21
+}

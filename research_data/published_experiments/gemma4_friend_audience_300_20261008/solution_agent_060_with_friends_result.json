@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_060_with_friends",
+  "actor": "agent_060",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-e9adb576bc144804ab83f4b172677215",
+    "object": "chat.completion",
+    "created": 1791455485,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种环保话题挺有意思的，尤其是提到工程方案和可持续生活，挺符合我的好奇心。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有启发性，支持这种环保科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但这类宏大话题我没什么专业见解，没必要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发这个对我目前的生活圈子来说意义不大，且我平时不常转发这类内容。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种环保话题挺有意思的，尤其是提到工程方案和可持续生活，挺符合我的好奇心。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有启发性，支持这种环保科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但这类宏大话题我没什么专业见解，没必要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发这个对我目前的生活圈子来说意义不大，且我平时不常转发这类内容。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.85
+}

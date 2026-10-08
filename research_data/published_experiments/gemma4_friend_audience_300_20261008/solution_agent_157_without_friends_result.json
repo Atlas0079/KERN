@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_157_without_friends",
+  "actor": "agent_157",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-10169393b25e46d994b5a9bcadd91659",
+    "object": "chat.completion",
+    "created": 1791453056,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的，原来应对海平面上升还有这么多具体的技术方案，感觉新技术在环保领域确实在起作用。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新技术改变生活和改善社会环境的话题很感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我作为一个内向的人，看完觉得挺好就行，没什么特别想补充的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类话题比较宏大，我平时很少转发这种科普类内容到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的，原来应对海平面上升还有这么多具体的技术方案，感觉新技术在环保领域确实在起作用。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新技术改变生活和改善社会环境的话题很感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我作为一个内向的人，看完觉得挺好就行，没什么特别想补充的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类话题比较宏大，我平时很少转发这种科普类内容到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.97
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_036_without_friends",
+  "actor": "agent_036",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-61208fc5359c4957a726257a7ec1e1bb",
+    "object": "chat.completion",
+    "created": 1791455830,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中要快，这种全球性的气候变化确实令人担忧，尤其是对沿海城市的影响。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对科普类话题和气候变化很感兴趣，这个帖子提供了有价值的信息。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这是一个宏大的全球性议题，我目前没有特别深刻的见解可以分享，点个赞支持即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且具有危机感，我通常不会在没有个人评述的情况下转发此类警示性信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中要快，这种全球性的气候变化确实令人担忧，尤其是对沿海城市的影响。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对科普类话题和气候变化很感兴趣，这个帖子提供了有价值的信息。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这是一个宏大的全球性议题，我目前没有特别深刻的见解可以分享，点个赞支持即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较严肃且具有危机感，我通常不会在没有个人评述的情况下转发此类警示性信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.73
+}

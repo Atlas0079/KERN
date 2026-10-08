@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_056_without_friends",
+  "actor": "agent_056",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-23441e47d9bd4d96aad2780ef435536c",
+    "object": "chat.completion",
+    "created": 1791456921,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保这个话题挺宏大的，虽然是个好主意，但对我现在的具体生活影响不大。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正能量且有建设性，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候工程没有专业见解，没必要发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃，不太适合发到我的个人主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保这个话题挺宏大的，虽然是个好主意，但对我现在的具体生活影响不大。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正能量且有建设性，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候工程没有专业见解，没必要发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较严肃，不太适合发到我的个人主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.42
+}

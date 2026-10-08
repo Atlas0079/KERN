@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_029_with_friends",
+  "actor": "agent_029",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-1d06669b3daf4e70bd52e3c4944bf623",
+    "object": "chat.completion",
+    "created": 1791455505,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的环境议题挺有深度的，而且提到的工程方案和生态修复让我这个学工程的人觉得挺有意思。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持低碳环保的观点，内容客观且有正能量。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但对于这种宏大的气候议题我没有太专业的见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但我的社交圈大多是同学和同事，转发这个可能不太契合他们的关注点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的环境议题挺有深度的，而且提到的工程方案和生态修复让我这个学工程的人觉得挺有意思。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持低碳环保的观点，内容客观且有正能量。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但对于这种宏大的气候议题我没有太专业的见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但我的社交圈大多是同学和同事，转发这个可能不太契合他们的关注点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.98
+}

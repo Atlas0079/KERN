@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_162_with_friends",
+  "actor": "agent_162",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-3a002b3a15344a788970e355f4c50000",
+    "object": "chat.completion",
+    "created": 1791455700,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的环境趋势挺令人担忧的，尤其是涉及到人口迁移和资源争夺，感觉对社会结构的冲击会很大。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类探讨技术、环境和社会变迁的话题感兴趣，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感想，但我性格比较内向，且这个话题太宏大，没什么具体的观点想在公开场合发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但我的朋友圈大多是同事和家长，转发这个可能不太符合我的社交习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的环境趋势挺令人担忧的，尤其是涉及到人口迁移和资源争夺，感觉对社会结构的冲击会很大。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类探讨技术、环境和社会变迁的话题感兴趣，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感想，但我性格比较内向，且这个话题太宏大，没什么具体的观点想在公开场合发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但我的朋友圈大多是同事和家长，转发这个可能不太符合我的社交习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.81
+}

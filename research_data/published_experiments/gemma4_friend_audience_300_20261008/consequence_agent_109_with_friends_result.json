@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_109_with_friends",
+  "actor": "agent_109",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-b5bf0f35e35c4aa2bd9722b1c48a9064",
+    "object": "chat.completion",
+    "created": 1791457688,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这情况看着挺揪心的，海平面上升如果真的这么快，很多城市的人生活在这种威胁下压力得有多大啊。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种关注全球气候危机的内容很有意义，支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得忧虑，但我对气候科学不专业，没什么能补充的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我平时朋友圈大多是家人和同事，转发这个可能不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这情况看着挺揪心的，海平面上升如果真的这么快，很多城市的人生活在这种威胁下压力得有多大啊。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种关注全球气候危机的内容很有意义，支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得忧虑，但我对气候科学不专业，没什么能补充的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我平时朋友圈大多是家人和同事，转发这个可能不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.52
+}

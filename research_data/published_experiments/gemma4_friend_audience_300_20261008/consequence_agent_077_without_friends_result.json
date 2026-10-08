@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_077_without_friends",
+  "actor": "agent_077",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-d3e69f68138f4eb5ba05cf454f3d8a24",
+    "object": "chat.completion",
+    "created": 1791457896,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的影响这么严重，想到以后孩子面对的世界可能会有这么多环境危机，心里觉得挺沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态话题，这篇内容很有警示意义，点个赞支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很担心，但这种宏大的全球性话题我没什么专业建议能提供，不方便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但我平时在社交平台上比较低调，不习惯转发这类沉重的新闻。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的影响这么严重，想到以后孩子面对的世界可能会有这么多环境危机，心里觉得挺沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态话题，这篇内容很有警示意义，点个赞支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很担心，但这种宏大的全球性话题我没什么专业建议能提供，不方便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但我平时在社交平台上比较低调，不习惯转发这类沉重的新闻。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.45
+}

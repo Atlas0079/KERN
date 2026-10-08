@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_057_without_friends",
+  "actor": "agent_057",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-82760632843d486e815cfbaf398195d2",
+    "object": "chat.completion",
+    "created": 1791454467,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉挺严重的，虽然离我现在的生活还很远，但想到未来可能会影响到这么多城市确实有点担心。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这是一个很重要的公共议题，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种全球性的宏大话题我没什么专业的见解，不方便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，不觉得有必要转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉挺严重的，虽然离我现在的生活还很远，但想到未来可能会影响到这么多城市确实有点担心。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这是一个很重要的公共议题，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种全球性的宏大话题我没什么专业的见解，不方便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，不觉得有必要转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.11
+}

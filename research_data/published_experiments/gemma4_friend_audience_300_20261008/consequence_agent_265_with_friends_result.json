@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_265_with_friends",
+  "actor": "agent_265",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-8cfd0f2110ed48adb4486c4b551258da",
+    "object": "chat.completion",
+    "created": 1791453122,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快这么多，想到未来会有这么多气候难民，感觉这种危机感离每个人都很近。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直很关注环境和气候话题，这篇文章提供了关键信息，值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得很严重，但目前没有特别想表达的观点，且我不习惯在公开场合过多地主动发言。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我的好友圈大多是同学和家人，转发这个可能并不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快这么多，想到未来会有这么多气候难民，感觉这种危机感离每个人都很近。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直很关注环境和气候话题，这篇文章提供了关键信息，值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得很严重，但目前没有特别想表达的观点，且我不习惯在公开场合过多地主动发言。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我的好友圈大多是同学和家人，转发这个可能并不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.42
+}

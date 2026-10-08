@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_020_without_friends",
+  "actor": "agent_020",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-51e1be852af34434bf169c318e03e07a",
+    "object": "chat.completion",
+    "created": 1791453693,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候危机听起来很沉重，虽然离我的木工活儿很远，但这种宏大的社会议题还是挺让我好奇的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种科普内容的价值，支持关注气候危机。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但这种专业且沉重的话题我暂时没有直接的看法，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"平时不怎么习惯在社交平台上转发这种沉重的大话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候危机听起来很沉重，虽然离我的木工活儿很远，但这种宏大的社会议题还是挺让我好奇的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种科普内容的价值，支持关注气候危机。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但这种专业且沉重的话题我暂时没有直接的看法，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "平时不怎么习惯在社交平台上转发这种沉重的大话题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.2
+}

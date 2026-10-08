@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_139_without_friends",
+  "actor": "agent_139",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-600ae2e9a65f48ca91d438f5e45b0d63",
+    "object": "chat.completion",
+    "created": 1791454114,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么快吗，这对沿海城市的人影响太大了，感觉世界变化真快。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这是一个很严肃的全球议题，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得挺严重，但我对此不专业，没什么能给出的建议或看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，我的朋友圈大多是熟人和街坊，转发这个可能氛围不太对。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么快吗，这对沿海城市的人影响太大了，感觉世界变化真快。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这是一个很严肃的全球议题，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得挺严重，但我对此不专业，没什么能给出的建议或看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，我的朋友圈大多是熟人和街坊，转发这个可能氛围不太对。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.46
+}

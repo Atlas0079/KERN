@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_002_without_friends",
+  "actor": "agent_002",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-b999cfbebf604462819b51365ad52c80",
+    "object": "chat.completion",
+    "created": 1791457335,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保话题挺有意义的，荷兰的工程方案听起来很有技术含量。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种积极且有建设性的环保观点，顺手点个赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但并没有什么特别想讨论的专业见解，不想随便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但还没到必须分享给社交圈的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保话题挺有意义的，荷兰的工程方案听起来很有技术含量。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种积极且有建设性的环保观点，顺手点个赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但并没有什么特别想讨论的专业见解，不想随便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但还没到必须分享给社交圈的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.27
+}

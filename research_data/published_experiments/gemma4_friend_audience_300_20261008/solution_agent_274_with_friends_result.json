@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_274_with_friends",
+  "actor": "agent_274",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-3353d1453d7045d1bf24a0e614e747c0",
+    "object": "chat.completion",
+    "created": 1791451613,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"全球气候问题确实挺严峻的，看到有具体的工程和方案在实施，稍微安心了一点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正能量且有建设性，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大的环保话题我没有太专业的见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"比较私人地浏览，不太习惯转发这类科普内容到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "全球气候问题确实挺严峻的，看到有具体的工程和方案在实施，稍微安心了一点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正能量且有建设性，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这类宏大的环保话题我没有太专业的见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "比较私人地浏览，不太习惯转发这类科普内容到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.41
+}

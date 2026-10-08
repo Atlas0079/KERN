@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_025_with_friends",
+  "actor": "agent_025",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-6d6e25e392154ea7bf71d557102ffc06",
+    "object": "chat.completion",
+    "created": 1791457406,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"关于气候变化和海平面上升的科普，虽然是个宏大课题，但看到具体工程和个人能做的小事，感觉还挺有意义的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的正面观点，点个赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对这个领域没有专业见解，且性格比较内向，不习惯在推荐帖下发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然不错，但并不是我朋友圈关注的重点，不需要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "关于气候变化和海平面上升的科普，虽然是个宏大课题，但看到具体工程和个人能做的小事，感觉还挺有意义的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的正面观点，点个赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对这个领域没有专业见解，且性格比较内向，不习惯在推荐帖下发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然不错，但并不是我朋友圈关注的重点，不需要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.12
+}

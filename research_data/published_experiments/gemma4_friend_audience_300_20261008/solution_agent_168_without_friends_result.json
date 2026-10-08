@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_168_without_friends",
+  "actor": "agent_168",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-f8da7d9dcc9e49cf93cfe9fbd447b181",
+    "object": "chat.completion",
+    "created": 1791451495,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然是科普类的环保话题，但我对这种带有煽动性的号召语气不太感冒，不过提到的工程和生态修复方案还挺有意思的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容涉及科学方案和可持续发展，符合我的兴趣点，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"没什么特别想讨论的观点，而且我社交比较内向，不习惯在公开帖子下发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大的环保话题转发了也没什么实际意义，不需要分享到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然是科普类的环保话题，但我对这种带有煽动性的号召语气不太感冒，不过提到的工程和生态修复方案还挺有意思的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容涉及科学方案和可持续发展，符合我的兴趣点，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "没什么特别想讨论的观点，而且我社交比较内向，不习惯在公开帖子下发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类宏大的环保话题转发了也没什么实际意义，不需要分享到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.05
+}

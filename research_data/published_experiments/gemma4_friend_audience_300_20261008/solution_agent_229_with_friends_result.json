@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_229_with_friends",
+  "actor": "agent_229",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-61afcc8db8d34f79b06dc880bfa1d006",
+    "object": "chat.completion",
+    "created": 1791454780,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保工程和数据还挺有意思的，感觉气候问题还是有解决希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且具有科普性质，符合我愿意接触新观点的性格。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但没有特别深刻的见解需要分享，随手点个赞就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大的环保话题离我的日常生活较远，不太适合转发到我的朋友圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保工程和数据还挺有意思的，感觉气候问题还是有解决希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且具有科普性质，符合我愿意接触新观点的性格。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但没有特别深刻的见解需要分享，随手点个赞就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类宏大的环保话题离我的日常生活较远，不太适合转发到我的朋友圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.59
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_270_with_friends",
+  "actor": "agent_270",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-c0121434b4b149249538105785141e59",
+    "object": "chat.completion",
+    "created": 1791458073,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事儿听起来挺严重的，不过离我的生活还比较远，感觉是个宏大的全球议题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然离我远，但这种环保议题比较正向，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学没什么专业见解，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太严肃且宏观，不太适合发到我的朋友圈给同事和家人看。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事儿听起来挺严重的，不过离我的生活还比较远，感觉是个宏大的全球议题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然离我远，但这种环保议题比较正向，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学没什么专业见解，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太严肃且宏观，不太适合发到我的朋友圈给同事和家人看。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.67
+}

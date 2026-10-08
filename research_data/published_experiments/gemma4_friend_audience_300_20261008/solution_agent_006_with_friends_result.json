@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_006_with_friends",
+  "actor": "agent_006",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-135400c84754498b8705a31e7a0cb534",
+    "object": "chat.completion",
+    "created": 1791451882,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的，特别是提到荷兰的工程，作为学工程的，我对这种大型基础设施方案一直比较感兴趣。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且包含工程实践案例，值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有共鸣，但目前没有特别想探讨的观点，随手点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大叙事的内容不太适合转发到我的个人圈子。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的，特别是提到荷兰的工程，作为学工程的，我对这种大型基础设施方案一直比较感兴趣。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且包含工程实践案例，值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有共鸣，但目前没有特别想探讨的观点，随手点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类宏大叙事的内容不太适合转发到我的个人圈子。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.52
+}

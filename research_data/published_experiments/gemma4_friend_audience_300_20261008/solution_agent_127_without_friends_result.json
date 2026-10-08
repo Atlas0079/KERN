@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_127_without_friends",
+  "actor": "agent_127",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-00df58a660374fddb2f457aeb9c52855",
+    "object": "chat.completion",
+    "created": 1791453808,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然海平面上升听起来很严重，但看到有具体的工程和方案在实施，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"正能量的内容，而且提到的技术方案挺有意思的，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，我没有特别专业的见解，不方便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但还没到需要分享到自己主页提醒他人的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然海平面上升听起来很严重，但看到有具体的工程和方案在实施，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "正能量的内容，而且提到的技术方案挺有意思的，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大，我没有特别专业的见解，不方便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但还没到需要分享到自己主页提醒他人的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.65
+}

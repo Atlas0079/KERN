@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_156_with_friends",
+  "actor": "agent_156",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-563416c3c2754783b78006191b56164c",
+    "object": "chat.completion",
+    "created": 1791456091,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是我一直关注的科学话题，看到有具体的工程和修复计划，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容符合我的兴趣点，而且传递的正能量观点我认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但目前没有特别强烈的观点需要直接表达，点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容我自己看看就好，没必要转发到朋友圈或空间。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是我一直关注的科学话题，看到有具体的工程和修复计划，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容符合我的兴趣点，而且传递的正能量观点我认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但目前没有特别强烈的观点需要直接表达，点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容我自己看看就好，没必要转发到朋友圈或空间。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.29
+}

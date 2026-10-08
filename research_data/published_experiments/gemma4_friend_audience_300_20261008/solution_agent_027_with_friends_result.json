@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_027_with_friends",
+  "actor": "agent_027",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-d7ccf6909dfa4841b3cae2dd97577fb2",
+    "object": "chat.completion",
+    "created": 1791456621,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题挺有深度的，而且提到的生态修复和工程方案从设计角度看应该很有意思。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同可持续发展的观点，支持环保类内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较科普且宏观，我没有特别专业的补充意见，不需要发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但跟我平时的艺术设计分享风格不太一样，暂时不转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题挺有深度的，而且提到的生态修复和工程方案从设计角度看应该很有意思。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同可持续发展的观点，支持环保类内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较科普且宏观，我没有特别专业的补充意见，不需要发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但跟我平时的艺术设计分享风格不太一样，暂时不转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.68
+}

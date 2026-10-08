@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_080_without_friends",
+  "actor": "agent_080",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-f2c2b25947d946a99a6915387eb50b09",
+    "object": "chat.completion",
+    "created": 1791451171,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"我对极端天气和气候变化一直挺感兴趣的，看到有这些具体的解决方案感觉还挺有希望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很正能量，而且是我关注的科学话题，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这些专业工程和宏观计划我不太懂，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容挺好的，但还没到需要转发到自己主页提醒大家的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "我对极端天气和气候变化一直挺感兴趣的，看到有这些具体的解决方案感觉还挺有希望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很正能量，而且是我关注的科学话题，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这些专业工程和宏观计划我不太懂，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容挺好的，但还没到需要转发到自己主页提醒大家的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.83
+}

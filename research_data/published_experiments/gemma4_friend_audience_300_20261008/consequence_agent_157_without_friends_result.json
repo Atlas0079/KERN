@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_157_without_friends",
+  "actor": "agent_157",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-5a15638ef8e6401bb18349c45bf67304",
+    "object": "chat.completion",
+    "created": 1791451685,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉这个话题规模太大了，虽然很严重，但对我目前的日常生活来说太遥远了，让人有点焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然没法做什么，但这种关注环境的科普内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太宏大且沉重，我不知道该评论什么，也不太想在公开场合讨论这种严肃议题。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发这个会让我的朋友圈氛围变得很压抑，我更倾向于安静地阅读。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉这个话题规模太大了，虽然很严重，但对我目前的日常生活来说太遥远了，让人有点焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然没法做什么，但这种关注环境的科普内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太宏大且沉重，我不知道该评论什么，也不太想在公开场合讨论这种严肃议题。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发这个会让我的朋友圈氛围变得很压抑，我更倾向于安静地阅读。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.22
+}

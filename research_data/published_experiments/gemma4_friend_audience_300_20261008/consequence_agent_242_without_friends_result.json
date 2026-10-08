@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_242_without_friends",
+  "actor": "agent_242",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-f9d3399c84ce4998b3df3b04b7d51d8a",
+    "object": "chat.completion",
+    "created": 1791451300,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事听起来挺严重的，不过离我的日常生活比较远，感觉是个宏大的全球性议题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类非虚构的知识性内容比较感兴趣，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较专业且严肃，我没有太多深刻的见解可以分享，没必要强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这内容比较沉重，且与我的社交圈层关注点不太匹配，不打算转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事听起来挺严重的，不过离我的日常生活比较远，感觉是个宏大的全球性议题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类非虚构的知识性内容比较感兴趣，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较专业且严肃，我没有太多深刻的见解可以分享，没必要强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这内容比较沉重，且与我的社交圈层关注点不太匹配，不打算转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.7
+}

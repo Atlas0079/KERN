@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_266_without_friends",
+  "actor": "agent_266",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8f467025567c47d39df8a7c70e8605a8",
+    "object": "chat.completion",
+    "created": 1791451919,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升一直是我关注的话题，看到这些具体的应对方案让人觉得稍微有了一点希望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且是我感兴趣的气候科普，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但习惯性地倾向于安静阅读，不想在公共区域发表观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发会让我的主页太热闹，且这种科普类内容看过了就行，不需要特意分享。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升一直是我关注的话题，看到这些具体的应对方案让人觉得稍微有了一点希望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且是我感兴趣的气候科普，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但习惯性地倾向于安静阅读，不想在公共区域发表观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发会让我的主页太热闹，且这种科普类内容看过了就行，不需要特意分享。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.96
+}

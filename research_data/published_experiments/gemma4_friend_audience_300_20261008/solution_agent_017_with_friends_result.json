@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_017_with_friends",
+  "actor": "agent_017",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-74c3a24e1bcd4b2ba8bc59fb860bf75b",
+    "object": "chat.completion",
+    "created": 1791454843,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的科普，原来这些具体工程对缓解海平面上升有这么直接的作用。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对极端天气和气候风险一直很关注，支持这类有正能量的科普内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较概括，我目前没有特别深刻的观点想分享，点个赞就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"比较私人的阅读兴趣，觉得没必要转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的科普，原来这些具体工程对缓解海平面上升有这么直接的作用。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对极端天气和气候风险一直很关注，支持这类有正能量的科普内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较概括，我目前没有特别深刻的观点想分享，点个赞就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "比较私人的阅读兴趣，觉得没必要转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.05
+}

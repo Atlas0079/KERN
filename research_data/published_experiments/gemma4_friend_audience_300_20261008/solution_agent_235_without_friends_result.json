@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_235_without_friends",
+  "actor": "agent_235",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-17f3eafff41a44d1a58c7f976754d613",
+    "object": "chat.completion",
+    "created": 1791451510,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些应对气候变化的实际工程和方法，觉得海平面上升的问题还是有希望解决的，挺有启发。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对极端天气和气候风险很关注，这类有正面解决方案的内容我愿意支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较概括，虽然有启发但没有特别想深入探讨的观点，点个赞就足够了。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇文章更像是一个科普摘要，不需要特意转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些应对气候变化的实际工程和方法，觉得海平面上升的问题还是有希望解决的，挺有启发。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对极端天气和气候风险很关注，这类有正面解决方案的内容我愿意支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较概括，虽然有启发但没有特别想深入探讨的观点，点个赞就足够了。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇文章更像是一个科普摘要，不需要特意转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.09
+}

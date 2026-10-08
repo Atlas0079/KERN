@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_180_with_friends",
+  "actor": "agent_180",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-be137d5c210f4267837d6ebc8afae513",
+    "object": "chat.completion",
+    "created": 1791455924,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这事儿听起来挺严重，不过离我现在的日子太远，感觉是个很大的课题，我个人没啥办法。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容太宏大太沉重，没有让我产生共鸣或想支持的冲动。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对这类全球性气候问题不专业，也没什么好发表的意见。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种消息转发出去也没实际用处，不符合我的分享习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这事儿听起来挺严重，不过离我现在的日子太远，感觉是个很大的课题，我个人没啥办法。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容太宏大太沉重，没有让我产生共鸣或想支持的冲动。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对这类全球性气候问题不专业，也没什么好发表的意见。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种消息转发出去也没实际用处，不符合我的分享习惯。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.43
+}

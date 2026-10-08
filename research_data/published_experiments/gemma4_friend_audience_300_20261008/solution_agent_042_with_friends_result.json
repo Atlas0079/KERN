@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_042_with_friends",
+  "actor": "agent_042",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-d8ce6eb6af3742f0aeeb075f743a3565",
+    "object": "chat.completion",
+    "created": 1791459116,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有启发地，原来这些宏大的工程和个人的微小习惯真的能对海平面上升产生影响，得给孩子多讲讲这类环保知识。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护很关注，支持这种传播正能量且有具体方案的内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较完整，我目前只是在关注和学习阶段，没有特别深刻的专业见解需要发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得不错，但转发到我的圈子里（多为家人同事）可能不太契合他们的兴趣点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有启发地，原来这些宏大的工程和个人的微小习惯真的能对海平面上升产生影响，得给孩子多讲讲这类环保知识。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护很关注，支持这种传播正能量且有具体方案的内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较完整，我目前只是在关注和学习阶段，没有特别深刻的专业见解需要发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然觉得不错，但转发到我的圈子里（多为家人同事）可能不太契合他们的兴趣点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.19
+}

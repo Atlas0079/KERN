@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_032_without_friends",
+  "actor": "agent_032",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-fe7353feceb54b559155f8482658e807",
+    "object": "chat.completion",
+    "created": 1791458722,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些大规模的工程和环保举措还挺有意思的，但对我个人生活影响不大。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正能量，且提到的技术工程方案符合我的好奇心。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同环保，但没什么特别想发表的观点，也不想在这种宏大话题下发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普内容不需要转发到我的个人主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些大规模的工程和环保举措还挺有意思的，但对我个人生活影响不大。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正能量，且提到的技术工程方案符合我的好奇心。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同环保，但没什么特别想发表的观点，也不想在这种宏大话题下发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普内容不需要转发到我的个人主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.05
+}

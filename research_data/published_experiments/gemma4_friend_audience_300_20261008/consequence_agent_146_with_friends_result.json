@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_146_with_friends",
+  "actor": "agent_146",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-486d6dbcea6041bba9890516b245cd1e",
+    "object": "chat.completion",
+    "created": 1791458194,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉好可怕，虽然离我现在的生活挺远的，但想到以后孩子面对的世界会变成这样，心里挺不安的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这类环保议题很重要，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"专业性太强，我没什么能发表的见解，不想随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，发到朋友圈可能会让周围的人觉得太焦虑。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉好可怕，虽然离我现在的生活挺远的，但想到以后孩子面对的世界会变成这样，心里挺不安的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这类环保议题很重要，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "专业性太强，我没什么能发表的见解，不想随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，发到朋友圈可能会让周围的人觉得太焦虑。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.87
+}

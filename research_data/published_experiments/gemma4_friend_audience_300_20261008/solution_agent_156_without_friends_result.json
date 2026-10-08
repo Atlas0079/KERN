@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_156_without_friends",
+  "actor": "agent_156",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-32a9c6555b4549609e43f5fdc47644b5",
+    "object": "chat.completion",
+    "created": 1791451531,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升一直是我关注的科学话题，看到这些具体的工程和修复计划，感觉比单纯地焦虑要积极得多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容符合我的兴趣点，且观点正面，值得点赞支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但这些工程方案对我来说是常识性的，没什么独特的观点需要直接表达。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我不常在社交平台上转发此类科普内容，除非它对我现有的社交圈有极强的分享价值。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升一直是我关注的科学话题，看到这些具体的工程和修复计划，感觉比单纯地焦虑要积极得多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容符合我的兴趣点，且观点正面，值得点赞支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但这些工程方案对我来说是常识性的，没什么独特的观点需要直接表达。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我不常在社交平台上转发此类科普内容，除非它对我现有的社交圈有极强的分享价值。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 19.65
+}

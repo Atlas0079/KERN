@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_224_without_friends",
+  "actor": "agent_224",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-38ad24e1e9f64cceb25c55b7ae40c5a6",
+    "object": "chat.completion",
+    "created": 1791458938,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实让人担心，但看到有具体的工程和方案在实施，心里稍微踏实了一点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候和极端天气一直很关注，这篇文章提供的正面视角让我觉得有意义。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但我性格比较内向，习惯于安静地阅读，不太想在公开区域发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这对我来说是个人关注的话题，不需要转发给别人。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实让人担心，但看到有具体的工程和方案在实施，心里稍微踏实了一点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候和极端天气一直很关注，这篇文章提供的正面视角让我觉得有意义。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但我性格比较内向，习惯于安静地阅读，不太想在公开区域发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这对我来说是个人关注的话题，不需要转发给别人。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.41
+}

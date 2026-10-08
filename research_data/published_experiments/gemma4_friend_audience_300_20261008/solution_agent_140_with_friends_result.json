@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_140_with_friends",
+  "actor": "agent_140",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-ad7bab89648041639fcce2047916630a",
+    "object": "chat.completion",
+    "created": 1791455052,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章提到的环保工程和低碳行动挺有意思的，虽然离我生活比较远，但这种宏大的科普内容我挺感兴趣。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新知识和可持续发展这类话题比较开放，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较专业且偏向号召，我没有太深刻的见解可以分享，没必要强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容不错，但我的社交圈主要是家人和老同学，转发这个可能没什么共鸣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章提到的环保工程和低碳行动挺有意思的，虽然离我生活比较远，但这种宏大的科普内容我挺感兴趣。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新知识和可持续发展这类话题比较开放，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较专业且偏向号召，我没有太深刻的见解可以分享，没必要强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容不错，但我的社交圈主要是家人和老同学，转发这个可能没什么共鸣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.67
+}

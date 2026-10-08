@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_107_with_friends",
+  "actor": "agent_107",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-0e48c43fca93459889c84b15cf4c4ac5",
+    "object": "chat.completion",
+    "created": 1791457988,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些工程方案挺有意思的，不过对我目前的日常生活影响不大，看着还行。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新想法和可持续发展比较开放，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观，我没有什么专业见解或特别想表达的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题和我的社交圈（修车、孩子家长）重合度不高，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些工程方案挺有意思的，不过对我目前的日常生活影响不大，看着还行。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新想法和可持续发展比较开放，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏观，我没有什么专业见解或特别想表达的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题和我的社交圈（修车、孩子家长）重合度不高，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.0
+}

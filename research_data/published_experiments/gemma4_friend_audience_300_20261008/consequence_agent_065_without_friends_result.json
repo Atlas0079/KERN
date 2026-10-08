@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_065_without_friends",
+  "actor": "agent_065",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-b5248bf2c62a458cb24dfe3ddff4015e",
+    "object": "chat.completion",
+    "created": 1791456226,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候问题听起来很严重，虽然离我的生活暂时还远，但确实让人感到不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然比较沉重，但这是一个值得关注的重要议题，点个赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对这类专业领域不熟悉，没什么能贡献的观点，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容过于沉重且偏向宏观，不太适合分享到我的个人主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候问题听起来很严重，虽然离我的生活暂时还远，但确实让人感到不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然比较沉重，但这是一个值得关注的重要议题，点个赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对这类专业领域不熟悉，没什么能贡献的观点，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容过于沉重且偏向宏观，不太适合分享到我的个人主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.62
+}

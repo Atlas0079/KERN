@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_268_with_friends",
+  "actor": "agent_268",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-9d230c8c288342cab10e65cad5a027e3",
+    "object": "chat.completion",
+    "created": 1791455758,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"关于海平面上升和环保的科普挺有意思的，而且这种可持续生活的观念我比较认可。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正面且具有科普价值，我愿意支持这种环保观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但我性格比较内向，且对这个领域没有专业见解，不太想在公开场合发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然不错，但还没到让我觉得必须分享给朋友圈或同事的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "关于海平面上升和环保的科普挺有意思的，而且这种可持续生活的观念我比较认可。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正面且具有科普价值，我愿意支持这种环保观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但我性格比较内向，且对这个领域没有专业见解，不太想在公开场合发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然不错，但还没到让我觉得必须分享给朋友圈或同事的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.93
+}

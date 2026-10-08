@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_208_with_friends",
+  "actor": "agent_208",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-472e25b213fc41f48db626d7df1804f4",
+    "object": "chat.completion",
+    "created": 1791456803,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的环境问题虽然听起来很遥远，但看到有具体的解决方案和每个人都能参与的小事，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且具有科普意义，支持环保倡议。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但并没有特别深刻的见解可以分享，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的议题转发到自己的朋友圈可能不太合适，且我的社交圈对此关注度不高。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的环境问题虽然听起来很遥远，但看到有具体的解决方案和每个人都能参与的小事，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且具有科普意义，支持环保倡议。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但并没有特别深刻的见解可以分享，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种宏大的议题转发到自己的朋友圈可能不太合适，且我的社交圈对此关注度不高。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.15
+}

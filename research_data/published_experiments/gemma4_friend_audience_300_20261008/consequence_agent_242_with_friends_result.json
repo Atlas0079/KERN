@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_242_with_friends",
+  "actor": "agent_242",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-93346211dc7b4e0d8516a9d6f2fd4304",
+    "object": "chat.completion",
+    "created": 1791454833,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事儿听起来挺严重的，感觉对未来几代人的影响很大，得关注一下。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很有警示意义，支持这种传播气候危机的科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但没有专业背景，没什么能直接发表的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"话题太宏大且沉重，不适合发在我的朋友圈或动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事儿听起来挺严重的，感觉对未来几代人的影响很大，得关注一下。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很有警示意义，支持这种传播气候危机的科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但没有专业背景，没什么能直接发表的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "话题太宏大且沉重，不适合发在我的朋友圈或动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.11
+}

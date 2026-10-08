@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_023_without_friends",
+  "actor": "agent_023",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-421a7f6f3a934a6d98e97a96df8b3a19",
+    "object": "chat.completion",
+    "created": 1791456212,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些工程措施和环保行动还挺有意思的，感觉人类还是有办法应对这些大问题的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有启发，支持这种传播环保意识的行为。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但没有特别想发表的见解，点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大话题转发到我的圈子里可能不太合适，没必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些工程措施和环保行动还挺有意思的，感觉人类还是有办法应对这些大问题的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有启发，支持这种传播环保意识的行为。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但没有特别想发表的见解，点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类宏大话题转发到我的圈子里可能不太合适，没必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.09
+}

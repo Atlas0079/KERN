@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_273_without_friends",
+  "actor": "agent_273",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-b1ec3278d2c44f82956355773963dd34",
+    "object": "chat.completion",
+    "created": 1791457673,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些环保工程听起来挺有条理的，虽然离我的生活比较远，但这种通过技术手段解决问题的思路我挺认同。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有建设性，点个赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没太多专业见解，没必要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这内容比较宏大，不太适合我平时的分享习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些环保工程听起来挺有条理的，虽然离我的生活比较远，但这种通过技术手段解决问题的思路我挺认同。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有建设性，点个赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没太多专业见解，没必要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这内容比较宏大，不太适合我平时的分享习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.42
+}

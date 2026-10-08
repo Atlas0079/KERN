@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_178_without_friends",
+  "actor": "agent_178",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-26ae419bd6584ae083e04a443a06431c",
+    "object": "chat.completion",
+    "created": 1791452214,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到海平面上升有这些具体的应对方案还挺让人欣慰的，气候异常确实是件值得关注的大事。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且具有建设性，我很认同这种关注气候变化的态度。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这些工程方案太专业，我没有太深的研究，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容点赞支持即可，没必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到海平面上升有这些具体的应对方案还挺让人欣慰的，气候异常确实是件值得关注的大事。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且具有建设性，我很认同这种关注气候变化的态度。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这些工程方案太专业，我没有太深的研究，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容点赞支持即可，没必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.85
+}

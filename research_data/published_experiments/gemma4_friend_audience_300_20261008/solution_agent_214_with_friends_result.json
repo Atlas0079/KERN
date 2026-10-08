@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_214_with_friends",
+  "actor": "agent_214",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-22ff6bef070d4ebc9cd575e1223b9dc5",
+    "object": "chat.completion",
+    "created": 1791453753,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题挺有深度的，而且看到具体的工程和方案比单纯地制造焦虑要好得多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种积极且具有建设性的环保视角。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但目前没有特别想补充的专业见解，点个赞支持即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较正向，但还没到必须分享给朋友圈传播的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题挺有深度的，而且看到具体的工程和方案比单纯地制造焦虑要好得多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种积极且具有建设性的环保视角。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但目前没有特别想补充的专业见解，点个赞支持即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较正向，但还没到必须分享给朋友圈传播的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.94
+}

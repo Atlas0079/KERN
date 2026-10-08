@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_067_with_friends",
+  "actor": "agent_067",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-bd61082c1ed24a9aaf4c3ae96993981d",
+    "object": "chat.completion",
+    "created": 1791453636,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这种关于环境和科技改变生活的讨论还挺有意思的，觉得低碳生活确实是每个人能参与的小事。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有意义，支持这种可持续生活的倡导。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别想表达的观点，不习惯在公开场合发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"比较低调，除非是特别实用或必须分享的信息，否则很少转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这种关于环境和科技改变生活的讨论还挺有意思的，觉得低碳生活确实是每个人能参与的小事。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有意义，支持这种可持续生活的倡导。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别想表达的观点，不习惯在公开场合发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "比较低调，除非是特别实用或必须分享的信息，否则很少转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.96
+}

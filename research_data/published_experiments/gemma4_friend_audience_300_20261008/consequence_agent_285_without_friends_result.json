@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_285_without_friends",
+  "actor": "agent_285",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-3ee5e84e39f44c4ebd02dfe6751ea7cb",
+    "object": "chat.completion",
+    "created": 1791455105,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些数据挺触目惊心的，想到未来的环境变化，忍不住担心孩子长大后面对的世界会变成什么样。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普全球危机的内容很有意义，支持这类信息的传播。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很担心，但面对这么宏大的气候问题，我没有太多专业的见解可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我并不习惯在社交平台频繁转发这类警示性消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些数据挺触目惊心的，想到未来的环境变化，忍不住担心孩子长大后面对的世界会变成什么样。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普全球危机的内容很有意义，支持这类信息的传播。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很担心，但面对这么宏大的气候问题，我没有太多专业的见解可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我并不习惯在社交平台频繁转发这类警示性消息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.47
+}

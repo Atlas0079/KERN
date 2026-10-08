@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_077_with_friends",
+  "actor": "agent_077",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-08c939bad09b41329f3fe4a42f87f921",
+    "object": "chat.completion",
+    "created": 1791457610,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到环境治理有这些具体方案让人感到宽慰，低碳生活确实是每个人都能参与的事情。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护话题比较关注，这篇文章的内容很正面且有启发。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但性格比较内向，不习惯在公开场合发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类的科普信息对我个人有启发即可，没有必要转发到自己的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到环境治理有这些具体方案让人感到宽慰，低碳生活确实是每个人都能参与的事情。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护话题比较关注，这篇文章的内容很正面且有启发。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但性格比较内向，不习惯在公开场合发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类的科普信息对我个人有启发即可，没有必要转发到自己的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.08
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_204_without_friends",
+  "actor": "agent_204",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-6ae16d77d1b64f1f92c46b21be9a2aff",
+    "object": "chat.completion",
+    "created": 1791458235,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然气候变化是个严肃的话题，但看到有具体的解决方案和积极的进展，感觉稍微安心了一点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种积极正向的科普内容，支持环保理念。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较完整，我没有特别强烈的观点需要直接表达，倾向于安静地阅读。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类话题比较宏大，我觉得点赞支持即可，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然气候变化是个严肃的话题，但看到有具体的解决方案和积极的进展，感觉稍微安心了一点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种积极正向的科普内容，支持环保理念。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较完整，我没有特别强烈的观点需要直接表达，倾向于安静地阅读。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类话题比较宏大，我觉得点赞支持即可，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.21
+}

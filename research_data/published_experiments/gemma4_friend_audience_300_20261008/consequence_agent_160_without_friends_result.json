@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_160_without_friends",
+  "actor": "agent_160",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-993607f343b14e77b7af972cd5f24d80",
+    "object": "chat.completion",
+    "created": 1791456762,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这种全球性的气候危机，心里莫名地感到一阵焦虑，担心未来的环境会变得更糟糕。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护很关心，这种提醒人们关注气候危机的内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很担心，但我性格内向，且这种宏大话题我没什么具体的建议能给出，不想在公开场合过多表达。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发这种沉重且令人不安的消息可能会让我的朋友圈气氛太压抑，还是算了吧。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这种全球性的气候危机，心里莫名地感到一阵焦虑，担心未来的环境会变得更糟糕。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护很关心，这种提醒人们关注气候危机的内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很担心，但我性格内向，且这种宏大话题我没什么具体的建议能给出，不想在公开场合过多表达。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发这种沉重且令人不安的消息可能会让我的朋友圈气氛太压抑，还是算了吧。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.6
+}

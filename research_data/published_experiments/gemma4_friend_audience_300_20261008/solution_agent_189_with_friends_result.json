@@ -1,0 +1,43 @@
+{
+  "key": "solution_agent_189_with_friends",
+  "actor": "agent_189",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-5fc7f561537b4d7d903a59e81dc0327f",
+    "object": "chat.completion",
+    "created": 1791452607,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"关于气候变化和环保的内容，虽然有意义，但对我目前的日常生活来说稍微有点远，且内容较为常规。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然正能量，但没有触动到我的个人兴趣点，不想随意点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"没有特别深刻的见解需要表达，且我不习惯在推荐帖下随意社交。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普内容对我而言缺乏转发的冲动，且我的好友圈可能对此不感兴趣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "关于气候变化和环保的内容，虽然有意义，但对我目前的日常生活来说稍微有点远，且内容较为常规。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容虽然正能量，但没有触动到我的个人兴趣点，不想随意点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "没有特别深刻的见解需要表达，且我不习惯在推荐帖下随意社交。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普内容对我而言缺乏转发的冲动，且我的好友圈可能对此不感兴趣。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 15.04
+}

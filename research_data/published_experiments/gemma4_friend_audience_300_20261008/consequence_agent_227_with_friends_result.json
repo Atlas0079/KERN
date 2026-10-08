@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_227_with_friends",
+  "actor": "agent_227",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-1b963ca340814db6af8b5504f207d4c1",
+    "object": "chat.completion",
+    "created": 1791454869,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中要快，想到未来孩子生活在这样的环境里挺让人揪心的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护一直很关注，支持这类科普内容的传播。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且宏大，我目前没有特别想补充的观点，点个赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容重要，但我的社交圈多为家长和同事，转发这个可能不太符合我的日常发帖风格。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中要快，想到未来孩子生活在这样的环境里挺让人揪心的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护一直很关注，支持这类科普内容的传播。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且宏大，我目前没有特别想补充的观点，点个赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容重要，但我的社交圈多为家长和同事，转发这个可能不太符合我的日常发帖风格。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.88
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_144_without_friends",
+  "actor": "agent_144",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-10fa0705be1a4b93b22dbc8a472d028c",
+    "object": "chat.completion",
+    "created": 1791450952,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保确实很重要，希望能给孩子留一个更好的环境，但这个话题离我的日常生活稍微有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很正能量，支持这种环保的理念。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别专业或独特的见解可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，不太符合我平时分享生活碎片或孩子动态的习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保确实很重要，希望能给孩子留一个更好的环境，但这个话题离我的日常生活稍微有点远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很正能量，支持这种环保的理念。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别专业或独特的见解可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较宏大，不太符合我平时分享生活碎片或孩子动态的习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.64
+}

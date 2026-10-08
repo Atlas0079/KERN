@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_099_without_friends",
+  "actor": "agent_099",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-26b83020c9764c4eadd09e19a62b97e7",
+    "object": "chat.completion",
+    "created": 1791459261,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章挺有正能量的，虽然离我生活比较远，但这些环保方案和低碳生活的方式听起来很有意义。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同环保理念，支持这种传递希望的正向内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，我只是个普通运营，没什么专业见解可以补充。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得好，但还没到必须分享给所有人知道的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章挺有正能量的，虽然离我生活比较远，但这些环保方案和低碳生活的方式听起来很有意义。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同环保理念，支持这种传递希望的正向内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大，我只是个普通运营，没什么专业见解可以补充。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然觉得好，但还没到必须分享给所有人知道的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.99
+}

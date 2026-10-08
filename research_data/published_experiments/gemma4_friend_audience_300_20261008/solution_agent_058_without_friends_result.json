@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_058_without_friends",
+  "actor": "agent_058",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-c7ef8d9c05834da9a8224b930aa72084",
+    "object": "chat.completion",
+    "created": 1791455359,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"我对气候风险一直比较关注，看到这些具体且积极的应对措施，感觉稍微安心了一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且符合我的关注点，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但没有特别强烈的观点想要发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较常规，不需要转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "我对气候风险一直比较关注，看到这些具体且积极的应对措施，感觉稍微安心了一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且符合我的关注点，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但没有特别强烈的观点想要发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较常规，不需要转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.4
+}

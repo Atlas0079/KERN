@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_126_with_friends",
+  "actor": "agent_126",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-b43734f89c0749e99ed83c5c6a8b95e5",
+    "object": "chat.completion",
+    "created": 1791453823,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保工程和具体措施，觉得环境问题虽然严重，但只要大家一起努力还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态话题，这类正能量的科普内容值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很全面，我看完学习到了，但没有特别想补充或探讨的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但这种宏大的议题转发到我的朋友圈可能不太合适，毕竟我的好友大多是亲友和旧同事。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保工程和具体措施，觉得环境问题虽然严重，但只要大家一起努力还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态话题，这类正能量的科普内容值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很全面，我看完学习到了，但没有特别想补充或探讨的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但这种宏大的议题转发到我的朋友圈可能不太合适，毕竟我的好友大多是亲友和旧同事。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.56
+}

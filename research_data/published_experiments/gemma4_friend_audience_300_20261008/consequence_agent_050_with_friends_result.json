@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_050_with_friends",
+  "actor": "agent_050",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-8f52f17d785743e3bf34aed1cd6c1ccf",
+    "object": "chat.completion",
+    "created": 1791457555,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化的影响确实触目惊心，虽然离我目前的日常生活有距离，但这种全球性的危机让人感到不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有警示意义且基于联合国报告，值得支持以增加曝光。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这是一个宏大的全球议题，我没有专业知识在这个领域发表深刻见解，不想发表太笼统的评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的社交圈主要是家人和同行，转发这个话题可能不太符合他们的关注点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化的影响确实触目惊心，虽然离我目前的日常生活有距离，但这种全球性的危机让人感到不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有警示意义且基于联合国报告，值得支持以增加曝光。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这是一个宏大的全球议题，我没有专业知识在这个领域发表深刻见解，不想发表太笼统的评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的社交圈主要是家人和同行，转发这个话题可能不太符合他们的关注点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.16
+}

@@ -1,0 +1,58 @@
+{
+  "requests_completed": 1200,
+  "target_requests": 1200,
+  "groups": {
+    "without_friends_consequence": {
+      "attempts": 300,
+      "valid": 299,
+      "invalid": 1,
+      "like": 284,
+      "comment": 9,
+      "repost": 2,
+      "empty": 15
+    },
+    "without_friends_solution": {
+      "attempts": 300,
+      "valid": 300,
+      "invalid": 0,
+      "like": 292,
+      "comment": 8,
+      "repost": 0,
+      "empty": 8
+    },
+    "with_friends_consequence": {
+      "attempts": 300,
+      "valid": 300,
+      "invalid": 0,
+      "like": 285,
+      "comment": 5,
+      "repost": 1,
+      "empty": 15
+    },
+    "with_friends_solution": {
+      "attempts": 300,
+      "valid": 300,
+      "invalid": 0,
+      "like": 286,
+      "comment": 5,
+      "repost": 0,
+      "empty": 14
+    }
+  },
+  "paired_repost": {
+    "consequence": {
+      "complete_pairs": 299,
+      "neither": 297,
+      "both": 1,
+      "without_only": 1,
+      "with_only": 0
+    },
+    "solution": {
+      "complete_pairs": 300,
+      "neither": 300,
+      "both": 0,
+      "without_only": 0,
+      "with_only": 0
+    }
+  }
+}

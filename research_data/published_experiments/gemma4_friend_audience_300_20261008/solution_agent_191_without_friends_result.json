@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_191_without_friends",
+  "actor": "agent_191",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-0e580ccbdb844369b6cf2eb3cb1ce3e3",
+    "object": "chat.completion",
+    "created": 1791453934,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这种关于环境和全球变暖的话题还挺有意思的，原来还有这么多具体的应对方案。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对生态保护和科学话题比较感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容挺客观的，但我没什么特别想补充的，也不习惯在公开平台多发表议论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发对我来说有点太高调了，平时习惯安静地看。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这种关于环境和全球变暖的话题还挺有意思的，原来还有这么多具体的应对方案。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对生态保护和科学话题比较感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容挺客观的，但我没什么特别想补充的，也不习惯在公开平台多发表议论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发对我来说有点太高调了，平时习惯安静地看。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.36
+}

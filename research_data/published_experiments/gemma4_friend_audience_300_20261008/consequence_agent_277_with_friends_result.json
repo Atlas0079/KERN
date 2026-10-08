@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_277_with_friends",
+  "actor": "agent_277",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-985f9051a0894a03877e8db65e0110ec",
+    "object": "chat.completion",
+    "created": 1791457037,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事听起来挺严重，虽然离我的生活暂时还没那么近，但这种全球性的危机确实值得关注。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新知识和全球议题比较开放，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感想，但关于气候危机这种专业话题，我没有太多能贡献的观点，不想随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且与我的社交圈（家人、同事、家长）关联度不大，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事听起来挺严重，虽然离我的生活暂时还没那么近，但这种全球性的危机确实值得关注。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新知识和全球议题比较开放，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感想，但关于气候危机这种专业话题，我没有太多能贡献的观点，不想随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且与我的社交圈（家人、同事、家长）关联度不大，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.6
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_250_without_friends",
+  "actor": "agent_250",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-558c8396c3d549b5ac3c69f106c79c25",
+    "object": "chat.completion",
+    "created": 1791451148,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化确实挺严重的，虽然这些工程听起来很宏大，但作为普通人确实只能从生活小事做起。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有建设性，支持环保意识。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但这类宏大话题我没什么专业见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"比较私人的阅读，不需要转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化确实挺严重的，虽然这些工程听起来很宏大，但作为普通人确实只能从生活小事做起。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有建设性，支持环保意识。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但这类宏大话题我没什么专业见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "比较私人的阅读，不需要转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.36
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_035_with_friends",
+  "actor": "agent_035",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-dcd70571ec0e4dba8b6cccd39d703ad0",
+    "object": "chat.completion",
+    "created": 1791455490,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"关于海平面上升和环保的科普挺有意思的，尤其是提到工程手段和生态修复的部分，感觉挺科学的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对科学和社会话题感兴趣，且赞同这种积极应对气候变化的观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较完整，我只是看看，没有特别想讨论的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但对我目前的社交圈层来说，转发这个可能不是最合适的内容。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "关于海平面上升和环保的科普挺有意思的，尤其是提到工程手段和生态修复的部分，感觉挺科学的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对科学和社会话题感兴趣，且赞同这种积极应对气候变化的观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较完整，我只是看看，没有特别想讨论的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但对我目前的社交圈层来说，转发这个可能不是最合适的内容。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.98
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_217_with_friends",
+  "actor": "agent_217",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-1759e05aa33d4da1a31b74816b2d40d9",
+    "object": "chat.completion",
+    "created": 1791451434,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快这么多，感觉全球气候危机真的在逼近了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注环境问题，支持这种科普警示类的内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得担忧，但这是一个宏大的全球议题，我暂时没有什么具体的观点能贡献。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但氛围比较沉重，不确定转发到朋友圈是否合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快这么多，感觉全球气候危机真的在逼近了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注环境问题，支持这种科普警示类的内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得担忧，但这是一个宏大的全球议题，我暂时没有什么具体的观点能贡献。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但氛围比较沉重，不确定转发到朋友圈是否合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.42
+}

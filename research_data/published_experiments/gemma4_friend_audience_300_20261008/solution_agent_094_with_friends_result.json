@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_094_with_friends",
+  "actor": "agent_094",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-b8a01d14745f48259c39d9e2e20f7dde",
+    "object": "chat.completion",
+    "created": 1791456405,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到关于海平面上升和红树林修复的内容，挺符合我对环境生态关注点的，感觉这种正向的科普挺有意义。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且符合我的兴趣方向，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但没有特别想讨论的观点，且性格比较内向，不习惯在推荐帖下评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然不错，但还没到非得分享给好友看地程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到关于海平面上升和红树林修复的内容，挺符合我对环境生态关注点的，感觉这种正向的科普挺有意义。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且符合我的兴趣方向，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但没有特别想讨论的观点，且性格比较内向，不习惯在推荐帖下评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然不错，但还没到非得分享给好友看地程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.78
+}

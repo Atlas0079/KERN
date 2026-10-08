@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_226_with_friends",
+  "actor": "agent_226",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-0c218829357644fe95fbb789c4c57bf3",
+    "object": "chat.completion",
+    "created": 1791451373,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题挺有意思的，从人文社科视角看，这种全球性环境问题与个体行为的结合很有探讨空间。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且具有建设性，支持这种倡导可持续生活的观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但目前只是浏览，还没有形成特别想分享的深度观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较常规，不需要转发到自己的朋友圈中。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题挺有意思的，从人文社科视角看，这种全球性环境问题与个体行为的结合很有探讨空间。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且具有建设性，支持这种倡导可持续生活的观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但目前只是浏览，还没有形成特别想分享的深度观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较常规，不需要转发到自己的朋友圈中。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.83
+}

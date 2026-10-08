@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_228_without_friends",
+  "actor": "agent_228",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-3ec40d838f724a5da73a99fcdb2bba7b",
+    "object": "chat.completion",
+    "created": 1791452242,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种探讨环境可持续性和全球治理的话题挺有意思的，希望能看到更多实际的解决方案。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种积极且具有建设性的环保观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但觉得内容已经写得很全面了，没什么特别想补充的，且我社交上比较内向。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类的科普内容点赞即可，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种探讨环境可持续性和全球治理的话题挺有意思的，希望能看到更多实际的解决方案。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种积极且具有建设性的环保观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但觉得内容已经写得很全面了，没什么特别想补充的，且我社交上比较内向。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类的科普内容点赞即可，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.07
+}

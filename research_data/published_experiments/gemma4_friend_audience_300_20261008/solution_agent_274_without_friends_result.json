@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_274_without_friends",
+  "actor": "agent_274",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-eadc67107d2449d5a98c36f2bbf88585",
+    "object": "chat.completion",
+    "created": 1791452934,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化确实是个严肃的问题，看到有些实际的工程方案在起作用，心里稍微踏实了一点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且具有建设性，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但这类宏大话题我不太擅长评论，且没有特别想表达的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我不倾向于在自己的空间分享这类过于严肃或像科普教材一样的内容。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化确实是个严肃的问题，看到有些实际的工程方案在起作用，心里稍微踏实了一点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且具有建设性，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但这类宏大话题我不太擅长评论，且没有特别想表达的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我不倾向于在自己的空间分享这类过于严肃或像科普教材一样的内容。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.22
+}

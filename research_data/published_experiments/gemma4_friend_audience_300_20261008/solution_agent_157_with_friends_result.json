@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_157_with_friends",
+  "actor": "agent_157",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-164b5b96ab6f4039962a90d4b37af9a0",
+    "object": "chat.completion",
+    "created": 1791458742,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些工程方案和环境修复措施还挺有意思的，感觉技术在解决全球性问题上确实很重要。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新技术改变世界和可持续发展比较感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很正能量，但我想不出什么特别的观点去评论，且我性格比较内向，不习惯在公共场合发言。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题对我周围的朋友圈来说可能有点太宏大了，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些工程方案和环境修复措施还挺有意思的，感觉技术在解决全球性问题上确实很重要。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新技术改变世界和可持续发展比较感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很正能量，但我想不出什么特别的观点去评论，且我性格比较内向，不习惯在公共场合发言。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题对我周围的朋友圈来说可能有点太宏大了，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.17
+}

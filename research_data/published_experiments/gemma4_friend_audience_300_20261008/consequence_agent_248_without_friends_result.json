@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_248_without_friends",
+  "actor": "agent_248",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-f1efe2a82b6a4e7db159e48d0de01318",
+    "object": "chat.completion",
+    "created": 1791453990,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉这个话题挺沉重的，虽然离我的日常生活有距离，但这种全球性的危机确实让人不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同气候危机的严肃性，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但由于缺乏专业知识，没什么能给出的建设性评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容过于压抑，且不是我平时关注的领域，不太适合转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉这个话题挺沉重的，虽然离我的日常生活有距离，但这种全球性的危机确实让人不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同气候危机的严肃性，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但由于缺乏专业知识，没什么能给出的建设性评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容过于压抑，且不是我平时关注的领域，不太适合转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.03
+}

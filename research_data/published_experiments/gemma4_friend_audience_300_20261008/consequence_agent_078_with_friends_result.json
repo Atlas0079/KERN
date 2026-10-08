@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_078_with_friends",
+  "actor": "agent_078",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-200f4c3dfd804853b3af3f79c26ca9e7",
+    "object": "chat.completion",
+    "created": 1791454583,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升速度这么快吗，感觉这些气候问题虽然宏大，但确实会对未来的居住环境产生直接影响。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注全球环境问题，支持这种科普警示类内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感想，但内容太宏观，我没有专业的地理或气候知识能给出深刻的评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这对我来说是一个信息获取点，但目前还没到需要转发给好友警示的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升速度这么快吗，感觉这些气候问题虽然宏大，但确实会对未来的居住环境产生直接影响。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注全球环境问题，支持这种科普警示类内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感想，但内容太宏观，我没有专业的地理或气候知识能给出深刻的评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这对我来说是一个信息获取点，但目前还没到需要转发给好友警示的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.27
+}

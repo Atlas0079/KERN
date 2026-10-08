@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_001_without_friends",
+  "actor": "agent_001",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-b5c5c75e1eb2421da641e01da2f94c54",
+    "object": "chat.completion",
+    "created": 1791456049,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"最近确实经常看到极端天气的报道，原来海平面上升这些问题已经有这么多具体的应对方案了，还是有点希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"比较关注气候变化话题，且这种正向的科普内容值得点赞支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但没有特别想发表的专业见解，且目前刷帖状态比较随缘。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽好，但没有强烈的冲动要分享给自己的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "最近确实经常看到极端天气的报道，原来海平面上升这些问题已经有这么多具体的应对方案了，还是有点希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "比较关注气候变化话题，且这种正向的科普内容值得点赞支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但没有特别想发表的专业见解，且目前刷帖状态比较随缘。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽好，但没有强烈的冲动要分享给自己的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.29
+}

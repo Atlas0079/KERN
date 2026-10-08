@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_274_without_friends",
+  "actor": "agent_274",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-a585bf8eecf147a9abfd73d10e38fc72",
+    "object": "chat.completion",
+    "created": 1791453066,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的危机听起来很严重，想到以后这么多人的家园被淹没，心里觉得挺沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这是一个严肃且重要的提醒，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的议题我没有专业的见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的社交圈比较小，且不习惯转发这类让人焦虑的消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的危机听起来很严重，想到以后这么多人的家园被淹没，心里觉得挺沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这是一个严肃且重要的提醒，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的议题我没有专业的见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的社交圈比较小，且不习惯转发这类让人焦虑的消息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.54
+}

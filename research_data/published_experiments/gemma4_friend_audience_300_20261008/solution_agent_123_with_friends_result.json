@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_123_with_friends",
+  "actor": "agent_123",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-99e91af246964ecabdc18aa4100f3054",
+    "object": "chat.completion",
+    "created": 1791459391,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"关于气候变化的科普内容，挺有意义的，不过对我目前的生活影响比较远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且具有科普性质，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认可，但没有特别深刻的见解，没必要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大叙事的内容不太适合发到我的个人主页，朋友们可能没兴趣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "关于气候变化的科普内容，挺有意义的，不过对我目前的生活影响比较远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且具有科普性质，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认可，但没有特别深刻的见解，没必要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类宏大叙事的内容不太适合发到我的个人主页，朋友们可能没兴趣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.67
+}

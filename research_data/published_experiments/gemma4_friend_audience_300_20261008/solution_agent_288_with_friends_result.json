@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_288_with_friends",
+  "actor": "agent_288",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-856f4b1c8e574996a7181f0c9b16da72",
+    "object": "chat.completion",
+    "created": 1791455038,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"我对环境生态一直挺关注的，看到这些实际的工程案例和环保措施，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且符合我的个人兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但没有特别深刻的观点想表达，简单点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类的内容对我来说是知识积累，不需要特意转发到我的朋友圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "我对环境生态一直挺关注的，看到这些实际的工程案例和环保措施，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且符合我的个人兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但没有特别深刻的观点想表达，简单点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类的内容对我来说是知识积累，不需要特意转发到我的朋友圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.27
+}

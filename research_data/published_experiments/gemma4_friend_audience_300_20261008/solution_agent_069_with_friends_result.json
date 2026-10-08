@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_069_with_friends",
+  "actor": "agent_069",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-a74ce4c5949e4a77be81a07428ce9ea3",
+    "object": "chat.completion",
+    "created": 1791453665,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保方案感觉还挺有希望的，而且这种宏大话题其实跟每个人的生活都相关。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种积极的正能量科普，支持环保理念。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但这种严肃话题我不太习惯在评论区发表观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但我觉得转发到自己的主页可能不太符合我平时的分享习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保方案感觉还挺有希望的，而且这种宏大话题其实跟每个人的生活都相关。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种积极的正能量科普，支持环保理念。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但这种严肃话题我不太习惯在评论区发表观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但我觉得转发到自己的主页可能不太符合我平时的分享习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.42
+}

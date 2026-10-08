@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_211_without_friends",
+  "actor": "agent_211",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-f2ce81f962544943a9e9e7cf6809a324",
+    "object": "chat.completion",
+    "created": 1791458590,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么快吗，感觉这种生态环境的剧变对以后的人类生活影响真的很大。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"平时就关注环境变化和生态保护，这种科普内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但性格内向，不习惯在公共平台发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且没有强烈的分享欲望。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么快吗，感觉这种生态环境的剧变对以后的人类生活影响真的很大。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "平时就关注环境变化和生态保护，这种科普内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但性格内向，不习惯在公共平台发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且没有强烈的分享欲望。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.48
+}

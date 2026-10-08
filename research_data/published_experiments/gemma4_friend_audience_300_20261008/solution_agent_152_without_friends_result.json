@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_152_without_friends",
+  "actor": "agent_152",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-38745bd916e64ef981b8b98d2e8a928a",
+    "object": "chat.completion",
+    "created": 1791451869,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的科普，虽然感觉离我生活有点远，但这种全球性的议题我一直比较关注。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有新意，赞同这种可持续生活的理念。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但没有特别想表达的观点，随性刷刷就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的话题转发到自己主页可能不太自然，没必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的科普，虽然感觉离我生活有点远，但这种全球性的议题我一直比较关注。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有新意，赞同这种可持续生活的理念。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但没有特别想表达的观点，随性刷刷就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种宏大的话题转发到自己主页可能不太自然，没必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.42
+}

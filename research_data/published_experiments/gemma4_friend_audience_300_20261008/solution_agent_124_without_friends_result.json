@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_124_without_friends",
+  "actor": "agent_124",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-e590d173e422483a8c7797a889513f3d",
+    "object": "chat.completion",
+    "created": 1791458250,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题挺宏大的，不过看到有具体的工程和方案，感觉比单纯的焦虑要好很多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正向且有科普性质，我倾向于支持这类可持续发展的观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没什么特别想补充的观点，也没必要在这么宏大的话题下发表浅显的评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然不错，但我的社交圈比较简单，没必要特意转发这种科普贴。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题挺宏大的，不过看到有具体的工程和方案，感觉比单纯的焦虑要好很多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正向且有科普性质，我倾向于支持这类可持续发展的观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没什么特别想补充的观点，也没必要在这么宏大的话题下发表浅显的评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然不错，但我的社交圈比较简单，没必要特意转发这种科普贴。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.0
+}

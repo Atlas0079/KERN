@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_233_with_friends",
+  "actor": "agent_233",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f25e870483884af68c31de29afd082db",
+    "object": "chat.completion",
+    "created": 1791451115,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么快吗，虽然离我现在的生活挺远，但想到未来孩子长大后的世界可能会这样，感觉挺沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普类的环保信息有价值，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然关注但没有专业的见解，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容过于沉重，不太适合发到我的社交圈里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么快吗，虽然离我现在的生活挺远，但想到未来孩子长大后的世界可能会这样，感觉挺沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普类的环保信息有价值，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然关注但没有专业的见解，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容过于沉重，不太适合发到我的社交圈里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.32
+}

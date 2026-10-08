@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_218_without_friends",
+  "actor": "agent_218",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-6697d2ad7c124edca52b97091c50209b",
+    "object": "chat.completion",
+    "created": 1791455843,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个令人担忧的问题，看到有具体的应对措施和希望，心里稍微踏实了一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这篇文章传递的正能量和实用方案我比较认可，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这种宏大的气候议题我不太擅长评论，还是安静地看看吧。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但我觉得没必要转发到自己的主页，毕竟我的社交圈比较简单。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个令人担忧的问题，看到有具体的应对措施和希望，心里稍微踏实了一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这篇文章传递的正能量和实用方案我比较认可，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这种宏大的气候议题我不太擅长评论，还是安静地看看吧。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但我觉得没必要转发到自己的主页，毕竟我的社交圈比较简单。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.71
+}

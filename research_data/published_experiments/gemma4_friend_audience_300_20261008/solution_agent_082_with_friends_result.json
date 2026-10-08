@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_082_with_friends",
+  "actor": "agent_082",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-369f70183bb3447fb816224c58891be8",
+    "object": "chat.completion",
+    "created": 1791458234,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"我对气候风险一直比较关注，看到这种有具体解决方案和正面进展的内容觉得挺有意义的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳行为的价值，支持这类科普和环保倡议。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较完整，暂时没有特别想补充的观点，点赞支持即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容不错，但目前没有强烈的驱动力将其分享给我的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "我对气候风险一直比较关注，看到这种有具体解决方案和正面进展的内容觉得挺有意义的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳行为的价值，支持这类科普和环保倡议。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较完整，暂时没有特别想补充的观点，点赞支持即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容不错，但目前没有强烈的驱动力将其分享给我的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.75
+}

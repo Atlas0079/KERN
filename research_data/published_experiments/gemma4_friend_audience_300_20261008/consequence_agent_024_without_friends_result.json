@@ -1,0 +1,51 @@
+{
+  "key": "consequence_agent_024_without_friends",
+  "actor": "agent_024",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-1fb5857f651747d381e3fef0d7464e37",
+    "object": "chat.completion",
+    "created": 1791459405,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看完觉得挺不安的，想到以后孩子长大面对的世界如果真是这样，真的有点焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"平时就很关注环境和生态话题，支持这类科普内容的传播。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很担心，但这种全球性的大问题没什么简单的建议能说，评论区估计也挺沉重的。\"\n    },\n    \"repost\": {\n      \"execute\": true,\n      \"reason\": \"这种危机感应该让更多人意识到，转发给朋友们看看。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看完觉得挺不安的，想到以后孩子长大面对的世界如果真是这样，真的有点焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "平时就很关注环境和生态话题，支持这类科普内容的传播。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很担心，但这种全球性的大问题没什么简单的建议能说，评论区估计也挺沉重的。"
+      },
+      "repost": {
+        "execute": true,
+        "reason": "这种危机感应该让更多人意识到，转发给朋友们看看。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "repost",
+      "text": ""
+    }
+  ],
+  "seconds": 13.83
+}

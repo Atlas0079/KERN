@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_211_without_friends",
+  "actor": "agent_211",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-50c45fa3b94b4d1ab09214f723a159e6",
+    "object": "chat.completion",
+    "created": 1791456124,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到关于生态保护和海平面上升的科普挺有意思的，感觉这种全球性的环境问题还是挺值得关注的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"平时就留意环境变化和生态保护的话题，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但性格内向，没想好怎么评论，且这类话题比较宏大，不便随意发表意见。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"不太习惯在社交平台上公开转发这类严肃的科普内容。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到关于生态保护和海平面上升的科普挺有意思的，感觉这种全球性的环境问题还是挺值得关注的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "平时就留意环境变化和生态保护的话题，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但性格内向，没想好怎么评论，且这类话题比较宏大，不便随意发表意见。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "不太习惯在社交平台上公开转发这类严肃的科普内容。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.64
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_113_with_friends",
+  "actor": "agent_113",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-4cae9978e0d44952838ca4c78d83b141",
+    "object": "chat.completion",
+    "created": 1791454253,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度确实惊人，这种气候风险对沿海城市的影响太大了，让人感到不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候风险和极端天气一直很关注，这个话题符合我的专业兴趣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很关注，但目前只是浏览，没有什么特别想发表的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重且宏大，不确定我的朋友圈好友是否会对这个话题感兴趣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度确实惊人，这种气候风险对沿海城市的影响太大了，让人感到不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候风险和极端天气一直很关注，这个话题符合我的专业兴趣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很关注，但目前只是浏览，没有什么特别想发表的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重且宏大，不确定我的朋友圈好友是否会对这个话题感兴趣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.93
+}

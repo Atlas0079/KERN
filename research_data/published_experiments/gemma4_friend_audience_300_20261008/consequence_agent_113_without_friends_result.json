@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_113_without_friends",
+  "actor": "agent_113",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-02d54183db9b450291ec5b6e9699a7df",
+    "object": "chat.completion",
+    "created": 1791455106,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度确实令人担忧，这会对全球生态和未来的人类居住环境产生极其深远的影响。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候风险和环境议题一直很关注，这篇文章提供了重要的信息。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然关注，但觉得内容比较宏大且专业，目前没有特别想补充的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种警示性的内容虽然重要，但我平时社交习惯比较低调，不倾向于转发此类沉重的话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度确实令人担忧，这会对全球生态和未来的人类居住环境产生极其深远的影响。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候风险和环境议题一直很关注，这篇文章提供了重要的信息。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然关注，但觉得内容比较宏大且专业，目前没有特别想补充的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种警示性的内容虽然重要，但我平时社交习惯比较低调，不倾向于转发此类沉重的话题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.24
+}

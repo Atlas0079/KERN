@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_010_with_friends",
+  "actor": "agent_010",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-51c5e292ac634d81af8a53e5b0cb1f33",
+    "object": "chat.completion",
+    "created": 1791452338,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的危机听起来好压抑，想到未来资源争夺和难民问题就让人感到焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容沉重，但这是一个值得关注的严肃议题，点赞表示认可其传播价值。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然关注但没有专业背景，且性格内向，不习惯在公共评论区发表见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重且带有危机感，不希望在自己的朋友圈传播这种让人焦虑的信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的危机听起来好压抑，想到未来资源争夺和难民问题就让人感到焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容沉重，但这是一个值得关注的严肃议题，点赞表示认可其传播价值。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然关注但没有专业背景，且性格内向，不习惯在公共评论区发表见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重且带有危机感，不希望在自己的朋友圈传播这种让人焦虑的信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.45
+}

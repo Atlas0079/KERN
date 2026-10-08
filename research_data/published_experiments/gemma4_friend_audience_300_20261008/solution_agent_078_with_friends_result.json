@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_078_with_friends",
+  "actor": "agent_078",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-924a200da1be430c98ee7a0be1441470",
+    "object": "chat.completion",
+    "created": 1791451412,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然这类环保话题挺重要，但感觉内容有点像科普宣传单，缺乏新鲜的切入点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持低碳和可持续发展的理念，点个赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较常规，没有特别想讨论或反驳的点，没必要评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类通用型的环保呼吁在朋友圈转发太多了，缺乏个人色彩。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然这类环保话题挺重要，但感觉内容有点像科普宣传单，缺乏新鲜的切入点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持低碳和可持续发展的理念，点个赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较常规，没有特别想讨论或反驳的点，没必要评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类通用型的环保呼吁在朋友圈转发太多了，缺乏个人色彩。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.09
+}

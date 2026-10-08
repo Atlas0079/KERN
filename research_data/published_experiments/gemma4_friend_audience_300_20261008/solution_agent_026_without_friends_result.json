@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_026_without_friends",
+  "actor": "agent_026",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-3b6894af25324cbaa6fc3acfcaf2b0d5",
+    "object": "chat.completion",
+    "created": 1791456492,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章提到的工程方案和生态修复很有意思，确实比单纯地担心海平面上升要积极得多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候和极端天气一直很关注，这种提供解决方案的正向内容值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得内容不错，但没有特别强烈的观点需要表达，点个赞就足够了。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较常规，没有到非转发不可的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章提到的工程方案和生态修复很有意思，确实比单纯地担心海平面上升要积极得多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候和极端天气一直很关注，这种提供解决方案的正向内容值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得内容不错，但没有特别强烈的观点需要表达，点个赞就足够了。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较常规，没有到非转发不可的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.34
+}

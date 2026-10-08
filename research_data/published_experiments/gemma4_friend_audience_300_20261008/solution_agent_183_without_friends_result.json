@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_183_without_friends",
+  "actor": "agent_183",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-802d280893bf46d5a20ad871bd1a44a9",
+    "object": "chat.completion",
+    "created": 1791452087,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这类环保话题挺有意义的，不过内容写得有点像宣传口号，缺乏一些具体的硬核技术分析。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持低碳环保和可持续生活的理念，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但帖子内容比较泛，没有特别想深入讨论或质疑的点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容在朋友圈或动态里比较常见，没必要特意转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这类环保话题挺有意义的，不过内容写得有点像宣传口号，缺乏一些具体的硬核技术分析。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持低碳环保和可持续生活的理念，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但帖子内容比较泛，没有特别想深入讨论或质疑的点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容在朋友圈或动态里比较常见，没必要特意转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.54
+}

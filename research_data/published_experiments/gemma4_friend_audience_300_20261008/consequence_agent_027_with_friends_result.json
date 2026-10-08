@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_027_with_friends",
+  "actor": "agent_027",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-c081a5eb59bb4e3db7e0660edb140071",
+    "object": "chat.completion",
+    "created": 1791452220,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的规模比我想象中要严重，这种全球性的危机让人感到不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类关于地球环境的严肃议题感兴趣，点赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，而且我对此类专业领域没有太多可补充的观点，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然很重要，但我的社交圈主要是同学和邻居，转发这个可能不太符合我平时的分享习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的规模比我想象中要严重，这种全球性的危机让人感到不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类关于地球环境的严肃议题感兴趣，点赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较沉重，而且我对此类专业领域没有太多可补充的观点，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然很重要，但我的社交圈主要是同学和邻居，转发这个可能不太符合我平时的分享习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.01
+}

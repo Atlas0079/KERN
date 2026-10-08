@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_168_with_friends",
+  "actor": "agent_168",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f3dd3d73d9f448f59156d314d5e641dd",
+    "object": "chat.completion",
+    "created": 1791453202,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个严峻的科学问题，不过离我现在的日常生活还比较远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类科普性质的科学话题比较感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容是报告总结，我没什么特别的观点要补充，也不太习惯在公共场合主动发言。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题太宏大且沉重，转发到我的朋友圈或好友圈并不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个严峻的科学问题，不过离我现在的日常生活还比较远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类科普性质的科学话题比较感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容是报告总结，我没什么特别的观点要补充，也不太习惯在公共场合主动发言。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题太宏大且沉重，转发到我的朋友圈或好友圈并不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.29
+}

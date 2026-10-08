@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_075_with_friends",
+  "actor": "agent_075",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-2a66a81b1e594a0486eedfce5381c241",
+    "object": "chat.completion",
+    "created": 1791453995,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保这种大话题挺有意思的，不过对我这种普通打工人来说，感觉离生活有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新知识和全球性话题比较开放，这种正能量的科普内容点个赞没问题。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很专业，但我没什么专业见解可以补充，没必要强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的朋友圈大多是干活的同行或旧友，转发这个可能不太合群，没必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保这种大话题挺有意思的，不过对我这种普通打工人来说，感觉离生活有点远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新知识和全球性话题比较开放，这种正能量的科普内容点个赞没问题。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很专业，但我没什么专业见解可以补充，没必要强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的朋友圈大多是干活的同行或旧友，转发这个可能不太合群，没必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.69
+}

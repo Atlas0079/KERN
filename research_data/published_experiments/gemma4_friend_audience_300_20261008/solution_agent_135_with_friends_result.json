@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_135_with_friends",
+  "actor": "agent_135",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-fd89fd239e1a4e31a6007d7117e1fda8",
+    "object": "chat.completion",
+    "created": 1791451855,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些应对海平面上升的工程和措施，感觉技术手段确实能给环境问题带来希望，挺有意思的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一向对新技术及其对社会生活的改变感兴趣，这个帖子提供了正向的解决方案，值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容不错，但这类宏大议题我更倾向于阅读了解，没有特别强烈的观点需要直接表达。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较专业且偏向公益宣传，不太符合我平时发朋友圈或分享给徒步友人的习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些应对海平面上升的工程和措施，感觉技术手段确实能给环境问题带来希望，挺有意思的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一向对新技术及其对社会生活的改变感兴趣，这个帖子提供了正向的解决方案，值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然内容不错，但这类宏大议题我更倾向于阅读了解，没有特别强烈的观点需要直接表达。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较专业且偏向公益宣传，不太符合我平时发朋友圈或分享给徒步友人的习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.29
+}

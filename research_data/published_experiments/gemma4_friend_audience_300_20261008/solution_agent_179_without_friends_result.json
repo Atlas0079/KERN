@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_179_without_friends",
+  "actor": "agent_179",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-a3ca03ffa550476dae238334cf834c05",
+    "object": "chat.completion",
+    "created": 1791455610,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然气候变化是个大话题，但看到有具体的工程和方案在推进，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正能量且有事实支撑，认同这种可持续生活的观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但性格内向，且没有特别专业的见解，不习惯在公开场合发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇帖子更像是个科普，对我个人来说点赞关注即可，没必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然气候变化是个大话题，但看到有具体的工程和方案在推进，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正能量且有事实支撑，认同这种可持续生活的观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但性格内向，且没有特别专业的见解，不习惯在公开场合发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇帖子更像是个科普，对我个人来说点赞关注即可，没必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.75
+}

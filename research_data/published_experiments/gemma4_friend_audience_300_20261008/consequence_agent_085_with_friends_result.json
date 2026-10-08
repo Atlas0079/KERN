@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_085_with_friends",
+  "actor": "agent_085",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-6b33c151522b451181abd1107a7a0713",
+    "object": "chat.completion",
+    "created": 1791451214,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实挺可怕的，尤其是对沿海城市的影响，得关注一下这对未来的环境和生活会有什么实际影响。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对科学和气候类话题感兴趣，这类科普信息有价值。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但专业性太强，我没什么具体的观点可以直白地讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我的社交圈多为家人和邻里，转发这个可能没那么大的共鸣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实挺可怕的，尤其是对沿海城市的影响，得关注一下这对未来的环境和生活会有什么实际影响。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对科学和气候类话题感兴趣，这类科普信息有价值。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但专业性太强，我没什么具体的观点可以直白地讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我的社交圈多为家人和邻里，转发这个可能没那么大的共鸣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.5
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_090_with_friends",
+  "actor": "agent_090",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-e4aef9003994497892b6d89f1e1ff9b3",
+    "object": "chat.completion",
+    "created": 1791454997,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"现在的环境问题确实越来越严重了，想到这么多城市和岛国受影响，心里觉得挺沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容压抑，但这种全球性的警示信息很有必要，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的气候话题我没什么专业见解，也没必要发表意见。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发这种令人焦虑的消息到我的朋友圈，感觉不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "现在的环境问题确实越来越严重了，想到这么多城市和岛国受影响，心里觉得挺沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容压抑，但这种全球性的警示信息很有必要，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的气候话题我没什么专业见解，也没必要发表意见。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发这种令人焦虑的消息到我的朋友圈，感觉不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.13
+}

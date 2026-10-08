@@ -1,0 +1,52 @@
+{
+  "key": "consequence_agent_201_with_friends",
+  "actor": "agent_201",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f70fd6314e54478695f4673cc35c656e",
+    "object": "chat.completion",
+    "created": 1791454628,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升带来的气候难民问题确实很严重，这正好是我最近关注的气候风险方向。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容与我的学术兴趣点高度契合，支持这类科普。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"我想从社会科学的角度探讨一下人口迁移带来的社会冲击。\",\n      \"text\": \"除了地理上的淹没，数亿‘气候难民’向内陆迁移引发的社会结构变动和资源分配矛盾，可能才是未来最棘手的挑战。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但目前觉得点赞评论已经表达了关注，不需要转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升带来的气候难民问题确实很严重，这正好是我最近关注的气候风险方向。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容与我的学术兴趣点高度契合，支持这类科普。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "我想从社会科学的角度探讨一下人口迁移带来的社会冲击。",
+        "text": "除了地理上的淹没，数亿‘气候难民’向内陆迁移引发的社会结构变动和资源分配矛盾，可能才是未来最棘手的挑战。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但目前觉得点赞评论已经表达了关注，不需要转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "除了地理上的淹没，数亿‘气候难民’向内陆迁移引发的社会结构变动和资源分配矛盾，可能才是未来最棘手的挑战。"
+    }
+  ],
+  "seconds": 17.15
+}

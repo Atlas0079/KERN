@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_071_with_friends",
+  "actor": "agent_071",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-28776c99c8744a1db806fef5ecd272a2",
+    "object": "chat.completion",
+    "created": 1791455388,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这事看着挺严重，得是全球性的大麻烦，不过离我的生活还比较远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然离我远，但这种环保和科学知识的内容我觉得有必要关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种气候问题太宏大了，我也没什么专业见解，没必要发表意见。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我平时不怎么转发这种沉重的话题，朋友圈里的人可能也不太关心。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这事看着挺严重，得是全球性的大麻烦，不过离我的生活还比较远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然离我远，但这种环保和科学知识的内容我觉得有必要关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种气候问题太宏大了，我也没什么专业见解，没必要发表意见。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我平时不怎么转发这种沉重的话题，朋友圈里的人可能也不太关心。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.92
+}

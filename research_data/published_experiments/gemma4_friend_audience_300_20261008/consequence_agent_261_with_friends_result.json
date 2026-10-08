@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_261_with_friends",
+  "actor": "agent_261",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-ba43b21817604640b8c3c82611421946",
+    "object": "chat.completion",
+    "created": 1791458563,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这个话题挺严肃的，虽然离我现在的日常生活有距离，但这种全球性的危机确实让人心沉。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注气候危机是正确且必要的，点个赞支持这类科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"专业性太强，我没有相关领域的见解，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，我的社交圈大多是工作和兴趣好友，不太适合转发这个。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这个话题挺严肃的，虽然离我现在的日常生活有距离，但这种全球性的危机确实让人心沉。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注气候危机是正确且必要的，点个赞支持这类科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "专业性太强，我没有相关领域的见解，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，我的社交圈大多是工作和兴趣好友，不太适合转发这个。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.63
+}

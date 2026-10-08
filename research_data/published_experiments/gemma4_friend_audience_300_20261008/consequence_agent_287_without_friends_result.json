@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_287_without_friends",
+  "actor": "agent_287",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-61cbc4c099e847e2916dc1ff7a1d1bd9",
+    "object": "chat.completion",
+    "created": 1791452637,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然知道气候变暖是个大问题，但看到具体到城市和人口迁移的数据，还是觉得挺触目惊心的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这类环保科普内容值得支持，提醒大家关注环境问题。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且宏大，我暂时没有什么能补充的专业见解，不想随便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种沉重的话题不一定会转发到自己的主页，除非我想发起某种讨论。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然知道气候变暖是个大问题，但看到具体到城市和人口迁移的数据，还是觉得挺触目惊心的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这类环保科普内容值得支持，提醒大家关注环境问题。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且宏大，我暂时没有什么能补充的专业见解，不想随便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种沉重的话题不一定会转发到自己的主页，除非我想发起某种讨论。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.53
+}

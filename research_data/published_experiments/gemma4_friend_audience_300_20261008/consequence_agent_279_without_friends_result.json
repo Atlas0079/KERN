@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_279_without_friends",
+  "actor": "agent_279",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8e042697448e4d58b9a7467baf9fcb9b",
+    "object": "chat.completion",
+    "created": 1791458411,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉挺严重的，不过这种全球性的大话题离我现在的日常生活还是有点远，有点无力感。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然焦虑但觉得是个重要的提醒，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的气候话题我没什么专业见解，不方便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"不习惯在自己的主页转发这种比较沉重且严肃的预警信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉挺严重的，不过这种全球性的大话题离我现在的日常生活还是有点远，有点无力感。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然焦虑但觉得是个重要的提醒，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的气候话题我没什么专业见解，不方便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "不习惯在自己的主页转发这种比较沉重且严肃的预警信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.8
+}

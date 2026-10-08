@@ -1,0 +1,52 @@
+{
+  "key": "solution_agent_049_with_friends",
+  "actor": "agent_049",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-2a5969713f5b4e268e304bb124af6f8d",
+    "object": "chat.completion",
+    "created": 1791452795,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保措施感觉心里踏实了很多，原来个体的小行动真的能产生影响。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护很关心，这篇文章传递的积极态度我很认可。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"我想分享一下自己生活中实践低碳的小习惯，和博主产生互动。\",\n      \"text\": \"看到红树林修复的消息很欣慰！我也在尝试减少一次性塑料制品的使用，虽然是小事，但希望能为地球出一份力🌱\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容很不错，但我觉得点赞和评论已经表达了支持，暂时不需要转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保措施感觉心里踏实了很多，原来个体的小行动真的能产生影响。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护很关心，这篇文章传递的积极态度我很认可。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "我想分享一下自己生活中实践低碳的小习惯，和博主产生互动。",
+        "text": "看到红树林修复的消息很欣慰！我也在尝试减少一次性塑料制品的使用，虽然是小事，但希望能为地球出一份力🌱"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容很不错，但我觉得点赞和评论已经表达了支持，暂时不需要转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "看到红树林修复的消息很欣慰！我也在尝试减少一次性塑料制品的使用，虽然是小事，但希望能为地球出一份力🌱"
+    }
+  ],
+  "seconds": 16.03
+}

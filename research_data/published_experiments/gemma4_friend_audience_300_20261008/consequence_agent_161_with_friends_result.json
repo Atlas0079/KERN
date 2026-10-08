@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_161_with_friends",
+  "actor": "agent_161",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-41351e225f304267b339c4fc915f46da",
+    "object": "chat.completion",
+    "created": 1791452978,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这种全球性的危机报道，虽然觉得很严重，但离我的日常生活太遥远了，反而有点焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这类科普和环保内容具有正向意义，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大议题我没什么专业见解，也没必要在这种帖子下发表观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重，转发到我的朋友圈或动态里氛围不太对。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这种全球性的危机报道，虽然觉得很严重，但离我的日常生活太遥远了，反而有点焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这类科普和环保内容具有正向意义，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大议题我没什么专业见解，也没必要在这种帖子下发表观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重，转发到我的朋友圈或动态里氛围不太对。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.18
+}

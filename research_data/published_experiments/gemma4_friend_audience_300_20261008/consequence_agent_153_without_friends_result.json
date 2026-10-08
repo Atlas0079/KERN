@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_153_without_friends",
+  "actor": "agent_153",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-9cce3f493bef4733a950ea7211ddd95f",
+    "object": "chat.completion",
+    "created": 1791458864,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这消息看着挺严重的，虽然离我现在的生活没那么近，但感觉是个挺深刻的社会问题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容挺有警示意义的，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学不专业，没什么能评论的，看看就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种比较沉重且宏大的话题，我不太习惯转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这消息看着挺严重的，虽然离我现在的生活没那么近，但感觉是个挺深刻的社会问题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容挺有警示意义的，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学不专业，没什么能评论的，看看就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种比较沉重且宏大的话题，我不太习惯转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.72
+}

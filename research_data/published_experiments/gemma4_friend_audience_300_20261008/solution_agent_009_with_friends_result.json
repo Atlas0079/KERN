@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_009_with_friends",
+  "actor": "agent_009",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-c6f8b5a99b3b4a7c9db5719c46f0dd88",
+    "object": "chat.completion",
+    "created": 1791459038,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题挺宏大的，虽然离我的日常生活有点远，但看到技术手段能解决环境问题还是挺有意思的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正能量，而且我比较愿意接受这类探讨技术与社会关系的观点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但我对气候工程不专业，没什么能发表的见解，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类的内容对我来说是阅读，但不需要转发到我的社交圈里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题挺宏大的，虽然离我的日常生活有点远，但看到技术手段能解决环境问题还是挺有意思的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正能量，而且我比较愿意接受这类探讨技术与社会关系的观点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但我对气候工程不专业，没什么能发表的见解，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类的内容对我来说是阅读，但不需要转发到我的社交圈里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.04
+}

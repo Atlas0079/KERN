@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_092_without_friends",
+  "actor": "agent_092",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-64f79fec1639498ca4f6af8d71ff4e91",
+    "object": "chat.completion",
+    "created": 1791453130,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事儿听起来挺可怕的，而且涉及这么多城市和人口迁移，感觉是个很宏大的社会问题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类关于技术、环境和社会关系的话题比较感兴趣，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但我性格比较内向，而且这个话题太宏大，我没什么专业建议能给出，就不评论了。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种沉重的话题转发到自己主页感觉氛围太压抑，没必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事儿听起来挺可怕的，而且涉及这么多城市和人口迁移，感觉是个很宏大的社会问题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类关于技术、环境和社会关系的话题比较感兴趣，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但我性格比较内向，而且这个话题太宏大，我没什么专业建议能给出，就不评论了。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种沉重的话题转发到自己主页感觉氛围太压抑，没必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.91
+}

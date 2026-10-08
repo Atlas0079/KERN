@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_192_without_friends",
+  "actor": "agent_192",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-22786e3449304d76b2fe28cd3e2a6a8d",
+    "object": "chat.completion",
+    "created": 1791456895,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然是个宏大的全球议题，但想到以后环境恶化对孩子这一代的长期影响，心里还是有点沉重。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注气候变化这类科普话题，且内容具有警示意义。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太宏大，我个人并没有专业的见解可以贡献，不便随意发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种沉重且遥远的消息没必要转发到自己的主页，不想给社交圈带来过多焦虑感。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然是个宏大的全球议题，但想到以后环境恶化对孩子这一代的长期影响，心里还是有点沉重。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注气候变化这类科普话题，且内容具有警示意义。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太宏大，我个人并没有专业的见解可以贡献，不便随意发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种沉重且遥远的消息没必要转发到自己的主页，不想给社交圈带来过多焦虑感。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.47
+}

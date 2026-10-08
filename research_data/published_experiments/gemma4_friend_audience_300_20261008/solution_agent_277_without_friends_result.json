@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_277_without_friends",
+  "actor": "agent_277",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-286ab22c9d1c40078eb61d5bbedf4674",
+    "object": "chat.completion",
+    "created": 1791456690,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球气候话题挺宏大的，虽然离我日常生活挺远，但看到有具体的工程和方案，感觉还是挺有意思的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新观点和环保这种正向话题比较开放，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但没啥特别想表达的专业见解，没必要强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较常规，没到非分享不可的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球气候话题挺宏大的，虽然离我日常生活挺远，但看到有具体的工程和方案，感觉还是挺有意思的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新观点和环保这种正向话题比较开放，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但没啥特别想表达的专业见解，没必要强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较常规，没到非分享不可的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.73
+}

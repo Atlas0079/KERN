@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_120_with_friends",
+  "actor": "agent_120",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-3c14e92467fd49c1ba2ca08831aa9c67",
+    "object": "chat.completion",
+    "created": 1791451599,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比想象中快，这种环境危机对未来的不确定性确实让人感到忧虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这是一个严肃且重要的环保议题，点赞以表达关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容是联合国报告的概括，我没有专业背景在上面发表评论，静静关注即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我的社交圈层大多是家人和同事，不太适合转发此类预警信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比想象中快，这种环境危机对未来的不确定性确实让人感到忧虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这是一个严肃且重要的环保议题，点赞以表达关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容是联合国报告的概括，我没有专业背景在上面发表评论，静静关注即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我的社交圈层大多是家人和同事，不太适合转发此类预警信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.45
+}

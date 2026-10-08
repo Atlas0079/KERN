@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_208_without_friends",
+  "actor": "agent_208",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-1a72935b52a54364a97ccf388df9ca2e",
+    "object": "chat.completion",
+    "created": 1791459231,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保措施还是挺有希望的，虽然我也在努力低碳，但感觉个人力量在这些大工程面前真的很渺小。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"正能量的内容，支持这种环保的科普引导。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没什么特别想发表的见解，且这种宏大话题不太好接话。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但转发到自己的主页可能不太符合我平时的社交习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保措施还是挺有希望的，虽然我也在努力低碳，但感觉个人力量在这些大工程面前真的很渺小。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "正能量的内容，支持这种环保的科普引导。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没什么特别想发表的见解，且这种宏大话题不太好接话。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但转发到自己的主页可能不太符合我平时的社交习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.66
+}

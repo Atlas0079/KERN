@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_102_with_friends",
+  "actor": "agent_102",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-746a7f17f27e46d29b6416728fa69ffb",
+    "object": "chat.completion",
+    "created": 1791451934,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保话题挺有意义的，看到有具体的工程和方案让人觉得稍微安心了一点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的正向价值观。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学并不专业，且性格比较内向，不习惯在推荐帖下发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容很好，但这不是我平时关注的艺术或收藏领域，没必要转发到我的个人主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保话题挺有意义的，看到有具体的工程和方案让人觉得稍微安心了一点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的正向价值观。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学并不专业，且性格比较内向，不习惯在推荐帖下发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容很好，但这不是我平时关注的艺术或收藏领域，没必要转发到我的个人主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.83
+}

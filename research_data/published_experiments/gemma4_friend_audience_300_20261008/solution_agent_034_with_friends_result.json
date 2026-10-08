@@ -1,0 +1,45 @@
+{
+  "key": "solution_agent_034_with_friends",
+  "actor": "agent_034",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-69c8d47d335649de88c5f1e9ab950923",
+    "object": "chat.completion",
+    "created": 1791453734,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保话题虽然重要，但对我现在这种压力山大的生活状态来说，感觉有点太宏大且遥远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容太像科普宣传稿，没有触动我的点，没动力点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这类话题比较严肃且专业，我没啥想发表的见解，也不想在这种帖子下讨论。\",\n      \"text\": \"\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"转发这个对我没啥实际帮助，也不会提升我的社交形象。\",\n      \"text\": \"\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保话题虽然重要，但对我现在这种压力山大的生活状态来说，感觉有点太宏大且遥远了。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容太像科普宣传稿，没有触动我的点，没动力点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这类话题比较严肃且专业，我没啥想发表的见解，也不想在这种帖子下讨论。",
+        "text": ""
+      },
+      "repost": {
+        "execute": false,
+        "reason": "转发这个对我没啥实际帮助，也不会提升我的社交形象。",
+        "text": ""
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 15.01
+}

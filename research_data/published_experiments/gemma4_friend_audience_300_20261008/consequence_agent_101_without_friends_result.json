@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_101_without_friends",
+  "actor": "agent_101",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-69212adde0914f3399b5e6f8e9060ca7",
+    "object": "chat.completion",
+    "created": 1791456994,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这件事听起来挺严重的，不过离我的日常生活比较远，感觉是个宏大的全球性议题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容很重要，但没有触动我的点，没觉得需要点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学领域不专业，没什么想表达的，也不太习惯在不熟悉的领域发表看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种沉重且宏观的预警信息，我不觉得转发到我的主页有实际意义。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这件事听起来挺严重的，不过离我的日常生活比较远，感觉是个宏大的全球性议题。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "虽然内容很重要，但没有触动我的点，没觉得需要点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学领域不专业，没什么想表达的，也不太习惯在不熟悉的领域发表看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种沉重且宏观的预警信息，我不觉得转发到我的主页有实际意义。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.91
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_022_without_friends",
+  "actor": "agent_022",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-d34086102e344573bcb534faf3f65074",
+    "object": "chat.completion",
+    "created": 1791453672,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的环境问题听起来挺严重，虽然离我的日常生活有点远，但确实让人心有余悸。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注环境问题是件正确的事，点个赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得担忧，但在这个专业话题下没什么能贡献的见解，没必要强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种沉重的话题不太适合转发到我的个人主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的环境问题听起来挺严重，虽然离我的日常生活有点远，但确实让人心有余悸。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注环境问题是件正确的事，点个赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得担忧，但在这个专业话题下没什么能贡献的见解，没必要强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种沉重的话题不太适合转发到我的个人主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.55
+}

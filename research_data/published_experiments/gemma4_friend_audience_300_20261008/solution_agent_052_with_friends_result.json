@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_052_with_friends",
+  "actor": "agent_052",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-fa9cab77d2cf45128ab79e0dc638a2ca",
+    "object": "chat.completion",
+    "created": 1791455950,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"我对极端天气和气候变化一直很关注，看到这些具体的应对方案感觉还挺有意思的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容符合我的兴趣点，且传递了积极的解决方向。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但目前没有特别想表达的观点，且我平时不怎么主动张罗社交讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇文章比较通用，没有必要转发到我的朋友圈或空间。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "我对极端天气和气候变化一直很关注，看到这些具体的应对方案感觉还挺有意思的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容符合我的兴趣点，且传递了积极的解决方向。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但目前没有特别想表达的观点，且我平时不怎么主动张罗社交讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇文章比较通用，没有必要转发到我的朋友圈或空间。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.74
+}

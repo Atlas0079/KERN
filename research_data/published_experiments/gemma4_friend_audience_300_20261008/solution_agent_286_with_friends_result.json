@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_286_with_friends",
+  "actor": "agent_286",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-3e2d167cf13c4a029be4948403fdaeb9",
+    "object": "chat.completion",
+    "created": 1791455991,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实挺让人担心的，不过看到有具体的工程和方案在实施，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境变化和生态保护感兴趣，而且这篇文章传递了积极的态度，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得内容有意义，但我性格比较内向，这种科普类帖子看就足够了，没必要特意发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题比较宏大，我的社交圈子大多是家人和同事，转发这个可能没什么讨论空间。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实挺让人担心的，不过看到有具体的工程和方案在实施，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境变化和生态保护感兴趣，而且这篇文章传递了积极的态度，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得内容有意义，但我性格比较内向，这种科普类帖子看就足够了，没必要特意发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题比较宏大，我的社交圈子大多是家人和同事，转发这个可能没什么讨论空间。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.11
+}

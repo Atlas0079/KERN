@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_251_with_friends",
+  "actor": "agent_251",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-8d3aa9b3680b423f89d96d7831d4a43d",
+    "object": "chat.completion",
+    "created": 1791455297,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是我关注的领域，看到有一些具体的工程和修复计划在实施，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容涉及我感兴趣的极端天气和气候风险话题，且观点积极。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但帖子内容比较概括，目前没有特别想反驳或补充的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这对我来说是个人的知识积累，没必要转发到我的社交圈里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是我关注的领域，看到有一些具体的工程和修复计划在实施，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容涉及我感兴趣的极端天气和气候风险话题，且观点积极。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但帖子内容比较概括，目前没有特别想反驳或补充的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这对我来说是个人的知识积累，没必要转发到我的社交圈里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.24
+}

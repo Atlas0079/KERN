@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_191_with_friends",
+  "actor": "agent_191",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-552a3bf4eef44f2581ae6fa74e75ec59",
+    "object": "chat.completion",
+    "created": 1791456568,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的环境问题确实挺触目惊心的，虽然离我现在的生活有点远，但这种趋势挺让人担心。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对生态保护和科学议题感兴趣，支持这类科普信息的传播。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很专业，我没什么能补充的见解，不习惯在公共场合发表空洞的感慨。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但我的社交圈比较小，转发这个可能没什么实际意义。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的环境问题确实挺触目惊心的，虽然离我现在的生活有点远，但这种趋势挺让人担心。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对生态保护和科学议题感兴趣，支持这类科普信息的传播。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很专业，我没什么能补充的见解，不习惯在公共场合发表空洞的感慨。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但我的社交圈比较小，转发这个可能没什么实际意义。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.57
+}

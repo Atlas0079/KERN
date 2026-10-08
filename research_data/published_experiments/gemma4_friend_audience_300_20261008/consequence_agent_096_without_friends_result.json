@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_096_without_friends",
+  "actor": "agent_096",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-22ca066ec1484d089a8ccc091cec7114",
+    "object": "chat.completion",
+    "created": 1791455773,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉好压抑，想到以后孩子长大面对的世界变成这样，心里莫名有些焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容沉重，但觉得这个科普很重要，支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的全球议题我没什么专业见解，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"太沉重了，不想把这种让人焦虑的消息转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉好压抑，想到以后孩子长大面对的世界变成这样，心里莫名有些焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容沉重，但觉得这个科普很重要，支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的全球议题我没什么专业见解，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "太沉重了，不想把这种让人焦虑的消息转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.43
+}

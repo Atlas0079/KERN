@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_291_with_friends",
+  "actor": "agent_291",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-791c3b60fbba4440b0e1a26f7c060ff1",
+    "object": "chat.completion",
+    "created": 1791452200,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个严重的问题，不过看到有些具体的工程和修复计划在起作用，感觉稍微乐观了一点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候变化和科普话题感兴趣，支持这种传递希望的环保内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容已经说得很全面了，我没有特别想补充的观点，倾向于安静地浏览。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但我的社交圈大多是家人和同事，转发这个可能不太契合大家的关注点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个严重的问题，不过看到有些具体的工程和修复计划在起作用，感觉稍微乐观了一点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候变化和科普话题感兴趣，支持这种传递希望的环保内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容已经说得很全面了，我没有特别想补充的观点，倾向于安静地浏览。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但我的社交圈大多是家人和同事，转发这个可能不太契合大家的关注点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.28
+}

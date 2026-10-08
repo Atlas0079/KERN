@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_283_without_friends",
+  "actor": "agent_283",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-9901a52075e64144b588e61d41703499",
+    "object": "chat.completion",
+    "created": 1791451718,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺正向的，虽然我的专业方向变了，但对这类环境科学和可持续发展的话题依然有基本的兴趣。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的理念，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别深刻的见解或必须要表达的观点，没必要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题对我来说比较常规，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺正向的，虽然我的专业方向变了，但对这类环境科学和可持续发展的话题依然有基本的兴趣。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的理念，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别深刻的见解或必须要表达的观点，没必要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题对我来说比较常规，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.96
+}

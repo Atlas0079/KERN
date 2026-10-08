@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_249_with_friends",
+  "actor": "agent_249",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-ff2a6530d4414c3ab55443536474a82b",
+    "object": "chat.completion",
+    "created": 1791458088,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种关于全球气候和环境的大议题挺有意思的，看到有具体的工程案例比纯粹的口号更有说服力。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新观点和可持续发展持开放态度，支持这种正能量的科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观，我没有特别专业的见解需要补充，点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这对我个人的社交圈层来说相关度不高，没必要转发到我的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种关于全球气候和环境的大议题挺有意思的，看到有具体的工程案例比纯粹的口号更有说服力。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新观点和可持续发展持开放态度，支持这种正能量的科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏观，我没有特别专业的见解需要补充，点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这对我个人的社交圈层来说相关度不高，没必要转发到我的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.93
+}

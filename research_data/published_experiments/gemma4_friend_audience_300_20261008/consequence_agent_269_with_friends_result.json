@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_269_with_friends",
+  "actor": "agent_269",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-479084d859a345baa91b5db7f2c6afa4",
+    "object": "chat.completion",
+    "created": 1791454059,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题太宏大且沉重了，想到以后环境变差，想到孩子将来的世界，心里莫名有点焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容太压抑了，没什么心情点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学不专业，没什么能贡献的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种令人不安的消息不想转发到我的好友圈里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题太宏大且沉重了，想到以后环境变差，想到孩子将来的世界，心里莫名有点焦虑。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容太压抑了，没什么心情点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学不专业，没什么能贡献的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种令人不安的消息不想转发到我的好友圈里。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 12.43
+}

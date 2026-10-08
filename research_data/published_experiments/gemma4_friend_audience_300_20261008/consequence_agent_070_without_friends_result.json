@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_070_without_friends",
+  "actor": "agent_070",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-1c0e5cda624945fdb9808075d76714d7",
+    "object": "chat.completion",
+    "created": 1791458851,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉挺沉重的，如果海平面真的上升这么多，很多沿海城市的生活方式会被彻底改变吧。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普类的内容很有必要，支持传播气候危机意识。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太宏大了，我个人没有什么专业见解，不方便随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但目前我的朋友圈氛围比较轻松，转发这个可能会显得太严肃。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉挺沉重的，如果海平面真的上升这么多，很多沿海城市的生活方式会被彻底改变吧。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普类的内容很有必要，支持传播气候危机意识。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太宏大了，我个人没有什么专业见解，不方便随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但目前我的朋友圈氛围比较轻松，转发这个可能会显得太严肃。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.69
+}

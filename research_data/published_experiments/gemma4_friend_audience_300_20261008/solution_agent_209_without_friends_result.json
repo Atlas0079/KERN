@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_209_without_friends",
+  "actor": "agent_209",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-311b5f84cd634eb1ae8ef850f5bf31ee",
+    "object": "chat.completion",
+    "created": 1791454082,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的，看到技术方案和具体行动结合在一起，感觉这类全球性问题还是有解决路径的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新技术改变生活以及可持续发展这类开放性话题比较感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较正能量且完整，我倾向于安静地阅读和思考，不需要特意发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但这类话题比较宏大，不太符合我比较内向且低调的社交习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的，看到技术方案和具体行动结合在一起，感觉这类全球性问题还是有解决路径的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新技术改变生活以及可持续发展这类开放性话题比较感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较正能量且完整，我倾向于安静地阅读和思考，不需要特意发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然认同，但这类话题比较宏大，不太符合我比较内向且低调的社交习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.25
+}

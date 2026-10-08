@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_275_without_friends",
+  "actor": "agent_275",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-f9bd07de871c48ca85cc72063b03c9ce",
+    "object": "chat.completion",
+    "created": 1791453148,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些工程措施听起来很有技术含量，不过对我个人生活影响比较远，随手关灯这种小事平时就在做。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正能量，支持环保和可持续发展。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别想讨论的专业见解或个人经历。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容点赞即可，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些工程措施听起来很有技术含量，不过对我个人生活影响比较远，随手关灯这种小事平时就在做。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正能量，支持环保和可持续发展。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别想讨论的专业见解或个人经历。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容点赞即可，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.83
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_209_without_friends",
+  "actor": "agent_209",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-6db630be763d48008e055e99e4f99ddd",
+    "object": "chat.completion",
+    "created": 1791456118,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升带来的社会变革和资源重新分配确实是个深层的议题，挺令人担忧的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有警示意义，且我本身对技术与社会关系的议题比较关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的全球性议题，我倾向于安静地思考，不习惯在公开评论区发表观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但我不常转发此类沉重的话题到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升带来的社会变革和资源重新分配确实是个深层的议题，挺令人担忧的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有警示意义，且我本身对技术与社会关系的议题比较关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的全球性议题，我倾向于安静地思考，不习惯在公开评论区发表观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但我不常转发此类沉重的话题到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.91
+}

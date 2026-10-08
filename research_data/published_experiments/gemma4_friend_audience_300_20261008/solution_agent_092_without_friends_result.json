@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_092_without_friends",
+  "actor": "agent_092",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-c18237181b6345d5a96ab632fbd42c41",
+    "object": "chat.completion",
+    "created": 1791457199,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然是个宏大的课题，但看到具体的工程和修复计划，觉得技术在应对气候问题上还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新技术和可持续发展感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较正能量，但我性格内向，且没有太多专业见解想公开讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类的东西看看就行，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然是个宏大的课题，但看到具体的工程和修复计划，觉得技术在应对气候问题上还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新技术和可持续发展感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较正能量，但我性格内向，且没有太多专业见解想公开讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类的东西看看就行，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.95
+}

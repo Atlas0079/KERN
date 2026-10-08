@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_212_without_friends",
+  "actor": "agent_212",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-a38d212b9e8146ae96563f175ecffd06",
+    "object": "chat.completion",
+    "created": 1791458600,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保举措还挺有希望的，不过对我这种过日子的普通人来说，感觉离生活有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很正能量，支持环保和可持续发展。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没什么专业见解，也不太知道该评论什么。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容点个赞就行，没必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保举措还挺有希望的，不过对我这种过日子的普通人来说，感觉离生活有点远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很正能量，支持环保和可持续发展。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没什么专业见解，也不太知道该评论什么。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容点个赞就行，没必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.08
+}

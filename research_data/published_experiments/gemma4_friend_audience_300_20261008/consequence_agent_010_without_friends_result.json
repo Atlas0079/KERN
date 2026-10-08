@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_010_without_friends",
+  "actor": "agent_010",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-d6cb35c340da4d5682f696d537b8e36a",
+    "object": "chat.completion",
+    "created": 1791450954,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候危机听起来太压抑了，想到未来可能会有这么多难民和资源争夺，让我感到很焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容沉重，但这种科普警示很有必要，表示支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的全球议题我没什么专业见解，而且我性格内向，不习惯在公开场合发表观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容过于负面压抑，转发到我的主页可能会让关注我的人心情不好。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候危机听起来太压抑了，想到未来可能会有这么多难民和资源争夺，让我感到很焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容沉重，但这种科普警示很有必要，表示支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的全球议题我没什么专业见解，而且我性格内向，不习惯在公开场合发表观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容过于负面压抑，转发到我的主页可能会让关注我的人心情不好。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.98
+}

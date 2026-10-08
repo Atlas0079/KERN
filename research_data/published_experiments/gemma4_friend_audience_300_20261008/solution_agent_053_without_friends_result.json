@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_053_without_friends",
+  "actor": "agent_053",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-76c3a907a334422d9b51c9f461b3da68",
+    "object": "chat.completion",
+    "created": 1791457481,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章提到的环保工程和低碳生活挺有意思的，这种全球性的环境议题我一直比较关注。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种积极面对气候变化的观点，支持环保行动。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观，我暂时没有什么特别深刻的见解需要分享，倾向于安静阅读。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但我觉得没必要转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章提到的环保工程和低碳生活挺有意思的，这种全球性的环境议题我一直比较关注。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种积极面对气候变化的观点，支持环保行动。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏观，我暂时没有什么特别深刻的见解需要分享，倾向于安静阅读。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但我觉得没必要转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.18
+}

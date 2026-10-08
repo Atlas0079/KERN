@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_198_without_friends",
+  "actor": "agent_198",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8ce7ca8b2c59441e945174ae4e9e9004",
+    "object": "chat.completion",
+    "created": 1791455402,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保话题挺有意义的，虽然有点宏大，但看到个体行动也能有贡献，感觉还挺正能量。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的理念，随手点个赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较科普且正面，但没有特别想讨论的切入点，不打算评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种宏观话题转发到我的动态里可能不太合适，且没有强烈的分享欲。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保话题挺有意义的，虽然有点宏大，但看到个体行动也能有贡献，感觉还挺正能量。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的理念，随手点个赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较科普且正面，但没有特别想讨论的切入点，不打算评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种宏观话题转发到我的动态里可能不太合适，且没有强烈的分享欲。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.97
+}

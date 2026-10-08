@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_110_without_friends",
+  "actor": "agent_110",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-bae964d9f2bb48058bfbe8fb47341e60",
+    "object": "chat.completion",
+    "created": 1791451199,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个令人担忧的问题，看到有些实际的工程和修复方案在起作用，感觉稍微宽心了一点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"平时就比较关注环境和生态话题，支持这种传播环保意识的正向内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很全面，但我没有太多专业的补充观点，随便评论一句反而显得没深度。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但目前没必要特意转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个令人担忧的问题，看到有些实际的工程和修复方案在起作用，感觉稍微宽心了一点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "平时就比较关注环境和生态话题，支持这种传播环保意识的正向内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很全面，但我没有太多专业的补充观点，随便评论一句反而显得没深度。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然认同，但目前没必要特意转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.86
+}

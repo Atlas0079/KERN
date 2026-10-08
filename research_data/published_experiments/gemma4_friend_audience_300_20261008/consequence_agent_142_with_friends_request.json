@@ -1,0 +1,15 @@
+{
+  "model": "gemma-4-31B-it",
+  "temperature": 0.9,
+  "max_tokens": 1200,
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是以下社交平台用户：\n\n我的 profile_id：social_profile_142\n我的自我画像：\n我今年38岁，是一名男性，目前处在成家立业的阶段。大学时我读的是工程与制造方向，本科毕业后就没再继续读书深造，这也是我目前最高的学历，现在手头也没有在读的课程或学位项目。毕业后我进入了测试行业，一直做到现在，身份是测试工程师，工作算是稳定，没有跳槽或空窗的困扰。\n\n生活上我有一个稳定的伴侣，感情比较持久，不过我们还没有孩子。家里这边，我和父母长辈住在一起，平时会顺手照应他们的生活，偶尔在经济上补贴一下，但因为没有孩子要养，家庭方面的责任整体不算重。不过说实话，我的经济压力一直挺大的，工资涨得不快，生活成本又高，所以尽管家庭负担轻，钱包上的紧张感一点没少，这也让我在花钱上养成了看重耐用和实用的习惯，买东西前总要琢磨值不值、扛不扛得住用。\n\n性格方面，我算是比较内向的人，不太喜欢在人多的场合表现自己，但我对新的观点和想法一直很愿意去了解和琢磨，遇到不同的看法也不排斥去接触。做事我比较讲计划性，习惯把事情安排得有条理，情绪上也算稳得住，不容易大起大落。跟人打交道的时候，我通常比较能体谅对方，愿意配合别人的想法，不喜欢起冲突。\n\n业余时间，我喜欢看书，小说和非虚构类的作品都读，没事就爱去书店或图书馆转转，翻翻新出的书。社区里的事情我也留意，邻里之间有什么动静或活动我都会关注一下，偶尔参与进去。做饭也是我日常生活里花心思的一部分，平时会研究一些家常菜谱，琢磨怎么做得更好吃。除了这些，我对一些文化类的展览和艺术内容也挺感兴趣，虽然没怎么真正去逛展，但常看一些艺术纪录片来了解；同样，高端电子产品我也一直留意，经常看新品的测评视频，算是关注和了解的阶段，还没真正下场去买。目前我也没有什么已经投入资金或已经定好计划要做的大项目，生活基本就是按部就班地过。除此之外，我平时也比较关心环境和生态方面的话题，会留意一些关于气候变化和生态保护的新闻和讨论。\n我的人格五维（0-1，越高越明显）：openness=0.80, conscientiousness=0.70, extraversion=0.10, agreeableness=0.70, neuroticism=0.30\n\n我的平台主要好友类别（platform_friend_categories）：[\"工作同事\", \"家人亲属\", \"大学同学\", \"现实生活中的邻居\"]"
+    },
+    {
+      "role": "user",
+      "content": "你正在浏览社交平台，当前页面如下：\n{\"tick\":1,\"actor_id\":\"agent_142\",\"screen\":{\"terminal_id\":\"phone_142\",\"runtime_id\":\"social_platform\",\"account_id\":\"account_142\",\"view\":\"post_detail\",\"updated_tick\":1,\"feed_session_id\":null,\"feed_items\":[],\"current_post\":{\"post_id\":\"sea_level_experiment_post\",\"title\":\"被淹没的未来：海平面上升正在逼近\",\"display_hashtags\":[\"气候危机\",\"海平面上升\",\"地球告急\"],\"original_author_id\":\"earth_voice\",\"feed_item_kind\":\"original\",\"reposted_by_account_id\":null,\"created_tick\":0,\"reposted_tick\":null,\"section\":\"recommended\",\"position\":0,\"like_count\":0,\"comment_count\":0,\"repost_count\":0,\"viewer_has_liked\":false,\"viewer_has_reposted\":false,\"text\":\"🌊【被淹没的未来】联合国最新报告：全球海平面正在加速上升！\\n\\n过去30年，海平面上升速度翻倍；上海、纽约、伦敦等沿海城市面临周期性海水倒灌；到2050年，很多沿海居民的家园将受到威胁；马尔代夫、图瓦卢等岛国已启动长期性人口迁移规划；数亿气候难民即将涌向内陆，资源争夺一触即发……\\n\\n我们正在看着自己的海岸线一点点消失。\",\"recent_comments\":[],\"feed_session_id\":null,\"exposure_id\":null}},\"recent_social_memory\":[],\"schema_version\":\"social_decision_page_context.v1\",\"allowed_action_post_ids\":[\"sea_level_experiment_post\"]}\n\n你读完当前帖子后有什么感受，接下来会做什么？\n请尽可能真实地表现出这个人在日常刷社交平台时会有的反应。没有必要为了完成任务强行采取任何行动，不行动也是完整的回答。\n先用一句话表达读后感受；这句话只是你的私人反应，不会发布到平台。\n然后分别决定是否点赞、是否发表评论、是否转发，每个决定都给出一句简短理由，无论决定做还是不做。\n有感想不等于决定发布评论。只有决定发表评论时，才填写实际发布的评论正文。\n只返回 JSON，严格使用以下结构，不输出额外正文。execute 必须是布尔值；reason 是一句简短理由；不发布时 text 可以省略或为空字符串。\n{\"reaction\":\"一句读后感受\",\"decisions\":{\"like\":{\"execute\":false,\"reason\":\"一句理由\"},\"comment\":{\"execute\":false,\"reason\":\"一句理由\",\"text\":\"\"},\"repost\":{\"execute\":false,\"reason\":\"一句理由\",\"text\":\"\"}}}"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_162_without_friends",
+  "actor": "agent_162",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-9a09e36dc14a4246bf11f7646c2c5f2c",
+    "object": "chat.completion",
+    "created": 1791453175,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的环境危机挺让人焦虑的，尤其是想到未来几十年会对社会资源分配产生这么大的影响。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注这类社会议题，点赞表示认同这种警示。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但这类宏大话题没什么好评论的，而且我性格比较内向，不习惯在公共区域发表看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"信息量很大，但目前还没有到非转发不可的紧迫感。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的环境危机挺让人焦虑的，尤其是想到未来几十年会对社会资源分配产生这么大的影响。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注这类社会议题，点赞表示认同这种警示。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但这类宏大话题没什么好评论的，而且我性格比较内向，不习惯在公共区域发表看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "信息量很大，但目前还没有到非转发不可的紧迫感。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.74
+}

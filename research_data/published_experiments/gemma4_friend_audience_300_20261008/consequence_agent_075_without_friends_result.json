@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_075_without_friends",
+  "actor": "agent_075",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-08042c59577a47ad8c297f877599eb37",
+    "object": "chat.completion",
+    "created": 1791454439,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事儿听起来挺严重，不过离我现在的日子太远，感觉是个大环境问题，个人没法改变什么。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容有警示意义，但没什么让我产生共鸣或想支持的点。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种全球性的气候问题太宏大，我没什么专业见解，也没必要凑热闹发表意见。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我不怎么转发这种沉重且无法立刻解决的消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事儿听起来挺严重，不过离我现在的日子太远，感觉是个大环境问题，个人没法改变什么。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "虽然内容有警示意义，但没什么让我产生共鸣或想支持的点。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种全球性的气候问题太宏大，我没什么专业见解，也没必要凑热闹发表意见。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我不怎么转发这种沉重且无法立刻解决的消息。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 14.38
+}

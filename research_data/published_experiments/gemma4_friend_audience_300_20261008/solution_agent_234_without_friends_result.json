@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_234_without_friends",
+  "actor": "agent_234",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-2ed0bc80b28443a28f5cb0367d7cbda2",
+    "object": "chat.completion",
+    "created": 1791451440,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意义的科普，虽然海平面上升听起来很遥远，但看到这些实际的工程和方案让人觉得还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种传播环保和可持续生活理念的正能量内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我没有太多专业见解可以补充，点个赞支持就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然挺好，但我的社交圈子比较小，觉得没必要特意转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意义的科普，虽然海平面上升听起来很遥远，但看到这些实际的工程和方案让人觉得还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种传播环保和可持续生活理念的正能量内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我没有太多专业见解可以补充，点个赞支持就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然挺好，但我的社交圈子比较小，觉得没必要特意转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.16
+}

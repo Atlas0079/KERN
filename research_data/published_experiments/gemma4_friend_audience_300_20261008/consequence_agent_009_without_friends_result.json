@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_009_without_friends",
+  "actor": "agent_009",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-4b13623eaaf2468a86f157012493be5a",
+    "object": "chat.completion",
+    "created": 1791455174,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题挺宏大且沉重的，感觉这种全球性的环境变化迟早会深刻影响到每个人的生活。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容有警示意义且客观，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意思，但气候危机这类话题太专业，我没什么具体的见解可以评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较压抑，不打算分享到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题挺宏大且沉重的，感觉这种全球性的环境变化迟早会深刻影响到每个人的生活。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容有警示意义且客观，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意思，但气候危机这类话题太专业，我没什么具体的见解可以评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较压抑，不打算分享到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.13
+}

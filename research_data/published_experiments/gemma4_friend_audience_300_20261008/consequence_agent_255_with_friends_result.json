@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_255_with_friends",
+  "actor": "agent_255",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-c8e57a8828664c5f87fe07514903e816",
+    "object": "chat.completion",
+    "created": 1791451285,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的影响这么大吗，感觉这些全球性的危机离我虽然远，但听起来挺让人焦虑的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类科普和全球性议题比较感兴趣，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得内容很重要，但我对气候科学并不专业，没什么能补充的，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我的社交圈大多是同事和邻居，转发这个可能不太契合他们的关注点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的影响这么大吗，感觉这些全球性的危机离我虽然远，但听起来挺让人焦虑的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类科普和全球性议题比较感兴趣，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得内容很重要，但我对气候科学并不专业，没什么能补充的，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我的社交圈大多是同事和邻居，转发这个可能不太契合他们的关注点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.35
+}

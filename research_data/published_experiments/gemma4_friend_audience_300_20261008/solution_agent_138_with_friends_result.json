@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_138_with_friends",
+  "actor": "agent_138",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-5e635e60dcf14775a519e906cca3cea0",
+    "object": "chat.completion",
+    "created": 1791455418,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保工程和低碳建议，心里觉得挺有希望的，环境问题确实得大家一起关注。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直很关注生态保护，这类积极的环保内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容已经说得很全面了，我倾向于安静地阅读，没有特别想补充的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容很好，但我社交习惯比较内向，不常转发东西到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保工程和低碳建议，心里觉得挺有希望的，环境问题确实得大家一起关注。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直很关注生态保护，这类积极的环保内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容已经说得很全面了，我倾向于安静地阅读，没有特别想补充的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容很好，但我社交习惯比较内向，不常转发东西到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.46
+}

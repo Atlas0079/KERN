@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_261_without_friends",
+  "actor": "agent_261",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-41cc8928fb9f4028b034221b26a9c8b4",
+    "object": "chat.completion",
+    "created": 1791452283,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"关于环保和气候变化的讨论挺有意思的，虽然是大课题，但看到有具体的工程方案和个人行动建议，感觉还挺有希望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活的理念，且帖子的正向引导让人心情不错。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有共鸣，但这类宏大话题我更倾向于安静阅读，没有特别想补充的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较通用，不需要特意分享到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "关于环保和气候变化的讨论挺有意思的，虽然是大课题，但看到有具体的工程方案和个人行动建议，感觉还挺有希望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活的理念，且帖子的正向引导让人心情不错。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有共鸣，但这类宏大话题我更倾向于安静阅读，没有特别想补充的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较通用，不需要特意分享到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.12
+}

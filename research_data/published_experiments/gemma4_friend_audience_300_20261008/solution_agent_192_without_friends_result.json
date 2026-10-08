@@ -1,0 +1,43 @@
+{
+  "key": "solution_agent_192_without_friends",
+  "actor": "agent_192",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-f3348e7c4de1408293a132d8456d3842",
+    "object": "chat.completion",
+    "created": 1791457907,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的宏大议题虽然重要，但对我目前压力山大的生活来说，实在有点太遥远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然正能量，但没触动到我的个人痛点，没动力点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候工程没有专业见解，也不想在陌生领域随意发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容转发到我的主页意义不大，我的社交圈并不在意这个。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的宏大议题虽然重要，但对我目前压力山大的生活来说，实在有点太遥远了。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容虽然正能量，但没触动到我的个人痛点，没动力点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候工程没有专业见解，也不想在陌生领域随意发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容转发到我的主页意义不大，我的社交圈并不在意这个。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.67
+}

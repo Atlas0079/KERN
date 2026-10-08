@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_252_with_friends",
+  "actor": "agent_252",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-d26aa3162a6b4063bd097a81e4e2bd6b",
+    "object": "chat.completion",
+    "created": 1791456460,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章把全球气候问题和个人行动联系在一起，挺有正能量的，而且提到的工程和计划让我觉得这件事确实是有希望解决的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种倡导可持续生活的积极态度，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整且专业，我目前只是读完觉得不错，没有特别想补充的专业观点或个人经验。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容不错，但我的社交圈主要是家长、同事和邻居，转发这个可能不太符合大家平时的关注点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章把全球气候问题和个人行动联系在一起，挺有正能量的，而且提到的工程和计划让我觉得这件事确实是有希望解决的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种倡导可持续生活的积极态度，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整且专业，我目前只是读完觉得不错，没有特别想补充的专业观点或个人经验。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容不错，但我的社交圈主要是家长、同事和邻居，转发这个可能不太符合大家平时的关注点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.73
+}

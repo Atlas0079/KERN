@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_012_without_friends",
+  "actor": "agent_012",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-e4afa52919094ec9ab9073b1aa6bc91a",
+    "object": "chat.completion",
+    "created": 1791457275,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"正好是我关注的极端天气和气候话题，看到有具体的解决方案让人觉得稍微安心了一些，毕竟得给孩子留个好环境。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且是我感兴趣的领域，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但这类宏大话题我没有太多专业的见解，点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较像科普宣传，不需要特意转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "正好是我关注的极端天气和气候话题，看到有具体的解决方案让人觉得稍微安心了一些，毕竟得给孩子留个好环境。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且是我感兴趣的领域，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但这类宏大话题我没有太多专业的见解，点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较像科普宣传，不需要特意转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.96
+}

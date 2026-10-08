@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_125_with_friends",
+  "actor": "agent_125",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-4fa1b7bd4e39462785805da1b2b54a7f",
+    "object": "chat.completion",
+    "created": 1791453685,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个帖子挺有正能量的，虽然离我的专业和生活没什么直接关系，但关于环境保护的内容还挺有意思。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活，点个赞鼓励一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候工程没有深入研究，没什么专业见解可以发表，随手点赞就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错但不是我的关注重点，没必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个帖子挺有正能量的，虽然离我的专业和生活没什么直接关系，但关于环境保护的内容还挺有意思。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活，点个赞鼓励一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候工程没有深入研究，没什么专业见解可以发表，随手点赞就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错但不是我的关注重点，没必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.46
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_050_without_friends",
+  "actor": "agent_050",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-76b0903bbb574740a53124fd1f65c855",
+    "object": "chat.completion",
+    "created": 1791456672,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化的影响比我想象中要快，想到未来的生存环境，感觉挺沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注全球气候危机，认同这类科普信息的传播价值。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得忧虑，但面对这种全球性的大议题，我没什么专业建议能提供，不想发表空洞的评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重且宏大，不太符合我平时记录生活或分享技术审美的转发习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化的影响比我想象中要快，想到未来的生存环境，感觉挺沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注全球气候危机，认同这类科普信息的传播价值。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得忧虑，但面对这种全球性的大议题，我没什么专业建议能提供，不想发表空洞的评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重且宏大，不太符合我平时记录生活或分享技术审美的转发习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.03
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_297_without_friends",
+  "actor": "agent_297",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-9c77b19c4d82419890b4c407d2a47e19",
+    "object": "chat.completion",
+    "created": 1791453189,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉这个话题挺宏大的，虽然离我现在的生活有点远，但看到沿海城市受影响还是觉得有点危机感。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类环境和地球科学的议题一直挺好奇，支持这种科普内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且专业，我目前没有特别想发表的见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种沉重的话题发到自己主页可能不太合适，且我还没有深入研究过。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉这个话题挺宏大的，虽然离我现在的生活有点远，但看到沿海城市受影响还是觉得有点危机感。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类环境和地球科学的议题一直挺好奇，支持这种科普内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且专业，我目前没有特别想发表的见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种沉重的话题发到自己主页可能不太合适，且我还没有深入研究过。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.52
+}

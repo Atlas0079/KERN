@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_078_without_friends",
+  "actor": "agent_078",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-4a93943289af45079ff655f1c1a574b2",
+    "object": "chat.completion",
+    "created": 1791454954,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实可怕，感觉那些沿海城市的未来挺不安的，希望技术能尽快找到解决方案。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这是一个严肃且重要的环境议题，值得支持关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然关注，但目前没有特别专业的见解或强烈的个人立场需要表达。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我还没研究过具体细节，不便直接转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实可怕，感觉那些沿海城市的未来挺不安的，希望技术能尽快找到解决方案。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这是一个严肃且重要的环境议题，值得支持关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然关注，但目前没有特别专业的见解或强烈的个人立场需要表达。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我还没研究过具体细节，不便直接转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.13
+}

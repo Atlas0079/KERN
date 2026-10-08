@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_247_with_friends",
+  "actor": "agent_247",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-1c485c8cefc648bb9f3d640faa316a19",
+    "object": "chat.completion",
+    "created": 1791458125,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的影响确实触目惊心，这种全球性的环境危机让人感到不安，同时也好奇科技手段能否有效缓解。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注气候变化和科技社会关系，支持传播这类具有警示意义的科普内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感到担忧，但这是一个宏大的全球议题，我目前没有足够专业的见解来发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容较为沉重，且我的好友圈主要是亲友和同事，不确定转发此类危机预警是否合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的影响确实触目惊心，这种全球性的环境危机让人感到不安，同时也好奇科技手段能否有效缓解。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注气候变化和科技社会关系，支持传播这类具有警示意义的科普内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感到担忧，但这是一个宏大的全球议题，我目前没有足够专业的见解来发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容较为沉重，且我的好友圈主要是亲友和同事，不确定转发此类危机预警是否合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.46
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_065_with_friends",
+  "actor": "agent_065",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-534ec89dbcb24ad8a8327171c6137f0b",
+    "object": "chat.completion",
+    "created": 1791451908,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保话题挺有意义的，虽然离我的生活比较远，但这种可持续的生活态度值得认同。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持这种积极的环保观点，点个赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，我没有专业的见解，不方便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普内容对我来说是阅读，不需要转发到我的朋友圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保话题挺有意义的，虽然离我的生活比较远，但这种可持续的生活态度值得认同。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持这种积极的环保观点，点个赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大，我没有专业的见解，不方便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普内容对我来说是阅读，不需要转发到我的朋友圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.73
+}

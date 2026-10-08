@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_128_with_friends",
+  "actor": "agent_128",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-04896dbfc5244eefb5ff7a6ab79bde0b",
+    "object": "chat.completion",
+    "created": 1791452256,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的趋势确实令人担忧，尤其是对沿海大城市的影响，这种生态危机感挺强烈的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态话题，支持这类科普内容的传播。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且宏大，我倾向于安静地阅读和思考，没有特别想表达的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然话题重要，但我的社交圈以同事和同学为主，转发这个可能不太符合我的低调风格。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的趋势确实令人担忧，尤其是对沿海大城市的影响，这种生态危机感挺强烈的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态话题，支持这类科普内容的传播。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且宏大，我倾向于安静地阅读和思考，没有特别想表达的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然话题重要，但我的社交圈以同事和同学为主，转发这个可能不太符合我的低调风格。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.22
+}

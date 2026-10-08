@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_233_without_friends",
+  "actor": "agent_233",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-bb9bf321b7014c60ab5317e147006692",
+    "object": "chat.completion",
+    "created": 1791456828,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保话题挺有意义的，不过对我目前的日常生活影响不大，感觉离我有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正面，点个赞支持一下这种环保倡议。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没什么专业见解或特别想分享的个人经验，没必要评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大的环保议题不太适合转发到我的个人主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保话题挺有意义的，不过对我目前的日常生活影响不大，感觉离我有点远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正面，点个赞支持一下这种环保倡议。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没什么专业见解或特别想分享的个人经验，没必要评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类宏大的环保议题不太适合转发到我的个人主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.93
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_161_without_friends",
+  "actor": "agent_161",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-955a1d01df334594a6cf84cb66ab1124",
+    "object": "chat.completion",
+    "created": 1791457743,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事听起来挺可怕的，想到未来孩子面对的世界如果变成这样，心里有点不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容沉重，但这类关注全球气候危机的科普贴值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太宏大且专业，我没什么具体的见解可以贡献，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"太压抑了，不想把这种焦虑感转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事听起来挺可怕的，想到未来孩子面对的世界如果变成这样，心里有点不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容沉重，但这类关注全球气候危机的科普贴值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太宏大且专业，我没什么具体的见解可以贡献，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "太压抑了，不想把这种焦虑感转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.22
+}

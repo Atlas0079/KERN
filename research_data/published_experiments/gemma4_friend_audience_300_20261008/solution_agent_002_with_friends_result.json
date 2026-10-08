@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_002_with_friends",
+  "actor": "agent_002",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-a2b78fa133094ba1b328c02fbd650a86",
+    "object": "chat.completion",
+    "created": 1791456285,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意义的环保科普，而且提到工程方案，让我这个工程背景的人觉得海平面上升确实有技术手段可以应对。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活的理念，且对文中提到的工程措施感兴趣。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但没有特别想深入讨论的观点，简单点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较常规，不需要转发到自己的朋友圈或动态中。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意义的环保科普，而且提到工程方案，让我这个工程背景的人觉得海平面上升确实有技术手段可以应对。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活的理念，且对文中提到的工程措施感兴趣。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但没有特别想深入讨论的观点，简单点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较常规，不需要转发到自己的朋友圈或动态中。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.91
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_209_with_friends",
+  "actor": "agent_209",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-136487ea65ff488e86676d73579ae753",
+    "object": "chat.completion",
+    "created": 1791455284,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的影响比我想象中要快，这种规模的社会变动确实令人担忧。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注全球性议题，且内容具有警示意义，点个赞支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容较为沉重且专业，我更倾向于安静地阅读思考，不需要发表观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但我的社交圈层并不太适合转发此类宏大叙事的预警信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的影响比我想象中要快，这种规模的社会变动确实令人担忧。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注全球性议题，且内容具有警示意义，点个赞支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容较为沉重且专业，我更倾向于安静地阅读思考，不需要发表观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但我的社交圈层并不太适合转发此类宏大叙事的预警信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.45
+}

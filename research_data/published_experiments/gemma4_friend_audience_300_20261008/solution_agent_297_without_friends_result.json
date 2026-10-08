@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_297_without_friends",
+  "actor": "agent_297",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-c6d7e82817b2476b87c34dd07d93a3d1",
+    "object": "chat.completion",
+    "created": 1791458804,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题挺有意思的，能看到具体的工程案例和解决方案，比纯粹的焦虑预警要好很多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环保和可持续发展这类新观点挺感兴趣，且帖子的内容比较积极。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但目前没有特别深刻的见解，不打算随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错但没到必须分享给好友的程度，且这不符合我平时低调的社交习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题挺有意思的，能看到具体的工程案例和解决方案，比纯粹的焦虑预警要好很多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环保和可持续发展这类新观点挺感兴趣，且帖子的内容比较积极。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但目前没有特别深刻的见解，不打算随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错但没到必须分享给好友的程度，且这不符合我平时低调的社交习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.73
+}

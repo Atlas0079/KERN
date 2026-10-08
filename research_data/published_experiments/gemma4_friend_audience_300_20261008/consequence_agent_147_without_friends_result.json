@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_147_without_friends",
+  "actor": "agent_147",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-f7c4e9a1b2554c138fd29273754054ec",
+    "object": "chat.completion",
+    "created": 1791454123,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些数据挺令人不安的，虽然离我的日常生活还远，但感觉未来的不确定性增加了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较严肃且具有警示意义，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太宏大且沉重，我没有专业知识，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种危机感的内容发在自己的主页可能太压抑了，不打算转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些数据挺令人不安的，虽然离我的日常生活还远，但感觉未来的不确定性增加了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较严肃且具有警示意义，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太宏大且沉重，我没有专业知识，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种危机感的内容发在自己的主页可能太压抑了，不打算转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.59
+}

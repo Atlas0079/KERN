@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_020_without_friends",
+  "actor": "agent_020",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-ce0b6085231243098fe3d3cc6ff428c0",
+    "object": "chat.completion",
+    "created": 1791454174,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种宏观的环保议题挺有意思的，不过对我现在的生活来说稍微有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类新知和可持续发展的观点比较好奇，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但没有特别强烈的观点需要直接表达，也不想在这个话题下扎堆聊天。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但我觉得没必要转发到自己的主页，平时不怎么分享这类宏大叙事。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种宏观的环保议题挺有意思的，不过对我现在的生活来说稍微有点远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类新知和可持续发展的观点比较好奇，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但没有特别强烈的观点需要直接表达，也不想在这个话题下扎堆聊天。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但我觉得没必要转发到自己的主页，平时不怎么分享这类宏大叙事。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.18
+}

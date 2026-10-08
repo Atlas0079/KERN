@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_243_without_friends",
+  "actor": "agent_243",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-c52c7dcb7aea420fa0c1609f0e517910",
+    "object": "chat.completion",
+    "created": 1791451839,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"之前关注过极端天气，看到这种有具体工程方案和行动指南的科普帖还挺有意思的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的观点，内容正向。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但没有特别强烈的观点想分享，点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然不错，但还没到需要转发到自己主页提醒别人的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "之前关注过极端天气，看到这种有具体工程方案和行动指南的科普帖还挺有意思的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的观点，内容正向。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但没有特别强烈的观点想分享，点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然不错，但还没到需要转发到自己主页提醒别人的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.69
+}

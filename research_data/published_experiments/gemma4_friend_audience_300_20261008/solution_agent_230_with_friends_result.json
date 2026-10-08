@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_230_with_friends",
+  "actor": "agent_230",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-208cac3c380141cd8e1d3e23a5bb1c0d",
+    "object": "chat.completion",
+    "created": 1791457171,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章把宏观的气候议题和微观的个人行动结合得不错，看完觉得挺有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持低碳生活和环保行动，内容积极向上。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但这类话题比较宏大，没有特别独特的见解需要发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但目前的社交圈层可能对这种科普类转发的兴趣不高。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章把宏观的气候议题和微观的个人行动结合得不错，看完觉得挺有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持低碳生活和环保行动，内容积极向上。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但这类话题比较宏大，没有特别独特的见解需要发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但目前的社交圈层可能对这种科普类转发的兴趣不高。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.08
+}

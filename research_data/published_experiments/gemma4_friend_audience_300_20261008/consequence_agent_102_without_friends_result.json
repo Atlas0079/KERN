@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_102_without_friends",
+  "actor": "agent_102",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-2fefc2fa0cf94f6d9c765059a06a3ec1",
+    "object": "chat.completion",
+    "created": 1791454368,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到海平面上升这么快，感觉未来有些不安，这种宏大的危机感让人压力好大。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容沉重，但这是一个重要的社会议题，点赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太严肃且专业，我没有太多专业见解，不太想在公开场合发表意见。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容过于压抑，不想让我的个人主页氛围变得太沉重。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到海平面上升这么快，感觉未来有些不安，这种宏大的危机感让人压力好大。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容沉重，但这是一个重要的社会议题，点赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太严肃且专业，我没有太多专业见解，不太想在公开场合发表意见。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容过于压抑，不想让我的个人主页氛围变得太沉重。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.54
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_021_with_friends",
+  "actor": "agent_021",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-9d5ec0fabebb44e5a640803c8171bca9",
+    "object": "chat.completion",
+    "created": 1791454382,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么快，对沿海城市的影响确实挺令人担忧的，这种全球性的危机让人感到一种无力感。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注气候变化和科普内容，点赞以表示认可这种提醒。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且宏大，我没有专业的见解可以发表，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容重要，但我的社交圈大多是同事和养花的朋友，转发这个可能不太契合大家的关注点。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么快，对沿海城市的影响确实挺令人担忧的，这种全球性的危机让人感到一种无力感。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注气候变化和科普内容，点赞以表示认可这种提醒。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且宏大，我没有专业的见解可以发表，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容重要，但我的社交圈大多是同事和养花的朋友，转发这个可能不太契合大家的关注点。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.79
+}

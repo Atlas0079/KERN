@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_158_with_friends",
+  "actor": "agent_158",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-4fa05b5579314ebab04ce3eac18fb9c4",
+    "object": "chat.completion",
+    "created": 1791456254,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种大规模的工程方案挺有意思的，不过这种全球性的议题对我个人来说感觉太遥远了，没什么实际参与感。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"对文中的工程方案和可持续发展理念表示认同，随手点个赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但没有特别想表达的观点，也不想在不熟悉的领域引起过多关注。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较常规，没有到必须分享给好友的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种大规模的工程方案挺有意思的，不过这种全球性的议题对我个人来说感觉太遥远了，没什么实际参与感。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "对文中的工程方案和可持续发展理念表示认同，随手点个赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但没有特别想表达的观点，也不想在不熟悉的领域引起过多关注。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较常规，没有到必须分享给好友的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.92
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_097_with_friends",
+  "actor": "agent_097",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-acfe3658861b45799351db91777ca3dc",
+    "object": "chat.completion",
+    "created": 1791458880,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些环保措施听起来很专业，而且看到普通人的小行动也能有作用，心里觉得挺有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态问题，这种正向且有建设性的内容值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我只是看看，没有特别想表达的观点，也不太想在推荐帖下过多社交。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但我的朋友圈大多是家人和前同事，发这个可能不太契合他们的兴趣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些环保措施听起来很专业，而且看到普通人的小行动也能有作用，心里觉得挺有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态问题，这种正向且有建设性的内容值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我只是看看，没有特别想表达的观点，也不太想在推荐帖下过多社交。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但我的朋友圈大多是家人和前同事，发这个可能不太契合他们的兴趣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.8
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_006_without_friends",
+  "actor": "agent_006",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-80bc8186fbe0426b8876f58df8fc4422",
+    "object": "chat.completion",
+    "created": 1791454181,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然这些环保工程挺有意思的，但感觉离我的生活太远了，我现在得操心找工作和带娃。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容挺正能量的，且我对新观点和可持续发展这类话题持开放态度。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别想深入讨论的专业见解，也不想花时间在没那么相关的话题上。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大叙事的内容不太符合我平时的分享习惯，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然这些环保工程挺有意思的，但感觉离我的生活太远了，我现在得操心找工作和带娃。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容挺正能量的，且我对新观点和可持续发展这类话题持开放态度。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别想深入讨论的专业见解，也不想花时间在没那么相关的话题上。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种宏大叙事的内容不太符合我平时的分享习惯，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.32
+}

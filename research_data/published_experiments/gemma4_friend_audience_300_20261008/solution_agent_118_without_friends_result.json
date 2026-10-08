@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_118_without_friends",
+  "actor": "agent_118",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-ae0ba9f3e0924849a9ebac8fa6d49bb5",
+    "object": "chat.completion",
+    "created": 1791454298,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种环保话题挺有意义的，但对我个人生活影响不大，看完觉得挺正能量的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有科普性质，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"没什么特别想补充的观点，不方便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的议题转发到自己的空间显得太突兀，没必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种环保话题挺有意义的，但对我个人生活影响不大，看完觉得挺正能量的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有科普性质，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "没什么特别想补充的观点，不方便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种宏大的议题转发到自己的空间显得太突兀，没必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.44
+}

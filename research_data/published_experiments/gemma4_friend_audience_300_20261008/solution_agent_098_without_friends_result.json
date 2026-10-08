@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_098_without_friends",
+  "actor": "agent_098",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-befe1f0fa49945b4b2175ff6c26985b1",
+    "object": "chat.completion",
+    "created": 1791452821,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些工程方案听起来挺有意思的，不过对我个人生活的直接影响不大。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续发展的理念，内容比较正面。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然对工程方案感兴趣，但没有特别想讨论的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大的环保话题不太适合发到我的个人主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些工程方案听起来挺有意思的，不过对我个人生活的直接影响不大。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续发展的理念，内容比较正面。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然对工程方案感兴趣，但没有特别想讨论的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类宏大的环保话题不太适合发到我的个人主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 11.85
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_217_with_friends",
+  "actor": "agent_217",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f36321aac7ff46b1ba963ba12b09daac",
+    "object": "chat.completion",
+    "created": 1791455066,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题挺有意义的，而且提到的红树林和工程案例让我这个工程专业出身的人觉得挺有意思。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的正面观点，点个赞鼓励一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我目前只是关注和了解，没什么特别的专业见解要补充。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容不错，但对我来说更像是个知识点，不需要转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题挺有意义的，而且提到的红树林和工程案例让我这个工程专业出身的人觉得挺有意思。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的正面观点，点个赞鼓励一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我目前只是关注和了解，没什么特别的专业见解要补充。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容不错，但对我来说更像是个知识点，不需要转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.57
+}

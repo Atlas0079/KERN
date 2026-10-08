@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_071_without_friends",
+  "actor": "agent_071",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-22f374b2fcec478496852bb465135847",
+    "object": "chat.completion",
+    "created": 1791458534,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这海平面上升得这么快，听起来挺吓人的，得给沿海的人留条后路啊。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注全球环境问题是有必要的，点个赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的气候话题我没什么专业见解，不想随便发表议论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，没必要转发到自己的空间里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这海平面上升得这么快，听起来挺吓人的，得给沿海的人留条后路啊。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注全球环境问题是有必要的，点个赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的气候话题我没什么专业见解，不想随便发表议论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，没必要转发到自己的空间里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.66
+}

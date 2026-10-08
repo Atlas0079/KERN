@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_014_with_friends",
+  "actor": "agent_014",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-b5d7b070406a4e5ca4b40580fe40276d",
+    "object": "chat.completion",
+    "created": 1791457174,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"现在的气候环境确实让人担心，如果真的影响到这么多人，未来的生活成本和压力肯定会更大。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然心情沉重，但这是一个值得关注的严肃议题。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容太宏大，我一个开花店的没什么专业建议可以给出，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类负面预警信息转发太多会增加焦虑，而且我的朋友圈大多是熟客和邻居，没必要扩散。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "现在的气候环境确实让人担心，如果真的影响到这么多人，未来的生活成本和压力肯定会更大。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然心情沉重，但这是一个值得关注的严肃议题。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容太宏大，我一个开花店的没什么专业建议可以给出，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类负面预警信息转发太多会增加焦虑，而且我的朋友圈大多是熟客和邻居，没必要扩散。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.2
+}

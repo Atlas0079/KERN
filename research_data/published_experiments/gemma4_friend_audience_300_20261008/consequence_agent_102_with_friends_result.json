@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_102_with_friends",
+  "actor": "agent_102",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-19c55357afdf4819a882451b4d41c234",
+    "object": "chat.completion",
+    "created": 1791451670,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉有点沉重，想到这么多城市和家园会被淹没，心里莫名有些焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容压抑，但这是一个很重要的警示，点赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大的气候议题我没什么专业见解，性格内向，不习惯在公共场合发表观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"太沉重了，不想把这种令人不安的消息转发到自己的主页影响氛围。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉有点沉重，想到这么多城市和家园会被淹没，心里莫名有些焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容压抑，但这是一个很重要的警示，点赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这类宏大的气候议题我没什么专业见解，性格内向，不习惯在公共场合发表观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "太沉重了，不想把这种令人不安的消息转发到自己的主页影响氛围。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.75
+}

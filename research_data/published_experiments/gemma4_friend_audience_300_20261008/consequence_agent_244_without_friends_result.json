@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_244_without_friends",
+  "actor": "agent_244",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-eee0b11b88924e0e9ab805aebf1427b9",
+    "object": "chat.completion",
+    "created": 1791451088,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉这事儿挺严重的，虽然离我现在的生活有点远，但想到以后带孩子出去旅行，万一这些地方都没了确实挺可惜。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普内容挺有意义的，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得挺震撼，但我也不是专家，没什么专业观点能发表，懒得评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种比较沉重的话题，转发到自己主页感觉不太合适，没必要。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉这事儿挺严重的，虽然离我现在的生活有点远，但想到以后带孩子出去旅行，万一这些地方都没了确实挺可惜。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普内容挺有意义的，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得挺震撼，但我也不是专家，没什么专业观点能发表，懒得评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种比较沉重的话题，转发到自己主页感觉不太合适，没必要。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.24
+}

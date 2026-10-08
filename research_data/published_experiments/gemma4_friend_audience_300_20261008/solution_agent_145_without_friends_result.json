@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_145_without_friends",
+  "actor": "agent_145",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-27b439e905ad4de8a646477b0d5cf5c4",
+    "object": "chat.completion",
+    "created": 1791453878,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升一直是我关注的科学话题，看到这些具体的应对方案和正面进展，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且符合我的个人兴趣，点赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但目前没有特别深刻的见解想要分享，简单点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇内容比较科普，不需要转发到我的个人主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升一直是我关注的科学话题，看到这些具体的应对方案和正面进展，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且符合我的个人兴趣，点赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但目前没有特别深刻的见解想要分享，简单点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇内容比较科普，不需要转发到我的个人主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.1
+}

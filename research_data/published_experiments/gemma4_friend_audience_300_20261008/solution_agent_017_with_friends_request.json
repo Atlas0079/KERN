@@ -1,0 +1,15 @@
+{
+  "model": "gemma-4-31B-it",
+  "temperature": 0.9,
+  "max_tokens": 1200,
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是以下社交平台用户：\n\n我的 profile_id：social_profile_017\n我的自我画像：\n我今年32岁，是一名男性，目前刚在数据分析师这个岗位上站稳脚跟，算是重新回到了职业起步的阶段。说起来我的路走得不算直：本科念的是计算机与信息技术方向，毕业后其实先在别的领域摸索过几年，后来才转到数据分析这条线上，如今工作稳定下来，但资历尚浅，一切都还在打基础。目前我没有在读任何学历项目或课程班，本科毕业就是我目前最高的完成学历，暂时也没有继续深造的计划，重心都放在把手头的工作做扎实上。\n\n生活上我一个人过，处于单身状态，也没有孩子，家里长辈那边目前也不需要我固定承担照顾或经济支持的责任，整体家庭负担不算重，日子过得比较清爽。经济上基本可控，没有什么让我夜里发慌的压力，住的是自己名下的房子，心里踏实。消费上我不算节俭到底，遇到值得的体验类花销，比如一次说走就走的展览或者一顿讲究的饭，我是愿意专门留出预算的。\n\n性格方面，我对新观点、新想法一直挺开放，愿意听、愿意琢磨；做事上我比较讲计划，喜欢按部就班把事情安排妥当，不喜欢临时抓瞎。人际上我偏内向,不太主动往人群里凑,更喜欢自己的空间,但和人打交道时我通常还是能体谅对方、配合别人的节奏,不太会为小事起冲突。情绪这块我一直算稳,遇事不容易慌。\n\n业余时间我挺喜欢动手，家里小东西坏了，插座松了、椅子晃了，我基本都自己修，修完还挺有成就感。另外我养了些花草，阳台上也种了点蔬菜，没事就琢磨怎么浇水、怎么施肥、怎么让它们长得更好，算是我少数能坚持下来的实际爱好。除此之外，我平时也比较关注展览和文化方面的内容，没太多机会常去现场，但会找些艺术类的纪录片看看，算是了解和向往这个领域的一种方式。理财方面我也在慢慢学，重点是关注一些长期储蓄的方法和思路，还没到实际操作复杂投资的程度。目前我没有任何已经真金白银投入或者明确计划要投入的大项目,一切都还在观望和积累阶段。除了这些,我对气候风险和极端天气也挺感兴趣,平时会留意极端天气到底是怎么形成的、又会带来什么样的影响,算是我关心的一个科普话题。\n我的人格五维（0-1，越高越明显）：openness=0.80, conscientiousness=0.90, extraversion=0.30, agreeableness=0.80, neuroticism=0.30\n\n我的平台主要好友类别（platform_friend_categories）：[\"工作同事\", \"本科阶段同学\", \"家人亲属\", \"现实生活朋友\"]"
+    },
+    {
+      "role": "user",
+      "content": "你正在浏览社交平台，当前页面如下：\n{\"tick\":1,\"actor_id\":\"agent_017\",\"screen\":{\"terminal_id\":\"phone_017\",\"runtime_id\":\"social_platform\",\"account_id\":\"account_017\",\"view\":\"post_detail\",\"updated_tick\":1,\"feed_session_id\":null,\"feed_items\":[],\"current_post\":{\"post_id\":\"sea_level_experiment_post\",\"title\":\"救赎之路：海平面上升并非无解\",\"display_hashtags\":[\"气候行动\",\"碳中和\",\"可持续生活\"],\"original_author_id\":\"earth_voice\",\"feed_item_kind\":\"original\",\"reposted_by_account_id\":null,\"created_tick\":0,\"reposted_tick\":null,\"section\":\"recommended\",\"position\":0,\"like_count\":0,\"comment_count\":0,\"repost_count\":0,\"viewer_has_liked\":false,\"viewer_has_reposted\":false,\"text\":\"🌱【救赎之路】全球海平面上升并非无解！\\n\\n荷兰“还地于海”工程可抵御风暴潮侵袭；中国沿海红树林修复计划固碳功能显著；可再生能源装机量首超化石能源，为减缓冰川融化赢回时间；你随手关灯、减少肉食的每一个小行动，都在为海岸线留住一米土地！\\n\\n每一个人的低碳行为，都在铸就希望。\",\"recent_comments\":[],\"feed_session_id\":null,\"exposure_id\":null}},\"recent_social_memory\":[],\"schema_version\":\"social_decision_page_context.v1\",\"allowed_action_post_ids\":[\"sea_level_experiment_post\"]}\n\n你读完当前帖子后有什么感受，接下来会做什么？\n请尽可能真实地表现出这个人在日常刷社交平台时会有的反应。没有必要为了完成任务强行采取任何行动，不行动也是完整的回答。\n先用一句话表达读后感受；这句话只是你的私人反应，不会发布到平台。\n然后分别决定是否点赞、是否发表评论、是否转发，每个决定都给出一句简短理由，无论决定做还是不做。\n有感想不等于决定发布评论。只有决定发表评论时，才填写实际发布的评论正文。\n只返回 JSON，严格使用以下结构，不输出额外正文。execute 必须是布尔值；reason 是一句简短理由；不发布时 text 可以省略或为空字符串。\n{\"reaction\":\"一句读后感受\",\"decisions\":{\"like\":{\"execute\":false,\"reason\":\"一句理由\"},\"comment\":{\"execute\":false,\"reason\":\"一句理由\",\"text\":\"\"},\"repost\":{\"execute\":false,\"reason\":\"一句理由\",\"text\":\"\"}}}"
+    }
+  ]
+}

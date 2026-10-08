@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_099_with_friends",
+  "actor": "agent_099",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-230fe5919148425b8845c0699191b6ca",
+    "object": "chat.completion",
+    "created": 1791456312,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么快吗，感觉这些宏大的气候问题离自己很远，但看到具体城市的名单还是挺震撼的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这类科普内容很有意义，支持一下，也算是一种关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太宏大了，我一个运营专员没什么专业见解可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重且严肃，不太适合分享到我的朋友圈给同事和家人看。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么快吗，感觉这些宏大的气候问题离自己很远，但看到具体城市的名单还是挺震撼的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这类科普内容很有意义，支持一下，也算是一种关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太宏大了，我一个运营专员没什么专业见解可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重且严肃，不太适合分享到我的朋友圈给同事和家人看。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.39
+}

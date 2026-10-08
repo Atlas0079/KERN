@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_152_without_friends",
+  "actor": "agent_152",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-933d63ffe3b34b34a903b2895bab3a93",
+    "object": "chat.completion",
+    "created": 1791452323,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉挺震撼的，没想到海平面上升的速度这么快，以后带孩子旅行得重新规划目的地了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普类的新鲜知识点我比较感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题比较宏大且沉重，我暂时没什么特别的见解可以评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容重要，但没到非转发不可的程度，不想让朋友圈氛围太压抑。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉挺震撼的，没想到海平面上升的速度这么快，以后带孩子旅行得重新规划目的地了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普类的新鲜知识点我比较感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题比较宏大且沉重，我暂时没什么特别的见解可以评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容重要，但没到非转发不可的程度，不想让朋友圈氛围太压抑。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.56
+}

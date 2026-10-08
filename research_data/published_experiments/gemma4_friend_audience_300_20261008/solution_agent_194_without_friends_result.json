@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_194_without_friends",
+  "actor": "agent_194",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-7b1e365f6c0f46b39d61e9ea1944f8ee",
+    "object": "chat.completion",
+    "created": 1791454931,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的，原来这些宏大的工程和日常的小习惯真的能产生影响，让环境问题看起来没那么绝望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种积极正面的观点，且内容符合我对新技术和社会关系改善的关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但性格比较内向，且没有特别强烈的个人见解需要表达。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普内容对我个人有启发，但还没到需要分享给他人知道的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的，原来这些宏大的工程和日常的小习惯真的能产生影响，让环境问题看起来没那么绝望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种积极正面的观点，且内容符合我对新技术和社会关系改善的关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但性格比较内向，且没有特别强烈的个人见解需要表达。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普内容对我个人有启发，但还没到需要分享给他人知道的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.41
+}

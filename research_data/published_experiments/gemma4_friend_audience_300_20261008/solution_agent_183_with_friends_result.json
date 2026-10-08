@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_183_with_friends",
+  "actor": "agent_183",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f2d2965821874793975287e3783c0357",
+    "object": "chat.completion",
+    "created": 1791455671,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种关于气候变化和可持续发展的科普内容挺有意思的，而且给出的方案比较具体，不是单纯地制造焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持低碳环保的理念，且内容有正能量。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认可，但没有特别深刻的见解需要表达，点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较常规，不需要转发到我的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种关于气候变化和可持续发展的科普内容挺有意思的，而且给出的方案比较具体，不是单纯地制造焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持低碳环保的理念，且内容有正能量。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认可，但没有特别深刻的见解需要表达，点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较常规，不需要转发到我的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.86
+}

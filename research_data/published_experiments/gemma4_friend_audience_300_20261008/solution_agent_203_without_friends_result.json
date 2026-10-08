@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_203_without_friends",
+  "actor": "agent_203",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-4a4113e3ceaa42aea36c3a4717800042",
+    "object": "chat.completion",
+    "created": 1791457319,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺正能量的，虽然离我的日常生活比较远，但确实是件很重要的大事。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活的理念，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候工程和碳中和这些专业领域了解不多，没什么能发表的见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大叙事的内容，我不习惯转发到自己的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺正能量的，虽然离我的日常生活比较远，但确实是件很重要的大事。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活的理念，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候工程和碳中和这些专业领域了解不多，没什么能发表的见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种宏大叙事的内容，我不习惯转发到自己的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.84
+}

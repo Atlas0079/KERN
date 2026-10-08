@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_262_without_friends",
+  "actor": "agent_262",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-939da62f85f34e86af861c195c5b107e",
+    "object": "chat.completion",
+    "created": 1791452552,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的科普，虽然离我的生活有点远，但看到有实际的工程方案在解决问题，感觉没那么绝望了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保理念，而且内容比较积极，点个赞鼓励一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但并没有特别强烈的观点想要表达，且我对气候科学并不专业。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但还没到非要分享给朋友圈或关注者的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的科普，虽然离我的生活有点远，但看到有实际的工程方案在解决问题，感觉没那么绝望了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保理念，而且内容比较积极，点个赞鼓励一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但并没有特别强烈的观点想要表达，且我对气候科学并不专业。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但还没到非要分享给朋友圈或关注者的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.65
+}

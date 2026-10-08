@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_241_with_friends",
+  "actor": "agent_241",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-b3e38abdd50a4c49aa929d42cae3108f",
+    "object": "chat.completion",
+    "created": 1791455011,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这种全球性的气候危机感觉挺沉重的，虽然离我现在的生活比较远，但想到孩子以后成长的世界会变成这样，心里有点担忧。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然内容比较压抑，但这是一个很重要的警示，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的议题我没什么专业见解，也不太知道该评论什么。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种比较严肃且令人焦虑的内容，不太适合转发到我的朋友圈里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这种全球性的气候危机感觉挺沉重的，虽然离我现在的生活比较远，但想到孩子以后成长的世界会变成这样，心里有点担忧。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然内容比较压抑，但这是一个很重要的警示，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的议题我没什么专业见解，也不太知道该评论什么。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种比较严肃且令人焦虑的内容，不太适合转发到我的朋友圈里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.24
+}

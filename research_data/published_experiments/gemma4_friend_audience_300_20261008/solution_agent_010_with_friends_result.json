@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_010_with_friends",
+  "actor": "agent_010",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-582d83f3b9694aa8a64bd3871546d732",
+    "object": "chat.completion",
+    "created": 1791451950,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然海平面上升听起来很绝望，但看到有具体的工程和方案在实施，感觉还是有希望的，挺有启发。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有建设性，符合我对可持续发展和新观点的开放态度。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但我性格比较内向，且对这个专业领域没有太深见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的议题虽然重要，但我的社交圈子比较小，转发出去可能没什么讨论空间。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然海平面上升听起来很绝望，但看到有具体的工程和方案在实施，感觉还是有希望的，挺有启发。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有建设性，符合我对可持续发展和新观点的开放态度。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但我性格比较内向，且对这个专业领域没有太深见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种宏大的议题虽然重要，但我的社交圈子比较小，转发出去可能没什么讨论空间。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.57
+}

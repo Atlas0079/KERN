@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_206_without_friends",
+  "actor": "agent_206",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-b510b119dcb34bbb9c5021649efb2523",
+    "object": "chat.completion",
+    "created": 1791454643,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升速度这么快吗，感觉对沿海城市的影响确实很令人担忧，得关注一下。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种关于气候危机的科普信息具有重要价值，点赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得担忧，但没有特别想表达的观点，也不太习惯在陌生帖子下主动社交。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我的社交圈层不需要通过我来扩散此类新闻。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升速度这么快吗，感觉对沿海城市的影响确实很令人担忧，得关注一下。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种关于气候危机的科普信息具有重要价值，点赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得担忧，但没有特别想表达的观点，也不太习惯在陌生帖子下主动社交。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我的社交圈层不需要通过我来扩散此类新闻。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.65
+}

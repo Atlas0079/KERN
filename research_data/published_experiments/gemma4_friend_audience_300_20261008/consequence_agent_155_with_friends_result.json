@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_155_with_friends",
+  "actor": "agent_155",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-977ee29680a94355b50965d56c46544d",
+    "object": "chat.completion",
+    "created": 1791457051,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉这种全球性的气候问题离我挺远的，但看到具体城市名单还是觉得有点危机感。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较有冲击力，而且我也比较关注技术与社会生活关系的议题。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的议题我没什么专业的见解可以发表，随便评论一句也显得没意义。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但没必要转发到自己的社交圈，我的朋友们可能对这个没那么感兴趣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉这种全球性的气候问题离我挺远的，但看到具体城市名单还是觉得有点危机感。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较有冲击力，而且我也比较关注技术与社会生活关系的议题。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的议题我没什么专业的见解可以发表，随便评论一句也显得没意义。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但没必要转发到自己的社交圈，我的朋友们可能对这个没那么感兴趣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.84
+}

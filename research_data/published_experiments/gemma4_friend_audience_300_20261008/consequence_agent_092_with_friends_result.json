@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_092_with_friends",
+  "actor": "agent_092",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-3ac32ee9b91f48428f7ab061932988a8",
+    "object": "chat.completion",
+    "created": 1791453622,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么快吗，感觉这种宏大的气候问题虽然可怕，但离我目前的日常生活太远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"对这种探讨技术、环境与社会关系的科普内容比较感兴趣，随手点个赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但性格内向且没太多专业见解，不想在公开区域发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重，且我的好友圈大多是家人和同行，转发这个可能没什么共鸣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么快吗，感觉这种宏大的气候问题虽然可怕，但离我目前的日常生活太远了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "对这种探讨技术、环境与社会关系的科普内容比较感兴趣，随手点个赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但性格内向且没太多专业见解，不想在公开区域发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重，且我的好友圈大多是家人和同行，转发这个可能没什么共鸣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.81
+}

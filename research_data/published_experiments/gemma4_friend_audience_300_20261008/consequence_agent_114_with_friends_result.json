@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_114_with_friends",
+  "actor": "agent_114",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-503fda50a7684644affa1cd48746792b",
+    "object": "chat.completion",
+    "created": 1791453424,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这事儿一直有听说，没想到速度这么快，以后沿海城市得受多大影响啊。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候类新闻比较感兴趣，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的全球性话题，我没什么专业见解，没必要评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，转发到朋友圈或给熟人看也没什么实际意义。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这事儿一直有听说，没想到速度这么快，以后沿海城市得受多大影响啊。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候类新闻比较感兴趣，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的全球性话题，我没什么专业见解，没必要评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，转发到朋友圈或给熟人看也没什么实际意义。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 17.29
+}

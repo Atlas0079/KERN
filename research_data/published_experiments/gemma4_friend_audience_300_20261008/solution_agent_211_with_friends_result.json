@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_211_with_friends",
+  "actor": "agent_211",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-e33ef51bd7a7464abf7ee057e82e9ca2",
+    "object": "chat.completion",
+    "created": 1791456952,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的科普，原来海平面上升还有这么多具体的应对方案，环保确实得从点滴做起。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境变化和生态保护比较关注，内容客观且有正能量，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但我性格比较内向，不太习惯在推荐帖下发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然不错，但还没到需要分享给好友或记录在个人主页的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的科普，原来海平面上升还有这么多具体的应对方案，环保确实得从点滴做起。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境变化和生态保护比较关注，内容客观且有正能量，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但我性格比较内向，不太习惯在推荐帖下发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然不错，但还没到需要分享给好友或记录在个人主页的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.47
+}

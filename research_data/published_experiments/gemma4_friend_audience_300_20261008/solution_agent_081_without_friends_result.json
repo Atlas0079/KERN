@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_081_without_friends",
+  "actor": "agent_081",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-4cee46b4cf674bb690deec4df46f8020",
+    "object": "chat.completion",
+    "created": 1791456506,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到有具体的解决方案和红树林修复，感觉心里踏实了一点，得给孩子留个好环境。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注环保和气候变化，支持这种传递希望的正能量内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我目前只是看看，没有特别想讨论的专业观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但朋友圈里大多是家长和同事，暂时没必要转发这个。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到有具体的解决方案和红树林修复，感觉心里踏实了一点，得给孩子留个好环境。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注环保和气候变化，支持这种传递希望的正能量内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我目前只是看看，没有特别想讨论的专业观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然认同，但朋友圈里大多是家长和同事，暂时没必要转发这个。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.5
+}

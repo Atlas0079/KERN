@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_143_without_friends",
+  "actor": "agent_143",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-5f33cbdcb14547549eb3bf56b473b4df",
+    "object": "chat.completion",
+    "created": 1791453351,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，想到以后沿海城市和岛国的孩子得面对这样的环境，心里挺沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注气候议题，支持这类提醒公众危机意识的科普内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很关注，但这种宏大的全球性问题，我没什么能给出的专业建议，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃压抑，朋友圈里大多是熟人和孩子，不打算在这个时间点转发这种令人焦虑的消息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，想到以后沿海城市和岛国的孩子得面对这样的环境，心里挺沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注气候议题，支持这类提醒公众危机意识的科普内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很关注，但这种宏大的全球性问题，我没什么能给出的专业建议，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较严肃压抑，朋友圈里大多是熟人和孩子，不打算在这个时间点转发这种令人焦虑的消息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.57
+}

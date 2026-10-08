@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_068_without_friends",
+  "actor": "agent_068",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-0eb2d7dc5a8042d09572ef81fc73708c",
+    "object": "chat.completion",
+    "created": 1791458043,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化带来的影响确实很严重，看着这些大城市和岛国的情况，感觉挺令人忧心且沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普全球危机的严肃内容值得支持和关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得忧心，但这类宏大议题我没有专业的见解，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重，且我的社交圈不需要特意转发这类警示信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化带来的影响确实很严重，看着这些大城市和岛国的情况，感觉挺令人忧心且沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普全球危机的严肃内容值得支持和关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得忧心，但这类宏大议题我没有专业的见解，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重，且我的社交圈不需要特意转发这类警示信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.42
+}

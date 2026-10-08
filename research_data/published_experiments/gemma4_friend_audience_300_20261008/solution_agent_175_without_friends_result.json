@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_175_without_friends",
+  "actor": "agent_175",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-78a55b6b4be4439991dc345cf10233be",
+    "object": "chat.completion",
+    "created": 1791454650,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺正能量的，虽然我对气候变化有关注，但这个话题跟我目前的学业和生活重心没什么直接关系。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种关于环保和可持续发展的正向内容值得点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没什么特别深刻的见解要分享，不想随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错但不够硬核，没必要转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺正能量的，虽然我对气候变化有关注，但这个话题跟我目前的学业和生活重心没什么直接关系。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种关于环保和可持续发展的正向内容值得点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没什么特别深刻的见解要分享，不想随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错但不够硬核，没必要转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.55
+}

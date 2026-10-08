@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_122_with_friends",
+  "actor": "agent_122",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-147051a4c8694cc39ab5898c39abbf43",
+    "object": "chat.completion",
+    "created": 1791459289,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"现在的环境问题确实严重，这些数据听起来挺让人忧心的，得给孩子孙辈留个好环境才行。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容客观且有警示意义，值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但自己不是专业人士，没什么好补充的，没必要发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种沉重的话题不太适合转发到我的朋友圈，免得让家人觉得我太焦虑。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "现在的环境问题确实严重，这些数据听起来挺让人忧心的，得给孩子孙辈留个好环境才行。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容客观且有警示意义，值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但自己不是专业人士，没什么好补充的，没必要发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种沉重的话题不太适合转发到我的朋友圈，免得让家人觉得我太焦虑。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.53
+}

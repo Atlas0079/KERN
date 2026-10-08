@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_174_with_friends",
+  "actor": "agent_174",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-6ff63434c00141cd929ff3e883cf2b15",
+    "object": "chat.completion",
+    "created": 1791458103,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候问题确实令人担忧，尤其是想到未来的孩子可能要面对这样的环境，感觉挺沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类全球性、文化性的话题比较关注，点赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且宏大，我没有太专业的观点可以发表，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容重要，但我比较内向，不倾向于在个人主页频繁转发这类沉重的话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候问题确实令人担忧，尤其是想到未来的孩子可能要面对这样的环境，感觉挺沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类全球性、文化性的话题比较关注，点赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且宏大，我没有太专业的观点可以发表，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容重要，但我比较内向，不倾向于在个人主页频繁转发这类沉重的话题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.55
+}

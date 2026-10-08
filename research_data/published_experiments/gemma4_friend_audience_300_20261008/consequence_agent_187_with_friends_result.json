@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_187_with_friends",
+  "actor": "agent_187",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-72ea81f97ceb45db9f61f8fe1e500f22",
+    "object": "chat.completion",
+    "created": 1791455744,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化的影响比我想象中要快，想到未来的环境对孩子的影响，心里有点沉甸甸的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这是一个很严肃且重要的全球性议题，赞同传播这种警示信息。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这类宏大叙事的话题我不知道该怎么评论，而且我性格比较内向，不习惯在公开帖子下发表见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我的社交圈主要是家人和家长群，转发这个可能不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化的影响比我想象中要快，想到未来的环境对孩子的影响，心里有点沉甸甸的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这是一个很严肃且重要的全球性议题，赞同传播这种警示信息。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这类宏大叙事的话题我不知道该怎么评论，而且我性格比较内向，不习惯在公开帖子下发表见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我的社交圈主要是家人和家长群，转发这个可能不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.23
+}

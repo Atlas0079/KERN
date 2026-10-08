@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_171_without_friends",
+  "actor": "agent_171",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-c054fcc9e7dc413ca956928bc96d3244",
+    "object": "chat.completion",
+    "created": 1791458773,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升和极端天气确实是我一直关注的科学话题，看到有具体的工程方案和修复计划，感觉比单纯的焦虑要好很多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容跟我关注的气候话题契合，且观点比较积极，点个赞支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但这篇文章更像是一个科普总结，我没有特别想补充的观点，不需要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然不错，但对我来说更多是个人知识积累，暂时没有动力把它分享到自己的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升和极端天气确实是我一直关注的科学话题，看到有具体的工程方案和修复计划，感觉比单纯的焦虑要好很多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容跟我关注的气候话题契合，且观点比较积极，点个赞支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但这篇文章更像是一个科普总结，我没有特别想补充的观点，不需要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然不错，但对我来说更多是个人知识积累，暂时没有动力把它分享到自己的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.88
+}

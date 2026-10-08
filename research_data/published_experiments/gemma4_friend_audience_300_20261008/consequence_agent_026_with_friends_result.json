@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_026_with_friends",
+  "actor": "agent_026",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-c73ab2faa23d4046a3d104cf25236016",
+    "object": "chat.completion",
+    "created": 1791457021,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，这种极端天气趋势对沿海城市的影响确实令人担忧。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"一直关注气候话题，这种科普性质的预警信息值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且是联合国报告，我目前的认知还不足以提出深刻的见解，点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然关注，但这种比较沉重的话题不太适合在我的朋友圈广泛转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，这种极端天气趋势对沿海城市的影响确实令人担忧。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "一直关注气候话题，这种科普性质的预警信息值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且是联合国报告，我目前的认知还不足以提出深刻的见解，点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然关注，但这种比较沉重的话题不太适合在我的朋友圈广泛转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.91
+}

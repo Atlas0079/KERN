@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_059_with_friends",
+  "actor": "agent_059",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-a1ac487e0e864a54864349cd6f09f7a8",
+    "object": "chat.completion",
+    "created": 1791457008,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这是一个很有意义的环保话题，看到人类在应对气候变化方面有具体的进展，感觉还挺有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活的理念，支持这种传递正能量的科普内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容已经表达得很完整了，我暂时没有特别想补充的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容很好，但我的社交圈大多是同事和邻居，转发这个可能不太契合我的日常分享风格。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这是一个很有意义的环保话题，看到人类在应对气候变化方面有具体的进展，感觉还挺有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活的理念，支持这种传递正能量的科普内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容已经表达得很完整了，我暂时没有特别想补充的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容很好，但我的社交圈大多是同事和邻居，转发这个可能不太契合我的日常分享风格。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.78
+}

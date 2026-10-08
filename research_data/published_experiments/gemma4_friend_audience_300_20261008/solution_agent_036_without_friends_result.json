@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_036_without_friends",
+  "actor": "agent_036",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-83a859c39a3a4385806c08e4ebce0ad5",
+    "object": "chat.completion",
+    "created": 1791455458,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的应对措施比单纯的焦虑要有意义得多，气候变化确实需要系统性的工程方案和个人习惯的改变共同推进。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对科普类话题和气候变化很感兴趣，且认可文中提到的积极应对方案。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容已经概括得很全面了，我倾向于安静地阅读和吸收信息，暂时没有需要补充的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容不错，但我平时社交比较低调，除非是非常有必要分享的实用信息，否则不会轻易转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的应对措施比单纯的焦虑要有意义得多，气候变化确实需要系统性的工程方案和个人习惯的改变共同推进。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对科普类话题和气候变化很感兴趣，且认可文中提到的积极应对方案。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容已经概括得很全面了，我倾向于安静地阅读和吸收信息，暂时没有需要补充的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容不错，但我平时社交比较低调，除非是非常有必要分享的实用信息，否则不会轻易转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.49
+}

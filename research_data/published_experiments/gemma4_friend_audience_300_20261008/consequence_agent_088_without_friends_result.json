@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_088_without_friends",
+  "actor": "agent_088",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-f106787d72e24f1c81ee642bda78be7e",
+    "object": "chat.completion",
+    "created": 1791459079,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中要快，这种大规模的人口迁移预想起来确实让人担忧。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对极端天气和气候风险一直比较关注，这个话题对我很有吸引力。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且专业，我目前只是浏览了解，还没有什么独特的见解可以分享。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但我觉得转发这种比较沉重的话题需要更深思熟虑，目前先关注即可。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中要快，这种大规模的人口迁移预想起来确实让人担忧。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对极端天气和气候风险一直比较关注，这个话题对我很有吸引力。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且专业，我目前只是浏览了解，还没有什么独特的见解可以分享。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但我觉得转发这种比较沉重的话题需要更深思熟虑，目前先关注即可。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.84
+}

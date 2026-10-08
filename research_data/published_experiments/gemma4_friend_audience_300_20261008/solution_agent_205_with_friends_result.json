@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_205_with_friends",
+  "actor": "agent_205",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-54dcd9e24a5b4404b868f9ca62f90b98",
+    "object": "chat.completion",
+    "created": 1791454073,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保这事儿确实重要，现在的气候变化确实挺让人焦虑的，但看到有这些技术手段在解决，心里稍微踏实点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极正向，而且提到的工程技术方案挺有意思，支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但这种宏大的环保议题我没什么专业见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类话题太严肃，转发到朋友圈可能不太符合我平时的低调风格。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保这事儿确实重要，现在的气候变化确实挺让人焦虑的，但看到有这些技术手段在解决，心里稍微踏实点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极正向，而且提到的工程技术方案挺有意思，支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但这种宏大的环保议题我没什么专业见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类话题太严肃，转发到朋友圈可能不太符合我平时的低调风格。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.24
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_197_with_friends",
+  "actor": "agent_197",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-2728bbb606944ac2b7f505e0909c38b4",
+    "object": "chat.completion",
+    "created": 1791455798,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"我对气候风险一直挺关注的，看到这些具体的应对方案感觉还挺有希望，而且这种科学话题我一直感兴趣。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且符合我的关注点，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但目前没有特别想深入讨论的观点，先看看就好。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类的帖子对我个人有启发，但没必要转发到我的朋友圈给孩子家长或供应商看。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "我对气候风险一直挺关注的，看到这些具体的应对方案感觉还挺有希望，而且这种科学话题我一直感兴趣。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且符合我的关注点，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但目前没有特别想深入讨论的观点，先看看就好。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类的帖子对我个人有启发，但没必要转发到我的朋友圈给孩子家长或供应商看。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.78
+}

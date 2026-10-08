@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_222_with_friends",
+  "actor": "agent_222",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-01247245499044cb98874f51ee3c6c1f",
+    "object": "chat.completion",
+    "created": 1791456417,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保措施还挺有希望的，虽然离我生活比较远，但确实是件好事。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容挺正能量的，支持一下环保理念。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对这些专业工程不太了解，没什么好补充的，看看就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这内容比较宏大，不太适合发到我的朋友圈里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保措施还挺有希望的，虽然离我生活比较远，但确实是件好事。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容挺正能量的，支持一下环保理念。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对这些专业工程不太了解，没什么好补充的，看看就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这内容比较宏大，不太适合发到我的朋友圈里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.19
+}

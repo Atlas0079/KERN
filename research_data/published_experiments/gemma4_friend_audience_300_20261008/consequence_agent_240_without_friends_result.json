@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_240_without_friends",
+  "actor": "agent_240",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-074a4c9d7f0e4b3b9e6fb1e4f75ef149",
+    "object": "chat.completion",
+    "created": 1791459324,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉海平面上升这件事比我想象中要紧迫得多，尤其是提到沿海大城市的时候，挺让人担忧的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这是一个很严肃且重要的环保议题，点赞表示关注和认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得担忧，但我对气候科学没有专业研究，没什么能补充的观点，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我平时不太会转发这类宏大叙事的警告类信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉海平面上升这件事比我想象中要紧迫得多，尤其是提到沿海大城市的时候，挺让人担忧的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这是一个很严肃且重要的环保议题，点赞表示关注和认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得担忧，但我对气候科学没有专业研究，没什么能补充的观点，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我平时不太会转发这类宏大叙事的警告类信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.98
+}

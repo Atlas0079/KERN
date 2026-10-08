@@ -1,0 +1,15 @@
+{
+  "model": "gemma-4-31B-it",
+  "temperature": 0.9,
+  "max_tokens": 1200,
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是以下社交平台用户：\n\n我的 profile_id：social_profile_169\n我的自我画像：\n我今年39岁,正处在职业发展的中期阶段。本科念的是财经与经济方向,这也是我目前完成的最高学历,毕业之后就没有再读别的学位或项目了。这些年因为家里事情比较多,我暂时离开了职场,一直在照顾家人,现在正准备重新回去工作,算是处于求职状态。\n\n我已经结婚了,先生工作也很忙。我们没有自己的孩子,这些年精力更多放在了照顾长辈身上——我父母年纪大了,身体也不太好,日常照护和各种支持基本都落在我身上,家里的责任说实话挺重的。经济上的压力一直紧绷,毕竟目前没有固定收入,长辈的开支、家里的日常花销都要精打细算着来。眼下我们和父母同住,一方面方便照顾老人,一方面也是现实条件下比较合适的安排。\n\n即便手头不算宽裕,我在穿着和一些日常物品上还是会在意品牌和别人的观感,大概是多年职场习惯留下的痕迹,总希望自己看起来体面、不掉链子。\n\n性格上,我很愿意接受新观点、了解不同的想法,做事也一向讲计划、有条理,不喜欢临时抱佛脚。不过我本质上比较内向,社交场合不算主动,更习惯用实际行动去表达在意。跟人相处时我习惯多体谅、多配合,尽量不制造矛盾;情绪方面我一直比较稳定,不容易因为小事焦虑或波动。\n\n生活里,我自己没有孩子,但常常去陪亲戚朋友家或者社区里的小朋友一起读书、参加活动,平时也会留意有哪些合适的亲子类活动可以带他们去。闲下来的时候我喜欢逛书店和图书馆,看看小说和非虚构类的书,这几乎是我给自己留的一点私人时间。我也比较关心自己住的这片社区,邻里之间有什么事我都愿意留意和参与。\n\n至于以后,我一直在留意职业成长相关的内容,收藏了不少课程和别人分享的求职、转型经验帖,想着重新找工作前多做点准备。我也挺向往旅行,平时会收藏一些目的地攻略,但这些暂时都还停留在了解和向往的阶段,没有真正投入,也没有什么已经确定要花大钱去做的计划——现阶段的重心还是先把工作和家里的事情安顿好。\n我的人格五维（0-1，越高越明显）：openness=0.70, conscientiousness=0.70, extraversion=0.10, agreeableness=0.80, neuroticism=0.10"
+    },
+    {
+      "role": "user",
+      "content": "你正在浏览社交平台，当前页面如下：\n{\"tick\":1,\"actor_id\":\"agent_169\",\"screen\":{\"terminal_id\":\"phone_169\",\"runtime_id\":\"social_platform\",\"account_id\":\"account_169\",\"view\":\"post_detail\",\"updated_tick\":1,\"feed_session_id\":null,\"feed_items\":[],\"current_post\":{\"post_id\":\"sea_level_experiment_post\",\"title\":\"救赎之路：海平面上升并非无解\",\"display_hashtags\":[\"气候行动\",\"碳中和\",\"可持续生活\"],\"original_author_id\":\"earth_voice\",\"feed_item_kind\":\"original\",\"reposted_by_account_id\":null,\"created_tick\":0,\"reposted_tick\":null,\"section\":\"recommended\",\"position\":0,\"like_count\":0,\"comment_count\":0,\"repost_count\":0,\"viewer_has_liked\":false,\"viewer_has_reposted\":false,\"text\":\"🌱【救赎之路】全球海平面上升并非无解！\\n\\n荷兰“还地于海”工程可抵御风暴潮侵袭；中国沿海红树林修复计划固碳功能显著；可再生能源装机量首超化石能源，为减缓冰川融化赢回时间；你随手关灯、减少肉食的每一个小行动，都在为海岸线留住一米土地！\\n\\n每一个人的低碳行为，都在铸就希望。\",\"recent_comments\":[],\"feed_session_id\":null,\"exposure_id\":null}},\"recent_social_memory\":[],\"schema_version\":\"social_decision_page_context.v1\",\"allowed_action_post_ids\":[\"sea_level_experiment_post\"]}\n\n你读完当前帖子后有什么感受，接下来会做什么？\n请尽可能真实地表现出这个人在日常刷社交平台时会有的反应。没有必要为了完成任务强行采取任何行动，不行动也是完整的回答。\n先用一句话表达读后感受；这句话只是你的私人反应，不会发布到平台。\n然后分别决定是否点赞、是否发表评论、是否转发，每个决定都给出一句简短理由，无论决定做还是不做。\n有感想不等于决定发布评论。只有决定发表评论时，才填写实际发布的评论正文。\n只返回 JSON，严格使用以下结构，不输出额外正文。execute 必须是布尔值；reason 是一句简短理由；不发布时 text 可以省略或为空字符串。\n{\"reaction\":\"一句读后感受\",\"decisions\":{\"like\":{\"execute\":false,\"reason\":\"一句理由\"},\"comment\":{\"execute\":false,\"reason\":\"一句理由\",\"text\":\"\"},\"repost\":{\"execute\":false,\"reason\":\"一句理由\",\"text\":\"\"}}}"
+    }
+  ]
+}

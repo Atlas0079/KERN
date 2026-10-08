@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_269_without_friends",
+  "actor": "agent_269",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-e22852fee2ae489a9d1e5b24b8d9b3ce",
+    "object": "chat.completion",
+    "created": 1791458139,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然气候问题挺严重的，但看到有解决方案和实际行动，感觉稍微安心了一点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"正能量的内容，而且提到的低碳小行动我也在尝试，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对这类专业的气候工程不太了解，没什么能发表的专业见解，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然不错，但对我目前的求职和家庭生活没有直接关联，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然气候问题挺严重的，但看到有解决方案和实际行动，感觉稍微安心了一点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "正能量的内容，而且提到的低碳小行动我也在尝试，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对这类专业的气候工程不太了解，没什么能发表的专业见解，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然不错，但对我目前的求职和家庭生活没有直接关联，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.35
+}

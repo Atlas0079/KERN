@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_073_without_friends",
+  "actor": "agent_073",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-4578747346f1443487a1a7e672aa8fcf",
+    "object": "chat.completion",
+    "created": 1791458958,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"我对极端天气和气候变化一直挺感兴趣的，看到这种有具体解决方案的科普帖感觉还挺有意义。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容正向且是我关注的科普方向，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但没有特别强烈的观点想要表达，随便看看就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种话题比较严肃，不太符合我平时在社交圈维持的体面和轻快的人设，不需要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "我对极端天气和气候变化一直挺感兴趣的，看到这种有具体解决方案的科普帖感觉还挺有意义。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容正向且是我关注的科普方向，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但没有特别强烈的观点想要表达，随便看看就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种话题比较严肃，不太符合我平时在社交圈维持的体面和轻快的人设，不需要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.87
+}

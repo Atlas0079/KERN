@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_123_with_friends",
+  "actor": "agent_123",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-a4af7968216f449885eaf8dc5ee64ca0",
+    "object": "chat.completion",
+    "created": 1791455815,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉挺严重的，虽然离我的生活还远，但这种全球性的环境问题确实让人焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种科普性质的警示内容值得支持，让更多人关注气候问题。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大且沉重，我没有太专业的见解，不方便随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但我的好友圈大多是同事和亲友，转发这个可能氛围有点太沉重了。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉挺严重的，虽然离我的生活还远，但这种全球性的环境问题确实让人焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种科普性质的警示内容值得支持，让更多人关注气候问题。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大且沉重，我没有太专业的见解，不方便随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但我的好友圈大多是同事和亲友，转发这个可能氛围有点太沉重了。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.48
+}

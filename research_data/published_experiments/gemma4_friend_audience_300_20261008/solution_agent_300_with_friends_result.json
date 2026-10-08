@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_300_with_friends",
+  "actor": "agent_300",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-52a330a510b541d3b947ea2ebd115677",
+    "object": "chat.completion",
+    "created": 1791456217,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保措施和科普内容挺有意思的，作为理科生，我很认同通过技术手段和个人习惯来应对气候变化。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对生态保护和环境话题一直比较关注，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我只是随便看看，没有特别想补充的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，我的好友圈大多是家长和同事，转发这个可能不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保措施和科普内容挺有意思的，作为理科生，我很认同通过技术手段和个人习惯来应对气候变化。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对生态保护和环境话题一直比较关注，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我只是随便看看，没有特别想补充的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较宏大，我的好友圈大多是家长和同事，转发这个可能不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.71
+}

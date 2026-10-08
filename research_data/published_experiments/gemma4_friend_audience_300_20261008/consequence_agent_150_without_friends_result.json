@@ -1,0 +1,57 @@
+{
+  "key": "consequence_agent_150_without_friends",
+  "actor": "agent_150",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-4e8e761a9bcf4d3fb58764904b29bfd2",
+    "object": "chat.completion",
+    "created": 1791458121,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种气候变化带来的危机感真的很强烈，想到这么多家园可能消失，心情挺沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直很关注环境和生态话题，这个科普很有意义。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"希望能引起更多人的关注，讨论一下我们个人能做些什么。\",\n      \"text\": \"看到这些数据真的触目惊心，感觉气候危机已经离我们很近了，希望更多人能意识到问题的严重性。🌊\"\n    },\n    \"repost\": {\n      \"execute\": true,\n      \"reason\": \"这是一个很严肃的全球性议题，值得转发给更多朋友看到。\",\n      \"text\": \"海平面上升的速度比想象中快，我们需要更多关注气候保护！\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种气候变化带来的危机感真的很强烈，想到这么多家园可能消失，心情挺沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直很关注环境和生态话题，这个科普很有意义。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "希望能引起更多人的关注，讨论一下我们个人能做些什么。",
+        "text": "看到这些数据真的触目惊心，感觉气候危机已经离我们很近了，希望更多人能意识到问题的严重性。🌊"
+      },
+      "repost": {
+        "execute": true,
+        "reason": "这是一个很严肃的全球性议题，值得转发给更多朋友看到。",
+        "text": "海平面上升的速度比想象中快，我们需要更多关注气候保护！"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "看到这些数据真的触目惊心，感觉气候危机已经离我们很近了，希望更多人能意识到问题的严重性。🌊"
+    },
+    {
+      "action": "repost",
+      "text": "海平面上升的速度比想象中快，我们需要更多关注气候保护！"
+    }
+  ],
+  "seconds": 17.9
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_119_with_friends",
+  "actor": "agent_119",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-55a8d239a6934e06bc0fe038ce2c7a1f",
+    "object": "chat.completion",
+    "created": 1791456240,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保工程和技术手段还挺有意思的，感觉全球气候问题虽然大，但还是有解决办法的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新技术如何改变生活和改善环境比较感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，我只是随便看看，没什么具体的专业见解可以评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这个话题跟我周围的朋友和邻居的关注点不太一样，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保工程和技术手段还挺有意思的，感觉全球气候问题虽然大，但还是有解决办法的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新技术如何改变生活和改善环境比较感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大，我只是随便看看，没什么具体的专业见解可以评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这个话题跟我周围的朋友和邻居的关注点不太一样，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.76
+}

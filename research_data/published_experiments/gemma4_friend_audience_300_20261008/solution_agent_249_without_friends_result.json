@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_249_without_friends",
+  "actor": "agent_249",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-e0dd5cc311214acab0a62f7e4fa0d473",
+    "object": "chat.completion",
+    "created": 1791454142,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种关于环境治理和可持续发展的议题挺有意思，而且列举的工程案例很具体。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新观点和环保议题持开放态度，认同这种积极的解决方向。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较像科普宣传，目前没有特别强烈的观点需要当面讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但还没到需要分享给朋友圈扩散的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种关于环境治理和可持续发展的议题挺有意思，而且列举的工程案例很具体。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新观点和环保议题持开放态度，认同这种积极的解决方向。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较像科普宣传，目前没有特别强烈的观点需要当面讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然认同，但还没到需要分享给朋友圈扩散的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.26
+}

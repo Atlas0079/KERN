@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_190_without_friends",
+  "actor": "agent_190",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-18f53e36146c4a8a85d66cc45bced508",
+    "object": "chat.completion",
+    "created": 1791453535,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，想到以后孩子面对的环境可能会这么糟糕，心里有点焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"一直关注气候话题，这种科普信息对我来说很重要。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这类宏大叙事的话题我习惯先思考消化，不倾向于在评论区随意发表观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，目前没有强烈的意愿将其转发到自己的社交主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，想到以后孩子面对的环境可能会这么糟糕，心里有点焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "一直关注气候话题，这种科普信息对我来说很重要。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这类宏大叙事的话题我习惯先思考消化，不倾向于在评论区随意发表观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，目前没有强烈的意愿将其转发到自己的社交主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.11
+}

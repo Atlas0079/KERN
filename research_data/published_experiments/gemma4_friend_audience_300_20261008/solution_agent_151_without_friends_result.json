@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_151_without_friends",
+  "actor": "agent_151",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-a9443c39c461426db64cd02c12865328",
+    "object": "chat.completion",
+    "created": 1791455813,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这类关于可持续发展和环境工程的话题挺有意思的，虽然离我日常生活较远，但这种积极解决问题的视角让我觉得挺舒服。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种传递希望且有具体案例的科普内容，随手点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观，我对此领域没有专业见解，不需要特意发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容不错，但这不是我平时关注或分享的核心领域，没必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这类关于可持续发展和环境工程的话题挺有意思的，虽然离我日常生活较远，但这种积极解决问题的视角让我觉得挺舒服。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种传递希望且有具体案例的科普内容，随手点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏观，我对此领域没有专业见解，不需要特意发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容不错，但这不是我平时关注或分享的核心领域，没必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.63
+}

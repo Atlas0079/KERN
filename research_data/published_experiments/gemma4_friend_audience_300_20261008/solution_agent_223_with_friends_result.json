@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_223_with_friends",
+  "actor": "agent_223",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-063c69fea51e430ca59942c8a3e671e9",
+    "object": "chat.completion",
+    "created": 1791455374,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然海平面上升听起来很宏大，但看到有具体的工程和修复计划在实施，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护话题一直比较关注，支持这类正能量的科普内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我作为一个非专业人士，暂时没有什么特别的见解可以补充。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但转发到我的朋友圈或给熟人看可能略显严肃，不打算转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然海平面上升听起来很宏大，但看到有具体的工程和修复计划在实施，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护话题一直比较关注，支持这类正能量的科普内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我作为一个非专业人士，暂时没有什么特别的见解可以补充。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但转发到我的朋友圈或给熟人看可能略显严肃，不打算转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.75
+}

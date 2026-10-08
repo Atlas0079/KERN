@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_255_without_friends",
+  "actor": "agent_255",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-6080a6f73ae946b89b237dd21aea012b",
+    "object": "chat.completion",
+    "created": 1791456186,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然离我的生活挺远的，但看到这种全球性的危机确实让人觉得有点不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类科普和全球议题比较感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但我也没什么专业见解，没必要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，转发到我的主页感觉不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然离我的生活挺远的，但看到这种全球性的危机确实让人觉得有点不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类科普和全球议题比较感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但我也没什么专业见解，没必要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，转发到我的主页感觉不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.68
+}

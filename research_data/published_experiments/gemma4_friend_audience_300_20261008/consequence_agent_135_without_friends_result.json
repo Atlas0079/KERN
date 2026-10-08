@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_135_without_friends",
+  "actor": "agent_135",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-3e5298ab85e24c1b9033a46b905f7af3",
+    "object": "chat.completion",
+    "created": 1791452412,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这形势看着挺严峻的，要是真影响到沿海大城市，未来的社会生活得发生多大的变动啊。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注全球气候变化和新技术应对社会问题，点赞表示认同这个话题的重要性。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这种宏大议题我没有专业的见解，没什么必要发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重且过于宏观，不适合转发到我的个人主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这形势看着挺严峻的，要是真影响到沿海大城市，未来的社会生活得发生多大的变动啊。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注全球气候变化和新技术应对社会问题，点赞表示认同这个话题的重要性。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这种宏大议题我没有专业的见解，没什么必要发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重且过于宏观，不适合转发到我的个人主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.39
+}

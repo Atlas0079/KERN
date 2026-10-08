@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_095_with_friends",
+  "actor": "agent_095",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-0bbf0865e94c4abcb647115f3897b158",
+    "object": "chat.completion",
+    "created": 1791454211,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"关于气候变化和海平面上升的讨论，涉及到的生态修复和能源转型确实是现在很重要的话题，值得关注。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种正向的环保科普，支持可持续生活的理念。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但内容比较宏大，我没有太多专业见解可以补充，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"个人习惯较为低调，这种科普类内容点赞即可，不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "关于气候变化和海平面上升的讨论，涉及到的生态修复和能源转型确实是现在很重要的话题，值得关注。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种正向的环保科普，支持可持续生活的理念。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但内容比较宏大，我没有太多专业见解可以补充，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "个人习惯较为低调，这种科普类内容点赞即可，不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.68
+}

@@ -1,0 +1,52 @@
+{
+  "key": "solution_agent_049_without_friends",
+  "actor": "agent_049",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-ac2ffa18e4c84f75adbb3949fa26303e",
+    "object": "chat.completion",
+    "created": 1791453921,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保工程和个人能做的小事，觉得还是有希望的，挺触动我的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直很关心环境和生态保护，这个内容很正能量，支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"我性格比较外向，愿意分享自己的看法并鼓励他人。\",\n      \"text\": \"看到红树林修复计划很有成就感，确实要从点滴做起，为地球尽一份力！🌱\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"点赞和评论已经表达了我的态度，暂时不需要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保工程和个人能做的小事，觉得还是有希望的，挺触动我的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直很关心环境和生态保护，这个内容很正能量，支持一下。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "我性格比较外向，愿意分享自己的看法并鼓励他人。",
+        "text": "看到红树林修复计划很有成就感，确实要从点滴做起，为地球尽一份力！🌱"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "点赞和评论已经表达了我的态度，暂时不需要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "看到红树林修复计划很有成就感，确实要从点滴做起，为地球尽一份力！🌱"
+    }
+  ],
+  "seconds": 15.65
+}

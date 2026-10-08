@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_241_without_friends",
+  "actor": "agent_241",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-9d2b0cf2781647259ea4db4076427e5b",
+    "object": "chat.completion",
+    "created": 1791451253,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉这件事离我很远，但听起来确实挺严重的，希望以后孩子生活在的环境不要这么糟糕。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重且宏大，没觉得特别有共鸣到想点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候问题不专业，没什么好发表的见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种危机感太强的内容，不太想分享到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉这件事离我很远，但听起来确实挺严重的，希望以后孩子生活在的环境不要这么糟糕。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容太沉重且宏大，没觉得特别有共鸣到想点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候问题不专业，没什么好发表的见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种危机感太强的内容，不太想分享到自己的动态里。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 14.41
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_168_with_friends",
+  "actor": "agent_168",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-b8c3303756e24329b3bb19269479b354",
+    "object": "chat.completion",
+    "created": 1791458364,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"关于气候变化和海平面上升的科普，虽然是个大课题，但文中提到的具体工程和低碳行为还挺有意思的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"比较认可这种基于科学方案的环保观点，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容已经说得很完整了，我没什么补充的，也不太习惯在推荐帖下随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"话题太宏大了，转发到我的圈子里可能没什么讨论空间。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "关于气候变化和海平面上升的科普，虽然是个大课题，但文中提到的具体工程和低碳行为还挺有意思的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "比较认可这种基于科学方案的环保观点，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容已经说得很完整了，我没什么补充的，也不太习惯在推荐帖下随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "话题太宏大了，转发到我的圈子里可能没什么讨论空间。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.21
+}

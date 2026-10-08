@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_154_with_friends",
+  "actor": "agent_154",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-1b941c3210404112b8a182e64f970f53",
+    "object": "chat.completion",
+    "created": 1791455542,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些环保措施和具体的修复计划，感觉海平面上升的问题还是有希望解决的，挺欣慰。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护比较关心，这篇文章传递的正能量值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但我性格比较内向，不习惯在公开平台发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普内容对我个人很有意义，但我觉得没必要转发到我的好友圈里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些环保措施和具体的修复计划，感觉海平面上升的问题还是有希望解决的，挺欣慰。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护比较关心，这篇文章传递的正能量值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但我性格比较内向，不习惯在公开平台发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普内容对我个人很有意义，但我觉得没必要转发到我的好友圈里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.09
+}

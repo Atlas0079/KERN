@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_294_without_friends",
+  "actor": "agent_294",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-cb3be04d766b4758852aef85356219f4",
+    "object": "chat.completion",
+    "created": 1791452750,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个严峻的问题，看到有具体的工程方案和修复计划，感觉还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候变化和极端天气很关注，这个帖子的正向观点我认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观，我目前没有特别深刻的见解可以分享，点个赞支持即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然有意义，但这类科普内容在我的社交圈里传播价值一般，不需要特意转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个严峻的问题，看到有具体的工程方案和修复计划，感觉还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候变化和极端天气很关注，这个帖子的正向观点我认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏观，我目前没有特别深刻的见解可以分享，点个赞支持即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然有意义，但这类科普内容在我的社交圈里传播价值一般，不需要特意转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.92
+}

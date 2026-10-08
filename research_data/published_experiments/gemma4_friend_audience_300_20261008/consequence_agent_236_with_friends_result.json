@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_236_with_friends",
+  "actor": "agent_236",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-288aa3cb003f4be58b18659d69df5359",
+    "object": "chat.completion",
+    "created": 1791456324,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升速度这么快，以后沿海城市的压力得有多大，真让人焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对极端天气和气候话题一直比较关注，这个内容对我来说很有意义。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得担忧，但我性格内向，不太习惯在公开平台上发表自己的看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，且我的好友圈多是同事和邻居，转发这个可能没太大的讨论空间。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升速度这么快，以后沿海城市的压力得有多大，真让人焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对极端天气和气候话题一直比较关注，这个内容对我来说很有意义。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得担忧，但我性格内向，不太习惯在公开平台上发表自己的看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，且我的好友圈多是同事和邻居，转发这个可能没太大的讨论空间。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.8
+}

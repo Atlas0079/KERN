@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_231_with_friends",
+  "actor": "agent_231",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-1f6dde28707747e492024dacc781701c",
+    "object": "chat.completion",
+    "created": 1791451101,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化确实是个大问题，虽然这些宏观工程听起来很专业，但普通人能做的小事确实也值得关注。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且具有科普意义，点个赞支持一下环保理念。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但这些环保话题太宏大，我没什么专业的见解可以补充，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普内容适合自己看看，转发到朋友圈可能不太符合我平时分享内容的习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化确实是个大问题，虽然这些宏观工程听起来很专业，但普通人能做的小事确实也值得关注。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且具有科普意义，点个赞支持一下环保理念。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但这些环保话题太宏大，我没什么专业的见解可以补充，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普内容适合自己看看，转发到朋友圈可能不太符合我平时分享内容的习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.49
+}

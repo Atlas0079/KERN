@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_287_with_friends",
+  "actor": "agent_287",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-491039913e93431ba0efbaf4aa74ed85",
+    "object": "chat.completion",
+    "created": 1791451328,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺有正能量的，虽然是个宏大话题，但提到的具体工程和个体行动让我觉得还算务实。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种积极探讨可持续生活和环保方案的态度。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但并没有什么独特的见解可以补充，没必要强行评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容偏科普和倡议，不太符合我平时分享生活体验或设计技术的风格。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺有正能量的，虽然是个宏大话题，但提到的具体工程和个体行动让我觉得还算务实。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种积极探讨可持续生活和环保方案的态度。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但并没有什么独特的见解可以补充，没必要强行评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容偏科普和倡议，不太符合我平时分享生活体验或设计技术的风格。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.18
+}

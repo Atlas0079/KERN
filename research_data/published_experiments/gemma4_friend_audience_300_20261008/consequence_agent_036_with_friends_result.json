@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_036_with_friends",
+  "actor": "agent_036",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-31794661f00045a5850e89a90f0a299c",
+    "object": "chat.completion",
+    "created": 1791455714,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"气候变化带来的影响比我想象中要紧迫，尤其是对沿海城市和岛国的影响，挺令人担忧的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对科普类话题感兴趣，且认同这种对气候危机关注的必要性。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但目前只是初步阅读，没有特别深刻的见解可以分享，不想随意凑热闹。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，我倾向于先自己消化了解，暂时不打算转发到我的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "气候变化带来的影响比我想象中要紧迫，尤其是对沿海城市和岛国的影响，挺令人担忧的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对科普类话题感兴趣，且认同这种对气候危机关注的必要性。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但目前只是初步阅读，没有特别深刻的见解可以分享，不想随意凑热闹。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，我倾向于先自己消化了解，暂时不打算转发到我的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.63
+}

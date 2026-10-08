@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_188_with_friends",
+  "actor": "agent_188",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-759b66d5498a4d66a9dda1dacd14a0c6",
+    "object": "chat.completion",
+    "created": 1791454717,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到海平面上升其实有应对方案且个人行动也能帮上忙，感觉心里踏实了一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护很感兴趣，而且帖子传递的正能量让我很认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很认同，但我性格比较内向，这种科普类帖子我习惯于默默阅读和点赞。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我觉得这个内容对我个人有启发，但还没到需要特意分享给朋友圈的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到海平面上升其实有应对方案且个人行动也能帮上忙，感觉心里踏实了一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护很感兴趣，而且帖子传递的正能量让我很认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很认同，但我性格比较内向，这种科普类帖子我习惯于默默阅读和点赞。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我觉得这个内容对我个人有启发，但还没到需要特意分享给朋友圈的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.78
+}

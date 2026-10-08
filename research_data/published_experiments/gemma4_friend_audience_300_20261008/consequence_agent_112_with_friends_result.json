@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_112_with_friends",
+  "actor": "agent_112",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-d822b63ee4b94dad867296ba9fc52ec1",
+    "object": "chat.completion",
+    "created": 1791456204,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这报道看着挺让人焦虑的，海平面上升要是真到这个程度，沿海城市得乱成什么样。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很有警示意义，支持这类关注全球环境的科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得严重，但我毕竟是搞机械维修的，对气候科学没有专业见解，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"消息太沉重了，没必要发到自己的主页给朋友们制造焦虑。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这报道看着挺让人焦虑的，海平面上升要是真到这个程度，沿海城市得乱成什么样。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很有警示意义，支持这类关注全球环境的科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得严重，但我毕竟是搞机械维修的，对气候科学没有专业见解，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "消息太沉重了，没必要发到自己的主页给朋友们制造焦虑。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.67
+}

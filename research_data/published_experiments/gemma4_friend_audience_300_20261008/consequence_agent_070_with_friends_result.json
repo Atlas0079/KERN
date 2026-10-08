@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_070_with_friends",
+  "actor": "agent_070",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-7dc0476d0ca94935b985c01f89c36895",
+    "object": "chat.completion",
+    "created": 1791457624,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉挺震撼的，原来海平面上升已经到这个地步了，对沿海城市的影响确实让人担忧。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对科技和社会关系以及全球性议题比较感兴趣，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且专业，我没有太深入的见解，暂时不发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容重要，但目前还没到我觉得必须立刻转发给好友提醒的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉挺震撼的，原来海平面上升已经到这个地步了，对沿海城市的影响确实让人担忧。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对科技和社会关系以及全球性议题比较感兴趣，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且专业，我没有太深入的见解，暂时不发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容重要，但目前还没到我觉得必须立刻转发给好友提醒的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.6
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_134_without_friends",
+  "actor": "agent_134",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-7017c7683ca447e6b1a2e316264bea99",
+    "object": "chat.completion",
+    "created": 1791452756,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这种关于工程手段应对气候变化的科普挺有意思的，特别是荷兰的工程案例，符合我的专业兴趣。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且包含工程技术视角，值得点赞支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但内容比较宏观，没有特别想讨论的细节，没必要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普内容虽然好，但不需要转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这种关于工程手段应对气候变化的科普挺有意思的，特别是荷兰的工程案例，符合我的专业兴趣。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且包含工程技术视角，值得点赞支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但内容比较宏观，没有特别想讨论的细节，没必要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普内容虽然好，但不需要转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.12
+}

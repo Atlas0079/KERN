@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_023_with_friends",
+  "actor": "agent_023",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-ba663318529d4f05a731619adab46ad8",
+    "object": "chat.completion",
+    "created": 1791456159,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这气候变化确实挺吓人的，尤其是说到沿海城市，得给后辈们留心。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容很严肃且重要，点个赞支持一下这种科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得担忧，但我对气候科学没专业研究，没什么能补充的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种沉重的话题转发到朋友圈可能太压抑了，不合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这气候变化确实挺吓人的，尤其是说到沿海城市，得给后辈们留心。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容很严肃且重要，点个赞支持一下这种科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得担忧，但我对气候科学没专业研究，没什么能补充的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种沉重的话题转发到朋友圈可能太压抑了，不合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.86
+}

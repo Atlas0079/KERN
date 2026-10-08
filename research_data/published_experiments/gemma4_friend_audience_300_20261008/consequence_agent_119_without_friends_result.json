@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_119_without_friends",
+  "actor": "agent_119",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-c1d587b506c14f129a985029c199c4a1",
+    "object": "chat.completion",
+    "created": 1791454009,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候问题听起来挺严重的，虽然离我的日常生活有点远，但想到以后对孩子那一辈的影响，还是觉得挺不安的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有科普意义且提醒大家关注环境危机，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大叙事的话题我没什么专业见解，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但我的社交圈子比较简单，转发这个可能没什么实际意义。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候问题听起来挺严重的，虽然离我的日常生活有点远，但想到以后对孩子那一辈的影响，还是觉得挺不安的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有科普意义且提醒大家关注环境危机，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这类宏大叙事的话题我没什么专业见解，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但我的社交圈子比较简单，转发这个可能没什么实际意义。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.66
+}

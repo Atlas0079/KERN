@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_278_without_friends",
+  "actor": "agent_278",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-2f6bfbc3348d48b1b18a3d028a6380c2",
+    "object": "chat.completion",
+    "created": 1791455316,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的应对措施让人觉得气候问题虽然严峻但还是有希望的，而且红树林修复这种基于自然的方案挺有意思。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候风险比较关注，且认同这种理性且积极的探讨。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较全面，虽然有共鸣但没有特别想补充的观点，不需要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇帖子更像是一个科普总结，目前觉得没必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的应对措施让人觉得气候问题虽然严峻但还是有希望的，而且红树林修复这种基于自然的方案挺有意思。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候风险比较关注，且认同这种理性且积极的探讨。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较全面，虽然有共鸣但没有特别想补充的观点，不需要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇帖子更像是一个科普总结，目前觉得没必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.7
+}

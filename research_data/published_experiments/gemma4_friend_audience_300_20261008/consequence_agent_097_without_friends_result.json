@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_097_without_friends",
+  "actor": "agent_097",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-244b3021a1b340019abc22f0b98e1f8b",
+    "object": "chat.completion",
+    "created": 1791457231,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度这么快，看来气候变化确实比想象中更紧迫，得留意一下对沿海城市的影响。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"平时就关注生态环境新闻，这类科普警示贴值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很严肃，我只是看看，没有什么特别的专业见解能补充在评论区。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但我的朋友圈比较简单，没必要转发这个让大家担心。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度这么快，看来气候变化确实比想象中更紧迫，得留意一下对沿海城市的影响。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "平时就关注生态环境新闻，这类科普警示贴值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很严肃，我只是看看，没有什么特别的专业见解能补充在评论区。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但我的朋友圈比较简单，没必要转发这个让大家担心。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.12
+}

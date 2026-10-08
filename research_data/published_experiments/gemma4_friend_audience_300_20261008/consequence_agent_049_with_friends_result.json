@@ -1,0 +1,52 @@
+{
+  "key": "consequence_agent_049_with_friends",
+  "actor": "agent_049",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-fef3e4889cfc4681bdd59d9c9f20feff",
+    "object": "chat.completion",
+    "created": 1791453013,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快这么多，这种环境危机真的离我们每个人都很近，挺让人揪心的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"一直关注环境生态问题，支持这类科普警示内容。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"希望能表达对沿海居民的担忧，并引导大家关注这个问题。\",\n      \"text\": \"看到这些数据真的挺震惊的，沿海城市的压力太大了，希望全球能尽快在气候行动上达成共识，保护好我们的家园。🌊\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然关心，但内容比较沉重，且目前没必要在自己的主页大范围扩散。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快这么多，这种环境危机真的离我们每个人都很近，挺让人揪心的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "一直关注环境生态问题，支持这类科普警示内容。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "希望能表达对沿海居民的担忧，并引导大家关注这个问题。",
+        "text": "看到这些数据真的挺震惊的，沿海城市的压力太大了，希望全球能尽快在气候行动上达成共识，保护好我们的家园。🌊"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然关心，但内容比较沉重，且目前没必要在自己的主页大范围扩散。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "看到这些数据真的挺震惊的，沿海城市的压力太大了，希望全球能尽快在气候行动上达成共识，保护好我们的家园。🌊"
+    }
+  ],
+  "seconds": 17.74
+}

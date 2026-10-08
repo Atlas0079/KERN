@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_225_without_friends",
+  "actor": "agent_225",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-19c415aed3a546239df71507a739abb5",
+    "object": "chat.completion",
+    "created": 1791459404,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺正能量的，而且提到的红树林修复和碳中和在生命科学领域也经常讨论，是有意义的事情。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活的理念，给一个简单的支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别想表达的独特见解，不习惯在公开场合发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较大众化，没有必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺正能量的，而且提到的红树林修复和碳中和在生命科学领域也经常讨论，是有意义的事情。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活的理念，给一个简单的支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别想表达的独特见解，不习惯在公开场合发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较大众化，没有必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.08
+}

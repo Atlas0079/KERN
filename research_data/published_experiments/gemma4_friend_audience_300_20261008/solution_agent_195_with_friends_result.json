@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_195_with_friends",
+  "actor": "agent_195",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-46549607ad70422aa0a2c0defa17b08b",
+    "object": "chat.completion",
+    "created": 1791454088,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种关于气候变化和可持续生活的讨论挺有意思的，虽然离我的日常生活有点远，但整体基调比较正向。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有一定科普价值，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别深刻的见解想分享，且性格偏内向，不太习惯在推荐帖下随意发言。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类的环保话题对我的人际圈子来说可能过于严肃，不太适合转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种关于气候变化和可持续生活的讨论挺有意思的，虽然离我的日常生活有点远，但整体基调比较正向。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有一定科普价值，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别深刻的见解想分享，且性格偏内向，不太习惯在推荐帖下随意发言。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类的环保话题对我的人际圈子来说可能过于严肃，不太适合转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.85
+}

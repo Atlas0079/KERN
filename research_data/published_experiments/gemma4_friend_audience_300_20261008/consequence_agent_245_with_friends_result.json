@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_245_with_friends",
+  "actor": "agent_245",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-6379863ef1834abe86bb954635947b09",
+    "object": "chat.completion",
+    "created": 1791452029,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，这种极端天气背后的环境危机确实让人感到不安。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对科学话题和环境问题感兴趣，这篇文章提供了有价值的警示信息。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得忧虑，但作为一个内向且习惯观察的人，我觉得点赞支持即可，不需要特意发表见解。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，而且我的社交圈子比较简单，不确定转发这类危机信息是否合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，这种极端天气背后的环境危机确实让人感到不安。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对科学话题和环境问题感兴趣，这篇文章提供了有价值的警示信息。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得忧虑，但作为一个内向且习惯观察的人，我觉得点赞支持即可，不需要特意发表见解。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，而且我的社交圈子比较简单，不确定转发这类危机信息是否合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.59
+}

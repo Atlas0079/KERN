@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_116_without_friends",
+  "actor": "agent_116",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-60d08fdff9f2427bba098187864a6453",
+    "object": "chat.completion",
+    "created": 1791453780,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意义的科普，看到全球在采取行动感觉心里踏实了一些，低碳生活确实是我能参与的小事。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同环保理念，支持这类正向的科普内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有特别深刻的见解或强烈的表达欲望，点个赞就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但还没到必须分享给所有人知道的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意义的科普，看到全球在采取行动感觉心里踏实了一些，低碳生活确实是我能参与的小事。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同环保理念，支持这类正向的科普内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有特别深刻的见解或强烈的表达欲望，点个赞就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但还没到必须分享给所有人知道的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.39
+}

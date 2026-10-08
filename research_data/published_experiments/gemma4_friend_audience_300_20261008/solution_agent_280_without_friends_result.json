@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_280_without_friends",
+  "actor": "agent_280",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-c9912cd6e4904942b6015fb32e9a8f82",
+    "object": "chat.completion",
+    "created": 1791456635,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然这些环保措施听起来很有希望，但想到环境恶化带来的不确定性，还是觉得有点焦虑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可低碳生活这个方向，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的话题我没什么专业的见解，不习惯在公开场合发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"觉得没必要转发，我的社交圈比较小，且不想在主页讨论太严肃的话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然这些环保措施听起来很有希望，但想到环境恶化带来的不确定性，还是觉得有点焦虑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可低碳生活这个方向，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的话题我没什么专业的见解，不习惯在公开场合发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "觉得没必要转发，我的社交圈比较小，且不想在主页讨论太严肃的话题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.58
+}

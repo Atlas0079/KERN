@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_132_with_friends",
+  "actor": "agent_132",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-2d0483baf477429db511a0c508d9eeb5",
+    "object": "chat.completion",
+    "created": 1791451767,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保工程和应对措施，感觉海平面上升的问题还是有希望解决的，挺欣慰。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态保护比较关心，这类正向的科普内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容已经说得很全面了，我目前只是浏览了解，没有特别想补充的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这篇文章属于推荐内容，我的好友圈里大多是熟人和老同事，转发这个可能不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保工程和应对措施，感觉海平面上升的问题还是有希望解决的，挺欣慰。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态保护比较关心，这类正向的科普内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容已经说得很全面了，我目前只是浏览了解，没有特别想补充的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这篇文章属于推荐内容，我的好友圈里大多是熟人和老同事，转发这个可能不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.98
+}

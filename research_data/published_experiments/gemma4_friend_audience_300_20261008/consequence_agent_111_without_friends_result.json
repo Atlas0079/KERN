@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_111_without_friends",
+  "actor": "agent_111",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-3ccdca8cbea1453f8f1158dc7aba6d4b",
+    "object": "chat.completion",
+    "created": 1791451725,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这事儿听着挺严重，虽然离我这小店远，但感觉整个世界以后得乱套。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容挺有警示意义的，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这种宏大的全球议题我没什么专业见解，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"太沉重了，没必要转发到我的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这事儿听着挺严重，虽然离我这小店远，但感觉整个世界以后得乱套。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容挺有警示意义的，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这种宏大的全球议题我没什么专业见解，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "太沉重了，没必要转发到我的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.28
+}

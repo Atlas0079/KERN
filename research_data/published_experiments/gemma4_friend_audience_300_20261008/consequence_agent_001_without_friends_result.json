@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_001_without_friends",
+  "actor": "agent_001",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-15f1853bd6df4a298419c2ddc6ba2b82",
+    "object": "chat.completion",
+    "created": 1791451389,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉挺不安的，最近极端天气确实变多了，没想到海平面上升已经严重到这个地步，担心以后孩子成长环境会变得更糟糕。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注气候问题，支持这种科普警示类的内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得焦虑，但这种宏大课题我没什么专业见解可以发表，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，不想让自己的社交主页显得太压抑。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉挺不安的，最近极端天气确实变多了，没想到海平面上升已经严重到这个地步，担心以后孩子成长环境会变得更糟糕。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注气候问题，支持这种科普警示类的内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得焦虑，但这种宏大课题我没什么专业见解可以发表，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，不想让自己的社交主页显得太压抑。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.34
+}

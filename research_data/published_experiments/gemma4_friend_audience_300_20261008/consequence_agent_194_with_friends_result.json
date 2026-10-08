@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_194_with_friends",
+  "actor": "agent_194",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-6c28f474fe1c4c398dbe3eb476902ad1",
+    "object": "chat.completion",
+    "created": 1791452861,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的环境危机听起来很可怕，想到未来可能会有这么多流离失所的人，心里觉得挺沉重的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然心情沉重，但认同这种警示信息的价值，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这是一个宏大的全球议题，我只是个普通老师，没什么专业见解可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类负面且沉重的信息，不太想转发到自己的社交圈里影响心情。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的环境危机听起来很可怕，想到未来可能会有这么多流离失所的人，心里觉得挺沉重的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然心情沉重，但认同这种警示信息的价值，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这是一个宏大的全球议题，我只是个普通老师，没什么专业见解可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类负面且沉重的信息，不太想转发到自己的社交圈里影响心情。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.28
+}

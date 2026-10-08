@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_257_with_friends",
+  "actor": "agent_257",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-b1e499485d1540548f8fdf0f2f35d8ce",
+    "object": "chat.completion",
+    "created": 1791451448,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这篇文章讲的环保话题挺宏大的，虽然很有意义，但离我的日常生活稍微有点远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"低碳生活是个好主意，支持一下这种正能量的内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较专业且严肃，我没什么专业见解可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类的帖子转发到我的朋友圈可能不太合适，大家可能没兴趣看。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这篇文章讲的环保话题挺宏大的，虽然很有意义，但离我的日常生活稍微有点远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "低碳生活是个好主意，支持一下这种正能量的内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较专业且严肃，我没什么专业见解可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类的帖子转发到我的朋友圈可能不太合适，大家可能没兴趣看。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.82
+}

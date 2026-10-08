@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_097_with_friends",
+  "actor": "agent_097",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-6d60a3139d8d48278b6da545624945bf",
+    "object": "chat.completion",
+    "created": 1791457460,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升这么快，以后沿海城市的居住环境确实让人担心，希望能有有效的应对措施。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态新闻，这个话题对我来说很重要。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很关注，但这类宏大的气候问题我没有太专业的见解，不想随便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重且专业，没必要转发到我的朋友圈或给熟人看。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升这么快，以后沿海城市的居住环境确实让人担心，希望能有有效的应对措施。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态新闻，这个话题对我来说很重要。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很关注，但这类宏大的气候问题我没有太专业的见解，不想随便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重且专业，没必要转发到我的朋友圈或给熟人看。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.45
+}

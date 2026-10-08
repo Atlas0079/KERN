@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_255_with_friends",
+  "actor": "agent_255",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-f2a3923b572d4e1583ff01a70e34c114",
+    "object": "chat.completion",
+    "created": 1791455840,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺有意义的，虽然离我的生活有点远，但这种环保和可持续的观念我挺认可的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和低碳生活，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但没有太专业的见解，没必要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，不太符合我平时的社交圈分享习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺有意义的，虽然离我的生活有点远，但这种环保和可持续的观念我挺认可的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和低碳生活，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但没有太专业的见解，没必要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较宏大，不太符合我平时的社交圈分享习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.09
+}

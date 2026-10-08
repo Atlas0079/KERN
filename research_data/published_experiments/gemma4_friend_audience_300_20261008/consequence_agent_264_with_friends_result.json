@@ -1,0 +1,43 @@
+{
+  "key": "consequence_agent_264_with_friends",
+  "actor": "agent_264",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-24ba4fdf3e6d404dac807ab9593e9b82",
+    "object": "chat.completion",
+    "created": 1791456869,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升得这么快吗，听起来挺可怕的，希望这些危机不要影响到未来的生活稳定。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": false,\n      \"reason\": \"内容太宏大且沉重，虽然关注但没有强烈的共鸣感，不想随便点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这是一个全球性的气候议题，我没有专业知识，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种焦虑感比较强的内容，不适合分享给我的朋友或亲子群。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升得这么快吗，听起来挺可怕的，希望这些危机不要影响到未来的生活稳定。",
+    "decisions": {
+      "like": {
+        "execute": false,
+        "reason": "内容太宏大且沉重，虽然关注但没有强烈的共鸣感，不想随便点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这是一个全球性的气候议题，我没有专业知识，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种焦虑感比较强的内容，不适合分享给我的朋友或亲子群。"
+      }
+    }
+  },
+  "actions": [],
+  "seconds": 13.76
+}

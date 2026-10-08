@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_027_without_friends",
+  "actor": "agent_027",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-4c72e330e21d4f81aa3b0d295d8c6455",
+    "object": "chat.completion",
+    "created": 1791459119,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺正向的，这种关于可持续发展和生态修复的讨论挺有意义，也符合我对新观点和公共议题的兴趣。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和低碳生活，点个赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但没有特别想分享的见解，在这种宏大叙事下倾向于安静阅读。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然好，但转发到自己的主页可能显得太严肃，目前没有转发的冲动。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺正向的，这种关于可持续发展和生态修复的讨论挺有意义，也符合我对新观点和公共议题的兴趣。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和低碳生活，点个赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但没有特别想分享的见解，在这种宏大叙事下倾向于安静阅读。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然好，但转发到自己的主页可能显得太严肃，目前没有转发的冲动。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.47
+}

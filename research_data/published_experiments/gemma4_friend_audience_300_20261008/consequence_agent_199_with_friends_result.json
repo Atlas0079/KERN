@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_199_with_friends",
+  "actor": "agent_199",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-eafbc8ba72d6484291708c70a16f650d",
+    "object": "chat.completion",
+    "created": 1791452684,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉这些年极端天气确实变多了，海平面上升要是真的这么快，沿海城市的人压力得有多大啊。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类气候科学话题比较关注，点个赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且宏大，我性格内向，在这种科普贴下没什么好发表的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容重要，但转发到我的圈子里可能不太合适，且我平时不习惯转发这类警示性太强的帖子。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉这些年极端天气确实变多了，海平面上升要是真的这么快，沿海城市的人压力得有多大啊。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类气候科学话题比较关注，点个赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且宏大，我性格内向，在这种科普贴下没什么好发表的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容重要，但转发到我的圈子里可能不太合适，且我平时不习惯转发这类警示性太强的帖子。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 16.29
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_249_without_friends",
+  "actor": "agent_249",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-44dfd2b4aa4e40fe824d54a783a015e9",
+    "object": "chat.completion",
+    "created": 1791457051,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个严峻的全球性问题，而且对我这种喜欢做长远规划的人来说，这种规模的变动确实让人担忧。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有科普价值，关注气候危机是理性且必要的。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这是一个宏大的全球议题，我个人没有专业见解可以补充，没必要发表空泛的评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但我的社交圈不一定对这类沉重的话题感兴趣，没必要转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个严峻的全球性问题，而且对我这种喜欢做长远规划的人来说，这种规模的变动确实让人担忧。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有科普价值，关注气候危机是理性且必要的。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这是一个宏大的全球议题，我个人没有专业见解可以补充，没必要发表空泛的评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但我的社交圈不一定对这类沉重的话题感兴趣，没必要转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.45
+}

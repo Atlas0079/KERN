@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_149_without_friends",
+  "actor": "agent_149",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-a73b245f39704d88ae38cbc8079c0e03",
+    "object": "chat.completion",
+    "created": 1791459240,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意思的科普，原来这些环保工程能起这么大作用，感觉低碳生活确实是个不错的方向。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对新技术和改善生活的内容比较感兴趣，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有道理，但并没有什么特别想深入讨论的观点，先看看就行。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错，但还没到非分享不可的程度。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意思的科普，原来这些环保工程能起这么大作用，感觉低碳生活确实是个不错的方向。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对新技术和改善生活的内容比较感兴趣，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得有道理，但并没有什么特别想深入讨论的观点，先看看就行。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错，但还没到非分享不可的程度。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.98
+}

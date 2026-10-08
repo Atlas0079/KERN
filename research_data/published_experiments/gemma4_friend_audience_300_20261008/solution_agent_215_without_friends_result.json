@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_215_without_friends",
+  "actor": "agent_215",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-48502b15ef3c47aebf92066e364e093a",
+    "object": "chat.completion",
+    "created": 1791458316,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到海平面上升有具体的解决方案和应对措施，感觉心里的焦虑减轻了一些，这些科学手段确实很重要。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注气候和极端天气话题，这篇文章传递的正能量和科学方案值得点赞。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同低碳生活，但并没有特别深刻的个人见解需要发表，点赞即可。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容很专业，但我的社交圈比较小，且这种宏大议题不太适合我转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到海平面上升有具体的解决方案和应对措施，感觉心里的焦虑减轻了一些，这些科学手段确实很重要。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注气候和极端天气话题，这篇文章传递的正能量和科学方案值得点赞。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同低碳生活，但并没有特别深刻的个人见解需要发表，点赞即可。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容很专业，但我的社交圈比较小，且这种宏大议题不太适合我转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.61
+}

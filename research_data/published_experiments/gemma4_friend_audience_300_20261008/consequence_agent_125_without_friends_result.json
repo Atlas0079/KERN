@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_125_without_friends",
+  "actor": "agent_125",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-932c410a39c141a0baa7218db9a15c58",
+    "object": "chat.completion",
+    "created": 1791456980,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候危机听起来确实挺触目惊心的，感觉人类面临的挑战比想象中要紧迫。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这类科普环保的内容很有意义，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然很有感触，但这个领域我并不专业，没什么能补充的观点，不方便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但目前的基调比较沉重，暂时不想转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候危机听起来确实挺触目惊心的，感觉人类面临的挑战比想象中要紧迫。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这类科普环保的内容很有意义，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然很有感触，但这个领域我并不专业，没什么能补充的观点，不方便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但目前的基调比较沉重，暂时不想转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.77
+}

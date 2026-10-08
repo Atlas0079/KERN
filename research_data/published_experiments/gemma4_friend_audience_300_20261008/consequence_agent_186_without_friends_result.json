@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_186_without_friends",
+  "actor": "agent_186",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-1f3bd78eb94f4086ac05ed8c5750cf2b",
+    "object": "chat.completion",
+    "created": 1791452076,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这形势确实挺严峻的，虽然离我现在的租房生活有些距离，但作为全球性危机确实让人心沉。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种科普信息的传播价值，支持关注气候危机。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"话题太大且过于沉重，我没有专业的见解去发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"平时社交并不活跃，不习惯转发这类宏大叙事的内容到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这形势确实挺严峻的，虽然离我现在的租房生活有些距离，但作为全球性危机确实让人心沉。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种科普信息的传播价值，支持关注气候危机。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "话题太大且过于沉重，我没有专业的见解去发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "平时社交并不活跃，不习惯转发这类宏大叙事的内容到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.4
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_220_with_friends",
+  "actor": "agent_220",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-12dfcd89c577487aa1df0412ca80e359",
+    "object": "chat.completion",
+    "created": 1791454464,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，想到沿海城市和那些岛国的人，感觉气候风险确实是迫在眉睫的危机。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候风险和科普话题感兴趣，支持这类传播危机意识的内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较严肃且具有权威性，我目前只是关注了解，没有特别专业的见解可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容重要，但这种宏大叙事的危机感帖子不太适合我平时分享给家人和同事的社交圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，想到沿海城市和那些岛国的人，感觉气候风险确实是迫在眉睫的危机。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候风险和科普话题感兴趣，支持这类传播危机意识的内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较严肃且具有权威性，我目前只是关注了解，没有特别专业的见解可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容重要，但这种宏大叙事的危机感帖子不太适合我平时分享给家人和同事的社交圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.94
+}

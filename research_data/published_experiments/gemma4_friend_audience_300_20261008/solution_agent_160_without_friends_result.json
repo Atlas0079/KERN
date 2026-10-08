@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_160_without_friends",
+  "actor": "agent_160",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-963df803933a4131a77c100f5bbcb03b",
+    "object": "chat.completion",
+    "created": 1791453938,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个令人焦虑的问题，不过看到这些应对措施，心里稍微踏实了一点。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态保护，这篇内容很有意义。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有共鸣，但我性格内向，且没有特别强烈的观点需要表达。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类话题比较宏大，我不习惯在自己的主页转发这类科普信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个令人焦虑的问题，不过看到这些应对措施，心里稍微踏实了一点。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态保护，这篇内容很有意义。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有共鸣，但我性格内向，且没有特别强烈的观点需要表达。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类话题比较宏大，我不习惯在自己的主页转发这类科普信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.62
+}

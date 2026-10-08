@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_189_without_friends",
+  "actor": "agent_189",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-4bca0fb47bd64a89a2f8fd61a0149318",
+    "object": "chat.completion",
+    "created": 1791456949,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保话题挺有意义的，虽然这些宏大工程离我很远，但低碳生活确实是能做到的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种传播可持续生活的正面态度。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较官方，没什么特别想表达的观点，不便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类科普内容转发意义不大，不需要在我的主页展示。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保话题挺有意义的，虽然这些宏大工程离我很远，但低碳生活确实是能做到的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种传播可持续生活的正面态度。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较官方，没什么特别想表达的观点，不便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类科普内容转发意义不大，不需要在我的主页展示。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.31
+}

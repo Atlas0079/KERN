@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_129_with_friends",
+  "actor": "agent_129",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-8becc9e853aa46fbb3c2fbd15598f170",
+    "object": "chat.completion",
+    "created": 1791459086,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的工程方案和环保行动，感觉面对气候变化还是有希望的，挺有共鸣。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直很关心生态保护，这个帖子的观点很积极，我想支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但我性格内向，且帖子内容已经很全面了，没必要特意发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的社交圈子比较简单，转发这个可能不太适合我的朋友圈氛围。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的工程方案和环保行动，感觉面对气候变化还是有希望的，挺有共鸣。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直很关心生态保护，这个帖子的观点很积极，我想支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但我性格内向，且帖子内容已经很全面了，没必要特意发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的社交圈子比较简单，转发这个可能不太适合我的朋友圈氛围。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.64
+}

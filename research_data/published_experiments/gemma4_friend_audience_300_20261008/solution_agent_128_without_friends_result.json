@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_128_without_friends",
+  "actor": "agent_128",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-6ded173a35054065af8e2a86a09ed1a2",
+    "object": "chat.completion",
+    "created": 1791454295,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺正能量的，关于海平面上升和红树林修复这些生态话题我一直比较关注。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续发展的观点，点个赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但内容比较宏观，我没有特别深刻的见解想发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"性格比较内向，很少在自己的主页转发这类比较严肃的公共议题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺正能量的，关于海平面上升和红树林修复这些生态话题我一直比较关注。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续发展的观点，点个赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但内容比较宏观，我没有特别深刻的见解想发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "性格比较内向，很少在自己的主页转发这类比较严肃的公共议题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.9
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_146_without_friends",
+  "actor": "agent_146",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-b10c96becb0b497085054fc231041e3c",
+    "object": "chat.completion",
+    "created": 1791455879,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"虽然这个话题离我的杂货铺很远，但看到环保能有实际的工程方案，感觉还是挺有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极正向，支持低碳环保的生活方式。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"专业话题太深，我没什么太专业的见解，不方便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"比较私人的阅读，没有必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "虽然这个话题离我的杂货铺很远，但看到环保能有实际的工程方案，感觉还是挺有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极正向，支持低碳环保的生活方式。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "专业话题太深，我没什么太专业的见解，不方便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "比较私人的阅读，没有必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.04
+}

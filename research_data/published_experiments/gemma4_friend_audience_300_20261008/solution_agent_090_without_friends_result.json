@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_090_without_friends",
+  "actor": "agent_090",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-e61676800ee54e6d996acc53e08a2253",
+    "object": "chat.completion",
+    "created": 1791456815,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"现在气候问题确实严重，不过看到这些工程和措施，觉得还是有希望的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容积极且有建设性，支持这种环保科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但没有什么特别想补充的观点，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"社交圈子不大，没必要特意转发这个话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "现在气候问题确实严重，不过看到这些工程和措施，觉得还是有希望的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容积极且有建设性，支持这种环保科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但没有什么特别想补充的观点，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "社交圈子不大，没必要特意转发这个话题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.3
+}

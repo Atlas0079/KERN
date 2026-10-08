@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_246_without_friends",
+  "actor": "agent_246",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-9dd089001f5640f7b379dfbda9977e89",
+    "object": "chat.completion",
+    "created": 1791457525,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个话题挺宏大的，虽然离我的生活有点远，但看到有具体的工程和方法解决问题，感觉还挺有意思。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较积极，对环保和科技解决问题的方案表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大的气候话题我没什么专业见解，没什么好评论的。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这类内容对我来说只是了解，没必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个话题挺宏大的，虽然离我的生活有点远，但看到有具体的工程和方法解决问题，感觉还挺有意思。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较积极，对环保和科技解决问题的方案表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这类宏大的气候话题我没什么专业见解，没什么好评论的。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这类内容对我来说只是了解，没必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.1
+}

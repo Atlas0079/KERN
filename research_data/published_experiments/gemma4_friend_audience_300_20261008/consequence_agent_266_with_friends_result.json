@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_266_with_friends",
+  "actor": "agent_266",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-46be56de1b654422900346a8b3fb07c0",
+    "object": "chat.completion",
+    "created": 1791453764,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中要快，想到这么多城市和岛国会被淹没，心里感到很沉重。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对气候危机这类科普话题一直很关注，支持这类信息的传播。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感到忧虑，但这种宏大的议题我没什么具体的建议或观点能贡献，不习惯在公开场合发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容太沉重了，且我的社交圈多为家人和前同事，转发这个可能氛围太压抑。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中要快，想到这么多城市和岛国会被淹没，心里感到很沉重。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对气候危机这类科普话题一直很关注，支持这类信息的传播。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感到忧虑，但这种宏大的议题我没什么具体的建议或观点能贡献，不习惯在公开场合发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容太沉重了，且我的社交圈多为家人和前同事，转发这个可能氛围太压抑。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.25
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_099_without_friends",
+  "actor": "agent_099",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-35a4930ed62442f7bf3e5cad3640ba94",
+    "object": "chat.completion",
+    "created": 1791451981,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"感觉挺震撼的，虽然离我现在的具体生活有点远，但这种全球性的环境危机确实让人担心未来。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类非虚构的科普内容感兴趣，点个赞表示支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得危机感很强，但我不是这方面的专家，没什么专业见解可以评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我平时转发的内容更多倾向于生活实用类或个人兴趣，这个不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "感觉挺震撼的，虽然离我现在的具体生活有点远，但这种全球性的环境危机确实让人担心未来。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类非虚构的科普内容感兴趣，点个赞表示支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得危机感很强，但我不是这方面的专家，没什么专业见解可以评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我平时转发的内容更多倾向于生活实用类或个人兴趣，这个不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.85
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_032_with_friends",
+  "actor": "agent_032",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-bec86d20799f43f59097902540f241e4",
+    "object": "chat.completion",
+    "created": 1791451747,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这事听起来挺严重，虽然离我的生活比较远，但这种全球性的趋势确实让人心慌。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容具有警示意义，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学不专业，没什么直接的观点可以发表。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种沉重的话题不适合发到我的朋友圈，没必要传播焦虑。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这事听起来挺严重，虽然离我的生活比较远，但这种全球性的趋势确实让人心慌。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容具有警示意义，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学不专业，没什么直接的观点可以发表。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种沉重的话题不适合发到我的朋友圈，没必要传播焦虑。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.96
+}

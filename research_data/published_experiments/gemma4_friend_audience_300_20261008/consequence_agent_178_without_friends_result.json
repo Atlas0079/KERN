@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_178_without_friends",
+  "actor": "agent_178",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-e8f078ea929c43fa9e182f24fce7aee6",
+    "object": "chat.completion",
+    "created": 1791451143,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些年经常关注极端天气，没想到海平面上升的速度这么快，对沿海城市的影响确实令人担忧。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"关注气候变化，支持传播这类严肃的环保警示信息。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这类宏大议题我更倾向于阅读和思考，没有特别想发表的观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"社交圈子不大，且这类消息较为沉重，不打算转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些年经常关注极端天气，没想到海平面上升的速度这么快，对沿海城市的影响确实令人担忧。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "关注气候变化，支持传播这类严肃的环保警示信息。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这类宏大议题我更倾向于阅读和思考，没有特别想发表的观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "社交圈子不大，且这类消息较为沉重，不打算转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.47
+}

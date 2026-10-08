@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_059_with_friends",
+  "actor": "agent_059",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-42c6573dd7ec45eeb8a7907a9074d7bc",
+    "object": "chat.completion",
+    "created": 1791454775,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的影响确实触目惊心，感觉环境问题比想象中要紧迫得多。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这类科普环保的信息很有意义，点个赞表示支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得很严重，但在这个领域我没有专业见解，不需要发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，且我平时不常转发这类宏大话题，不打算转发。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的影响确实触目惊心，感觉环境问题比想象中要紧迫得多。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这类科普环保的信息很有意义，点个赞表示支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得很严重，但在这个领域我没有专业见解，不需要发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，且我平时不常转发这类宏大话题，不打算转发。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.38
+}

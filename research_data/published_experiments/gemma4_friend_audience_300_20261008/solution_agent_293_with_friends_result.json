@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_293_with_friends",
+  "actor": "agent_293",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-6d69ba67ce10429dae3f6cf9c8e193e9",
+    "object": "chat.completion",
+    "created": 1791456770,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这个帖子挺有正能量的，虽然海平面上升听起来很宏大，但看到具体的解决方案和个人能做的小事，觉得还挺务实。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续生活的观点，点赞鼓励一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容已经表达得很完整了，我没有特别专业的见解去补充。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然内容不错，但这不是我的核心关注领域，不需要转发到我的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这个帖子挺有正能量的，虽然海平面上升听起来很宏大，但看到具体的解决方案和个人能做的小事，觉得还挺务实。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续生活的观点，点赞鼓励一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容已经表达得很完整了，我没有特别专业的见解去补充。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然内容不错，但这不是我的核心关注领域，不需要转发到我的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.92
+}

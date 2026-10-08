@@ -1,0 +1,52 @@
+{
+  "key": "solution_agent_298_without_friends",
+  "actor": "agent_298",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-8543a3c97df24b6296d539338fce6c13",
+    "object": "chat.completion",
+    "created": 1791451998,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到这些具体的环保工程和行动方案，感觉面对气候变化还是有希望的，心情变得积极了一些。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对生态保护一直很关注，且认同这种积极正向的观点。\"\n    },\n    \"comment\": {\n      \"execute\": true,\n      \"reason\": \"我想分享一下自己对低碳生活的认同，给博主一点鼓励。\",\n      \"text\": \"看到红树林修复和可再生能源的进展很振奋，虽然个人力量很小，但希望能坚持低碳生活，为地球出一份力🌱\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容很好，但目前不需要转发到我的主页提醒他人。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到这些具体的环保工程和行动方案，感觉面对气候变化还是有希望的，心情变得积极了一些。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对生态保护一直很关注，且认同这种积极正向的观点。"
+      },
+      "comment": {
+        "execute": true,
+        "reason": "我想分享一下自己对低碳生活的认同，给博主一点鼓励。",
+        "text": "看到红树林修复和可再生能源的进展很振奋，虽然个人力量很小，但希望能坚持低碳生活，为地球出一份力🌱"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容很好，但目前不需要转发到我的主页提醒他人。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    },
+    {
+      "action": "comment",
+      "text": "看到红树林修复和可再生能源的进展很振奋，虽然个人力量很小，但希望能坚持低碳生活，为地球出一份力🌱"
+    }
+  ],
+  "seconds": 18.06
+}

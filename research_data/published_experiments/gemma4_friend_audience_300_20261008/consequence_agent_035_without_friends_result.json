@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_035_without_friends",
+  "actor": "agent_035",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-7fd050a425964197954555ae22aab8f6",
+    "object": "chat.completion",
+    "created": 1791458407,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的影响确实触目惊心，尤其是对那些沿海城市和岛国来说，这是一个非常严肃的社会和科学问题。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对科学和社会话题感兴趣，且认同这类环境预警信息的价值。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得问题严重，但我对此类专业领域没有深刻的见解，不便随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但目前我的关注点更多在个人生活和找工作上，没有必要转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的影响确实触目惊心，尤其是对那些沿海城市和岛国来说，这是一个非常严肃的社会和科学问题。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对科学和社会话题感兴趣，且认同这类环境预警信息的价值。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得问题严重，但我对此类专业领域没有深刻的见解，不便随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但目前我的关注点更多在个人生活和找工作上，没有必要转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.37
+}

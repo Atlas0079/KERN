@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_234_with_friends",
+  "actor": "agent_234",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-4033798d35854c4dbadb506268f2d2b5",
+    "object": "chat.completion",
+    "created": 1791456018,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺令人担忧的，虽然离我目前的日常生活比较远，但这种全球性的危机确实让人感到压抑。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然心情沉重，但支持这种传播环境危机意识的科普内容。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"我对气候科学不专业，没有什么能补充的观点，不想随便评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，我的朋友圈大多是同学和邻居，转发这个可能氛围太压抑了。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺令人担忧的，虽然离我目前的日常生活比较远，但这种全球性的危机确实让人感到压抑。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然心情沉重，但支持这种传播环境危机意识的科普内容。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "我对气候科学不专业，没有什么能补充的观点，不想随便评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，我的朋友圈大多是同学和邻居，转发这个可能氛围太压抑了。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.65
+}

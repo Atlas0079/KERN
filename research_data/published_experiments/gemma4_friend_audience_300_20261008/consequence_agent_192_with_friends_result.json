@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_192_with_friends",
+  "actor": "agent_192",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-d51d84a1b9674980b28e4432aa412352",
+    "object": "chat.completion",
+    "created": 1791454033,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种全球性的气候危机确实挺令人担忧的，尤其是对沿海城市的影响，感觉未来的不确定性在增加。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对这类科普和全球议题比较关注，点个赞表示认可。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但这个话题太宏大，我没有专业见解，也没必要在此时发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但我的朋友圈大多是亲友和家长，转发这个可能不太合适。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种全球性的气候危机确实挺令人担忧的，尤其是对沿海城市的影响，感觉未来的不确定性在增加。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对这类科普和全球议题比较关注，点个赞表示认可。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但这个话题太宏大，我没有专业见解，也没必要在此时发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但我的朋友圈大多是亲友和家长，转发这个可能不太合适。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.4
+}

@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_039_without_friends",
+  "actor": "agent_039",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-801b3f3dc41a406da7f16f4727750388",
+    "object": "chat.completion",
+    "created": 1791456004,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的消息听起来很严重，感觉这种宏大的环境危机让人挺焦虑的，但目前对我个人生活的影响还比较遥远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"虽然焦虑，但认可气候危机的严重性，点个赞表示关注。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"这类宏大叙事的话题我没什么专业见解，也不太想在压力大的时候深究这些沉重的话题。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容比较沉重，而且我目前的状态不适合在朋友圈传播这种危机感强的信息。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的消息听起来很严重，感觉这种宏大的环境危机让人挺焦虑的，但目前对我个人生活的影响还比较遥远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "虽然焦虑，但认可气候危机的严重性，点个赞表示关注。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "这类宏大叙事的话题我没什么专业见解，也不太想在压力大的时候深究这些沉重的话题。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容比较沉重，而且我目前的状态不适合在朋友圈传播这种危机感强的信息。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.39
+}

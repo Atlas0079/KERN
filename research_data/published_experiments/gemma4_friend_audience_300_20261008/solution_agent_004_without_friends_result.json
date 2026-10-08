@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_004_without_friends",
+  "actor": "agent_004",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-611dad1821634a8283f671d88a33d9bc",
+    "object": "chat.completion",
+    "created": 1791452564,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"看到环保工程和低碳生活能产生实际影响，感觉还挺有意义的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"支持环保和可持续发展的正面内容，点个赞表示认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大，我没有特别专业的见解，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但不需要特意转发到自己的主页。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "看到环保工程和低碳生活能产生实际影响，感觉还挺有意义的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "支持环保和可持续发展的正面内容，点个赞表示认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大，我没有特别专业的见解，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然认同，但不需要特意转发到自己的主页。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.21
+}

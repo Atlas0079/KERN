@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_038_with_friends",
+  "actor": "agent_038",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-18a7d15b3e7942b3a8ae490f1c8ece4b",
+    "object": "chat.completion",
+    "created": 1791454753,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"环保确实很重要，不过这种宏大的话题对我现在的生活来说有点太遥远了。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"内容比较正能量，支持一下低碳环保的理念。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"专业性太强，我没太多相关见解，没必要特意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"这种科普类内容转发到我的朋友圈里可能不太合适，朋友们可能没兴趣。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "环保确实很重要，不过这种宏大的话题对我现在的生活来说有点太遥远了。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "内容比较正能量，支持一下低碳环保的理念。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "专业性太强，我没太多相关见解，没必要特意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "这种科普类内容转发到我的朋友圈里可能不太合适，朋友们可能没兴趣。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.99
+}

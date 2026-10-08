@@ -1,0 +1,15 @@
+{
+  "model": "gemma-4-31B-it",
+  "temperature": 0.9,
+  "max_tokens": 1200,
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是以下社交平台用户：\n\n我的 profile_id：social_profile_233\n我的自我画像：\n我今年31岁，是一名男性，目前处于组建和维系家庭的阶段。大学时我读的是计算机与信息技术专业，本科毕业后就没再继续读书深造，这也是我目前最高的学历，眼下也没有在读的学位或课程计划。毕业后我一直在软件行业做测试工程师，工作还算稳定，几年下来节奏摸得比较熟。感情上我现在是单身，之前有过一段婚姻，后来离异了，孩子归我这边照顾，正好在读小学、算是学龄阶段，平时接送、陪功课都是我在张罗。离婚以后我搬回了父母家一起住，一来是方便有老人搭把手照看孩子，二来我平时也会顺手照应父母的生活，偶尔补贴一点家用，虽然不算重担，但孩子加上父母这两头,家里的事情总归要我兼顾着，责任感觉是中等偏实在的那种。经济上我目前基本可控，工资够日常开销和孩子的花销,只是压力大的时候，我会靠一些小额的消费来放松一下，比如买点小东西犒劳自己，谈不上大手大脚。性格方面，我对新鲜事物保持着适度的好奇，不算特别追新，但也不排斥去了解；做事我会提前规划一下，有个大概的安排；平时我比较外向主动，喜欢和人打交道，也愿意主动张罗事情；在合作和坚持自己想法之间，我觉得自己拿捏得比较平衡，既能配合别人，也不会轻易被说服放弃原则；情绪上我大部分时候都挺稳的,不太容易被小事搞得心浮气躁。业余时间，我喜欢动手修理一些家里的小物件，坏了的东西自己捣鼓捣鼓修好挺有成就感；也喜欢看书，小说和非虚构类的都读，没事就去书店或图书馆逛逛；因为孩子在身边,我也会留意一些适合亲子一起参与的活动，找机会带孩子出去走走、一起读读书。这几年我开始关注一些基础理财的知识,主要是想弄明白怎么长期储蓄比较靠谱，算是一种慢慢学习和了解的状态，暂时还没有什么实际投入或者明确的大项目计划。另外我也比较留意公共健康方面的科普内容,平时刷到相关的解读文章会多看两眼。\n我的人格五维（0-1，越高越明显）：openness=0.50, conscientiousness=0.60, extraversion=0.70, agreeableness=0.40, neuroticism=0.30\n\n我的平台主要好友类别（platform_friend_categories）：[\"家人亲属\", \"工作同事\", \"大学同学\", \"孩子同学的家长\", \"现实生活朋友\"]"
+    },
+    {
+      "role": "user",
+      "content": "你正在浏览社交平台，当前页面如下：\n{\"tick\":1,\"actor_id\":\"agent_233\",\"screen\":{\"terminal_id\":\"phone_233\",\"runtime_id\":\"social_platform\",\"account_id\":\"account_233\",\"view\":\"post_detail\",\"updated_tick\":1,\"feed_session_id\":null,\"feed_items\":[],\"current_post\":{\"post_id\":\"sea_level_experiment_post\",\"title\":\"救赎之路：海平面上升并非无解\",\"display_hashtags\":[\"气候行动\",\"碳中和\",\"可持续生活\"],\"original_author_id\":\"earth_voice\",\"feed_item_kind\":\"original\",\"reposted_by_account_id\":null,\"created_tick\":0,\"reposted_tick\":null,\"section\":\"recommended\",\"position\":0,\"like_count\":0,\"comment_count\":0,\"repost_count\":0,\"viewer_has_liked\":false,\"viewer_has_reposted\":false,\"text\":\"🌱【救赎之路】全球海平面上升并非无解！\\n\\n荷兰“还地于海”工程可抵御风暴潮侵袭；中国沿海红树林修复计划固碳功能显著；可再生能源装机量首超化石能源，为减缓冰川融化赢回时间；你随手关灯、减少肉食的每一个小行动，都在为海岸线留住一米土地！\\n\\n每一个人的低碳行为，都在铸就希望。\",\"recent_comments\":[],\"feed_session_id\":null,\"exposure_id\":null}},\"recent_social_memory\":[],\"schema_version\":\"social_decision_page_context.v1\",\"allowed_action_post_ids\":[\"sea_level_experiment_post\"]}\n\n你读完当前帖子后有什么感受，接下来会做什么？\n请尽可能真实地表现出这个人在日常刷社交平台时会有的反应。没有必要为了完成任务强行采取任何行动，不行动也是完整的回答。\n先用一句话表达读后感受；这句话只是你的私人反应，不会发布到平台。\n然后分别决定是否点赞、是否发表评论、是否转发，每个决定都给出一句简短理由，无论决定做还是不做。\n有感想不等于决定发布评论。只有决定发表评论时，才填写实际发布的评论正文。\n只返回 JSON，严格使用以下结构，不输出额外正文。execute 必须是布尔值；reason 是一句简短理由；不发布时 text 可以省略或为空字符串。\n{\"reaction\":\"一句读后感受\",\"decisions\":{\"like\":{\"execute\":false,\"reason\":\"一句理由\"},\"comment\":{\"execute\":false,\"reason\":\"一句理由\",\"text\":\"\"},\"repost\":{\"execute\":false,\"reason\":\"一句理由\",\"text\":\"\"}}}"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_079_with_friends",
+  "actor": "agent_079",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-da4492c98e294a098d2003c4bce1bfdd",
+    "object": "chat.completion",
+    "created": 1791455037,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实是个严肃的话题，为了孩子以后能生活在更好的环境里，这些环保行动很有必要。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同帖子的观点，支持生态保护和低碳生活。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏观，点个赞支持即可，没有特别想补充的专业观点。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但觉得没必要转发到自己的朋友圈，保持低调即可。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实是个严肃的话题，为了孩子以后能生活在更好的环境里，这些环保行动很有必要。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同帖子的观点，支持生态保护和低碳生活。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏观，点个赞支持即可，没有特别想补充的专业观点。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然认同，但觉得没必要转发到自己的朋友圈，保持低调即可。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.06
+}

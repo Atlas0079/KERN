@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_228_with_friends",
+  "actor": "agent_228",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-d022a22648c04fa19a371a1efe4bed6b",
+    "object": "chat.completion",
+    "created": 1791458667,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"挺有意义的科普，让我看到了在应对环境危机方面一些积极的尝试。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可低碳生活的理念，支持环保行动。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容很完整，我目前没有特别想补充的观点，且性格比较内向，不习惯随意评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得有意义，但这不是我经常分享的内容类型，不想打扰到朋友圈。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "挺有意义的科普，让我看到了在应对环境危机方面一些积极的尝试。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可低碳生活的理念，支持环保行动。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容很完整，我目前没有特别想补充的观点，且性格比较内向，不习惯随意评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然觉得有意义，但这不是我经常分享的内容类型，不想打扰到朋友圈。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 12.85
+}

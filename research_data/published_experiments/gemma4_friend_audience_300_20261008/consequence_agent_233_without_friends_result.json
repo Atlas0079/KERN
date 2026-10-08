@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_233_without_friends",
+  "actor": "agent_233",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-6768eab9ba7d4a84aaeed510404729e6",
+    "object": "chat.completion",
+    "created": 1791453102,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升确实挺严重的，得给孩子考虑一下未来环境的影响，不过现在离我生活还比较远。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"这种关于全球气候和公共环境的科普内容值得关注，点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"内容比较宏大且专业，我没什么专业见解可以补充，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"虽然重要，但内容比较沉重，不打算转发到自己的动态里。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升确实挺严重的，得给孩子考虑一下未来环境的影响，不过现在离我生活还比较远。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "这种关于全球气候和公共环境的科普内容值得关注，点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "内容比较宏大且专业，我没什么专业见解可以补充，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "虽然重要，但内容比较沉重，不打算转发到自己的动态里。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.71
+}

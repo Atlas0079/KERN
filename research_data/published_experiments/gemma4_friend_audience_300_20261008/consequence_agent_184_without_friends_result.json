@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_184_without_friends",
+  "actor": "agent_184",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-ac1f6f0d6d574bf4b9965985216eea69",
+    "object": "chat.completion",
+    "created": 1791456299,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升的速度比我想象中快，这些数据让人不安，尤其是涉及到人口迁移和资源争夺的部分。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我对环境和生态变化一直很关注，这类科普内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然有感触，但目前还没有什么独特的见解能给这个话题增加有价值的讨论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容虽然重要，但我平时不习惯在社交圈大肆转发这类沉重的话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升的速度比我想象中快，这些数据让人不安，尤其是涉及到人口迁移和资源争夺的部分。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我对环境和生态变化一直很关注，这类科普内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然有感触，但目前还没有什么独特的见解能给这个话题增加有价值的讨论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容虽然重要，但我平时不习惯在社交圈大肆转发这类沉重的话题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.44
+}

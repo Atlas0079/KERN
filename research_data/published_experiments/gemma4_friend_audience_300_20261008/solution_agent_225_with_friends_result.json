@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_225_with_friends",
+  "actor": "agent_225",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "with_friends",
+  "response": {
+    "id": "chatcmpl-7e1017ad0ebf4525ad83772127ca6c93",
+    "object": "chat.completion",
+    "created": 1791450981,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"内容挺有意义的，这种关注环境可持续发展的科普挺有价值。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认可这种低碳环保的理念，随手点个赞支持一下。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然认同，但内容比较宏大，我没有太多专业见解可以补充，不便发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"我的社交圈主要是家人和老同学，转发这个可能不太符合我的平时分享习惯。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "内容挺有意义的，这种关注环境可持续发展的科普挺有价值。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认可这种低碳环保的理念，随手点个赞支持一下。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然认同，但内容比较宏大，我没有太多专业见解可以补充，不便发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "我的社交圈主要是家人和老同学，转发这个可能不太符合我的平时分享习惯。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 14.11
+}

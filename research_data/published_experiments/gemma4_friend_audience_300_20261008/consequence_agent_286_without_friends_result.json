@@ -1,0 +1,47 @@
+{
+  "key": "consequence_agent_286_without_friends",
+  "actor": "agent_286",
+  "condition": "consequence",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-e71ea4d4b49f46beb630aa5e606e1ef3",
+    "object": "chat.completion",
+    "created": 1791457119,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"海平面上升速度这么快吗，感觉环境问题离我们越来越近了，挺让人焦虑的。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"平时就关注生态保护，这类科普内容值得支持。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得担忧，但没想好怎么评论，而且这种宏大话题我不太习惯公开发表看法。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"比较内向，不习惯在自己的主页转发这种沉重的话题。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "海平面上升速度这么快吗，感觉环境问题离我们越来越近了，挺让人焦虑的。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "平时就关注生态保护，这类科普内容值得支持。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得担忧，但没想好怎么评论，而且这种宏大话题我不太习惯公开发表看法。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "比较内向，不习惯在自己的主页转发这种沉重的话题。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.16
+}

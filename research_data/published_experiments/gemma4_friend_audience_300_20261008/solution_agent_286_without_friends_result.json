@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_286_without_friends",
+  "actor": "agent_286",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-a9a5ef0b009c4d11a4c385542aa819f4",
+    "object": "chat.completion",
+    "created": 1791453337,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这种关于环境变化和生态保护的科普内容我一直挺关注的，看到有具体的解决方案感觉还不错。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"认同低碳生活的理念，支持这类环保科普。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然感兴趣，但没什么特别想表达的，习惯潜水阅读。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容不错但不需要转发到自己的主页，没必要引起太多关注。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这种关于环境变化和生态保护的科普内容我一直挺关注的，看到有具体的解决方案感觉还不错。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "认同低碳生活的理念，支持这类环保科普。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然感兴趣，但没什么特别想表达的，习惯潜水阅读。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容不错但不需要转发到自己的主页，没必要引起太多关注。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 13.68
+}

@@ -1,0 +1,47 @@
+{
+  "key": "solution_agent_165_without_friends",
+  "actor": "agent_165",
+  "condition": "solution",
+  "kind": "experimental",
+  "variant": "without_friends",
+  "response": {
+    "id": "chatcmpl-da36730fadae4c6087dbb4f010b97f60",
+    "object": "chat.completion",
+    "created": 1791453176,
+    "model": "gemma-4-31B-it",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "```json\n{\n  \"reaction\": \"这些环保举措挺有意思的，尤其是红树林修复，感觉确实能给未来的环境带来希望。\",\n  \"decisions\": {\n    \"like\": {\n      \"execute\": true,\n      \"reason\": \"我一直关注环境和生态话题，这篇文章传递的观点我很认同。\"\n    },\n    \"comment\": {\n      \"execute\": false,\n      \"reason\": \"虽然觉得内容不错，但我性格偏内向，在这种科普帖下通常只是静静看完，不太想发表评论。\"\n    },\n    \"repost\": {\n      \"execute\": false,\n      \"reason\": \"内容很有意义，但我觉得转发到我的主页可能有点太严肃了，不需要特意分享。\"\n    }\n  }\n}\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ]
+  },
+  "valid": true,
+  "parsed": {
+    "reaction": "这些环保举措挺有意思的，尤其是红树林修复，感觉确实能给未来的环境带来希望。",
+    "decisions": {
+      "like": {
+        "execute": true,
+        "reason": "我一直关注环境和生态话题，这篇文章传递的观点我很认同。"
+      },
+      "comment": {
+        "execute": false,
+        "reason": "虽然觉得内容不错，但我性格偏内向，在这种科普帖下通常只是静静看完，不太想发表评论。"
+      },
+      "repost": {
+        "execute": false,
+        "reason": "内容很有意义，但我觉得转发到我的主页可能有点太严肃了，不需要特意分享。"
+      }
+    }
+  },
+  "actions": [
+    {
+      "action": "like"
+    }
+  ],
+  "seconds": 15.18
+}
